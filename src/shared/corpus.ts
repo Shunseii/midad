@@ -37,3 +37,12 @@ export interface ExportFile {
   state: FileState;
   text: string | null;
 }
+
+export interface CorpusBookListing {
+  id: string;
+  title: string;
+  author: string | null;
+  workTitle: string | null;
+  pagesTotal: number;
+  pagesReady: number;
+}

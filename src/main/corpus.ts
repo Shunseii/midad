@@ -1,18 +1,9 @@
-import type { BookWithStatus, ExportFile, Work } from "../shared/corpus";
+import type { BookWithStatus, CorpusBookListing, ExportFile, Work } from "../shared/corpus";
 
 /** What the library needs from a book source. The corpus is the only one today. */
 export interface CorpusSource {
   getBook(id: string): Promise<{ id: string; title: string; work: { name: string; author: string | null } | null }>;
   exportBook(id: string): Promise<ExportFile[]>;
-}
-
-export interface CorpusBookListing {
-  id: string;
-  title: string;
-  author: string | null;
-  workTitle: string | null;
-  pagesTotal: number;
-  pagesReady: number;
 }
 
 export class CorpusError extends Error {
