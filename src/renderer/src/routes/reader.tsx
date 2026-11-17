@@ -79,15 +79,15 @@ const PageView = ({ stored, showHarakat }: { stored: StoredPage; showHarakat: bo
   const t = (s: string) => (showHarakat ? s : stripHarakat(s));
   const { page } = stored;
   return (
-    <article className="mx-auto flex w-160 flex-col gap-4 pb-24">
-      <div className="flex items-baseline justify-between border-b border-line pb-4 text-ink-3" dir="rtl">
+    <article className="mx-auto flex w-160 flex-col pb-24">
+      <div className="mb-4 flex items-baseline justify-between border-b border-line pb-4 text-ink-3" dir="rtl">
         <span className="ar text-ar-small">{t(page.header ?? "")}</span>
         <span className="ar text-ar-small">{arabicNumber(stored.number ?? stored.position)}</span>
       </div>
       {page.matn.length === 0 && <p className="py-12 text-center text-sm text-ink-3">This page has no main text.</p>}
       {page.matn.map((b) =>
         b.kind === "heading" ? (
-          <h2 key={b.line} data-line={b.line} className={cx("ar mt-2 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-body")}>
+          <h2 key={b.line} data-line={b.line} className={cx("ar my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-body")}>
             {t(b.text)}
           </h2>
         ) : (
@@ -97,7 +97,7 @@ const PageView = ({ stored, showHarakat }: { stored: StoredPage; showHarakat: bo
         ),
       )}
       {page.hashiya.length > 0 && (
-        <section className="mt-4 flex flex-col gap-2 border-t border-line pt-4" dir="rtl">
+        <section className="mt-8 flex flex-col gap-2 border-t border-line pt-4" dir="rtl">
           <h3 className="ar text-ar-small font-bold text-ink-3">الحاشية</h3>
           {page.hashiya.map((f, i) => (
             <p key={`${f.marker ?? "u"}-${i}`} data-footnote={f.marker ?? ""} className="ar text-right text-ar-small text-ink-2">

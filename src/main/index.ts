@@ -7,6 +7,8 @@ import { createLibrary } from "./library";
 import { createSettings } from "./settings";
 
 app.setName("hamish");
+// A separate profile (settings + library) for development and testing.
+if (process.env.HAMISH_USER_DATA) app.setPath("userData", process.env.HAMISH_USER_DATA);
 
 const userData = app.getPath("userData");
 const settings = createSettings({ dir: userData });

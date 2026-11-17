@@ -42,7 +42,7 @@ export const createCorpusClient = ({ endpoint, key }: { endpoint: string; key: s
           id: b.id,
           title: work?.name ?? b.title,
           author: work?.author ?? null,
-          workTitle: work ? b.title : null,
+          workTitle: work && b.title !== work.name ? b.title : null,
           pagesTotal: b.files_total,
           pagesReady: READY_STATES.reduce((n, s) => n + (b.counts[s] ?? 0), 0),
         };
