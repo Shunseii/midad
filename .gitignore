@@ -1,1 +1,4 @@
 .lamsa/
+node_modules/
+out/
+dist/
