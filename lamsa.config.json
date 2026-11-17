@@ -1,0 +1,19 @@
+{
+  "agent": {
+    "args": [],
+    "command": "claude"
+  },
+  "assetsDir": "designs/assets",
+  "designs": [
+    "designs/**/*.lamsa.json"
+  ],
+  "tokens": {
+    "adapter": "shadcn-tailwind4",
+    "path": "src/styles/tokens.css"
+  },
+  "fonts": {
+    "Source Serif 4": { "google": "Source Serif 4:opsz,wght@8..60,400..700" },
+    "Inter": { "google": "Inter:wght@400..700" },
+    "Noto Naskh Arabic": { "google": "Noto Naskh Arabic:wght@400..700" }
+  }
+}

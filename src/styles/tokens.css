@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #F6F3EC;
+  --color-surface: #FFFDF8;
+  --color-surface-2: #EFEADF;
+  --color-scrim: #1A181466;
+  --color-ink: #1A1814;
+  --color-ink-2: #55503F;
+  --color-ink-3: #8C8573;
+  --color-line: #E3DCCC;
+  --color-ink-added: #B8401F;
+  --color-accent: #1F5E55;
+  --color-accent-soft: #DCEBE7;
+  --color-on-accent: #FFFFFF;
+  --color-ok: #2F7444;
+  --color-ok-soft: #DDEEDF;
+  --color-warn: #96600F;
+  --color-warn-soft: #F5E5C6;
+  --color-danger: #AE3E2B;
+  --color-danger-soft: #F5DCD5;
+  --color-mark-1: #F7E39A;
+  --color-mark-2: #C9E4C5;
+  --color-mark-3: #F2C9C0;
+  --color-mark-4: #C8D8F0;
+  --font-display: "Source Serif 4", serif;
+  --font-body: "Inter", sans-serif;
+  --font-ar: "Noto Naskh Arabic", serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #13120F;
+    --color-surface: #1C1A16;
+    --color-surface-2: #27241E;
+    --color-scrim: #000000A6;
+    --color-ink: #EFEADF;
+    --color-ink-2: #BBB3A1;
+    --color-ink-3: #888170;
+    --color-line: #35312A;
+    --color-ink-added: #F08C68;
+    --color-accent: #7CC4B6;
+    --color-accent-soft: #1E3531;
+    --color-on-accent: #0E1E1B;
+    --color-ok: #6CC08A;
+    --color-ok-soft: #1C3425;
+    --color-warn: #E0A94A;
+    --color-warn-soft: #392B13;
+    --color-danger: #E6826D;
+    --color-danger-soft: #3F1F19;
+    --color-mark-1: #5A4C1C;
+    --color-mark-2: #2D4A2A;
+    --color-mark-3: #55302A;
+    --color-mark-4: #2A3A55;
+  }
+}
+
+:root[data-theme="dark"],
+.dark {
+  --color-bg: #13120F;
+  --color-surface: #1C1A16;
+  --color-surface-2: #27241E;
+  --color-scrim: #000000A6;
+  --color-ink: #EFEADF;
+  --color-ink-2: #BBB3A1;
+  --color-ink-3: #888170;
+  --color-line: #35312A;
+  --color-ink-added: #F08C68;
+  --color-accent: #7CC4B6;
+  --color-accent-soft: #1E3531;
+  --color-on-accent: #0E1E1B;
+  --color-ok: #6CC08A;
+  --color-ok-soft: #1C3425;
+  --color-warn: #E0A94A;
+  --color-warn-soft: #392B13;
+  --color-danger: #E6826D;
+  --color-danger-soft: #3F1F19;
+  --color-mark-1: #5A4C1C;
+  --color-mark-2: #2D4A2A;
+  --color-mark-3: #55302A;
+  --color-mark-4: #2A3A55;
+}
