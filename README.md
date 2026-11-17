@@ -20,7 +20,7 @@ A reader for the Arabic digitization corpus. You import books from the `arabic-d
 - **Your harakat never change the corpus.** They are stored as a separate layer (position in the page text plus the mark) and drawn over the corpus text in `ink-added` red, so they are easy to tell apart from the corpus's own marks.
 - **Adding harakat works like typing.** Click a letter, or select one, to put a caret after it. Type the haraka with the normal Arabic layout (Shift+Q fatha, Shift+E damma, Shift+A kasra, Shift+X sukun, Shift+\` shadda, Shift+W/R/S tanwīn) and it attaches to that letter. Backspace removes your mark, ← → move one letter, Esc leaves. The typed character is used when the OS layout is Arabic. Otherwise Hamish maps the physical key (`KeyboardEvent.code`) to its position on the standard Arabic layout, so the same keys work on an English layout. The selection toolbar's Harakat button enters the same mode.
 - **Harakat display:** a "Harakat" switch hides or shows all marks, the corpus's and yours (shortcut `H`). A "My harakat" switch hides only yours. It is disabled while all harakat are hidden.
-- **Agent access:** Hamish runs a local MCP server so Claude, or any MCP client, can read pages from the local library and add or remove harakat, notes and highlights (`list_books`, `get_page`, `get_lines`, `list_annotations`, `add_harakat`, `remove_harakat`, `add_note`, `update_note`, `delete_note`, `add_highlight`, `remove_highlight`). Notes an agent writes are labelled with the agent's name.
+- **Agent access:** a `hamish` command-line tool reads pages from the local library and adds or removes harakat, notes and highlights, so Claude (or any agent with a shell) can work with it. There is no MCP server. Spans are named by line and word (`--line 4 --words 6-8`), the same anchors the app uses. Notes an agent writes are labelled with the agent's name.
 - **Ask AI cites the page, not the corpus.** Answers link to lines of the matn and ḥāshiya on the current page as inline chips (`line 1`, `ḥāshiya ١`). Clicking one scrolls to that line and highlights it. There are no links to other books.
 - **The contents sidebar collapses** with a toggle next to the back button. The page re-centres in the freed space.
 - **Ask AI uses a local Claude Code session**, not an API key. Settings holds the path to the `claude` binary and the folder it starts in, so it can use the corpus search tools.
@@ -28,7 +28,7 @@ A reader for the Arabic digitization corpus. You import books from the `arabic-d
 ## Stack
 
 - **Electron, not Tauri.** Electron ships its own Chromium, so Arabic shaping renders the same on every OS. Tauri uses the system webview (WebKitGTK on Linux), which caused Arabic rendering problems in the past. The harakat layer depends on Chromium's behaviour: a mark in its own coloured span stays attached and the letters stay joined.
-- The Electron main process (Node) starts the local Claude Code session and hosts the MCP server for agent access.
+- The Electron main process (Node) starts the local Claude Code session. The `hamish` CLI opens the same SQLite library directly.
 - Same base as the Qiraa desktop app in `arabic-digitization/apps/desktop` (Electron, Vite, React, bundled Noto Naskh Arabic). Its markdown reader, which handles `### الحاشية` and `<ruby>`, can be shared through `@qiraa/shared`.
 
 ## Ask AI behaviour
