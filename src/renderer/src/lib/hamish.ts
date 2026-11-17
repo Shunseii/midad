@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { HighlightColor, PageAnnotations, Span } from "../../../shared/annotations";
 import type { HamishApi, SyncInput } from "../../../shared/ipc";
 
 declare global {
@@ -16,6 +17,7 @@ export const keys = {
   book: (bookId: string) => ["library", bookId] as const,
   page: (bookId: string, position: number) => ["library", bookId, "page", position] as const,
   syncPreview: (bookId: string) => ["library", bookId, "sync-preview"] as const,
+  annotations: (bookId: string, position: number) => ["library", bookId, "annotations", position] as const,
 };
 
 export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: () => hamish["settings.get"]() });
@@ -58,6 +60,47 @@ export const useSyncBook = () => {
     mutationFn: (input: SyncInput) => hamish["library.sync"](input),
     onSuccess: (_result, input) => client.invalidateQueries({ queryKey: keys.book(input.bookId) }),
   });
+};
+
+export const useAnnotations = ({ bookId, position }: { bookId: string; position: number }) =>
+  useQuery({
+    queryKey: keys.annotations(bookId, position),
+    queryFn: () => hamish["annotations.list"]({ bookId, position }),
+  });
+
+/** Highlight and note writes for one page. Each refreshes that page's annotations. */
+export const useAnnotationActions = ({ bookId, position }: { bookId: string; position: number }) => {
+  const client = useQueryClient();
+  const key = keys.annotations(bookId, position);
+  const refresh = () => client.invalidateQueries({ queryKey: key });
+  return {
+    addHighlight: async ({ span, color }: { span: Span; color: HighlightColor }) => {
+      await hamish["highlights.add"]({ bookId, position, span, color });
+      await refresh();
+    },
+    removeHighlight: async (id: string) => {
+      await hamish["highlights.remove"]({ id });
+      await refresh();
+    },
+    addNote: async ({ span, body }: { span: Span; body: string }) => {
+      const note = await hamish["notes.add"]({ bookId, position, span, body });
+      await refresh();
+      return note;
+    },
+    updateNote: async ({ id, body }: { id: string; body: string }) => {
+      await hamish["notes.update"]({ id, body });
+      client.setQueryData<PageAnnotations>(key, (current) =>
+        current && {
+          ...current,
+          notes: current.notes.map((n) => (n.id === id ? { ...n, body: body.trim(), updatedAt: Date.now() } : n)),
+        },
+      );
+    },
+    deleteNote: async (id: string) => {
+      await hamish["notes.delete"]({ id });
+      await refresh();
+    },
+  };
 };
 
 export const useSaveSettings = () => {

@@ -1,11 +1,13 @@
-import { ArrowLeft, ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen, Type } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowLeft, ChevronLeft, ChevronRight, NotebookPen, PanelLeftClose, PanelLeftOpen, Type } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
-import { stripHarakat } from "../../../shared/arabic";
-import type { BookDetail, StoredPage } from "../../../shared/library";
+import type { Highlight, Note, Span } from "../../../shared/annotations";
+import type { BookDetail } from "../../../shared/library";
+import { NotePopover, SelectionToolbar } from "../components/annotation-popovers";
+import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
+import { PageView, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
-import { arabicNumber } from "../lib/format";
-import { hamish, readPref, useBook, usePage, writePref } from "../lib/hamish";
+import { hamish, readPref, useAnnotationActions, useAnnotations, useBook, usePage, writePref } from "../lib/hamish";
 
 interface TocEntry {
   text: string;
@@ -32,6 +34,37 @@ const usePref = <T,>({ key, fallback }: { key: string; fallback: T }) => {
     [key],
   );
   return [value, update] as const;
+};
+
+type Toolbar =
+  | { mode: "selection"; span: Span; rect: DOMRect; text: string }
+  | { mode: "highlight"; highlight: Highlight; rect: DOMRect };
+
+interface NoteEditor {
+  note: Note | null;
+  span: Span;
+  rect: DOMRect;
+}
+
+const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
+
+/** Scrolls a span into view and briefly tints its words, for jumping from the panel (and later, AI citations). */
+const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) => {
+  if (!root) return;
+  const words = [...root.querySelectorAll<HTMLElement>(`[data-part="${span.part}"][data-w]`)].filter((el) => {
+    const line = Number(el.dataset.line);
+    const word = Number(el.dataset.w);
+    const afterStart = line > span.start.line || (line === span.start.line && word >= span.start.word);
+    const beforeEnd = line < span.end.line || (line === span.end.line && word <= span.end.word);
+    return afterStart && beforeEnd;
+  });
+  words[0]?.scrollIntoView({ block: "center", behavior: "smooth" });
+  for (const el of words) {
+    el.animate(
+      [{ boxShadow: "inset 0 -0.6em 0 var(--color-accent-soft)" }, { boxShadow: "inset 0 -0.6em 0 transparent" }],
+      { duration: 1600, easing: "ease-out" },
+    );
+  }
 };
 
 const ContentsRail = ({ entries, current, onGo }: { entries: TocEntry[]; current: number; onGo: (position: number) => void }) => {
@@ -75,42 +108,6 @@ const DisplayMenu = ({ showHarakat, onShowHarakat }: { showHarakat: boolean; onS
   </div>
 );
 
-const PageView = ({ stored, showHarakat }: { stored: StoredPage; showHarakat: boolean }) => {
-  const t = (s: string) => (showHarakat ? s : stripHarakat(s));
-  const { page } = stored;
-  return (
-    <article className="mx-auto flex w-160 flex-col pb-24">
-      <div className="mb-4 flex items-baseline justify-between border-b border-line pb-4 text-ink-3" dir="rtl">
-        <span className="ar text-ar-small">{t(page.header ?? "")}</span>
-        <span className="ar text-ar-small">{arabicNumber(stored.number ?? stored.position)}</span>
-      </div>
-      {page.matn.length === 0 && <p className="py-12 text-center text-sm text-ink-3">This page has no main text.</p>}
-      {page.matn.map((b) =>
-        b.kind === "heading" ? (
-          <h2 key={b.line} data-line={b.line} className={cx("ar my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-body")}>
-            {t(b.text)}
-          </h2>
-        ) : (
-          <p key={b.line} data-line={b.line} className="ar whitespace-pre-line text-right text-ar-reading">
-            {t(b.text)}
-          </p>
-        ),
-      )}
-      {page.hashiya.length > 0 && (
-        <section className="mt-8 flex flex-col gap-2 border-t border-line pt-4" dir="rtl">
-          <h3 className="ar text-ar-small font-bold text-ink-3">الحاشية</h3>
-          {page.hashiya.map((f, i) => (
-            <p key={`${f.marker ?? "u"}-${i}`} data-footnote={f.marker ?? ""} className="ar text-right text-ar-small text-ink-2">
-              {f.marker && `(${f.marker}) `}
-              {t(f.text)}
-            </p>
-          ))}
-        </section>
-      )}
-    </article>
-  );
-};
-
 export const ReaderRoute = () => {
   const { bookId = "" } = useParams();
   const [search, setSearch] = useSearchParams();
@@ -118,11 +115,20 @@ export const ReaderRoute = () => {
   const [contentsOpen, setContentsOpen] = usePref({ key: "reader.contentsOpen", fallback: true });
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = usePref({ key: "reader.panelOpen", fallback: false });
+  const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
+  const [toolbar, setToolbar] = useState<Toolbar | null>(null);
+  const [noteEditor, setNoteEditor] = useState<NoteEditor | null>(null);
+  const pageRoot = useRef<HTMLDivElement>(null);
+  const pointerInNote = useRef(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const total = book.data?.pageCount ?? 0;
   const fromUrl = Number(search.get("p"));
   const position = fromUrl >= 1 ? fromUrl : (book.data?.progress?.position ?? 1);
   const page = usePage({ bookId, position });
+  const annotations = useAnnotations({ bookId, position });
+  const actions = useAnnotationActions({ bookId, position });
   const toc = useMemo(() => (book.data ? tableOfContents(book.data) : []), [book.data]);
 
   const go = useCallback(
@@ -132,6 +138,59 @@ export const ReaderRoute = () => {
     },
     [total, setSearch],
   );
+
+  const dismiss = useCallback(() => {
+    setToolbar(null);
+    setNoteEditor(null);
+  }, []);
+
+  useEffect(dismiss, [position, dismiss]);
+
+  const scheduleNoteClose = () => {
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => {
+      if (!pointerInNote.current && !focusInNoteEditor()) setNoteEditor(null);
+    }, 300);
+  };
+
+  const onWordHover = (target: WordTarget, note: Note | null) => {
+    if (!note) {
+      if (noteEditor) scheduleNoteClose();
+      return;
+    }
+    clearTimeout(closeTimer.current);
+    if (toolbar || focusInNoteEditor() || noteEditor?.note?.id === note.id) return;
+    setNoteEditor({ note, span: note.span, rect: target.element.getBoundingClientRect() });
+  };
+
+  const onWordClick = (target: WordTarget, highlight: Highlight | null) => {
+    if (!highlight || !window.getSelection()?.isCollapsed) return;
+    setNoteEditor(null);
+    setToolbar({ mode: "highlight", highlight, rect: target.element.getBoundingClientRect() });
+  };
+
+  const onSelectionEnd = () => {
+    const root = pageRoot.current;
+    const picked = root && spanFromSelection(root);
+    if (!picked) {
+      if (toolbar?.mode === "selection") setToolbar(null);
+      return;
+    }
+    setNoteEditor(null);
+    setToolbar({ mode: "selection", ...picked, text: window.getSelection()?.toString() ?? "" });
+  };
+
+  const finishToolbar = () => {
+    setToolbar(null);
+    window.getSelection()?.removeAllRanges();
+  };
+
+  const openNoteFromToolbar = () => {
+    if (!toolbar) return;
+    const span = toolbar.mode === "selection" ? toolbar.span : toolbar.highlight.span;
+    setNoteEditor({ note: null, span, rect: toolbar.rect });
+    finishToolbar();
+  };
 
   useEffect(() => {
     if (book.data && position >= 1 && position <= total) {
@@ -146,11 +205,14 @@ export const ReaderRoute = () => {
       if (e.key === "ArrowLeft" || e.key === "PageDown") go(position + 1);
       else if (e.key === "ArrowRight" || e.key === "PageUp") go(position - 1);
       else if (e.key.toLowerCase() === "h" && !e.metaKey && !e.ctrlKey) setShowHarakat(!showHarakat);
-      else if (e.key === "Escape") setMenuOpen(false);
+      else if (e.key === "Escape") {
+        setMenuOpen(false);
+        dismiss();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [go, position, showHarakat, setShowHarakat]);
+  }, [go, position, showHarakat, setShowHarakat, dismiss]);
 
   if (book.isSuccess && book.data === null) {
     return (
@@ -196,13 +258,30 @@ export const ReaderRoute = () => {
           <IconButton icon={Type} label="Text display" selected={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
           {menuOpen && <DisplayMenu showHarakat={showHarakat} onShowHarakat={setShowHarakat} />}
         </div>
+        <div className="mx-2 h-6 w-px bg-line" />
+        <IconButton
+          icon={NotebookPen}
+          label={panelOpen ? "Hide highlights and notes" : "Show highlights and notes"}
+          selected={panelOpen}
+          onClick={() => setPanelOpen(!panelOpen)}
+        />
       </header>
 
       <div className="flex min-h-0 flex-1">
         {contentsOpen && <ContentsRail entries={toc} current={position} onGo={go} />}
-        <div className="min-w-0 flex-1 overflow-y-auto px-12 py-10" onMouseDown={() => setMenuOpen(false)}>
+        <div
+          ref={pageRoot}
+          className="min-w-0 flex-1 overflow-y-auto px-12 py-10"
+          onMouseDown={() => {
+            setMenuOpen(false);
+            dismiss();
+          }}
+          onMouseUp={onSelectionEnd}
+          onMouseLeave={() => noteEditor && scheduleNoteClose()}
+          onScroll={() => toolbar && setToolbar(null)}
+        >
           {page.isPending && (
-            <div className="mx-auto flex w-160 flex-col gap-4">
+            <div className="mx-auto flex w-full max-w-160 flex-col gap-4">
               <Skeleton className="h-4 w-full" />
               {[0, 1, 2, 3].map((i) => (
                 <Skeleton key={i} className="h-8 w-full" />
@@ -211,9 +290,65 @@ export const ReaderRoute = () => {
           )}
           {page.error && <p className="text-center text-sm text-danger">Couldn't open this page: {page.error.message}</p>}
           {page.data === null && book.data && <p className="text-center text-sm text-ink-3">This book has no pages yet. Sync it from the Library.</p>}
-          {page.data && <PageView stored={page.data} showHarakat={showHarakat} />}
+          {page.data && (
+            <PageView
+              stored={page.data}
+              annotations={annotations.data ?? { highlights: [], notes: [] }}
+              showHarakat={showHarakat}
+              onWordHover={onWordHover}
+              onWordClick={onWordClick}
+            />
+          )}
         </div>
+        {panelOpen && (
+          <AnnotationsPanel
+            tab={panelTab}
+            onTab={setPanelTab}
+            annotations={annotations.data}
+            onClose={() => setPanelOpen(false)}
+            onGoTo={(span) => revealSpan({ root: pageRoot.current, span })}
+            onRemoveHighlight={(id) => void actions.removeHighlight(id)}
+            onDeleteNote={(id) => void actions.deleteNote(id)}
+          />
+        )}
       </div>
+
+      {toolbar && (
+        <SelectionToolbar
+          rect={toolbar.rect}
+          mode={toolbar.mode}
+          onHighlight={(color) => {
+            if (toolbar.mode === "selection") void actions.addHighlight({ span: toolbar.span, color });
+            finishToolbar();
+          }}
+          onRemoveHighlight={() => {
+            if (toolbar.mode === "highlight") void actions.removeHighlight(toolbar.highlight.id);
+            finishToolbar();
+          }}
+          onNote={openNoteFromToolbar}
+          onCopy={() => {
+            if (toolbar.mode === "selection") void navigator.clipboard.writeText(toolbar.text);
+            finishToolbar();
+          }}
+        />
+      )}
+      {noteEditor && (
+        <NotePopover
+          key={noteEditor.note?.id ?? "new"}
+          rect={noteEditor.rect}
+          note={noteEditor.note}
+          lineLabel={spanLabel(noteEditor.span).toLowerCase()}
+          onCreate={(body) => actions.addNote({ span: noteEditor.span, body })}
+          onUpdate={actions.updateNote}
+          onDelete={actions.deleteNote}
+          onClose={() => setNoteEditor(null)}
+          onPointerInside={(inside) => {
+            pointerInNote.current = inside;
+            if (inside) clearTimeout(closeTimer.current);
+            else scheduleNoteClose();
+          }}
+        />
+      )}
     </div>
   );
 };

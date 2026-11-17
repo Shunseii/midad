@@ -2,6 +2,7 @@ import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import type { HamishApi } from "../shared/ipc";
+import { createAnnotations } from "./annotations";
 import { type CorpusSource, createCorpusClient } from "./corpus";
 import { createLibrary } from "./library";
 import { createSettings } from "./settings";
@@ -25,7 +26,9 @@ const corpus: CorpusSource = {
   exportBook: (id) => corpusClient().exportBook(id),
 };
 
-const library = createLibrary({ db: new DatabaseSync(join(userData, "hamish.db")), corpus });
+const db = new DatabaseSync(join(userData, "hamish.db"));
+const library = createLibrary({ db, corpus });
+const annotations = createAnnotations({ db });
 
 const handlers: HamishApi = {
   "settings.get": async () => settings.get(),
@@ -49,6 +52,12 @@ const handlers: HamishApi = {
   "library.previewSync": (input) => library.previewSync(input),
   "library.sync": (input) => library.syncBook(input),
   "library.setProgress": (input) => library.setProgress(input),
+  "annotations.list": (input) => annotations.listForPage(input),
+  "highlights.add": (input) => annotations.addHighlight(input),
+  "highlights.remove": (input) => annotations.removeHighlight(input),
+  "notes.add": (input) => annotations.addNote(input),
+  "notes.update": (input) => annotations.updateNote(input),
+  "notes.delete": (input) => annotations.deleteNote(input),
 };
 
 for (const [channel, handler] of Object.entries(handlers)) {

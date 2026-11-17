@@ -1,3 +1,4 @@
+import type { HighlightColor, Highlight, Note, PageAnnotations, Span } from "./annotations";
 import type { CorpusBookListing } from "./corpus";
 import type {
   BookDetail,
@@ -30,6 +31,12 @@ export interface HamishApi {
   "library.previewSync": (input: { bookId: string }) => Promise<SyncPreview>;
   "library.sync": (input: SyncInput) => Promise<SyncResult>;
   "library.setProgress": (input: { bookId: string; position: number }) => Promise<void>;
+  "annotations.list": (input: { bookId: string; position: number }) => Promise<PageAnnotations>;
+  "highlights.add": (input: { bookId: string; position: number; span: Span; color: HighlightColor }) => Promise<Highlight>;
+  "highlights.remove": (input: { id: string }) => Promise<void>;
+  "notes.add": (input: { bookId: string; position: number; span: Span; body: string }) => Promise<Note>;
+  "notes.update": (input: { id: string; body: string }) => Promise<void>;
+  "notes.delete": (input: { id: string }) => Promise<void>;
 }
 
 export type Channel = keyof HamishApi;
@@ -46,4 +53,10 @@ export const CHANNELS = [
   "library.previewSync",
   "library.sync",
   "library.setProgress",
+  "annotations.list",
+  "highlights.add",
+  "highlights.remove",
+  "notes.add",
+  "notes.update",
+  "notes.delete",
 ] as const satisfies readonly Channel[];
