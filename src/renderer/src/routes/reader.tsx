@@ -8,9 +8,12 @@ import { NotePopover, SelectionToolbar } from "../components/annotation-popovers
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { letterAtSelectionStart, PageView, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
+import { arabicNumber } from "../lib/format";
 import { hamish, readPref, useAnnotationActions, useAnnotations, useBook, usePage, writePref } from "../lib/hamish";
 
 interface TocEntry {
+  /** The page number printed in the book, when the page has one. */
+  number: number | null;
   text: string;
   level: number;
   position: number;
@@ -18,11 +21,13 @@ interface TocEntry {
 
 /** Chapter headings across the book; falls back to running headers for books without headings. */
 const tableOfContents = (book: BookDetail): TocEntry[] => {
-  const headings = book.pages.flatMap((p) => p.headings.map((h) => ({ text: h.text, level: h.level, position: p.position })));
+  const headings = book.pages.flatMap((p) =>
+    p.headings.map((h) => ({ text: h.text, level: h.level, position: p.position, number: p.number })),
+  );
   if (headings.length > 0) return headings;
   return book.pages
     .filter((p, i) => p.header && p.header !== book.pages[i - 1]?.header)
-    .map((p) => ({ text: p.header ?? "", level: 2, position: p.position }));
+    .map((p) => ({ text: p.header ?? "", level: 2, position: p.position, number: p.number }));
 };
 
 const usePref = <T,>({ key, fallback }: { key: string; fallback: T }) => {
@@ -85,7 +90,7 @@ const ContentsRail = ({ entries, current, onGo }: { entries: TocEntry[]; current
             e.level > 2 && "pl-5",
           )}
         >
-          <span className="text-xs tabular-nums">{e.position}</span>
+          <span className="ar text-ar-small text-ink-3">{arabicNumber(e.number ?? e.position)}</span>
           <span className="ar flex-1 text-right text-ar-small">{e.text}</span>
         </button>
       ))}
@@ -329,11 +334,11 @@ export const ReaderRoute = () => {
           )}
         </div>
         <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1">
-          <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
+          <IconButton icon={ChevronLeft} label="Next page" onClick={() => go(position + 1)} disabled={position >= total} />
           <span className="min-w-16 text-center text-sm font-medium tabular-nums">
             {position} / {total || "–"}
           </span>
-          <IconButton icon={ChevronLeft} label="Next page" onClick={() => go(position + 1)} disabled={position >= total} />
+          <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
         </div>
         <div className="flex-1" />
         <div className="relative">
