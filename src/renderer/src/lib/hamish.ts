@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { HighlightColor, PageAnnotations, Span } from "../../../shared/annotations";
+import type { HighlightColor, LetterRef, PageAnnotations, Span } from "../../../shared/annotations";
 import type { HamishApi, SyncInput } from "../../../shared/ipc";
 
 declare global {
@@ -98,6 +98,14 @@ export const useAnnotationActions = ({ bookId, position }: { bookId: string; pos
     },
     deleteNote: async (id: string) => {
       await hamish["notes.delete"]({ id });
+      await refresh();
+    },
+    setHarakat: async ({ marks, ...ref }: LetterRef & { marks: string }) => {
+      await hamish["harakat.set"]({ bookId, position, marks, ...ref });
+      await refresh();
+    },
+    removeHarakat: async (ref: LetterRef) => {
+      await hamish["harakat.remove"]({ bookId, position, ...ref });
       await refresh();
     },
   };

@@ -1,4 +1,4 @@
-import type { HighlightColor, Highlight, Note, PageAnnotations, Span } from "./annotations";
+import type { Highlight, HighlightColor, LetterRef, Note, PageAnnotations, Span } from "./annotations";
 import type { CorpusBookListing } from "./corpus";
 import type {
   BookDetail,
@@ -37,6 +37,8 @@ export interface HamishApi {
   "notes.add": (input: { bookId: string; position: number; span: Span; body: string }) => Promise<Note>;
   "notes.update": (input: { id: string; body: string }) => Promise<void>;
   "notes.delete": (input: { id: string }) => Promise<void>;
+  "harakat.set": (input: LetterRef & { bookId: string; position: number; marks: string }) => Promise<void>;
+  "harakat.remove": (input: LetterRef & { bookId: string; position: number }) => Promise<void>;
 }
 
 export type Channel = keyof HamishApi;
@@ -59,4 +61,6 @@ export const CHANNELS = [
   "notes.add",
   "notes.update",
   "notes.delete",
+  "harakat.set",
+  "harakat.remove",
 ] as const satisfies readonly Channel[];

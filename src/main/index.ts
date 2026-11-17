@@ -58,6 +58,8 @@ const handlers: HamishApi = {
   "notes.add": (input) => annotations.addNote(input),
   "notes.update": (input) => annotations.updateNote(input),
   "notes.delete": (input) => annotations.deleteNote(input),
+  "harakat.set": (input) => annotations.setHarakat(input),
+  "harakat.remove": (input) => annotations.removeHarakat(input),
 };
 
 for (const [channel, handler] of Object.entries(handlers)) {

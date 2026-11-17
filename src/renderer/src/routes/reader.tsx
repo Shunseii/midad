@@ -1,11 +1,12 @@
 import { ArrowLeft, ChevronLeft, ChevronRight, NotebookPen, PanelLeftClose, PanelLeftOpen, Type } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
-import type { Highlight, Note, Span } from "../../../shared/annotations";
-import type { BookDetail } from "../../../shared/library";
+import { type Highlight, type LetterRef, lineText, type Note, type Span, wordsOf } from "../../../shared/annotations";
+import { lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
+import type { BookDetail, StoredPage } from "../../../shared/library";
 import { NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
-import { PageView, spanFromSelection, type WordTarget } from "../components/page-view";
+import { letterAtSelectionStart, PageView, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
 import { hamish, readPref, useAnnotationActions, useAnnotations, useBook, usePage, writePref } from "../lib/hamish";
 
@@ -92,21 +93,54 @@ const ContentsRail = ({ entries, current, onGo }: { entries: TocEntry[]; current
   );
 };
 
-const DisplayMenu = ({ showHarakat, onShowHarakat }: { showHarakat: boolean; onShowHarakat: (v: boolean) => void }) => (
-  <div className="absolute right-0 top-11 z-40 flex w-76 flex-col gap-3.5 rounded-xl border border-line bg-surface p-4 shadow-lg">
+const DisplayMenu = ({
+  showHarakat,
+  onShowHarakat,
+  showMine,
+  onShowMine,
+}: {
+  showHarakat: boolean;
+  onShowHarakat: (v: boolean) => void;
+  showMine: boolean;
+  onShowMine: (v: boolean) => void;
+}) => (
+  <div className="absolute right-0 top-11 z-40 flex w-80 flex-col gap-3.5 rounded-xl border border-line bg-surface p-4 shadow-lg">
     <span className="text-sm font-medium">Text display</span>
     <div className="flex items-center gap-3">
       <div className="flex flex-1 flex-col gap-0.5">
         <span className="text-sm font-medium">Harakat</span>
-        <span className="text-xs text-ink-3">Vowel marks in the text</span>
+        <span className="text-xs text-ink-3">The corpus's marks and yours</span>
       </div>
       <Kbd>H</Kbd>
       <Switch label="Show harakat" checked={showHarakat} onChange={onShowHarakat} />
     </div>
+    <div className={cx("ml-1 flex items-center gap-3 border-l-2 border-line pl-3", !showHarakat && "opacity-45")}>
+      <div className="flex flex-1 flex-col gap-0.5">
+        <span className="text-sm font-medium">My harakat</span>
+        <span className="text-xs text-ink-3">
+          Marks you added, in <span className="text-ink-added">red</span>
+        </span>
+      </div>
+      <Switch label="Show my harakat" checked={showMine} onChange={onShowMine} disabled={!showHarakat} />
+    </div>
     <div className="h-px bg-line" />
-    <p className="text-xs text-ink-3">The corpus text is never changed.</p>
+    <p className="text-xs text-ink-3">
+      Click a letter and type a haraka with the Arabic keyboard layout. Your marks are stored separately; the corpus text is never changed.
+    </p>
   </div>
 );
+
+/** Moves the typing target by `delta` letters, crossing into neighbouring words on the same line. */
+const moveTarget = ({ page, target, delta }: { page: StoredPage["page"]; target: LetterRef; delta: number }): LetterRef => {
+  const text = lineText({ page, part: target.part, line: target.line }) ?? "";
+  const counts = wordsOf(text).map((w) => lettersOf(w).length);
+  const letter = target.letter + delta;
+  if (letter >= 1 && letter <= (counts[target.word - 1] ?? 0)) return { ...target, letter };
+  const word = target.word + delta;
+  const size = counts[word - 1];
+  if (!size) return target;
+  return { ...target, word, letter: delta > 0 ? 1 : size };
+};
 
 export const ReaderRoute = () => {
   const { bookId = "" } = useParams();
@@ -114,6 +148,8 @@ export const ReaderRoute = () => {
   const book = useBook(bookId);
   const [contentsOpen, setContentsOpen] = usePref({ key: "reader.contentsOpen", fallback: true });
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
+  const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
+  const [target, setTarget] = useState<LetterRef | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [panelOpen, setPanelOpen] = usePref({ key: "reader.panelOpen", fallback: false });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
@@ -142,6 +178,7 @@ export const ReaderRoute = () => {
   const dismiss = useCallback(() => {
     setToolbar(null);
     setNoteEditor(null);
+    setTarget(null);
   }, []);
 
   useEffect(dismiss, [position, dismiss]);
@@ -163,10 +200,12 @@ export const ReaderRoute = () => {
     setNoteEditor({ note, span: note.span, rect: target.element.getBoundingClientRect() });
   };
 
-  const onWordClick = (target: WordTarget, highlight: Highlight | null) => {
-    if (!highlight || !window.getSelection()?.isCollapsed) return;
+  const onWordClick = (word: WordTarget, highlight: Highlight | null) => {
+    if (!window.getSelection()?.isCollapsed) return;
+    if (word.letter !== null) setTarget({ part: word.part, line: word.ref.line, word: word.ref.word, letter: word.letter });
+    if (!highlight) return;
     setNoteEditor(null);
-    setToolbar({ mode: "highlight", highlight, rect: target.element.getBoundingClientRect() });
+    setToolbar({ mode: "highlight", highlight, rect: word.element.getBoundingClientRect() });
   };
 
   const onSelectionEnd = () => {
@@ -178,6 +217,21 @@ export const ReaderRoute = () => {
     }
     setNoteEditor(null);
     setToolbar({ mode: "selection", ...picked, text: window.getSelection()?.toString() ?? "" });
+    const { start, end, part } = picked.span;
+    if (start.line === end.line && start.word === end.word && root) {
+      const letter = letterAtSelectionStart(root);
+      if (letter !== null) setTarget({ part, line: start.line, word: start.word, letter });
+    }
+  };
+
+  const mineAt = (ref: LetterRef) =>
+    annotations.data?.harakat.find(
+      (h) => !h.stale && h.part === ref.part && h.line === ref.line && h.word === ref.word && h.letter === ref.letter,
+    )?.marks ?? "";
+
+  const typeMark = (ref: LetterRef, typed: string) => {
+    const marks = mergeMarks({ existing: mineAt(ref), typed });
+    void (marks ? actions.setHarakat({ ...ref, marks }) : actions.removeHarakat(ref));
   };
 
   const finishToolbar = () => {
@@ -198,21 +252,49 @@ export const ReaderRoute = () => {
     }
   }, [book.data, bookId, position, total]);
 
+  const keyHandler = useRef<(e: KeyboardEvent) => void>(() => {});
+  keyHandler.current = (e: KeyboardEvent) => {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (target && page.data && letterKeys({ e, target, page: page.data.page })) {
+      e.preventDefault();
+      return;
+    }
+    pageKeys(e);
+  };
+
+  /** Keys while a letter is targeted. Returns false for keys it leaves to the page. */
+  const letterKeys = ({ e, target, page }: { e: KeyboardEvent; target: LetterRef; page: StoredPage["page"] }) => {
+    const mark = markFromKey(e);
+    if (mark) typeMark(target, mark);
+    else if (e.key === "Backspace" || e.key === "Delete") {
+      if (mineAt(target)) void actions.removeHarakat(target);
+    }
+    // Right to left: the next letter is to the left.
+    else if (e.key === "ArrowLeft") setTarget(moveTarget({ page, target, delta: 1 }));
+    else if (e.key === "ArrowRight") setTarget(moveTarget({ page, target, delta: -1 }));
+    else if (e.key === "Escape") setTarget(null);
+    else return false;
+    return true;
+  };
+
+  const pageKeys = (e: KeyboardEvent) => {
+    // Right-to-left book: the next page is to the left.
+    if (e.key === "ArrowLeft" || e.key === "PageDown") go(position + 1);
+    else if (e.key === "ArrowRight" || e.key === "PageUp") go(position - 1);
+    else if (e.code === "KeyH" && !e.shiftKey) setShowHarakat(!showHarakat);
+    else if (e.key === "Escape") {
+      setMenuOpen(false);
+      dismiss();
+    }
+  };
+
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      // Right-to-left book: the next page is to the left.
-      if (e.key === "ArrowLeft" || e.key === "PageDown") go(position + 1);
-      else if (e.key === "ArrowRight" || e.key === "PageUp") go(position - 1);
-      else if (e.key.toLowerCase() === "h" && !e.metaKey && !e.ctrlKey) setShowHarakat(!showHarakat);
-      else if (e.key === "Escape") {
-        setMenuOpen(false);
-        dismiss();
-      }
-    };
+    const onKey = (e: KeyboardEvent) => keyHandler.current(e);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [go, position, showHarakat, setShowHarakat, dismiss]);
+  }, []);
+
 
   if (book.isSuccess && book.data === null) {
     return (
@@ -256,7 +338,9 @@ export const ReaderRoute = () => {
         <div className="flex-1" />
         <div className="relative">
           <IconButton icon={Type} label="Text display" selected={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && <DisplayMenu showHarakat={showHarakat} onShowHarakat={setShowHarakat} />}
+          {menuOpen && (
+            <DisplayMenu showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
+          )}
         </div>
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton
@@ -294,7 +378,7 @@ export const ReaderRoute = () => {
             <PageView
               stored={page.data}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
-              showHarakat={showHarakat}
+              display={{ showHarakat, showMine, target }}
               onWordHover={onWordHover}
               onWordClick={onWordClick}
             />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { displayMarks, lettersOf, MARK, markFromKey, mergeMarks, normalizeMarks } from "./harakat";
+import { displayMarks, inContext, lettersOf, MARK, markFromKey, mergeMarks, normalizeMarks } from "./harakat";
 
 const { fatha, kasra, damma, shadda, sukun } = MARK;
 
@@ -77,5 +77,28 @@ describe("markFromKey", () => {
   it("ignores unshifted letters and other keys", () => {
     expect(markFromKey({ key: "a", code: "KeyA", shiftKey: false })).toBeNull();
     expect(markFromKey({ key: "Z", code: "KeyZ", shiftKey: true })).toBeNull();
+  });
+});
+
+describe("inContext", () => {
+  const ZWJ = String.fromCodePoint(0x200d);
+  // ا ل د ل ا ل ة
+  const letters = lettersOf("الدلالة");
+  const at = (index: number) => inContext({ letters, index });
+
+  it("joins a letter to the neighbours it connects to", () => {
+    expect(at(1)).toEqual({ before: "", after: ZWJ });
+    // ي ك و ن: the kaf joins both ways.
+    expect(inContext({ letters: lettersOf("يكون"), index: 1 })).toEqual({ before: ZWJ, after: ZWJ });
+  });
+
+  it("doesn't join after a letter that only connects backwards", () => {
+    expect(at(2)).toEqual({ before: ZWJ, after: "" });
+    expect(at(3)).toEqual({ before: "", after: ZWJ });
+  });
+
+  it("doesn't join past the ends of the word", () => {
+    expect(at(0)).toEqual({ before: "", after: "" });
+    expect(at(6)).toEqual({ before: ZWJ, after: "" });
   });
 });

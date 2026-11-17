@@ -77,6 +77,27 @@ export const displayMarks = ({ corpus, mine }: { corpus: string; mine: string })
   return { corpus: kept, mine };
 };
 
+const ZWJ = String.fromCodePoint(0x200d);
+
+// Letters that join only to the letter before them (Unicode joining type R), and ones that never join (U).
+const JOINS_BEFORE_ONLY = new Set([..."اأإآٱدذرزوؤة"]);
+const NEVER_JOINS = new Set([..."ء"]);
+
+const joinsBefore = (ch: string | undefined) => ch !== undefined && !NEVER_JOINS.has(ch) && /\p{Script=Arabic}/u.test(ch) && !isMark(ch);
+const joinsAfter = (ch: string | undefined) => joinsBefore(ch) && !JOINS_BEFORE_ONLY.has(ch ?? "");
+
+/**
+ * The letter in the shape it has inside its word, as a standalone string:
+ * zero-width joiners stand in for the neighbours it connects to.
+ */
+export const inContext = ({ letters, index }: { letters: Letter[]; index: number }): { before: string; after: string } => {
+  const self = letters[index]?.base;
+  return {
+    before: joinsAfter(letters[index - 1]?.base) && joinsBefore(self) ? ZWJ : "",
+    after: joinsAfter(self) && joinsBefore(letters[index + 1]?.base) ? ZWJ : "",
+  };
+};
+
 /**
  * Physical keys of the Arabic (101) layout, for typing harakat when the OS
  * layout isn't Arabic. All are shifted.
