@@ -23,8 +23,8 @@
   --color-mark-2: #C9E4C5;
   --color-mark-3: #F2C9C0;
   --color-mark-4: #C8D8F0;
-  --font-display: "Source Serif 4", serif;
-  --font-body: "Inter", sans-serif;
+  --font-display: "Source Serif 4 Variable", "Source Serif 4", serif;
+  --font-body: "Inter Variable", "Inter", sans-serif;
   --font-ar: "Noto Naskh Arabic", serif;
 }
 

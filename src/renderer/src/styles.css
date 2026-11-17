@@ -1,0 +1,52 @@
+@import "../../styles/tokens.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/source-serif-4";
+@import "@fontsource/noto-naskh-arabic/400.css";
+@import "@fontsource/noto-naskh-arabic/700.css";
+
+/* Type scale from designs/hamish-components.lamsa.json (Type scale board). */
+@theme {
+  --text-display: 2rem;
+  --text-display--line-height: 2.5rem;
+  --text-title: 1.5rem;
+  --text-title--line-height: 2rem;
+  --text-heading: 1.0625rem;
+  --text-heading--line-height: 1.5rem;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.5rem;
+  --text-small: 0.8125rem;
+  --text-small--line-height: 1.25rem;
+  --text-overline: 0.6875rem;
+  --text-overline--line-height: 1rem;
+  --text-ar-display: 1.875rem;
+  --text-ar-display--line-height: 3.25rem;
+  --text-ar-reading: 1.625rem;
+  --text-ar-reading--line-height: 3.25rem;
+  --text-ar-body: 1.25rem;
+  --text-ar-body--line-height: 2.25rem;
+  --text-ar-small: 1rem;
+  --text-ar-small--line-height: 1.75rem;
+  --font-mono: ui-monospace, "JetBrains Mono", monospace;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Arabic runs set their own direction per line so mixed text lays out correctly. */
+.ar {
+  font-family: var(--font-ar);
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
