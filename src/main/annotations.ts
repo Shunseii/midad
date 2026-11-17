@@ -5,11 +5,16 @@ import {
   compareSpans,
   type Highlight,
   type HighlightColor,
+  type LetterRef,
+  lineText,
   type Note,
   type PageAnnotations,
   quoteSpan,
   type Span,
+  type UserHarakat,
+  wordsOf,
 } from "../shared/annotations";
+import { lettersOf, normalizeMarks } from "../shared/harakat";
 import type { Footnote, MatnBlock, Page } from "../shared/page";
 
 /**
@@ -43,6 +48,21 @@ CREATE TABLE IF NOT EXISTS notes (
   FOREIGN KEY (book_id, file_id) REFERENCES pages (book_id, file_id) ON DELETE CASCADE
 );
 CREATE INDEX IF NOT EXISTS notes_by_page ON notes (book_id, file_id);
+CREATE TABLE IF NOT EXISTS harakat (
+  id TEXT PRIMARY KEY,
+  book_id TEXT NOT NULL,
+  file_id TEXT NOT NULL,
+  part TEXT NOT NULL,
+  line INTEGER NOT NULL,
+  word INTEGER NOT NULL,
+  letter INTEGER NOT NULL,
+  marks TEXT NOT NULL,
+  base TEXT NOT NULL,
+  author TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  UNIQUE (book_id, file_id, part, line, word, letter),
+  FOREIGN KEY (book_id, file_id) REFERENCES pages (book_id, file_id) ON DELETE CASCADE
+);
 `;
 
 interface AnchoredRow {
@@ -55,6 +75,19 @@ interface AnchoredRow {
 }
 type HighlightRow = AnchoredRow & { color: HighlightColor };
 type NoteRow = AnchoredRow & { body: string; updated_at: number };
+
+interface HarakatRow {
+  id: string;
+  book_id: string;
+  part: LetterRef["part"];
+  line: number;
+  word: number;
+  letter: number;
+  marks: string;
+  base: string;
+  author: Author;
+  created_at: number;
+}
 
 interface PageRow {
   file_id: string;
@@ -77,6 +110,15 @@ const isStale = ({ page, span, quote }: { page: Page; span: Span; quote: string 
     return true;
   }
 };
+
+/** The base letter at a LetterRef, or null when the page has no such letter. */
+const letterAt = ({ page, ref }: { page: Page; ref: LetterRef }): string | null => {
+  const text = lineText({ page, part: ref.part, line: ref.line });
+  const word = text === null ? undefined : wordsOf(text)[ref.word - 1];
+  return (word && lettersOf(word)[ref.letter - 1]?.base) ?? null;
+};
+
+const describeRef = (ref: LetterRef) => `${ref.part} line ${ref.line}, word ${ref.word}, letter ${ref.letter}`;
 
 const requireBody = (body: string): string => {
   const trimmed = body.trim();
@@ -126,7 +168,27 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
       ).map((n): Note => ({ ...anchored({ row: n, page, position }), body: n.body, updatedAt: n.updated_at }));
       const inReadingOrder = (a: { span: Span; createdAt: number }, b: { span: Span; createdAt: number }) =>
         compareSpans(a.span, b.span) || a.createdAt - b.createdAt;
-      return { highlights: highlights.sort(inReadingOrder), notes: notes.sort(inReadingOrder) };
+      const harakat = (
+        db
+          .prepare("SELECT * FROM harakat WHERE book_id = ? AND file_id = ? ORDER BY part, line, word, letter")
+          .all(bookId, row.file_id) as unknown as HarakatRow[]
+      ).map(
+        (h): UserHarakat => ({
+          id: h.id,
+          bookId,
+          position,
+          part: h.part,
+          line: h.line,
+          word: h.word,
+          letter: h.letter,
+          marks: h.marks,
+          base: h.base,
+          stale: letterAt({ page, ref: h }) !== h.base,
+          author: h.author,
+          createdAt: h.created_at,
+        }),
+      );
+      return { highlights: highlights.sort(inReadingOrder), notes: notes.sort(inReadingOrder), harakat };
     },
 
     async addHighlight({
@@ -187,6 +249,34 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
 
     async deleteNote({ id }: { id: string }): Promise<void> {
       deleteOne({ table: "notes", id, label: "note" });
+    },
+
+    /** Sets the reader's marks on one letter, replacing any marks they already put there. */
+    async setHarakat({
+      bookId,
+      position,
+      marks,
+      author = "me",
+      ...ref
+    }: LetterRef & { bookId: string; position: number; marks: string; author?: Author }): Promise<void> {
+      const normalized = normalizeMarks(marks);
+      const row = pageAt({ bookId, position });
+      const base = letterAt({ page: toPage(row), ref });
+      if (base === null) throw new Error(`Page ${position} has no letter at ${describeRef(ref)}.`);
+      db.prepare(
+        `INSERT INTO harakat (id, book_id, file_id, part, line, word, letter, marks, base, author, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT (book_id, file_id, part, line, word, letter)
+         DO UPDATE SET marks = excluded.marks, base = excluded.base, author = excluded.author`,
+      ).run(randomUUID(), bookId, row.file_id, ref.part, ref.line, ref.word, ref.letter, normalized, base, author, now());
+    },
+
+    async removeHarakat({ bookId, position, ...ref }: LetterRef & { bookId: string; position: number }): Promise<void> {
+      const row = pageAt({ bookId, position });
+      const { changes } = db
+        .prepare("DELETE FROM harakat WHERE book_id = ? AND file_id = ? AND part = ? AND line = ? AND word = ? AND letter = ?")
+        .run(bookId, row.file_id, ref.part, ref.line, ref.word, ref.letter);
+      if (changes === 0) throw new Error(`There are no harakat of yours at ${describeRef(ref)} on page ${position}.`);
     },
   };
 };

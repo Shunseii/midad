@@ -166,3 +166,56 @@ describe("after sync", () => {
     expect((await onPage()).highlights[0]?.stale).toBe(true);
   });
 });
+
+describe("harakat", () => {
+  const FATHA = String.fromCodePoint(0x064e);
+  const KASRA = String.fromCodePoint(0x0650);
+  const SHADDA = String.fromCodePoint(0x0651);
+  // Matn line 2, word 3 is اللفظ: letters ا ل ل ف ظ.
+  const at = { bookId: "b1", position: 1, part: "matn" as const, line: 2, word: 3 };
+
+  it("lists marks set on a letter, with the letter they sit on", async () => {
+    await annotations.setHarakat({ ...at, letter: 4, marks: FATHA });
+    expect((await onPage()).harakat).toEqual([
+      expect.objectContaining({ part: "matn", line: 2, word: 3, letter: 4, marks: FATHA, base: "ف", stale: false, author: "me" }),
+    ]);
+  });
+
+  it("replaces the marks on a letter that already has some", async () => {
+    await annotations.setHarakat({ ...at, letter: 3, marks: FATHA });
+    await annotations.setHarakat({ ...at, letter: 3, marks: `${KASRA}${SHADDA}`, author: "agent" });
+    const { harakat } = await onPage();
+    expect(harakat).toHaveLength(1);
+    expect(harakat[0]).toMatchObject({ marks: `${SHADDA}${KASRA}`, author: "agent" });
+  });
+
+  it.each([
+    ["letter zero", { letter: 0, marks: FATHA }, /no letter/],
+    ["a letter past the end of the word", { letter: 6, marks: FATHA }, /no letter/],
+    ["a word that doesn't exist", { word: 9, letter: 1, marks: FATHA }, /no letter/],
+    ["something that isn't a haraka", { letter: 1, marks: "ب" }, /isn't a haraka/],
+    ["two vowels", { letter: 1, marks: `${FATHA}${KASRA}` }, /at most one/],
+  ])("refuses %s", async (_label, over, message) => {
+    await expect(annotations.setHarakat({ ...at, ...over })).rejects.toThrow(message);
+    expect((await onPage()).harakat).toHaveLength(0);
+  });
+
+  it("removes a letter's marks, and refuses a letter without any", async () => {
+    await annotations.setHarakat({ ...at, letter: 2, marks: FATHA });
+    await annotations.removeHarakat({ ...at, letter: 2 });
+    expect((await onPage()).harakat).toHaveLength(0);
+    await expect(annotations.removeHarakat({ ...at, letter: 2 })).rejects.toThrow(/no harakat/i);
+  });
+
+  it("stays fresh when an overwrite only adds corpus harakat, and goes stale when the letter changes", async () => {
+    await annotations.setHarakat({ ...at, letter: 4, marks: FATHA });
+    await annotations.setHarakat({ ...at, word: 1, letter: 2, marks: FATHA });
+    corpus.files[0] = page("f1", 1, PAGE_1.replace("الكلام هو اللفظ", `الكتاب هو اللف${KASRA}ظ`));
+    await library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f1"] });
+    const byWord = Object.fromEntries((await onPage()).harakat.map((h) => [h.word, h.stale]));
+    expect(byWord).toEqual({ 1: false, 3: false });
+    corpus.files[0] = page("f1", 1, PAGE_1.replace("اللفظ", "اللقظ"));
+    await library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f1"] });
+    expect((await onPage()).harakat.find((h) => h.word === 3)?.stale).toBe(true);
+  });
+});

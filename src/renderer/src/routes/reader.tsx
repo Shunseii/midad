@@ -293,7 +293,7 @@ export const ReaderRoute = () => {
           {page.data && (
             <PageView
               stored={page.data}
-              annotations={annotations.data ?? { highlights: [], notes: [] }}
+              annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
               showHarakat={showHarakat}
               onWordHover={onWordHover}
               onWordClick={onWordClick}

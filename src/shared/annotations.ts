@@ -48,9 +48,33 @@ export interface Note extends Anchored {
   updatedAt: number;
 }
 
+/** The reader's marks on one letter (see harakat.ts). */
+export interface LetterRef {
+  part: Part;
+  line: number;
+  word: number;
+  /** 1-based base letter in the word, not counting marks. */
+  letter: number;
+}
+
+export interface UserHarakat extends LetterRef {
+  id: string;
+  bookId: string;
+  position: number;
+  /** Shadda first, then at most one vowel. */
+  marks: string;
+  /** The letter the marks were put on. */
+  base: string;
+  /** True when a sync overwrote the page and that letter is no longer there. */
+  stale: boolean;
+  author: Author;
+  createdAt: number;
+}
+
 export interface PageAnnotations {
   highlights: Highlight[];
   notes: Note[];
+  harakat: UserHarakat[];
 }
 
 export type Token = { kind: "word"; text: string; word: number } | { kind: "space"; text: string };
