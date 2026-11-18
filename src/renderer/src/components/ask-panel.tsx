@@ -1,7 +1,8 @@
 import { ArrowUp, Copy, Languages, Lightbulb, ListTree, NotebookPen, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
-import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type ClipboardEvent, type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Part, Span } from "../../../shared/annotations";
 import { parseCitations, type Segment } from "../../../shared/ask";
+import { copiedPassage } from "../lib/copied";
 import { arabicNumber } from "../lib/format";
 import { hamish } from "../lib/hamish";
 import { Button, IconButton, cx } from "./ui";
@@ -12,9 +13,18 @@ export interface AskSelection {
   position: number;
 }
 
+/** A passage pasted into the question. `span` is set when it was copied from the page. */
+export interface Quote {
+  id: string;
+  text: string;
+  span: Span | null;
+  position: number;
+}
+
 export interface Turn {
   id: string;
   question: string;
+  quotes: Quote[];
   position: number;
   selection: AskSelection | null;
   answer: string;
@@ -48,16 +58,17 @@ export const useAskConversation = (bookId: string) => {
     [update],
   );
 
-  const ask = ({ question, position, selection }: { question: string; position: number; selection: AskSelection | null }) => {
+  const ask = ({ question, position, selection, quotes = [] }: { question: string; position: number; selection: AskSelection | null; quotes?: Quote[] }) => {
     const id = crypto.randomUUID();
     const started = generation.current;
-    setTurns((all) => [...all, { id, question, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }]);
+    setTurns((all) => [...all, { id, question, quotes, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }]);
     hamish["ai.ask"]({
       requestId: id,
       bookId,
       position,
       question,
       selection: selection && position === selection.position ? { span: selection.span, text: selection.text } : undefined,
+      quotes: quotes.map((q) => ({ text: q.text, span: q.position === position ? q.span : null })),
       sessionId: sessionId.current,
     }).then(
       (result) => {
@@ -72,7 +83,7 @@ export const useAskConversation = (bookId: string) => {
   const stop = () => {
     for (const t of turns) if (t.status === "streaming") void hamish["ai.cancel"]({ requestId: t.id });
   };
-  const retry = (turn: Turn) => ask({ question: turn.question, position: turn.position, selection: turn.selection });
+  const retry = (turn: Turn) => ask({ question: turn.question, position: turn.position, selection: turn.selection, quotes: turn.quotes });
   /** Drops the conversation; the next question starts a fresh Claude session. */
   const reset = () => {
     stop();
@@ -132,6 +143,26 @@ const plainAnswer = (text: string) =>
     .join("")
     .trim();
 
+const quoteLabel = (q: Quote) => {
+  if (!q.span) return "Pasted";
+  const { part, start, end } = q.span;
+  const lines = start.line === end.line ? `${start.line}` : `${start.line}–${end.line}`;
+  return `${part === "matn" ? "Line" : "Ḥāshiya"} ${lines}`;
+};
+
+/** A quoted passage in the composer or a sent question. */
+const QuoteBlock = ({ quote, onRemove }: { quote: Quote; onRemove?: () => void }) => (
+  <div className="flex flex-col gap-1 rounded-lg border-r-2 border-accent bg-surface px-3 py-2">
+    <div className="flex items-center gap-1.5 text-xs text-ink-3">
+      <TextQuote aria-hidden className="size-3.5" />
+      {quoteLabel(quote)}
+      <span className="flex-1" />
+      {onRemove && <IconButton icon={X} label="Remove quote" onClick={onRemove} />}
+    </div>
+    <p className="ar line-clamp-4 text-right text-ar-body">{quote.text}</p>
+  </div>
+);
+
 export const AskPanel = ({
   conversation,
   position,
@@ -151,6 +182,7 @@ export const AskPanel = ({
 }) => {
   const { turns, ask, busy, stop, retry, reset } = conversation;
   const [draft, setDraft] = useState("");
+  const [quotes, setQuotes] = useState<Quote[]>([]);
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const end = useRef<HTMLDivElement>(null);
   const activeSelection = selection && selection.position === position ? selection : null;
@@ -161,9 +193,23 @@ export const AskPanel = ({
   }, [lastAnswer, turns.length]);
 
   const send = (question: string) => {
-    if (!question.trim() || busy) return;
-    ask({ question: question.trim(), position, selection: activeSelection });
+    if ((!question.trim() && quotes.length === 0) || busy) return;
+    ask({ question: question.trim() || "Explain this passage.", position, selection: activeSelection, quotes });
     setDraft("");
+    setQuotes([]);
+  };
+
+  // Text copied from the page becomes a quote with its lines; Arabic from elsewhere becomes a plain quote.
+  const onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    const text = e.clipboardData.getData("text/plain");
+    const fromPage = copiedPassage(text);
+    const arabicOnly = /\p{Script=Arabic}/u.test(text) && !/[A-Za-z]/.test(text);
+    if (!fromPage && !arabicOnly) return;
+    e.preventDefault();
+    setQuotes((all) => [
+      ...all,
+      { id: crypto.randomUUID(), text: fromPage?.text ?? text.trim(), span: fromPage?.span ?? null, position: fromPage?.position ?? position },
+    ]);
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -230,9 +276,14 @@ export const AskPanel = ({
 
         {turns.map((turn) => (
           <div key={turn.id} className="flex flex-col gap-3">
-            <p dir="auto" className="max-w-[85%] self-end rounded-xl bg-accent-soft px-3.5 py-2.5 text-body [unicode-bidi:plaintext]">
-              {turn.question}
-            </p>
+            <div className="flex max-w-[85%] flex-col gap-2 self-end rounded-xl bg-accent-soft px-3.5 py-2.5">
+              {turn.quotes.map((q) => (
+                <QuoteBlock key={q.id} quote={q} />
+              ))}
+              <p dir="auto" className="text-body [unicode-bidi:plaintext]">
+                {turn.question}
+              </p>
+            </div>
             {turn.answer && <Answer text={turn.answer} onCite={(c) => onCite({ ...c, position: turn.position })} />}
             {turn.status === "streaming" && (
               <p className="flex items-center gap-2 text-xs text-ink-3">
@@ -269,10 +320,14 @@ export const AskPanel = ({
 
       <div className="shrink-0 p-4 pt-0">
         <div className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-3 focus-within:border-ink-3">
+          {quotes.map((q) => (
+            <QuoteBlock key={q.id} quote={q} onRemove={() => setQuotes((all) => all.filter((x) => x.id !== q.id))} />
+          ))}
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={onKeyDown}
+            onPaste={onPaste}
             rows={2}
             dir="auto"
             placeholder={activeSelection ? "Ask about this passage…" : "Ask about this page…"}
@@ -285,7 +340,7 @@ export const AskPanel = ({
                 Stop
               </Button>
             ) : (
-              <Button size="sm" icon={ArrowUp} disabled={!draft.trim()} onClick={() => send(draft)}>
+              <Button size="sm" icon={ArrowUp} disabled={!draft.trim() && quotes.length === 0} onClick={() => send(draft)}>
                 Ask
               </Button>
             )}

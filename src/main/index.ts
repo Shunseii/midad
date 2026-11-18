@@ -81,11 +81,11 @@ const handlers: HamishApi = {
   "marker.get": (input) => markers.get(input),
   "marker.set": (input) => markers.set(input),
   "marker.clear": (input) => markers.clear(input),
-  "ai.ask": async ({ requestId, bookId, position, question, selection, sessionId }) => {
+  "ai.ask": async ({ requestId, bookId, position, question, selection, quotes, sessionId }) => {
     const book = await library.getBook(bookId);
     const page = await library.getPage({ bookId, position });
     if (!book || !page) throw new Error("That page isn't in the library.");
-    const context = readingContext({ bookId, title: book.title, position, number: page.number, selection });
+    const context = readingContext({ bookId, title: book.title, position, number: page.number, selection, quotes });
     return ask.ask({ requestId, prompt: `${context}\n\n${question}`, sessionId });
   },
   "ai.cancel": async (input) => ask.cancel(input),

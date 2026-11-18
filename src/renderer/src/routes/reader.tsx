@@ -11,6 +11,7 @@ import { type AskSelection, AskPanel, useAskConversation } from "../components/a
 import { ScanPane } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
+import { rememberCopy } from "../lib/copied";
 import { arabicNumber } from "../lib/format";
 import { EMPTY_HISTORY, type History, record, redo, undo } from "../lib/history";
 import { hamish, keys, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/hamish";
@@ -609,6 +610,11 @@ export const ReaderRoute = () => {
           className={cx("@container min-w-0 flex-1 overflow-y-auto overflow-x-hidden", showScan && page.data && "@max-2xl:hidden")}
           onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
+          onCopy={() => {
+            const root = pageRoot.current;
+            const picked = root && spanFromSelection(root);
+            if (picked) rememberCopy({ text: window.getSelection()?.toString() ?? "", span: picked.span, position });
+          }}
           onMouseLeave={() => noteEditor && scheduleNoteClose()}
           onScroll={() => toolbar && setToolbar(null)}
         >
@@ -706,7 +712,10 @@ export const ReaderRoute = () => {
           }}
           onNote={openNoteFromToolbar}
           onCopy={() => {
-            if (toolbar.mode === "selection") void navigator.clipboard.writeText(toolbar.text);
+            if (toolbar.mode === "selection") {
+              void navigator.clipboard.writeText(toolbar.text);
+              rememberCopy({ text: toolbar.text, span: toolbar.span, position });
+            }
             finishToolbar();
           }}
           onAsk={() => {

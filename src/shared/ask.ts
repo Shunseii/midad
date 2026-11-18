@@ -53,18 +53,22 @@ export const readingContext = ({
   position,
   number,
   selection,
+  quotes = [],
 }: {
   bookId: string;
   title: string;
   position: number;
   number: number | null;
   selection?: { span: Span; text: string };
+  /** Text the reader pasted into the question: from this page (with its span) or from elsewhere. */
+  quotes?: { span: Span | null; text: string }[];
 }): string =>
   [
     "<reading-context>",
     `book: ${bookId} (${title})`,
     `page ${position}${number === null ? "" : `, printed ${number}`}`,
     ...(selection ? [`selection: ${describeSpan(selection.span)}: ${selection.text}`] : []),
+    ...quotes.map((q) => (q.span ? `quote: ${describeSpan(q.span)}: ${q.text}` : `quote (pasted): ${q.text}`)),
     "</reading-context>",
   ].join("\n");
 

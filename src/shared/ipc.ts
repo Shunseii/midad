@@ -55,6 +55,8 @@ export interface AskInput {
   position: number;
   question: string;
   selection?: { span: Span; text: string };
+  /** Passages pasted into the question; `span` only for ones copied from this page. */
+  quotes?: { span: Span | null; text: string }[];
   /** The conversation's Claude session, to continue it. */
   sessionId: string | null;
 }

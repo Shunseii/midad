@@ -50,6 +50,22 @@ describe("readingContext", () => {
   });
 });
 
+describe("readingContext quotes", () => {
+  const base = { bookId: "b1", title: "t", position: 3, number: null };
+
+  it("lists quotes from this page with their lines, and pasted text without", () => {
+    const text = readingContext({
+      ...base,
+      quotes: [
+        { span: { part: "matn", start: { line: 2, word: 1 }, end: { line: 2, word: 4 } }, text: "الكلام هو اللفظ المركب" },
+        { span: null, text: "نص من مكان آخر" },
+      ],
+    });
+    expect(text).toMatch(/quote: line 2, words 1–4 .*: الكلام هو اللفظ المركب/);
+    expect(text).toMatch(/quote \(pasted\): نص من مكان آخر/);
+  });
+});
+
 describe("streamEvent", () => {
   const line = (o: unknown) => JSON.stringify(o);
 
