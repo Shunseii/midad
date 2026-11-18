@@ -1,16 +1,18 @@
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, NotebookPen, PanelLeftClose, PanelLeftOpen, Type } from "lucide-react";
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles, Type } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
-import { type Highlight, type LetterRef, lineText, type Note, type Span, wordsOf } from "../../../shared/annotations";
+import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, wordsOf } from "../../../shared/annotations";
 import { lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, StoredPage } from "../../../shared/library";
 import { NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
+import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
 import { letterAtSelectionStart, PageView, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
 import { arabicNumber } from "../lib/format";
 import { EMPTY_HISTORY, type History, record, redo, undo } from "../lib/history";
-import { hamish, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/hamish";
+import { hamish, keys, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/hamish";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -74,19 +76,30 @@ const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) =>
   }
 };
 
-/** Scrolls to a matn line and tints it for a moment. */
-const revealLine = ({ root, line }: { root: HTMLElement | null; line: number }) => {
-  const el = root?.querySelector<HTMLElement>(`[data-line-block="matn-${line}"]`);
-  if (!el) return;
-  el.scrollIntoView({ block: "center" });
-  el.animate(
-    [
-      { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)" },
-      { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)", offset: 0.6 },
-      { backgroundColor: "transparent", boxShadow: "0 0 0 0.75rem transparent" },
-    ],
-    { duration: 3000, easing: "ease-out" },
-  );
+interface LineRange {
+  part: Part;
+  from: number;
+  to: number;
+}
+
+/** Scrolls to some lines and tints them for a moment. */
+const revealLines = ({ root, part, from, to }: LineRange & { root: HTMLElement | null }) => {
+  const blocks: HTMLElement[] = [];
+  for (let line = from; line <= to; line += 1) {
+    const el = root?.querySelector<HTMLElement>(`[data-line-block="${part}-${line}"]`);
+    if (el) blocks.push(el);
+  }
+  blocks[0]?.scrollIntoView({ block: "center" });
+  for (const el of blocks) {
+    el.animate(
+      [
+        { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)" },
+        { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)", offset: 0.6 },
+        { backgroundColor: "transparent", boxShadow: "0 0 0 0.75rem transparent" },
+      ],
+      { duration: 3000, easing: "ease-out" },
+    );
+  }
 };
 
 /** The contents entry a page falls under. */
@@ -206,7 +219,10 @@ export const ReaderRoute = () => {
   const marker = useMarker(bookId);
   const setMarker = useSetMarker(bookId);
   const [markerToast, setMarkerToast] = useState<{ id: number; page: number; undo: () => void } | null>(null);
-  const pendingReveal = useRef<{ position: number; line: number } | null>(null);
+  const pendingReveal = useRef<(LineRange & { position: number }) | null>(null);
+  const conversation = useAskConversation(bookId);
+  const [askSelection, setAskSelection] = useState<AskSelection | null>(null);
+  const client = useQueryClient();
 
   const total = book.data?.pageCount ?? 0;
   const fromUrl = Number(search.get("p"));
@@ -237,15 +253,29 @@ export const ReaderRoute = () => {
   useEffect(() => {
     if (resumed.current || !marker.isSuccess) return;
     resumed.current = true;
-    if (!fromUrl && marker.data) pendingReveal.current = marker.data;
+    if (!fromUrl && marker.data) pendingReveal.current = { position: marker.data.position, part: "matn", from: marker.data.line, to: marker.data.line };
   }, [marker.isSuccess, marker.data, fromUrl]);
 
   useEffect(() => {
     const reveal = pendingReveal.current;
     if (!reveal || page.data?.position !== reveal.position) return;
     pendingReveal.current = null;
-    requestAnimationFrame(() => revealLine({ root: pageRoot.current, line: reveal.line }));
+    requestAnimationFrame(() => revealLines({ root: pageRoot.current, ...reveal }));
   });
+
+  const citeLines = ({ position: at, ...range }: LineRange & { position: number }) => {
+    if (at === position) revealLines({ root: pageRoot.current, ...range });
+    else {
+      pendingReveal.current = { position: at, ...range };
+      go(at);
+    }
+  };
+
+  const openAsk = (selection: AskSelection | null) => {
+    if (selection) setAskSelection(selection);
+    setPanelTab("ask");
+    setPanelOpen(true);
+  };
 
   const dismissMarkerToast = useCallback(() => setMarkerToast(null), []);
 
@@ -483,9 +513,21 @@ export const ReaderRoute = () => {
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton
           icon={NotebookPen}
-          label={panelOpen ? "Hide highlights and notes" : "Show highlights and notes"}
-          selected={panelOpen}
-          onClick={() => setPanelOpen(!panelOpen)}
+          label={panelOpen && panelTab !== "ask" ? "Hide highlights and notes" : "Show highlights and notes"}
+          selected={panelOpen && panelTab !== "ask"}
+          onClick={() => {
+            if (panelOpen && panelTab !== "ask") setPanelOpen(false);
+            else {
+              if (panelTab === "ask") setPanelTab("highlights");
+              setPanelOpen(true);
+            }
+          }}
+        />
+        <IconButton
+          icon={Sparkles}
+          label={panelOpen && panelTab === "ask" ? "Hide Ask AI" : "Ask AI"}
+          selected={panelOpen && panelTab === "ask"}
+          onClick={() => (panelOpen && panelTab === "ask" ? setPanelOpen(false) : openAsk(null))}
         />
       </header>
 
@@ -493,12 +535,14 @@ export const ReaderRoute = () => {
         {contentsOpen && <ContentsRail entries={toc} current={position} markerAt={marker.data?.position ?? null} onGo={go} />}
         <div
           ref={pageRoot}
-          className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden py-10 pl-12 pr-40"
+          className="@container min-w-0 flex-1 overflow-y-auto overflow-x-hidden"
           onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
           onMouseLeave={() => noteEditor && scheduleNoteClose()}
           onScroll={() => toolbar && setToolbar(null)}
         >
+          {/* The wide right padding leaves room for the last-read marker in the margin. */}
+          <div className="px-6 py-10 @3xl:pl-12 @3xl:pr-40">
           {page.isPending && (
             <div className="mx-auto flex w-full max-w-160 flex-col gap-4">
               <Skeleton className="h-4 w-full" />
@@ -521,6 +565,7 @@ export const ReaderRoute = () => {
               onWordClick={onWordClick}
             />
           )}
+          </div>
         </div>
         {panelOpen && (
           <AnnotationsPanel
@@ -531,6 +576,21 @@ export const ReaderRoute = () => {
             onGoTo={(span) => revealSpan({ root: pageRoot.current, span })}
             onRemoveHighlight={(id) => void actions.removeHighlight(id)}
             onDeleteNote={(id) => void actions.deleteNote(id)}
+            askPanel={
+              <AskPanel
+                conversation={conversation}
+                position={position}
+                pageNumber={page.data?.number ?? position}
+                selection={askSelection}
+                onClearSelection={() => setAskSelection(null)}
+                onCite={citeLines}
+                onSaveNote={(turn, body) => {
+                  void hamish["notes.add"]({ bookId, position: turn.position, span: turn.selection.span, body }).then(() =>
+                    client.invalidateQueries({ queryKey: keys.annotations(bookId, turn.position) }),
+                  );
+                }}
+              />
+            }
           />
         )}
       </div>
@@ -568,6 +628,10 @@ export const ReaderRoute = () => {
           onNote={openNoteFromToolbar}
           onCopy={() => {
             if (toolbar.mode === "selection") void navigator.clipboard.writeText(toolbar.text);
+            finishToolbar();
+          }}
+          onAsk={() => {
+            if (toolbar.mode === "selection") openAsk({ span: toolbar.span, text: page.data ? quoteSpan({ page: page.data.page, span: toolbar.span }) : toolbar.text, position });
             finishToolbar();
           }}
         />

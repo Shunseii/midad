@@ -1,7 +1,9 @@
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
-import { type HamishApi, LIBRARY_CHANGED } from "../shared/ipc";
+import { readingContext } from "../shared/ask";
+import { ASK_EVENT, type HamishApi, LIBRARY_CHANGED } from "../shared/ipc";
+import { createAsk } from "./ask";
 import { createAnnotations } from "./annotations";
 import { createMarkers } from "./markers";
 import { type CorpusSource, createCorpusClient } from "./corpus";
@@ -27,10 +29,19 @@ const corpus: CorpusSource = {
   exportBook: (id) => corpusClient().exportBook(id),
 };
 
-const db = new DatabaseSync(join(userData, "hamish.db"));
+const dbPath = join(userData, "hamish.db");
+const db = new DatabaseSync(dbPath);
 const library = createLibrary({ db, corpus });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
+const ask = createAsk({
+  cliPath: join(app.getAppPath(), "out", "cli", "hamish.mjs"),
+  dbPath,
+  workDir: join(userData, "ask"),
+  onEvent: (requestId, event) => {
+    for (const win of BrowserWindow.getAllWindows()) win.webContents.send(ASK_EVENT, requestId, event);
+  },
+});
 
 const handlers: HamishApi = {
   "settings.get": async () => settings.get(),
@@ -65,6 +76,14 @@ const handlers: HamishApi = {
   "marker.get": (input) => markers.get(input),
   "marker.set": (input) => markers.set(input),
   "marker.clear": (input) => markers.clear(input),
+  "ai.ask": async ({ requestId, bookId, position, question, selection, sessionId }) => {
+    const book = await library.getBook(bookId);
+    const page = await library.getPage({ bookId, position });
+    if (!book || !page) throw new Error("That page isn't in the library.");
+    const context = readingContext({ bookId, title: book.title, position, number: page.number, selection });
+    return ask.ask({ requestId, prompt: `${context}\n\n${question}`, sessionId });
+  },
+  "ai.cancel": async (input) => ask.cancel(input),
 };
 
 // data_version changes only when another connection (the hamish CLI) commits.

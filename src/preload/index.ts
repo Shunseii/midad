@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { CHANNELS, type HamishApi, type HamishEvents, LIBRARY_CHANGED } from "../shared/ipc";
+import type { StreamEvent } from "../shared/ask";
+import { ASK_EVENT, CHANNELS, type HamishApi, type HamishEvents, LIBRARY_CHANGED } from "../shared/ipc";
 
 // Electron prefixes errors thrown in the main process; strip it so the UI can
 // show the original message.
@@ -22,6 +23,11 @@ const events: HamishEvents = {
     const listener = () => callback();
     ipcRenderer.on(LIBRARY_CHANGED, listener);
     return () => ipcRenderer.off(LIBRARY_CHANGED, listener);
+  },
+  onAskEvent: (callback) => {
+    const listener = (_event: unknown, requestId: string, event: StreamEvent) => callback(requestId, event);
+    ipcRenderer.on(ASK_EVENT, listener);
+    return () => ipcRenderer.off(ASK_EVENT, listener);
   },
 };
 

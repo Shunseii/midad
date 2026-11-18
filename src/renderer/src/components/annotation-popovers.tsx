@@ -1,4 +1,4 @@
-import { Check, Copy, NotebookPen, Trash2 } from "lucide-react";
+import { Check, Copy, NotebookPen, Sparkles, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { HIGHLIGHT_COLORS, type HighlightColor, type Note } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
@@ -24,7 +24,9 @@ export const SelectionToolbar = ({
   onRemoveHighlight,
   onNote,
   onCopy,
+  onAsk,
 }: {
+  onAsk: () => void;
   rect: DOMRect;
   mode: "selection" | "highlight";
   onHighlight: (color: HighlightColor) => void;
@@ -59,6 +61,11 @@ export const SelectionToolbar = ({
     <Button variant="ghost" size="sm" icon={NotebookPen} onClick={onNote}>
       Note
     </Button>
+    {mode === "selection" && (
+      <Button variant="ghost" size="sm" icon={Sparkles} onClick={onAsk}>
+        Ask
+      </Button>
+    )}
     {mode === "selection" && <IconButton icon={Copy} label="Copy" onClick={onCopy} />}
   </div>
 );

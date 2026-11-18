@@ -5,7 +5,7 @@ import { timeAgo } from "../lib/format";
 import { MARK_BG } from "./page-view";
 import { Badge, IconButton, Segmented, cx } from "./ui";
 
-export type PanelTab = "highlights" | "notes";
+export type PanelTab = "highlights" | "notes" | "ask";
 
 export const spanLabel = (span: Span) =>
   span.part === "matn" ? `Line ${span.start.line}` : `Ḥāshiya ${span.start.line}`;
@@ -53,7 +53,9 @@ export const AnnotationsPanel = ({
   onGoTo,
   onRemoveHighlight,
   onDeleteNote,
+  askPanel,
 }: {
+  askPanel: ReactNode;
   tab: PanelTab;
   onTab: (tab: PanelTab) => void;
   annotations: PageAnnotations | undefined;
@@ -64,7 +66,7 @@ export const AnnotationsPanel = ({
 }) => {
   const items = tab === "highlights" ? (annotations?.highlights ?? []) : (annotations?.notes ?? []);
   return (
-    <aside aria-label="Annotations" className="flex w-100 shrink-0 flex-col border-l border-line bg-surface">
+    <aside aria-label="Annotations" className="flex w-100 shrink-0 min-h-0 flex-col border-l border-line bg-surface">
       <div className="flex h-15 shrink-0 items-center gap-2 border-b border-line px-4">
         <Segmented
           label="Annotations"
@@ -73,11 +75,15 @@ export const AnnotationsPanel = ({
           options={[
             { value: "highlights", label: "Highlights" },
             { value: "notes", label: "Notes" },
+            { value: "ask", label: "Ask AI" },
           ]}
         />
         <span className="flex-1" />
         <IconButton icon={X} label="Close panel" onClick={onClose} />
       </div>
+      {tab === "ask" ? (
+        askPanel
+      ) : (
       <div className="flex flex-col gap-4 overflow-y-auto p-5">
         <h2 className="flex items-center gap-2 text-heading font-semibold">
           {tab === "highlights" ? "Highlights on this page" : "Notes on this page"}
@@ -110,6 +116,7 @@ export const AnnotationsPanel = ({
             : "Notes belong to this page. Hover a dotted word to edit its note in place."}
         </p>
       </div>
+      )}
     </aside>
   );
 };

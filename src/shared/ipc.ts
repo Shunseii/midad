@@ -1,4 +1,5 @@
 import type { Highlight, HighlightColor, LetterRef, Note, PageAnnotations, Span } from "./annotations";
+import type { StreamEvent } from "./ask";
 import type { CorpusBookListing } from "./corpus";
 import type {
   BookDetail,
@@ -43,6 +44,19 @@ export interface HamishApi {
   "marker.get": (input: { bookId: string }) => Promise<LastRead | null>;
   "marker.set": (input: { bookId: string; position: number; line: number }) => Promise<void>;
   "marker.clear": (input: { bookId: string }) => Promise<void>;
+  /** Streams StreamEvents for requestId while it runs; resolves with the whole answer. */
+  "ai.ask": (input: AskInput) => Promise<{ sessionId: string; text: string }>;
+  "ai.cancel": (input: { requestId: string }) => Promise<void>;
+}
+
+export interface AskInput {
+  requestId: string;
+  bookId: string;
+  position: number;
+  question: string;
+  selection?: { span: Span; text: string };
+  /** The conversation's Claude session, to continue it. */
+  sessionId: string | null;
 }
 
 export type Channel = keyof HamishApi;
@@ -70,12 +84,18 @@ export const CHANNELS = [
   "marker.get",
   "marker.set",
   "marker.clear",
+  "ai.ask",
+  "ai.cancel",
 ] as const satisfies readonly Channel[];
 
 /** Pushed from the main process to the renderer. */
 export interface HamishEvents {
   /** Another process (the hamish CLI) changed the library. Returns an unsubscribe function. */
   onLibraryChanged: (callback: () => void) => () => void;
+  /** Progress of an Ask AI request. Returns an unsubscribe function. */
+  onAskEvent: (callback: (requestId: string, event: StreamEvent) => void) => () => void;
 }
+
+export const ASK_EVENT = "ai.event";
 
 export const LIBRARY_CHANGED = "library.changed";

@@ -180,7 +180,7 @@ const LineMargin = ({ marked, onMark, onClear }: { marked: boolean; onMark: () =
       onClick={onClear}
       onMouseDown={(e) => e.stopPropagation()}
       title="Clear the last-read marker"
-      className="absolute inset-y-1 left-full ml-6 flex select-none items-start gap-3 font-sans"
+      className="absolute inset-y-1 left-full ml-6 hidden select-none items-start gap-3 font-sans @3xl:flex"
     >
       <span className="w-0.5 self-stretch rounded-full bg-accent" />
       <span className="flex flex-col items-center gap-1 pt-1 text-accent">
@@ -189,7 +189,7 @@ const LineMargin = ({ marked, onMark, onClear }: { marked: boolean; onMark: () =
       </span>
     </button>
   ) : (
-    <span className="absolute inset-y-1 left-full ml-6 flex select-none items-start gap-3 font-sans opacity-0 transition-opacity group-hover/line:opacity-100">
+    <span className="absolute inset-y-1 left-full ml-6 hidden select-none items-start gap-3 font-sans opacity-0 @3xl:flex transition-opacity group-hover/line:opacity-100">
       <span className="w-px self-stretch bg-line" />
       <button
         type="button"
@@ -246,7 +246,15 @@ export const PageView = ({
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
           </h2>
         ) : (
-          <p key={b.line} data-line-block={`matn-${b.line}`} className="ar group/line relative whitespace-pre-line rounded-lg text-right text-ar-reading">
+          <p
+            key={b.line}
+            data-line-block={`matn-${b.line}`}
+            className={cx(
+              "ar group/line relative whitespace-pre-line rounded-lg text-right text-ar-reading",
+              // Without room for the margin, the marked line gets a bar instead.
+              markerLine === b.line && "@max-3xl:border-r-2 @max-3xl:border-accent @max-3xl:pr-3",
+            )}
+          >
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
             <LineMargin marked={markerLine === b.line} onMark={() => onMark(b.line)} onClear={onClearMark} />
           </p>
