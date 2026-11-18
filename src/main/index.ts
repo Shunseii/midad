@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
-import type { HamishApi } from "../shared/ipc";
+import { type HamishApi, LIBRARY_CHANGED } from "../shared/ipc";
 import { createAnnotations } from "./annotations";
 import { createMarkers } from "./markers";
 import { type CorpusSource, createCorpusClient } from "./corpus";
@@ -66,6 +66,16 @@ const handlers: HamishApi = {
   "marker.set": (input) => markers.set(input),
   "marker.clear": (input) => markers.clear(input),
 };
+
+// data_version changes only when another connection (the hamish CLI) commits.
+const dataVersion = () => (db.prepare("PRAGMA data_version").get() as { data_version: number }).data_version;
+let seenVersion = dataVersion();
+setInterval(() => {
+  const version = dataVersion();
+  if (version === seenVersion) return;
+  seenVersion = version;
+  for (const win of BrowserWindow.getAllWindows()) win.webContents.send(LIBRARY_CHANGED);
+}, 1000);
 
 for (const [channel, handler] of Object.entries(handlers)) {
   ipcMain.handle(channel, (_event, arg) => (handler as (a: unknown) => unknown)(arg));

@@ -71,3 +71,11 @@ export const CHANNELS = [
   "marker.set",
   "marker.clear",
 ] as const satisfies readonly Channel[];
+
+/** Pushed from the main process to the renderer. */
+export interface HamishEvents {
+  /** Another process (the hamish CLI) changed the library. Returns an unsubscribe function. */
+  onLibraryChanged: (callback: () => void) => () => void;
+}
+
+export const LIBRARY_CHANGED = "library.changed";

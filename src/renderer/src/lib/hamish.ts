@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { HighlightColor, LetterRef, PageAnnotations, Span } from "../../../shared/annotations";
-import type { HamishApi, SyncInput } from "../../../shared/ipc";
+import type { HamishApi, HamishEvents, SyncInput } from "../../../shared/ipc";
 
 declare global {
   interface Window {
     hamish: HamishApi;
+    hamishEvents: HamishEvents;
   }
 }
 
