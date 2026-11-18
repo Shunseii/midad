@@ -34,6 +34,8 @@ const tableOfContents = (book: BookDetail): TocEntry[] => {
     .map((p) => ({ text: p.header ?? "", level: 2, position: p.position, number: p.number }));
 };
 
+const PANEL_WIDTH = 400;
+
 const usePref = <T,>({ key, fallback }: { key: string; fallback: T }) => {
   const [value, setValue] = useState<T>(() => readPref({ key, fallback }));
   const update = useCallback(
@@ -234,7 +236,7 @@ export const ReaderRoute = () => {
   const [edits, setEdits] = useState<{ position: number; history: History<HarakatEdit> }>({ position: 0, history: EMPTY_HISTORY });
   const [menuOpen, setMenuOpen] = useState(false);
   const [panelOpen, setPanelOpen] = usePref({ key: "reader.panelOpen", fallback: false });
-  const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: 400 });
+  const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: PANEL_WIDTH });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
   const [noteEditor, setNoteEditor] = useState<NoteEditor | null>(null);
@@ -652,6 +654,7 @@ export const ReaderRoute = () => {
             onDeleteNote={(id) => void actions.deleteNote(id)}
             width={panelWidth}
             onResize={(w) => setPanelWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
+            onResetSize={() => setPanelWidth(PANEL_WIDTH)}
             askPanel={
               <AskPanel
                 conversation={conversation}

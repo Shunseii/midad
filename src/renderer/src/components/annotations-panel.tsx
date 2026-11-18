@@ -56,11 +56,13 @@ export const AnnotationsPanel = ({
   askPanel,
   width,
   onResize,
+  onResetSize,
 }: {
   askPanel: ReactNode;
   width: number;
   /** Called while the reader drags the panel's left edge. */
   onResize: (width: number) => void;
+  onResetSize: () => void;
   tab: PanelTab;
   onTab: (tab: PanelTab) => void;
   annotations: PageAnnotations | undefined;
@@ -76,6 +78,8 @@ export const AnnotationsPanel = ({
         role="separator"
         aria-orientation="vertical"
         aria-label="Resize panel"
+        title="Drag to resize · double-click to reset"
+        onDoubleClick={onResetSize}
         onPointerDown={(e) => {
           e.preventDefault();
           const handle = e.currentTarget;

@@ -1,4 +1,4 @@
-import { ArrowUp, Copy, Languages, Lightbulb, ListTree, NotebookPen, RotateCcw, Square, TextQuote, X } from "lucide-react";
+import { ArrowUp, Copy, Languages, Lightbulb, ListTree, NotebookPen, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
 import { type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Part, Span } from "../../../shared/annotations";
 import { parseCitations, type Segment } from "../../../shared/ask";
@@ -28,6 +28,8 @@ export interface Turn {
 export const useAskConversation = (bookId: string) => {
   const [turns, setTurns] = useState<Turn[]>([]);
   const sessionId = useRef<string | null>(null);
+  // Bumped by a new conversation, so a late answer from the old one can't revive its session.
+  const generation = useRef(0);
   const update = useCallback((id: string, change: (t: Turn) => Partial<Turn>) => {
     setTurns((all) => all.map((t) => (t.id === id ? { ...t, ...change(t) } : t)));
   }, []);
@@ -48,6 +50,7 @@ export const useAskConversation = (bookId: string) => {
 
   const ask = ({ question, position, selection }: { question: string; position: number; selection: AskSelection | null }) => {
     const id = crypto.randomUUID();
+    const started = generation.current;
     setTurns((all) => [...all, { id, question, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }]);
     hamish["ai.ask"]({
       requestId: id,
@@ -58,7 +61,7 @@ export const useAskConversation = (bookId: string) => {
       sessionId: sessionId.current,
     }).then(
       (result) => {
-        sessionId.current = result.sessionId || sessionId.current;
+        if (started === generation.current) sessionId.current = result.sessionId || sessionId.current;
         update(id, () => ({ answer: result.text, status: "done", activity: null }));
       },
       (err: unknown) => update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) })),
@@ -70,7 +73,14 @@ export const useAskConversation = (bookId: string) => {
     for (const t of turns) if (t.status === "streaming") void hamish["ai.cancel"]({ requestId: t.id });
   };
   const retry = (turn: Turn) => ask({ question: turn.question, position: turn.position, selection: turn.selection });
-  return { turns, ask, busy, stop, retry };
+  /** Drops the conversation; the next question starts a fresh Claude session. */
+  const reset = () => {
+    stop();
+    generation.current += 1;
+    setTurns([]);
+    sessionId.current = null;
+  };
+  return { turns, ask, busy, stop, retry, reset };
 };
 
 const ARABIC_START = /^[^\p{L}]*\p{Script=Arabic}/u;
@@ -139,7 +149,7 @@ export const AskPanel = ({
   onCite: (cite: { part: Part; from: number; to: number; position: number }) => void;
   onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
 }) => {
-  const { turns, ask, busy, stop, retry } = conversation;
+  const { turns, ask, busy, stop, retry, reset } = conversation;
   const [draft, setDraft] = useState("");
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const end = useRef<HTMLDivElement>(null);
@@ -178,6 +188,17 @@ export const AskPanel = ({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      {turns.length > 0 && (
+        <div className="flex shrink-0 items-center border-b border-line px-5 py-2">
+          <span className="text-xs text-ink-3">
+            {turns.length} {turns.length === 1 ? "question" : "questions"}
+          </span>
+          <span className="flex-1" />
+          <Button variant="ghost" size="sm" icon={SquarePen} onClick={reset}>
+            New conversation
+          </Button>
+        </div>
+      )}
       <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-5">
         {activeSelection && (
           <div className="flex flex-col gap-1 rounded-xl border-r-2 border-accent bg-surface-2 px-4 py-3">
