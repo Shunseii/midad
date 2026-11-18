@@ -54,8 +54,13 @@ export const AnnotationsPanel = ({
   onRemoveHighlight,
   onDeleteNote,
   askPanel,
+  width,
+  onResize,
 }: {
   askPanel: ReactNode;
+  width: number;
+  /** Called while the reader drags the panel's left edge. */
+  onResize: (width: number) => void;
   tab: PanelTab;
   onTab: (tab: PanelTab) => void;
   annotations: PageAnnotations | undefined;
@@ -66,7 +71,22 @@ export const AnnotationsPanel = ({
 }) => {
   const items = tab === "highlights" ? (annotations?.highlights ?? []) : (annotations?.notes ?? []);
   return (
-    <aside aria-label="Annotations" className="flex w-100 shrink-0 min-h-0 flex-col border-l border-line bg-surface">
+    <aside aria-label="Annotations" style={{ width }} className="relative flex min-h-0 shrink-0 flex-col border-l border-line bg-surface">
+      <div
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="Resize panel"
+        onPointerDown={(e) => {
+          e.preventDefault();
+          const handle = e.currentTarget;
+          handle.setPointerCapture(e.pointerId);
+          const startX = e.clientX;
+          const move = (ev: PointerEvent) => onResize(width + startX - ev.clientX);
+          handle.addEventListener("pointermove", move);
+          handle.addEventListener("pointerup", () => handle.removeEventListener("pointermove", move), { once: true });
+        }}
+        className="absolute inset-y-0 -left-1 z-10 w-2 cursor-col-resize transition-colors hover:bg-accent-soft active:bg-accent-soft"
+      />
       <div className="flex h-15 shrink-0 items-center gap-2 border-b border-line px-4">
         <Segmented
           label="Annotations"

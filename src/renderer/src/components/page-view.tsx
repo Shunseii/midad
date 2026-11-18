@@ -487,3 +487,33 @@ export const spanFromSelection = (root: HTMLElement): { span: Span; rect: DOMRec
   const ref = (el: HTMLElement): WordRef => ({ line: Number(el.dataset.line), word: Number(el.dataset.w) });
   return { span: { part, start: ref(first), end: ref(last) }, rect: range.getBoundingClientRect() };
 };
+
+const inWord = (node: Node) => {
+  const el = node instanceof Element ? node : node.parentElement;
+  return !!el?.closest("[data-w]") && !el.closest("[data-overlay]");
+};
+
+/**
+ * The text position nearest a point, for selections that start or run off the
+ * text: in the margins, between lines, past the end of a line.
+ */
+export const caretNear = ({ root, x, y }: { root: HTMLElement; x: number; y: number }): { node: Node; offset: number } | null => {
+  const at = (px: number, py: number) => {
+    const pos = document.caretPositionFromPoint(px, py);
+    return pos && inWord(pos.offsetNode) ? { node: pos.offsetNode, offset: pos.offset } : null;
+  };
+  const direct = at(x, y);
+  if (direct) return direct;
+  // Nearest word: the closest row first, then the closest word along it.
+  let best: { rect: DOMRect; score: number } | null = null;
+  for (const el of root.querySelectorAll<HTMLElement>("[data-w]")) {
+    const r = el.getBoundingClientRect();
+    const dy = y < r.top ? r.top - y : y > r.bottom ? y - r.bottom : 0;
+    const dx = x < r.left ? r.left - x : x > r.right ? x - r.right : 0;
+    const score = dy * 10_000 + dx;
+    if (!best || score < best.score) best = { rect: r, score };
+  }
+  if (!best) return null;
+  const { rect } = best;
+  return at(Math.min(Math.max(x, rect.left + 1), rect.right - 1), rect.top + rect.height / 2);
+};

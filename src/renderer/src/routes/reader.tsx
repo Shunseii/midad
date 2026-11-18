@@ -9,7 +9,7 @@ import { NotePopover, SelectionToolbar } from "../components/annotation-popovers
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
 import { ScanPane } from "../components/scan-pane";
-import { letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
+import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
 import { arabicNumber } from "../lib/format";
 import { EMPTY_HISTORY, type History, record, redo, undo } from "../lib/history";
@@ -234,6 +234,7 @@ export const ReaderRoute = () => {
   const [edits, setEdits] = useState<{ position: number; history: History<HarakatEdit> }>({ position: 0, history: EMPTY_HISTORY });
   const [menuOpen, setMenuOpen] = useState(false);
   const [panelOpen, setPanelOpen] = usePref({ key: "reader.panelOpen", fallback: false });
+  const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: 400 });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
   const [noteEditor, setNoteEditor] = useState<NoteEditor | null>(null);
@@ -365,9 +366,32 @@ export const ReaderRoute = () => {
    * The first click redraws the word with the letter cursor, so the browser
    * neither fires dblclick nor selects the word. Select it on the second press.
    */
+  /** A drag that starts off the text (margins, gaps) still selects, from the nearest text. */
+  const startDragSelection = (e: React.MouseEvent<HTMLElement>) => {
+    const root = pageRoot.current;
+    const anchor = root && caretNear({ root, x: e.clientX, y: e.clientY });
+    const selection = window.getSelection();
+    if (!root || !anchor || !selection) return;
+    e.preventDefault();
+    selection.collapse(anchor.node, anchor.offset);
+    const move = (ev: MouseEvent) => {
+      const focus = caretNear({ root, x: ev.clientX, y: ev.clientY });
+      if (focus) selection.extend(focus.node, focus.offset);
+    };
+    const up = (ev: MouseEvent) => {
+      window.removeEventListener("mousemove", move);
+      // Released over the page, the page's own mouseup handles it.
+      if (!(ev.target instanceof Node && root.contains(ev.target))) onSelectionEnd();
+    };
+    window.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up, { once: true });
+  };
+
   const onMouseDown = (e: React.MouseEvent<HTMLElement>) => {
     setMenuOpen(false);
     dismiss();
+    const offText = e.target instanceof Element && !e.target.closest("[data-w], button, a, input, textarea");
+    if (e.button === 0 && e.detail === 1 && offText) return startDragSelection(e);
     const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
     const root = pageRoot.current;
     if (!word || !root) return;
@@ -626,6 +650,8 @@ export const ReaderRoute = () => {
             onGoTo={(span) => revealSpan({ root: pageRoot.current, span })}
             onRemoveHighlight={(id) => void actions.removeHighlight(id)}
             onDeleteNote={(id) => void actions.deleteNote(id)}
+            width={panelWidth}
+            onResize={(w) => setPanelWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
             askPanel={
               <AskPanel
                 conversation={conversation}
