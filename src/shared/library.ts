@@ -56,9 +56,10 @@ export interface ImportResult {
   pending: number;
 }
 
-/** Where the reader last marked their place in a book: a matn line on a page. */
+/** Where the reader last marked their place: a word on a page, whose screen row is marked. */
 export interface LastRead {
   position: number;
   line: number;
+  word: number;
   setAt: number;
 }

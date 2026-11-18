@@ -47,35 +47,46 @@ describe("last-read marker", () => {
     expect(await markers.get({ bookId: "b1" })).toBeNull();
   });
 
-  it("returns the page and line it was set on", async () => {
-    await markers.set({ bookId: "b1", position: 1, line: 3 });
-    expect(await markers.get({ bookId: "b1" })).toEqual({ position: 1, line: 3, setAt: 1000 });
+  it("returns the page, line and word it was set on", async () => {
+    await markers.set({ bookId: "b1", position: 1, line: 3, word: 2 });
+    expect(await markers.get({ bookId: "b1" })).toEqual({ position: 1, line: 3, word: 2, setAt: 1000 });
   });
 
   it("keeps one marker per book: setting it again moves it", async () => {
-    await markers.set({ bookId: "b1", position: 1, line: 3 });
+    await markers.set({ bookId: "b1", position: 1, line: 3, word: 1 });
     clock = 2000;
-    await markers.set({ bookId: "b1", position: 2, line: 1 });
-    expect(await markers.get({ bookId: "b1" })).toEqual({ position: 2, line: 1, setAt: 2000 });
+    await markers.set({ bookId: "b1", position: 2, line: 1, word: 2 });
+    expect(await markers.get({ bookId: "b1" })).toEqual({ position: 2, line: 1, word: 2, setAt: 2000 });
   });
 
   it.each([
-    ["a matn line that isn't on the page", { position: 2, line: 2 }, /no matn line 2/],
-    ["line zero", { position: 1, line: 0 }, /no matn line 0/],
-    ["a page that isn't in the library", { position: 9, line: 1 }, /page 9/],
+    ["a matn line that isn't on the page", { position: 2, line: 2, word: 1 }, /no matn line 2/],
+    ["line zero", { position: 1, line: 0, word: 1 }, /no matn line 0/],
+    ["a word past the end of the line", { position: 1, line: 3, word: 3 }, /has 2 words/],
+    ["word zero", { position: 1, line: 3, word: 0 }, /has 2 words/],
+    ["a page that isn't in the library", { position: 9, line: 1, word: 1 }, /page 9/],
   ])("refuses %s", async (_label, at, message) => {
     await expect(markers.set({ bookId: "b1", ...at })).rejects.toThrow(message);
     expect(await markers.get({ bookId: "b1" })).toBeNull();
   });
 
   it("clears the marker", async () => {
-    await markers.set({ bookId: "b1", position: 1, line: 2 });
+    await markers.set({ bookId: "b1", position: 1, line: 2, word: 1 });
     await markers.clear({ bookId: "b1" });
     expect(await markers.get({ bookId: "b1" })).toBeNull();
   });
 
+  it("adds a word to markers saved before markers had one", async () => {
+    const db = new DatabaseSync(":memory:");
+    const lib = createLibrary({ db, corpus });
+    await lib.importBook({ corpusBookId: "b1" });
+    db.exec("CREATE TABLE markers (book_id TEXT PRIMARY KEY, file_id TEXT NOT NULL, line INTEGER NOT NULL, set_at INTEGER NOT NULL)");
+    db.exec("INSERT INTO markers VALUES ('b1', 'f1', 2, 5)");
+    expect(await createMarkers({ db }).get({ bookId: "b1" })).toEqual({ position: 1, line: 2, word: 1, setAt: 5 });
+  });
+
   it("follows its page when a sync adds a page before it", async () => {
-    await markers.set({ bookId: "b1", position: 2, line: 1 });
+    await markers.set({ bookId: "b1", position: 2, line: 1, word: 1 });
     corpus.files.push(page("f0", 0, "h\n\n---\nمقدمة"));
     await library.syncBook({ bookId: "b1", mode: "new" });
     expect(await markers.get({ bookId: "b1" })).toMatchObject({ position: 3, line: 1 });

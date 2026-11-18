@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import type { ReactNode, MouseEvent as ReactMouseEvent } from "react";
+import { type ReactNode, type MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -171,58 +171,155 @@ const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick
   });
 };
 
-/** The margin beside a matn line: the last-read marker, or on hover a button to put it there. */
-const LineMargin = ({ marked, onMark, onClear }: { marked: boolean; onMark: () => void; onClear: () => void }) =>
-  marked ? (
-    <button
-      type="button"
-      data-marker
-      onClick={onClear}
-      onMouseDown={(e) => e.stopPropagation()}
-      title="Clear the last-read marker"
-      className="absolute inset-y-1 left-full ml-6 hidden select-none items-start gap-3 font-sans @3xl:flex"
+/** One row of a matn line as laid out on screen, relative to its paragraph. `word` is the row's first word. */
+export interface ScreenRow {
+  top: number;
+  height: number;
+  word: number;
+}
+
+export const screenRows = (block: HTMLElement): ScreenRow[] => {
+  const base = block.getBoundingClientRect();
+  const rows: ScreenRow[] = [];
+  for (const el of block.querySelectorAll<HTMLElement>("[data-part=matn][data-w]")) {
+    const r = el.getBoundingClientRect();
+    const top = r.top - base.top;
+    const word = Number(el.dataset.w);
+    const row = rows.find((x) => Math.abs(x.top - top) < r.height / 2);
+    if (row) {
+      row.word = Math.min(row.word, word);
+      row.height = Math.max(row.height, r.height);
+    } else rows.push({ top, height: r.height, word });
+  }
+  return rows.sort((x, y) => x.top - y.top);
+};
+
+/** The row a word sits on: words run down the rows in order. */
+export const rowOfWord = (rows: ScreenRow[], word: number): ScreenRow | null =>
+  rows.reduce<ScreenRow | null>((found, row) => (row.word <= word ? row : found), null);
+
+const rowStyle = (row: ScreenRow) => ({ top: row.top, height: row.height });
+
+/** A matn paragraph with its margin: the last-read marker on one screen row, or on hover a button beside the row. */
+const MatnParagraph = ({
+  line,
+  markerWord,
+  layoutKey,
+  onMark,
+  onClearMark,
+  onHoverRow,
+  children,
+}: {
+  line: number;
+  markerWord: number | null;
+  /** Changes when the text may have reflowed (e.g. harakat shown or hidden). */
+  layoutKey: string;
+  onMark: (word: number) => void;
+  onClearMark: () => void;
+  onHoverRow: (at: { line: number; word: number } | null) => void;
+  children: ReactNode;
+}) => {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [hover, setHover] = useState<ScreenRow | null>(null);
+  const [marked, setMarked] = useState<ScreenRow | null>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || markerWord === null) {
+      setMarked(null);
+      return;
+    }
+    const measure = () => setMarked(rowOfWord(screenRows(el), markerWord));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [markerWord, layoutKey]);
+
+  const onMouseMove = (e: ReactMouseEvent<HTMLParagraphElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const y = e.clientY - el.getBoundingClientRect().top;
+    const rows = screenRows(el);
+    const row = rows.find((r) => y < r.top + r.height) ?? rows.at(-1) ?? null;
+    if (row?.word !== hover?.word) {
+      setHover(row);
+      onHoverRow(row ? { line, word: row.word } : null);
+    }
+  };
+
+  return (
+    <p
+      ref={ref}
+      data-line-block={`matn-${line}`}
+      onMouseMove={onMouseMove}
+      onMouseLeave={() => {
+        setHover(null);
+        onHoverRow(null);
+      }}
+      className="ar relative whitespace-pre-line rounded-lg text-right text-ar-reading"
     >
-      <span className="w-0.5 self-stretch rounded-full bg-accent" />
-      <span className="flex flex-col items-center gap-1 pt-1 text-accent">
-        <Bookmark aria-hidden className="size-5 fill-current" />
-        <span className="whitespace-nowrap text-overline font-semibold uppercase tracking-widest">Last read</span>
-      </span>
-    </button>
-  ) : (
-    <span className="absolute inset-y-1 left-full ml-6 hidden select-none items-start gap-3 font-sans opacity-0 @3xl:flex transition-opacity group-hover/line:opacity-100">
-      <span className="w-px self-stretch bg-line" />
-      <button
-        type="button"
-        onClick={onMark}
-        onMouseDown={(e) => e.stopPropagation()}
-        aria-label="Mark as last read"
-        className="group/mark relative flex size-8 items-center justify-center rounded-md border border-line bg-surface text-ink-2 hover:text-accent"
-      >
-        <BookmarkPlus aria-hidden className="size-4" />
-        <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden whitespace-nowrap rounded-md bg-ink px-2 py-1 text-xs text-bg group-hover/mark:block">
-          Mark as last read · M
+      {children}
+      {marked && (
+        <>
+          <button
+            type="button"
+            onClick={onClearMark}
+            onMouseDown={(e) => e.stopPropagation()}
+            title="Clear the last-read marker"
+            style={rowStyle(marked)}
+            className="absolute left-full ml-6 hidden select-none items-start gap-3 font-sans @3xl:flex"
+          >
+            <span className="w-0.5 self-stretch rounded-full bg-accent" />
+            <span className="flex flex-col items-center gap-1 text-accent">
+              <Bookmark aria-hidden className="size-5 fill-current" />
+              <span className="whitespace-nowrap text-overline font-semibold uppercase tracking-widest">Last read</span>
+            </span>
+          </button>
+          {/* Without room for the margin, the marked row gets a bar beside it. */}
+          <span aria-hidden style={rowStyle(marked)} className="absolute -right-3 w-0.5 rounded-full bg-accent @3xl:hidden" />
+        </>
+      )}
+      {hover && hover.word !== marked?.word && (
+        <span style={rowStyle(hover)} className="absolute left-full ml-6 hidden select-none items-center gap-3 font-sans @3xl:flex">
+          <span className="w-px self-stretch bg-line" />
+          <button
+            type="button"
+            onClick={() => onMark(hover.word)}
+            onMouseDown={(e) => e.stopPropagation()}
+            aria-label="Mark as last read"
+            className="group/mark relative flex size-8 items-center justify-center rounded-md border border-line bg-surface text-ink-2 hover:text-accent"
+          >
+            <BookmarkPlus aria-hidden className="size-4" />
+            <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden whitespace-nowrap rounded-md bg-ink px-2 py-1 text-xs text-bg group-hover/mark:block">
+              Mark as last read · M
+            </span>
+          </button>
         </span>
-      </button>
-    </span>
+      )}
+    </p>
   );
+};
 
 export const PageView = ({
   stored,
   annotations,
   display,
-  markerLine,
+  marker,
   onMark,
   onClearMark,
+  onHoverRow,
   onWordHover,
   onWordClick,
 }: {
   stored: StoredPage;
   annotations: PageAnnotations;
   display: Display;
-  /** The matn line on this page holding the last-read marker, if any. */
-  markerLine: number | null;
-  onMark: (line: number) => void;
+  /** The word on this page holding the last-read marker, if any. */
+  marker: { line: number; word: number } | null;
+  onMark: (at: { line: number; word: number }) => void;
   onClearMark: () => void;
+  onHoverRow: (at: { line: number; word: number } | null) => void;
   onWordHover: LineProps["onWordHover"];
   onWordClick: LineProps["onWordClick"];
 }) => {
@@ -246,18 +343,17 @@ export const PageView = ({
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
           </h2>
         ) : (
-          <p
+          <MatnParagraph
             key={b.line}
-            data-line-block={`matn-${b.line}`}
-            className={cx(
-              "ar group/line relative whitespace-pre-line rounded-lg text-right text-ar-reading",
-              // Without room for the margin, the marked line gets a bar instead.
-              markerLine === b.line && "@max-3xl:border-r-2 @max-3xl:border-accent @max-3xl:pr-3",
-            )}
+            line={b.line}
+            markerWord={marker?.line === b.line ? marker.word : null}
+            layoutKey={`${display.showHarakat}-${display.showMine}`}
+            onMark={(word) => onMark({ line: b.line, word })}
+            onClearMark={onClearMark}
+            onHoverRow={onHoverRow}
           >
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
-            <LineMargin marked={markerLine === b.line} onMark={() => onMark(b.line)} onClear={onClearMark} />
-          </p>
+          </MatnParagraph>
         ),
       )}
       {page.hashiya.length > 0 && (

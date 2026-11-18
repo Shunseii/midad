@@ -8,7 +8,7 @@ import type { BookDetail, StoredPage } from "../../../shared/library";
 import { NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
-import { letterAtSelectionStart, PageView, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
+import { letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
 import { arabicNumber } from "../lib/format";
 import { EMPTY_HISTORY, type History, record, redo, undo } from "../lib/history";
@@ -96,6 +96,30 @@ const revealLines = ({ root, part, from, to }: LineRange & { root: HTMLElement |
         { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)" },
         { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)", offset: 0.6 },
         { backgroundColor: "transparent", boxShadow: "0 0 0 0.75rem transparent" },
+      ],
+      { duration: 3000, easing: "ease-out" },
+    );
+  }
+};
+
+/** Scrolls to the screen row a word is on and tints that row for a moment. */
+const revealRow = ({ root, line, word }: { root: HTMLElement | null; line: number; word: number }) => {
+  const block = root?.querySelector<HTMLElement>(`p[data-line-block="matn-${line}"]`);
+  if (!block) return;
+  const rows = screenRows(block);
+  const row = rowOfWord(rows, word);
+  const next = row && rows[rows.indexOf(row) + 1];
+  const onRow = [...block.querySelectorAll<HTMLElement>("[data-part=matn][data-w]")].filter((el) => {
+    const w = Number(el.dataset.w);
+    return row !== null && w >= row.word && (!next || w < next.word);
+  });
+  onRow[0]?.scrollIntoView({ block: "center" });
+  for (const el of onRow) {
+    el.animate(
+      [
+        { backgroundColor: "var(--color-accent-soft)" },
+        { backgroundColor: "var(--color-accent-soft)", offset: 0.6 },
+        { backgroundColor: "transparent" },
       ],
       { duration: 3000, easing: "ease-out" },
     );
@@ -220,6 +244,8 @@ export const ReaderRoute = () => {
   const setMarker = useSetMarker(bookId);
   const [markerToast, setMarkerToast] = useState<{ id: number; page: number; undo: () => void } | null>(null);
   const pendingReveal = useRef<(LineRange & { position: number }) | null>(null);
+  const pendingRow = useRef<{ position: number; line: number; word: number } | null>(null);
+  const hoveredRow = useRef<{ line: number; word: number } | null>(null);
   const conversation = useAskConversation(bookId);
   const [askSelection, setAskSelection] = useState<AskSelection | null>(null);
   const client = useQueryClient();
@@ -253,14 +279,20 @@ export const ReaderRoute = () => {
   useEffect(() => {
     if (resumed.current || !marker.isSuccess) return;
     resumed.current = true;
-    if (!fromUrl && marker.data) pendingReveal.current = { position: marker.data.position, part: "matn", from: marker.data.line, to: marker.data.line };
+    if (!fromUrl && marker.data) pendingRow.current = marker.data;
   }, [marker.isSuccess, marker.data, fromUrl]);
 
   useEffect(() => {
     const reveal = pendingReveal.current;
-    if (!reveal || page.data?.position !== reveal.position) return;
-    pendingReveal.current = null;
-    requestAnimationFrame(() => revealLines({ root: pageRoot.current, ...reveal }));
+    if (reveal && page.data?.position === reveal.position) {
+      pendingReveal.current = null;
+      requestAnimationFrame(() => revealLines({ root: pageRoot.current, ...reveal }));
+    }
+    const row = pendingRow.current;
+    if (row && page.data?.position === row.position) {
+      pendingRow.current = null;
+      requestAnimationFrame(() => revealRow({ root: pageRoot.current, ...row }));
+    }
   });
 
   const citeLines = ({ position: at, ...range }: LineRange & { position: number }) => {
@@ -279,20 +311,27 @@ export const ReaderRoute = () => {
 
   const dismissMarkerToast = useCallback(() => setMarkerToast(null), []);
 
-  const markLine = (line: number) => {
+  const markRow = (at: { line: number; word: number }) => {
     const previous = marker.data;
-    void setMarker({ position, line });
-    setMarkerToast({ id: Date.now(), page: page.data?.number ?? position, undo: () => void setMarker(previous ? { position: previous.position, line: previous.line } : null) });
+    void setMarker({ position, ...at });
+    setMarkerToast({
+      id: Date.now(),
+      page: page.data?.number ?? position,
+      undo: () => void setMarker(previous ? { position: previous.position, line: previous.line, word: previous.word } : null),
+    });
   };
 
-  /** M marks the line under the pointer, or else the first line in view. */
+  /** M marks the screen row under the pointer, or else the first row in view. */
   const markFromKeyboard = () => {
     const root = pageRoot.current;
     if (!root) return;
-    const lines = [...root.querySelectorAll<HTMLElement>('[data-line-block^="matn-"]')].filter((el) => el.tagName === "P");
+    if (hoveredRow.current) return markRow(hoveredRow.current);
     const top = root.getBoundingClientRect().top;
-    const el = lines.find((l) => l.matches(":hover")) ?? lines.find((l) => l.getBoundingClientRect().bottom > top);
-    if (el) markLine(Number(el.dataset.lineBlock?.replace("matn-", "")));
+    const word = [...root.querySelectorAll<HTMLElement>("p [data-part=matn][data-w]")].find((w) => w.getBoundingClientRect().top >= top);
+    const block = word?.closest<HTMLElement>("p[data-line-block]");
+    if (!word || !block) return;
+    const row = rowOfWord(screenRows(block), Number(word.dataset.w));
+    markRow({ line: Number(word.dataset.line), word: row?.word ?? Number(word.dataset.w) });
   };
 
   const scheduleNoteClose = () => {
@@ -558,8 +597,11 @@ export const ReaderRoute = () => {
               stored={page.data}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
               display={{ showHarakat, showMine, target }}
-              markerLine={marker.data?.position === position ? marker.data.line : null}
-              onMark={markLine}
+              marker={marker.data?.position === position ? marker.data : null}
+              onMark={markRow}
+              onHoverRow={(at) => {
+                hoveredRow.current = at;
+              }}
               onClearMark={() => void setMarker(null)}
               onWordHover={onWordHover}
               onWordClick={onWordClick}

@@ -42,7 +42,7 @@ export interface HamishApi {
   "harakat.set": (input: LetterRef & { bookId: string; position: number; marks: string }) => Promise<void>;
   "harakat.remove": (input: LetterRef & { bookId: string; position: number }) => Promise<void>;
   "marker.get": (input: { bookId: string }) => Promise<LastRead | null>;
-  "marker.set": (input: { bookId: string; position: number; line: number }) => Promise<void>;
+  "marker.set": (input: { bookId: string; position: number; line: number; word: number }) => Promise<void>;
   "marker.clear": (input: { bookId: string }) => Promise<void>;
   /** Streams StreamEvents for requestId while it runs; resolves with the whole answer. */
   "ai.ask": (input: AskInput) => Promise<{ sessionId: string; text: string }>;
