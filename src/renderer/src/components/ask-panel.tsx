@@ -279,11 +279,6 @@ export const AskPanel = ({
             className="resize-none bg-transparent text-body outline-none placeholder:text-ink-3 [unicode-bidi:plaintext]"
           />
           <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 rounded-full bg-accent-soft px-2 py-0.5 text-xs text-accent">
-              <span className="size-1.5 rounded-full bg-accent" />
-              Local Claude · page {arabicNumber(pageNumber)}
-              {activeSelection && " + selection"}
-            </span>
             <span className="flex-1" />
             {busy ? (
               <Button variant="secondary" size="sm" icon={Square} onClick={stop}>

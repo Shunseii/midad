@@ -39,7 +39,7 @@ A reader for the Arabic digitization corpus. You import books from the `arabic-d
 - the page position (and printed page number),
 - the selected text and its line range, when there is a selection.
 
-Claude pulls everything else itself through the CLI (`hamish page`, `hamish lines`, `hamish annotations`), which reads the local library, so the prompt stays small and the text Claude sees is exactly what the reader shows. The only visible trace is the composer badge (for example "Local Claude · page 3 + selection").
+Claude pulls everything else itself through the CLI (`hamish page`, `hamish lines`, `hamish annotations`), which reads the local library, so the prompt stays small and the text Claude sees is exactly what the reader shows. The reader never sees this block; the selection card at the top of the chat shows what was selected.
 
 **Keeping Arabic and English on separate lines.** The system prompt tells Claude:
 
