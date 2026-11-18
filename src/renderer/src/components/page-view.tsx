@@ -236,30 +236,46 @@ const MatnParagraph = ({
     return () => observer.disconnect();
   }, [markerWord, layoutKey]);
 
-  const onMouseMove = (e: ReactMouseEvent<HTMLParagraphElement>) => {
+  const rowAt = (clientY: number) => {
     const el = ref.current;
-    if (!el) return;
-    const y = e.clientY - el.getBoundingClientRect().top;
+    if (!el) return null;
+    const y = clientY - el.getBoundingClientRect().top;
     const rows = screenRows(el);
-    const row = rows.find((r) => y < r.top + r.height) ?? rows.at(-1) ?? null;
-    if (row?.word !== hover?.word) {
-      setHover(row);
-      onHoverRow(row ? { line, word: row.word } : null);
-    }
+    return rows.find((r) => y < r.top + r.height) ?? rows.at(-1) ?? null;
+  };
+
+  // The row under the pointer, over the text or the margin, is what M marks.
+  const trackRow = (e: ReactMouseEvent<HTMLElement>) => {
+    const row = rowAt(e.clientY);
+    onHoverRow(row ? { line, word: row.word } : null);
+    return row;
+  };
+
+  const leave = () => {
+    setHover(null);
+    onHoverRow(null);
   };
 
   return (
     <p
       ref={ref}
       data-line-block={`matn-${line}`}
-      onMouseMove={onMouseMove}
-      onMouseLeave={() => {
-        setHover(null);
-        onHoverRow(null);
-      }}
+      onMouseMove={trackRow}
+      onMouseLeave={leave}
       className="ar relative whitespace-pre-line rounded-lg text-right text-ar-reading"
     >
       {children}
+      {/* The margin beside the paragraph: the mark button shows only while the pointer is here. */}
+      <span
+        aria-hidden
+        onMouseMove={(e) => {
+          e.stopPropagation();
+          const row = trackRow(e);
+          if (row?.word !== hover?.word) setHover(row);
+        }}
+        onMouseLeave={() => setHover(null)}
+        className="absolute inset-y-0 left-full hidden w-36 @3xl:block"
+      />
       {marked && (
         <>
           <button
@@ -281,7 +297,11 @@ const MatnParagraph = ({
         </>
       )}
       {hover && hover.word !== marked?.word && (
-        <span style={rowStyle(hover)} className="absolute left-full ml-6 hidden select-none items-center gap-3 font-sans @3xl:flex">
+        <span
+          style={rowStyle(hover)}
+          onMouseEnter={() => setHover(hover)}
+          className="absolute left-full ml-6 hidden select-none items-center gap-3 font-sans @3xl:flex"
+        >
           <span className="w-px self-stretch bg-line" />
           <button
             type="button"
