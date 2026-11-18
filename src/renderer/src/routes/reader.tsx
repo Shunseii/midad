@@ -1,12 +1,12 @@
 import { ArrowLeft, ChevronLeft, ChevronRight, NotebookPen, PanelLeftClose, PanelLeftOpen, Type } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Span, wordsOf } from "../../../shared/annotations";
 import { lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, StoredPage } from "../../../shared/library";
 import { NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
-import { letterAtSelectionStart, PageView, spanFromSelection, type WordTarget } from "../components/page-view";
+import { letterAtSelectionStart, PageView, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
 import { arabicNumber } from "../lib/format";
 import { EMPTY_HISTORY, type History, record, redo, undo } from "../lib/history";
@@ -170,6 +170,7 @@ export const ReaderRoute = () => {
   const [noteEditor, setNoteEditor] = useState<NoteEditor | null>(null);
   const pageRoot = useRef<HTMLDivElement>(null);
   const pointerInNote = useRef(false);
+  const reselect = useRef<Span | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const total = book.data?.pageCount ?? 0;
@@ -221,6 +222,25 @@ export const ReaderRoute = () => {
     setToolbar({ mode: "highlight", highlight, rect: word.element.getBoundingClientRect() });
   };
 
+  /**
+   * The first click redraws the word with the letter cursor, so the browser
+   * neither fires dblclick nor selects the word. Select it on the second press.
+   */
+  const onMouseDown = (e: React.MouseEvent<HTMLElement>) => {
+    setMenuOpen(false);
+    dismiss();
+    const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
+    const root = pageRoot.current;
+    if (!word || !root) return;
+    e.preventDefault();
+    const ref = { line: Number(word.dataset.line), word: Number(word.dataset.w) };
+    const span: Span = { part: word.dataset.part as Span["part"], start: ref, end: ref };
+    if (target) {
+      reselect.current = span;
+      setTarget(null);
+    } else selectSpan({ root, span });
+  };
+
   const onSelectionEnd = () => {
     const root = pageRoot.current;
     const picked = root && spanFromSelection(root);
@@ -231,11 +251,24 @@ export const ReaderRoute = () => {
     setNoteEditor(null);
     setToolbar({ mode: "selection", ...picked, text: window.getSelection()?.toString() ?? "" });
     const { start, end, part } = picked.span;
-    if (start.line === end.line && start.word === end.word && root) {
+    const range = window.getSelection()?.getRangeAt(0);
+    const word = root.querySelector<HTMLElement>(`[data-part="${part}"][data-line="${start.line}"][data-w="${start.word}"]`);
+    const insideOneWord = start.line === end.line && start.word === end.word && range && word && !selectionCoversWord({ range, word });
+    if (insideOneWord) {
       const letter = letterAtSelectionStart(root);
       if (letter !== null) setTarget({ part, line: start.line, word: start.word, letter });
+    } else if (target) {
+      // Dropping the letter cursor re-renders the word and loses the selection, so put it back afterwards.
+      reselect.current = picked.span;
+      setTarget(null);
     }
   };
+
+  useLayoutEffect(() => {
+    const span = reselect.current;
+    reselect.current = null;
+    if (span && pageRoot.current) selectSpan({ root: pageRoot.current, span });
+  });
 
   const mineAt = (ref: LetterRef) =>
     annotations.data?.harakat.find(
@@ -392,10 +425,7 @@ export const ReaderRoute = () => {
         <div
           ref={pageRoot}
           className="min-w-0 flex-1 overflow-y-auto px-12 py-10"
-          onMouseDown={() => {
-            setMenuOpen(false);
-            dismiss();
-          }}
+          onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
           onMouseLeave={() => noteEditor && scheduleNoteClose()}
           onScroll={() => toolbar && setToolbar(null)}

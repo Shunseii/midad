@@ -273,6 +273,29 @@ export const letterAtSelectionStart = (root: HTMLElement): number | null => {
   return letters + 1;
 };
 
+/** True when the selection covers every letter of the word element. */
+export const selectionCoversWord = ({ range, word }: { range: Range; word: HTMLElement }): boolean => {
+  const walker = readingText(word);
+  const first = walker.nextNode();
+  let last = first;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) last = node;
+  if (!first || !last) return false;
+  return range.comparePoint(first, 0) === 0 && range.comparePoint(last, last.textContent?.length ?? 0) === 0;
+};
+
+/** Selects the words a span covers, as a double-click or drag would. */
+export const selectSpan = ({ root, span }: { root: HTMLElement; span: Span }) => {
+  const at = (ref: WordRef) => root.querySelector<HTMLElement>(`[data-part="${span.part}"][data-line="${ref.line}"][data-w="${ref.word}"]`);
+  const first = at(span.start);
+  const last = at(span.end);
+  if (!first || !last) return;
+  const range = document.createRange();
+  range.setStartBefore(first);
+  range.setEndAfter(last);
+  window.getSelection()?.removeAllRanges();
+  window.getSelection()?.addRange(range);
+};
+
 /** Snaps the current text selection inside `root` to whole words. Null when nothing is selected. */
 export const spanFromSelection = (root: HTMLElement): { span: Span; rect: DOMRect } | null => {
   const selection = window.getSelection();
