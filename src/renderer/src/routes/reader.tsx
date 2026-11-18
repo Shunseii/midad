@@ -9,6 +9,7 @@ import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annota
 import { letterAtSelectionStart, PageView, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
 import { arabicNumber } from "../lib/format";
+import { EMPTY_HISTORY, type History, record, redo, undo } from "../lib/history";
 import { hamish, readPref, useAnnotationActions, useAnnotations, useBook, usePage, writePref } from "../lib/hamish";
 
 interface TocEntry {
@@ -147,6 +148,12 @@ const moveTarget = ({ page, target, delta }: { page: StoredPage["page"]; target:
   return { ...target, word, letter: delta > 0 ? 1 : size };
 };
 
+interface HarakatEdit {
+  ref: LetterRef;
+  before: string;
+  after: string;
+}
+
 export const ReaderRoute = () => {
   const { bookId = "" } = useParams();
   const [search, setSearch] = useSearchParams();
@@ -155,6 +162,7 @@ export const ReaderRoute = () => {
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
   const [target, setTarget] = useState<LetterRef | null>(null);
+  const [edits, setEdits] = useState<{ position: number; history: History<HarakatEdit> }>({ position: 0, history: EMPTY_HISTORY });
   const [menuOpen, setMenuOpen] = useState(false);
   const [panelOpen, setPanelOpen] = usePref({ key: "reader.panelOpen", fallback: false });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
@@ -234,9 +242,27 @@ export const ReaderRoute = () => {
       (h) => !h.stale && h.part === ref.part && h.line === ref.line && h.word === ref.word && h.letter === ref.letter,
     )?.marks ?? "";
 
-  const typeMark = (ref: LetterRef, typed: string) => {
-    const marks = mergeMarks({ existing: mineAt(ref), typed });
+  /** Undo and redo cover harakat typed on the current page. */
+  const pageHistory = edits.position === position ? edits.history : EMPTY_HISTORY;
+
+  const applyMarks = (ref: LetterRef, marks: string) =>
     void (marks ? actions.setHarakat({ ...ref, marks }) : actions.removeHarakat(ref));
+
+  const editMarks = (ref: LetterRef, after: string) => {
+    const before = mineAt(ref);
+    if (before === after) return;
+    applyMarks(ref, after);
+    setEdits({ position, history: record(pageHistory, { ref, before, after }) });
+  };
+
+  const typeMark = (ref: LetterRef, typed: string) => editMarks(ref, mergeMarks({ existing: mineAt(ref), typed }));
+
+  const step = (direction: "undo" | "redo") => {
+    const { history, entry } = (direction === "undo" ? undo : redo)(pageHistory);
+    if (!entry) return;
+    applyMarks(entry.ref, direction === "undo" ? entry.before : entry.after);
+    setEdits({ position, history });
+    setTarget(entry.ref);
   };
 
   const finishToolbar = () => {
@@ -260,6 +286,11 @@ export const ReaderRoute = () => {
   const keyHandler = useRef<(e: KeyboardEvent) => void>(() => {});
   keyHandler.current = (e: KeyboardEvent) => {
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
+      e.preventDefault();
+      step(e.code === "KeyY" || e.shiftKey ? "redo" : "undo");
+      return;
+    }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (target && page.data && letterKeys({ e, target, page: page.data.page })) {
       e.preventDefault();
@@ -273,7 +304,7 @@ export const ReaderRoute = () => {
     const mark = markFromKey(e);
     if (mark) typeMark(target, mark);
     else if (e.key === "Backspace" || e.key === "Delete") {
-      if (mineAt(target)) void actions.removeHarakat(target);
+      editMarks(target, "");
     }
     // Right to left: the next letter is to the left.
     else if (e.key === "ArrowLeft") setTarget(moveTarget({ page, target, delta: 1 }));
