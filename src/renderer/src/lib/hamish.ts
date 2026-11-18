@@ -18,6 +18,7 @@ export const keys = {
   page: (bookId: string, position: number) => ["library", bookId, "page", position] as const,
   syncPreview: (bookId: string) => ["library", bookId, "sync-preview"] as const,
   annotations: (bookId: string, position: number) => ["library", bookId, "annotations", position] as const,
+  marker: (bookId: string) => ["library", bookId, "marker"] as const,
 };
 
 export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: () => hamish["settings.get"]() });
@@ -60,6 +61,19 @@ export const useSyncBook = () => {
     mutationFn: (input: SyncInput) => hamish["library.sync"](input),
     onSuccess: (_result, input) => client.invalidateQueries({ queryKey: keys.book(input.bookId) }),
   });
+};
+
+export const useMarker = (bookId: string) =>
+  useQuery({ queryKey: keys.marker(bookId), queryFn: () => hamish["marker.get"]({ bookId }) });
+
+/** Moves or clears the book's last-read marker; `null` clears it. */
+export const useSetMarker = (bookId: string) => {
+  const client = useQueryClient();
+  return async (at: { position: number; line: number } | null) => {
+    if (at) await hamish["marker.set"]({ bookId, ...at });
+    else await hamish["marker.clear"]({ bookId });
+    await client.invalidateQueries({ queryKey: keys.marker(bookId) });
+  };
 };
 
 export const useAnnotations = ({ bookId, position }: { bookId: string; position: number }) =>

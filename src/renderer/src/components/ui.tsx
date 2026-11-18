@@ -265,7 +265,7 @@ export const Toast = ({ children, onDone }: { children: ReactNode; onDone: () =>
   }, [onDone]);
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-8 z-50 flex justify-center">
-      <div role="status" className="rounded-lg bg-ink px-3.5 py-2.5 text-sm text-bg shadow-lg">
+      <div role="status" className="pointer-events-auto rounded-lg bg-ink px-3.5 py-2.5 text-sm text-bg shadow-lg">
         {children}
       </div>
     </div>

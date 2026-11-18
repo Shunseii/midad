@@ -3,6 +3,7 @@ import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import type { HamishApi } from "../shared/ipc";
 import { createAnnotations } from "./annotations";
+import { createMarkers } from "./markers";
 import { type CorpusSource, createCorpusClient } from "./corpus";
 import { createLibrary } from "./library";
 import { createSettings } from "./settings";
@@ -29,6 +30,7 @@ const corpus: CorpusSource = {
 const db = new DatabaseSync(join(userData, "hamish.db"));
 const library = createLibrary({ db, corpus });
 const annotations = createAnnotations({ db });
+const markers = createMarkers({ db });
 
 const handlers: HamishApi = {
   "settings.get": async () => settings.get(),
@@ -60,6 +62,9 @@ const handlers: HamishApi = {
   "notes.delete": (input) => annotations.deleteNote(input),
   "harakat.set": (input) => annotations.setHarakat(input),
   "harakat.remove": (input) => annotations.removeHarakat(input),
+  "marker.get": (input) => markers.get(input),
+  "marker.set": (input) => markers.set(input),
+  "marker.clear": (input) => markers.clear(input),
 };
 
 for (const [channel, handler] of Object.entries(handlers)) {

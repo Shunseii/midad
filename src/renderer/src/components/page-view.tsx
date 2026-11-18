@@ -1,4 +1,4 @@
-import { MessageSquareText } from "lucide-react";
+import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
 import type { ReactNode, MouseEvent as ReactMouseEvent } from "react";
 import {
   type Highlight,
@@ -171,16 +171,58 @@ const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick
   });
 };
 
+/** The margin beside a matn line: the last-read marker, or on hover a button to put it there. */
+const LineMargin = ({ marked, onMark, onClear }: { marked: boolean; onMark: () => void; onClear: () => void }) =>
+  marked ? (
+    <button
+      type="button"
+      data-marker
+      onClick={onClear}
+      onMouseDown={(e) => e.stopPropagation()}
+      title="Clear the last-read marker"
+      className="absolute inset-y-1 left-full ml-6 flex select-none items-start gap-3 font-sans"
+    >
+      <span className="w-0.5 self-stretch rounded-full bg-accent" />
+      <span className="flex flex-col items-center gap-1 pt-1 text-accent">
+        <Bookmark aria-hidden className="size-5 fill-current" />
+        <span className="whitespace-nowrap text-overline font-semibold uppercase tracking-widest">Last read</span>
+      </span>
+    </button>
+  ) : (
+    <span className="absolute inset-y-1 left-full ml-6 flex select-none items-start gap-3 font-sans opacity-0 transition-opacity group-hover/line:opacity-100">
+      <span className="w-px self-stretch bg-line" />
+      <button
+        type="button"
+        onClick={onMark}
+        onMouseDown={(e) => e.stopPropagation()}
+        aria-label="Mark as last read"
+        className="group/mark relative flex size-8 items-center justify-center rounded-md border border-line bg-surface text-ink-2 hover:text-accent"
+      >
+        <BookmarkPlus aria-hidden className="size-4" />
+        <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden whitespace-nowrap rounded-md bg-ink px-2 py-1 text-xs text-bg group-hover/mark:block">
+          Mark as last read · M
+        </span>
+      </button>
+    </span>
+  );
+
 export const PageView = ({
   stored,
   annotations,
   display,
+  markerLine,
+  onMark,
+  onClearMark,
   onWordHover,
   onWordClick,
 }: {
   stored: StoredPage;
   annotations: PageAnnotations;
   display: Display;
+  /** The matn line on this page holding the last-read marker, if any. */
+  markerLine: number | null;
+  onMark: (line: number) => void;
+  onClearMark: () => void;
   onWordHover: LineProps["onWordHover"];
   onWordClick: LineProps["onWordClick"];
 }) => {
@@ -204,8 +246,9 @@ export const PageView = ({
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
           </h2>
         ) : (
-          <p key={b.line} data-line-block={`matn-${b.line}`} className="ar whitespace-pre-line text-right text-ar-reading">
+          <p key={b.line} data-line-block={`matn-${b.line}`} className="ar group/line relative whitespace-pre-line rounded-lg text-right text-ar-reading">
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
+            <LineMargin marked={markerLine === b.line} onMark={() => onMark(b.line)} onClear={onClearMark} />
           </p>
         ),
       )}

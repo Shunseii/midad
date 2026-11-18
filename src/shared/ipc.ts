@@ -3,6 +3,7 @@ import type { CorpusBookListing } from "./corpus";
 import type {
   BookDetail,
   ImportResult,
+  LastRead,
   LibraryBook,
   StoredPage,
   SyncPreview,
@@ -39,6 +40,9 @@ export interface HamishApi {
   "notes.delete": (input: { id: string }) => Promise<void>;
   "harakat.set": (input: LetterRef & { bookId: string; position: number; marks: string }) => Promise<void>;
   "harakat.remove": (input: LetterRef & { bookId: string; position: number }) => Promise<void>;
+  "marker.get": (input: { bookId: string }) => Promise<LastRead | null>;
+  "marker.set": (input: { bookId: string; position: number; line: number }) => Promise<void>;
+  "marker.clear": (input: { bookId: string }) => Promise<void>;
 }
 
 export type Channel = keyof HamishApi;
@@ -63,4 +67,7 @@ export const CHANNELS = [
   "notes.delete",
   "harakat.set",
   "harakat.remove",
+  "marker.get",
+  "marker.set",
+  "marker.clear",
 ] as const satisfies readonly Channel[];

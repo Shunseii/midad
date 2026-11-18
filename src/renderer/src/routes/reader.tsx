@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronLeft, ChevronRight, NotebookPen, PanelLeftClose, PanelLeftOpen, Type } from "lucide-react";
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, NotebookPen, PanelLeftClose, PanelLeftOpen, Type } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Span, wordsOf } from "../../../shared/annotations";
@@ -7,10 +7,10 @@ import type { BookDetail, StoredPage } from "../../../shared/library";
 import { NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { letterAtSelectionStart, PageView, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
-import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
+import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
 import { arabicNumber } from "../lib/format";
 import { EMPTY_HISTORY, type History, record, redo, undo } from "../lib/history";
-import { hamish, readPref, useAnnotationActions, useAnnotations, useBook, usePage, writePref } from "../lib/hamish";
+import { hamish, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/hamish";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -74,8 +74,37 @@ const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) =>
   }
 };
 
-const ContentsRail = ({ entries, current, onGo }: { entries: TocEntry[]; current: number; onGo: (position: number) => void }) => {
-  const activeIndex = entries.reduce((found, e, i) => (e.position <= current ? i : found), -1);
+/** Scrolls to a matn line and tints it for a moment. */
+const revealLine = ({ root, line }: { root: HTMLElement | null; line: number }) => {
+  const el = root?.querySelector<HTMLElement>(`[data-line-block="matn-${line}"]`);
+  if (!el) return;
+  el.scrollIntoView({ block: "center" });
+  el.animate(
+    [
+      { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)" },
+      { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)", offset: 0.6 },
+      { backgroundColor: "transparent", boxShadow: "0 0 0 0.75rem transparent" },
+    ],
+    { duration: 3000, easing: "ease-out" },
+  );
+};
+
+/** The contents entry a page falls under. */
+const entryIndexFor = (entries: TocEntry[], position: number) => entries.reduce((found, e, i) => (e.position <= position ? i : found), -1);
+
+const ContentsRail = ({
+  entries,
+  current,
+  markerAt,
+  onGo,
+}: {
+  entries: TocEntry[];
+  current: number;
+  markerAt: number | null;
+  onGo: (position: number) => void;
+}) => {
+  const activeIndex = entryIndexFor(entries, current);
+  const markerIndex = markerAt === null ? -1 : entryIndexFor(entries, markerAt);
   return (
     <nav aria-label="Contents" className="flex w-62 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-line bg-surface-2 px-4 py-6">
       <h2 className="mb-2 px-2.5 text-overline font-semibold uppercase tracking-widest text-ink-3">Contents</h2>
@@ -92,6 +121,7 @@ const ContentsRail = ({ entries, current, onGo }: { entries: TocEntry[]; current
           )}
         >
           <span className="ar text-ar-small text-ink-3">{arabicNumber(e.number ?? e.position)}</span>
+          {i === markerIndex && <Bookmark aria-label="Last read" className="size-3.5 text-accent" />}
           <span className="ar flex-1 text-right text-ar-small">{e.text}</span>
         </button>
       ))}
@@ -173,9 +203,15 @@ export const ReaderRoute = () => {
   const reselect = useRef<Span | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+  const marker = useMarker(bookId);
+  const setMarker = useSetMarker(bookId);
+  const [markerToast, setMarkerToast] = useState<{ id: number; page: number; undo: () => void } | null>(null);
+  const pendingReveal = useRef<{ position: number; line: number } | null>(null);
+
   const total = book.data?.pageCount ?? 0;
   const fromUrl = Number(search.get("p"));
-  const position = fromUrl >= 1 ? fromUrl : (book.data?.progress?.position ?? 1);
+  // Opening a book returns to its last-read marker; without one, to the last page viewed.
+  const position = fromUrl >= 1 ? fromUrl : (marker.data?.position ?? book.data?.progress?.position ?? 1);
   const page = usePage({ bookId, position });
   const annotations = useAnnotations({ bookId, position });
   const actions = useAnnotationActions({ bookId, position });
@@ -196,6 +232,38 @@ export const ReaderRoute = () => {
   }, []);
 
   useEffect(dismiss, [position, dismiss]);
+
+  const resumed = useRef(false);
+  useEffect(() => {
+    if (resumed.current || !marker.isSuccess) return;
+    resumed.current = true;
+    if (!fromUrl && marker.data) pendingReveal.current = marker.data;
+  }, [marker.isSuccess, marker.data, fromUrl]);
+
+  useEffect(() => {
+    const reveal = pendingReveal.current;
+    if (!reveal || page.data?.position !== reveal.position) return;
+    pendingReveal.current = null;
+    requestAnimationFrame(() => revealLine({ root: pageRoot.current, line: reveal.line }));
+  });
+
+  const dismissMarkerToast = useCallback(() => setMarkerToast(null), []);
+
+  const markLine = (line: number) => {
+    const previous = marker.data;
+    void setMarker({ position, line });
+    setMarkerToast({ id: Date.now(), page: page.data?.number ?? position, undo: () => void setMarker(previous ? { position: previous.position, line: previous.line } : null) });
+  };
+
+  /** M marks the line under the pointer, or else the first line in view. */
+  const markFromKeyboard = () => {
+    const root = pageRoot.current;
+    if (!root) return;
+    const lines = [...root.querySelectorAll<HTMLElement>('[data-line-block^="matn-"]')].filter((el) => el.tagName === "P");
+    const top = root.getBoundingClientRect().top;
+    const el = lines.find((l) => l.matches(":hover")) ?? lines.find((l) => l.getBoundingClientRect().bottom > top);
+    if (el) markLine(Number(el.dataset.lineBlock?.replace("matn-", "")));
+  };
 
   const scheduleNoteClose = () => {
     clearTimeout(closeTimer.current);
@@ -352,6 +420,7 @@ export const ReaderRoute = () => {
     if (e.key === "ArrowLeft" || e.key === "PageDown") go(position + 1);
     else if (e.key === "ArrowRight" || e.key === "PageUp") go(position - 1);
     else if (e.code === "KeyH" && !e.shiftKey) setShowHarakat(!showHarakat);
+    else if (e.code === "KeyM" && !e.shiftKey) markFromKeyboard();
     else if (e.key === "Escape") {
       setMenuOpen(false);
       dismiss();
@@ -421,10 +490,10 @@ export const ReaderRoute = () => {
       </header>
 
       <div className="flex min-h-0 flex-1">
-        {contentsOpen && <ContentsRail entries={toc} current={position} onGo={go} />}
+        {contentsOpen && <ContentsRail entries={toc} current={position} markerAt={marker.data?.position ?? null} onGo={go} />}
         <div
           ref={pageRoot}
-          className="min-w-0 flex-1 overflow-y-auto px-12 py-10"
+          className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden py-10 pl-12 pr-40"
           onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
           onMouseLeave={() => noteEditor && scheduleNoteClose()}
@@ -445,6 +514,9 @@ export const ReaderRoute = () => {
               stored={page.data}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
               display={{ showHarakat, showMine, target }}
+              markerLine={marker.data?.position === position ? marker.data.line : null}
+              onMark={markLine}
+              onClearMark={() => void setMarker(null)}
               onWordHover={onWordHover}
               onWordClick={onWordClick}
             />
@@ -462,6 +534,24 @@ export const ReaderRoute = () => {
           />
         )}
       </div>
+
+      {markerToast && (
+        <Toast key={markerToast.id} onDone={dismissMarkerToast}>
+          <span className="flex items-center gap-3">
+            <span>Marked as last read · page {arabicNumber(markerToast.page)}</span>
+            <button
+              type="button"
+              className="font-semibold"
+              onClick={() => {
+                markerToast.undo();
+                setMarkerToast(null);
+              }}
+            >
+              Undo
+            </button>
+          </span>
+        </Toast>
+      )}
 
       {toolbar && (
         <SelectionToolbar
