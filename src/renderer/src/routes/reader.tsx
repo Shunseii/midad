@@ -1,4 +1,4 @@
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles, Type } from "lucide-react";
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles, Type } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
@@ -8,6 +8,7 @@ import type { BookDetail, StoredPage } from "../../../shared/library";
 import { NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
+import { ScanPane } from "../components/scan-pane";
 import { letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
 import { arabicNumber } from "../lib/format";
@@ -228,6 +229,7 @@ export const ReaderRoute = () => {
   const [contentsOpen, setContentsOpen] = usePref({ key: "reader.contentsOpen", fallback: true });
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
+  const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
   const [edits, setEdits] = useState<{ position: number; history: History<HarakatEdit> }>({ position: 0, history: EMPTY_HISTORY });
   const [menuOpen, setMenuOpen] = useState(false);
@@ -490,6 +492,7 @@ export const ReaderRoute = () => {
     else if (e.key === "ArrowRight" || e.key === "PageUp") go(position - 1);
     else if (e.code === "KeyH" && !e.shiftKey) setShowHarakat(!showHarakat);
     else if (e.code === "KeyM" && !e.shiftKey) markFromKeyboard();
+    else if (e.code === "KeyS" && !e.shiftKey) setShowScan(!showScan);
     else if (e.key === "Escape") {
       setMenuOpen(false);
       dismiss();
@@ -549,6 +552,7 @@ export const ReaderRoute = () => {
             <DisplayMenu showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
           )}
         </div>
+        <IconButton icon={FileImage} label={showScan ? "Hide scan (S)" : "Show scan (S)"} selected={showScan} onClick={() => setShowScan(!showScan)} />
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton
           icon={NotebookPen}
@@ -572,9 +576,11 @@ export const ReaderRoute = () => {
 
       <div className="flex min-h-0 flex-1">
         {contentsOpen && <ContentsRail entries={toc} current={position} markerAt={marker.data?.position ?? null} onGo={go} />}
+        {/* The scan sits beside the text, or replaces it when there isn't room for both. */}
+        <div className="@container flex min-w-0 flex-1">
         <div
           ref={pageRoot}
-          className="@container min-w-0 flex-1 overflow-y-auto overflow-x-hidden"
+          className={cx("@container min-w-0 flex-1 overflow-y-auto overflow-x-hidden", showScan && page.data && "@max-2xl:hidden")}
           onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
           onMouseLeave={() => noteEditor && scheduleNoteClose()}
@@ -608,6 +614,8 @@ export const ReaderRoute = () => {
             />
           )}
           </div>
+        </div>
+        {showScan && page.data && <ScanPane bookId={bookId} fileId={page.data.fileId} onClose={() => setShowScan(false)} />}
         </div>
         {panelOpen && (
           <AnnotationsPanel

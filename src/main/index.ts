@@ -1,9 +1,10 @@
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, ipcMain, protocol, shell } from "electron";
 import { readingContext } from "../shared/ask";
 import { ASK_EVENT, type HamishApi, LIBRARY_CHANGED } from "../shared/ipc";
 import { createAsk } from "./ask";
+import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
 import { createMarkers } from "./markers";
 import { type CorpusSource, createCorpusClient } from "./corpus";
@@ -34,6 +35,10 @@ const db = new DatabaseSync(dbPath);
 const library = createLibrary({ db, corpus });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
+const scans = createScans({ dir: join(userData, "scans"), fetchScan: (input) => corpusClient().fetchScan(input) });
+
+// Page scans load as <img src="hamish-scan://scan/<bookId>/<fileId>">.
+protocol.registerSchemesAsPrivileged([{ scheme: "hamish-scan", privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
 const ask = createAsk({
   cliPath: join(app.getAppPath(), "out", "cli", "hamish.mjs"),
   dbPath,
@@ -129,6 +134,15 @@ const createWindow = () => {
 };
 
 void app.whenReady().then(() => {
+  protocol.handle("hamish-scan", async (request) => {
+    const [bookId = "", fileId = ""] = new URL(request.url).pathname.split("/").filter(Boolean).map(decodeURIComponent);
+    try {
+      const scan = await scans.get({ bookId, fileId });
+      return new Response(Buffer.from(scan.bytes), { headers: { "content-type": scan.contentType, "cache-control": "max-age=31536000" } });
+    } catch (err) {
+      return new Response(err instanceof Error ? err.message : String(err), { status: 502 });
+    }
+  });
   createWindow();
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

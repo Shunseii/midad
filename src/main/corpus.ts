@@ -63,6 +63,15 @@ export const createCorpusClient = ({ endpoint, key }: { endpoint: string; key: s
       return (await get<{ files: ExportFile[] }>(`/api/books/${id}/export`)).files;
     },
 
+    /** The page's original scan image. */
+    async fetchScan({ bookId, fileId }: { bookId: string; fileId: string }): Promise<{ bytes: Uint8Array; contentType: string }> {
+      const res = await fetch(`${base}/api/books/${encodeURIComponent(bookId)}/files/${encodeURIComponent(fileId)}/image`, {
+        headers: { Authorization: `Bearer ${key}` },
+      });
+      if (!res.ok) throw new CorpusError(res.status, `${res.status} ${await res.text().catch(() => res.statusText)}`);
+      return { bytes: new Uint8Array(await res.arrayBuffer()), contentType: res.headers.get("content-type")?.split(";")[0] ?? "image/jpeg" };
+    },
+
     async ping(): Promise<void> {
       await get("/api/books");
     },
