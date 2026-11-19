@@ -1,6 +1,6 @@
 {
   "$schema": "https://lamsa.dev/schema/v1.json",
-  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes mark-bar {\n  from {\n    scale: 1 0;\n  }\n}\n\n@keyframes mark-drop {\n  from {\n    opacity: 0;\n    translate: 0 -0.75rem;\n    scale: 0.6;\n  }\n  60% {\n    opacity: 1;\n    translate: 0 0.125rem;\n  }\n}\n\n@keyframes reveal {\n  0%,\n  60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n",
+  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes mark-bar {\n  from {\n    scale: 1 0;\n  }\n}\n\n@keyframes mark-drop {\n  from {\n    opacity: 0;\n    translate: 0 -0.75rem;\n    scale: 0.6;\n  }\n  60% {\n    opacity: 1;\n    translate: 0 0.125rem;\n  }\n}\n\n@keyframes mark-lift {\n  to {\n    opacity: 0;\n    translate: 0 -0.5rem;\n    scale: 0.8;\n  }\n}\n\n@keyframes reveal {\n  0%,\n  60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n",
   "nodes": {
     "01tFx8yA": {
       "index": "a000",
@@ -740,7 +740,7 @@
         "transform-origin": "top"
       },
       "type": "frame",
-      "css": "animation: mark-bar 350ms var(--ease-out);"
+      "css": "animation: mark-bar 350ms var(--ease-out);\n[data-state=\"closed\"] & { animation: mark-bar 200ms ease-in reverse forwards; }"
     },
     "0zh2LWrQ": {
       "index": "a004",
@@ -36903,7 +36903,7 @@
         "color": "{color.accent}"
       },
       "type": "frame",
-      "css": "animation: mark-drop 450ms var(--ease-out);"
+      "css": "animation: mark-drop 450ms var(--ease-out);\n[data-state=\"closed\"] & { animation: mark-lift 200ms ease-in forwards; }"
     },
     "wuNZKIkc": {
       "index": "a001",
@@ -48122,7 +48122,7 @@
         "transform-origin": "top"
       },
       "type": "frame",
-      "css": "animation: mark-bar 350ms var(--ease-out);"
+      "css": "animation: mark-bar 350ms var(--ease-out);\n[data-state=\"closed\"] & { animation: mark-bar 200ms ease-in reverse forwards; }"
     },
     "xM0kytNw": {
       "index": "a000",
@@ -48136,7 +48136,7 @@
         "color": "{color.accent}"
       },
       "type": "frame",
-      "css": "animation: mark-drop 450ms var(--ease-out);"
+      "css": "animation: mark-drop 450ms var(--ease-out);\n[data-state=\"closed\"] & { animation: mark-lift 200ms ease-in forwards; }"
     },
     "WxldFKM6": {
       "type": "icon",

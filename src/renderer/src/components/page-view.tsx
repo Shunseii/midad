@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { Fragment, type ReactNode, type MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from "react";
+import { type ReactNode, type MouseEvent as ReactMouseEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -209,6 +209,39 @@ const LineNumber = ({ line }: { line: number }) => (
   </span>
 );
 
+/** The last-read mark in a line's margin: a bar and a bookmark, or on narrow layouts a bar beside the row. */
+const LastReadMark = ({ row, phase, onClear }: { row: ScreenRow; phase: "enter" | "still" | "leave"; onClear?: () => void }) => {
+  const bar = phase === "enter" ? "motion-safe:animate-mark-bar" : phase === "leave" ? "animate-mark-bar-out motion-reduce:hidden" : "";
+  return (
+    <>
+      <button
+        type="button"
+        onClick={onClear}
+        onMouseDown={(e) => e.stopPropagation()}
+        aria-label="Clear the last-read marker"
+        aria-hidden={phase === "leave" || undefined}
+        tabIndex={phase === "leave" ? -1 : undefined}
+        style={rowStyle(row)}
+        className={cx("absolute left-full ml-6 hidden select-none items-start gap-3 font-sans @3xl:flex", phase === "leave" && "pointer-events-none motion-reduce:hidden")}
+      >
+        <span className={cx("w-0.5 origin-top self-stretch rounded-full bg-accent", bar)} />
+        <span
+          className={cx(
+            "flex flex-col items-center gap-1 text-accent",
+            phase === "enter" && "motion-safe:animate-mark-drop",
+            phase === "leave" && "animate-mark-lift",
+          )}
+        >
+          <Bookmark aria-hidden className="size-5 fill-current" />
+          <span className="whitespace-nowrap text-overline font-semibold uppercase tracking-widest">Last read</span>
+        </span>
+      </button>
+      {/* Without room for the margin, the marked row gets a bar beside it. */}
+      <span aria-hidden style={rowStyle(row)} className={cx("absolute -right-3 w-0.5 origin-top rounded-full bg-accent @3xl:hidden", bar)} />
+    </>
+  );
+};
+
 /** A line of text with its margin: the last-read marker on one screen row, or on hover a button beside the row. */
 const MarkableLine = ({
   as: Tag,
@@ -238,19 +271,34 @@ const MarkableLine = ({
   const ref = useRef<HTMLParagraphElement>(null);
   const [hover, setHover] = useState<ScreenRow | null>(null);
   const [marked, setMarked] = useState<ScreenRow | null>(null);
+  // A marker that moved off a row, or was cleared, animates out before it goes.
+  const [leaving, setLeaving] = useState<ScreenRow | null>(null);
+  const shown = useRef<ScreenRow | null>(null);
 
   useLayoutEffect(() => {
     const el = ref.current;
+    const show = (row: ScreenRow | null) => {
+      const before = shown.current;
+      if (before && before.word !== row?.word) setLeaving(before);
+      shown.current = row;
+      setMarked(row);
+    };
     if (!el || markerWord === null) {
-      setMarked(null);
+      show(null);
       return;
     }
-    const measure = () => setMarked(rowOfWord(screenRows(el), markerWord));
+    const measure = () => show(rowOfWord(screenRows(el), markerWord));
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(el);
     return () => observer.disconnect();
   }, [markerWord, layoutKey]);
+
+  useEffect(() => {
+    if (!leaving) return;
+    const timer = setTimeout(() => setLeaving(null), 250);
+    return () => clearTimeout(timer);
+  }, [leaving]);
 
   const rowAt = (clientY: number) => {
     const el = ref.current;
@@ -273,30 +321,8 @@ const MarkableLine = ({
         onMouseLeave={() => setHover(null)}
         className="absolute inset-y-0 left-full hidden w-36 @3xl:block"
       />
-      {marked && (
-        <Fragment key={fresh ? `${markerWord}` : "settled"}>
-          <button
-            type="button"
-            onClick={onClearMark}
-            onMouseDown={(e) => e.stopPropagation()}
-            aria-label="Clear the last-read marker"
-            style={rowStyle(marked)}
-            className="absolute left-full ml-6 hidden select-none items-start gap-3 font-sans @3xl:flex"
-          >
-            <span className={cx("w-0.5 origin-top self-stretch rounded-full bg-accent", fresh && "motion-safe:animate-mark-bar")} />
-            <span className={cx("flex flex-col items-center gap-1 text-accent", fresh && "motion-safe:animate-mark-drop")}>
-              <Bookmark aria-hidden className="size-5 fill-current" />
-              <span className="whitespace-nowrap text-overline font-semibold uppercase tracking-widest">Last read</span>
-            </span>
-          </button>
-          {/* Without room for the margin, the marked row gets a bar beside it. */}
-          <span
-            aria-hidden
-            style={rowStyle(marked)}
-            className={cx("absolute -right-3 w-0.5 origin-top rounded-full bg-accent @3xl:hidden", fresh && "motion-safe:animate-mark-bar")}
-          />
-        </Fragment>
-      )}
+      {leaving && <LastReadMark key={`leaving-${leaving.word}`} row={leaving} phase="leave" />}
+      {marked && <LastReadMark key={fresh ? `${marked.word}` : "settled"} row={marked} phase={fresh ? "enter" : "still"} onClear={onClearMark} />}
       {hover && hover.word !== marked?.word && (
         <span
           style={rowStyle(hover)}
