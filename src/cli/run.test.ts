@@ -128,6 +128,15 @@ describe("writing", () => {
     expect((await annotations()).harakat).toHaveLength(0);
   });
 
+  it("clears every added mark inside a span", async () => {
+    await run("harakat", "set", "b1", "1", "--line", "2", "--word", "3", "--letter", "3", "--marks", "kasra");
+    await run("harakat", "set", "b1", "1", "--line", "2", "--word", "1", "--letter", "2", "--marks", "fatha");
+    const { code, stdout } = await run("harakat", "clear", "b1", "1", "--line", "2", "--words", "2-3");
+    expect(code).toBe(0);
+    expect(stdout).toContain("1 letter");
+    expect((await annotations()).harakat).toEqual([expect.objectContaining({ word: 1, letter: 2 })]);
+  });
+
   it("lists a page's annotations with their ids", async () => {
     await run("highlight", "add", "b1", "1", "--line", "2", "--words", "1");
     const { highlights } = await annotations();

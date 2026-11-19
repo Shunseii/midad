@@ -124,6 +124,11 @@ export const useAnnotationActions = ({ bookId, position }: { bookId: string; pos
       await hamish["harakat.remove"]({ bookId, position, ...ref });
       await refresh();
     },
+    clearHarakat: async (span: Span) => {
+      const removed = await hamish["harakat.clear"]({ bookId, position, span });
+      await refresh();
+      return removed;
+    },
   };
 };
 

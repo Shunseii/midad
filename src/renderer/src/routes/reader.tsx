@@ -2,7 +2,7 @@ import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, Minus, Noteb
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
-import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, wordsOf } from "../../../shared/annotations";
+import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, spanContains, wordsOf } from "../../../shared/annotations";
 import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, StoredPage } from "../../../shared/library";
 import { InlinePanel, SideSheet } from "../components/side-sheet";
@@ -536,6 +536,7 @@ export const ReaderRoute = () => {
           updateNote: (input) => a().updateNote(input),
           deleteNote: (id) => a().deleteNote(id),
           setMarks: ({ ref, marks }) => (marks ? a().setHarakat({ ...ref, marks }) : a().removeHarakat(ref)),
+          clearMarks: (span) => a().clearHarakat(span),
           setMarker: (at) => latestSetMarker.current(at),
         }),
       };
@@ -837,6 +838,14 @@ export const ReaderRoute = () => {
                 finishToolbar();
               }}
               onNote={openNoteFromToolbar}
+              onClearHarakat={
+                shown.mode === "selection" && annotations.data?.harakat.some((h) => !h.stale && spanContains({ span: shown.span, part: h.part, ref: h }))
+                  ? () => {
+                      void edits().clearMarks(shown.span);
+                      finishToolbar();
+                    }
+                  : undefined
+              }
               onCopy={() => {
                 if (shown.mode === "selection") {
                   void navigator.clipboard.writeText(shown.text);

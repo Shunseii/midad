@@ -80,6 +80,7 @@ const handlers: HamishApi = {
   "notes.delete": (input) => annotations.deleteNote(input),
   "harakat.set": (input) => annotations.setHarakat(input),
   "harakat.remove": (input) => annotations.removeHarakat(input),
+  "harakat.clear": (input) => annotations.clearHarakat(input),
   "marker.get": (input) => markers.get(input),
   "marker.set": (input) => markers.set(input),
   "marker.clear": (input) => markers.clear(input),

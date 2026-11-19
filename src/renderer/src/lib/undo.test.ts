@@ -38,6 +38,13 @@ const fakePage = () => {
       if (marks) harakat.set(JSON.stringify(ref), marks);
       else harakat.delete(JSON.stringify(ref));
     },
+    clearMarks: async (span) => {
+      const removed = [...harakat.entries()]
+        .map(([key, marks]) => ({ ref: JSON.parse(key) as LetterRef, marks }))
+        .filter(({ ref }) => ref.part === span.part && ref.line >= span.start.line && ref.line <= span.end.line);
+      for (const { ref } of removed) harakat.delete(JSON.stringify(ref));
+      return removed;
+    },
     setMarker: async (at) => {
       book.marker = at;
     },
@@ -189,5 +196,30 @@ describe("undo stack", () => {
     expect(page.book.marker).toBeNull();
     await stack.undo();
     expect(page.book.marker).toEqual(at);
+  });
+
+  it("clears a passage's marks in one step and puts every one back on undo", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    const other = { ...REF, line: 5 };
+    await stack.setMarks({ ref: REF, before: "", after: "َ" });
+    await stack.setMarks({ ref: { ...REF, letter: 3 }, before: "", after: "ِ" });
+    await stack.setMarks({ ref: other, before: "", after: "ُ" });
+    expect(await stack.clearMarks(SPAN)).toBe(2);
+    expect([...page.harakat.keys()]).toEqual([JSON.stringify(other)]);
+    await stack.undo();
+    expect(page.harakat.get(JSON.stringify(REF))).toBe("َ");
+    expect(page.harakat.get(JSON.stringify({ ...REF, letter: 3 }))).toBe("ِ");
+    await stack.redo();
+    expect(page.harakat.size).toBe(1);
+  });
+
+  it("adds no undo step when there was nothing to clear", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    await stack.setMarks({ ref: REF, before: "", after: "َ" });
+    expect(await stack.clearMarks({ ...SPAN, start: { line: 9, word: 1 }, end: { line: 9, word: 2 } })).toBe(0);
+    await stack.undo();
+    expect(page.harakat.size).toBe(0);
   });
 });

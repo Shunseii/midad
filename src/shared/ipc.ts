@@ -41,6 +41,7 @@ export interface HamishApi {
   "notes.delete": (input: { id: string }) => Promise<void>;
   "harakat.set": (input: LetterRef & { bookId: string; position: number; marks: string }) => Promise<void>;
   "harakat.remove": (input: LetterRef & { bookId: string; position: number }) => Promise<void>;
+  "harakat.clear": (input: { bookId: string; position: number; span: Span }) => Promise<{ ref: LetterRef; marks: string }[]>;
   "marker.get": (input: { bookId: string }) => Promise<LastRead | null>;
   "marker.set": (input: { bookId: string; position: number; part: Part; line: number; word: number }) => Promise<void>;
   "marker.clear": (input: { bookId: string }) => Promise<void>;
@@ -83,6 +84,7 @@ export const CHANNELS = [
   "notes.delete",
   "harakat.set",
   "harakat.remove",
+  "harakat.clear",
   "marker.get",
   "marker.set",
   "marker.clear",

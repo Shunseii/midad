@@ -1,4 +1,4 @@
-import { Check, Copy, NotebookPen, Sparkles, Trash2 } from "lucide-react";
+import { Check, Copy, Eraser, NotebookPen, Sparkles, Trash2 } from "lucide-react";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { HIGHLIGHT_COLORS, type HighlightColor, type Note } from "../../../shared/annotations";
@@ -22,6 +22,7 @@ export const SelectionToolbar = ({
   onHighlight,
   onRemoveHighlight,
   onNote,
+  onClearHarakat,
   onCopy,
   onAsk,
 }: {
@@ -33,6 +34,8 @@ export const SelectionToolbar = ({
   onHighlight: (color: HighlightColor) => void;
   onRemoveHighlight: () => void;
   onNote: () => void;
+  /** Only given when the selection has harakat the reader or the agent added. */
+  onClearHarakat?: () => void;
   onCopy: () => void;
 }) => {
   const anchor = useMemo(() => toAnchor(rect), [rect]);
@@ -76,6 +79,7 @@ export const SelectionToolbar = ({
             Ask
           </Button>
         )}
+        {onClearHarakat && <IconButton icon={Eraser} label="Clear my harakat" onClick={onClearHarakat} />}
         {mode === "selection" && <IconButton icon={Copy} label="Copy" onClick={onCopy} />}
       </PopoverContent>
     </Popover>

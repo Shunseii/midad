@@ -22,6 +22,7 @@ Writing (labelled as written by the agent)
   hamish note delete <id>
   hamish harakat set <book> <page> --line <n> --word <n> --letter <n> --marks <names>
   hamish harakat remove <book> <page> --line <n> --word <n> --letter <n>
+  hamish harakat clear <book> <page> <span>      Remove every added mark inside the span
 
 <book> is a book id, the start of one, or part of its title. <page> is the page's
 position in the book (1 = first page), as shown in the reader's pager.
@@ -255,6 +256,12 @@ export const runCli = async ({
         const stored = await findPage({ book: b, position: c });
         await annotations.removeHarakat({ bookId: stored.bookId, position: stored.position, ...letterRef() });
         done("Removed the harakat.");
+        return 0;
+      }
+      case "harakat clear": {
+        const stored = await findPage({ book: b, position: c });
+        const removed = await annotations.clearHarakat({ bookId: stored.bookId, position: stored.position, span: spanFrom(opts) });
+        done(removed.length === 0 ? "There were no added harakat in that span." : `Removed harakat from ${removed.length} letter${removed.length === 1 ? "" : "s"}.`, { removed });
         return 0;
       }
       default:

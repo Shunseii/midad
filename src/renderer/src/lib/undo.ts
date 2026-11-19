@@ -1,5 +1,7 @@
 import type { HighlightColor, LetterRef, Part, Span } from "../../../shared/annotations";
 
+export type ClearedMark = { ref: LetterRef; marks: string };
+
 /** Where the book's last-read marker sits; `null` when there is none. */
 export type MarkerAt = { position: number; part: Part; line: number; word: number } | null;
 import { EMPTY_HISTORY, type History, record, redo, undo } from "./history";
@@ -13,6 +15,8 @@ export interface PageWrites {
   deleteNote: (id: string) => Promise<void>;
   /** Empty marks remove the reader's harakat from the letter. */
   setMarks: (input: { ref: LetterRef; marks: string }) => Promise<void>;
+  /** Removes every added mark inside the span; returns what it removed. */
+  clearMarks: (span: Span) => Promise<ClearedMark[]>;
   setMarker: (at: MarkerAt) => Promise<void>;
 }
 
@@ -21,6 +25,7 @@ export type Change =
   | { kind: "note"; op: "add" | "delete"; id: string; span: Span; body: string }
   | { kind: "note-edit"; id: string; before: string; after: string }
   | { kind: "harakat"; ref: LetterRef; before: string; after: string }
+  | { kind: "harakat-clear"; span: Span; removed: ClearedMark[] }
   | { kind: "marker"; before: MarkerAt; after: MarkerAt };
 
 /**
@@ -55,6 +60,10 @@ export const createUndoStack = (writes: PageWrites) => {
     else await writes.deleteNote(current(c.id));
   };
 
+  const restoreMarks = async (removed: ClearedMark[]) => {
+    for (const { ref, marks } of removed) await writes.setMarks({ ref, marks });
+  };
+
   /** Puts the page in the state from before (`forward` false) or after the change. */
   const apply = (c: Change, forward: boolean): Promise<void> => {
     switch (c.kind) {
@@ -66,6 +75,8 @@ export const createUndoStack = (writes: PageWrites) => {
         return writes.updateNote({ id: current(c.id), body: forward ? c.after : c.before });
       case "harakat":
         return writes.setMarks({ ref: c.ref, marks: forward ? c.after : c.before });
+      case "harakat-clear":
+        return forward ? writes.clearMarks(c.span).then(() => undefined) : restoreMarks(c.removed);
       case "marker":
         return writes.setMarker(forward ? c.after : c.before);
     }
@@ -125,6 +136,14 @@ export const createUndoStack = (writes: PageWrites) => {
         if (before === after) return;
         await writes.setMarks({ ref, marks: after });
         history = record(history, { kind: "harakat", ref, before, after });
+      });
+    },
+    /** Clears the span's added marks as one undo step. Resolves to how many letters lost their marks. */
+    clearMarks(span: Span): Promise<number> {
+      return serial(async () => {
+        const removed = await writes.clearMarks(span);
+        if (removed.length > 0) history = record(history, { kind: "harakat-clear", span, removed });
+        return removed.length;
       });
     },
     setMarker({ before, after }: { before: MarkerAt; after: MarkerAt }): Promise<void> {

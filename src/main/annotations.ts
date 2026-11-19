@@ -11,6 +11,7 @@ import {
   type PageAnnotations,
   quoteSpan,
   type Span,
+  spanContains,
   type UserHarakat,
   wordsOf,
 } from "../shared/annotations";
@@ -288,6 +289,28 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
         .prepare("DELETE FROM harakat WHERE book_id = ? AND file_id = ? AND part = ? AND line = ? AND word = ? AND letter = ?")
         .run(bookId, row.file_id, ref.part, ref.line, ref.word, ref.letter);
       if (changes === 0) throw new Error(`There are no harakat of yours at ${describeRef(ref)} on page ${position}.`);
+    },
+
+    /**
+     * Removes every mark the reader or the agent put on letters inside the span, in one go.
+     * Returns what it removed so it can be put back. Marks on letters a sync replaced are left alone.
+     */
+    async clearHarakat({ bookId, position, span }: { bookId: string; position: number; span: Span }): Promise<{ ref: LetterRef; marks: string }[]> {
+      const row = pageAt({ bookId, position });
+      const page = toPage(row);
+      quoteSpan({ page, span });
+      const inSpan = (db.prepare("SELECT * FROM harakat WHERE book_id = ? AND file_id = ? AND part = ? ORDER BY line, word, letter").all(bookId, row.file_id, span.part) as unknown as HarakatRow[])
+        .filter((h) => spanContains({ span, part: h.part, ref: h }) && letterAt({ page, ref: h }) === h.base);
+      const remove = db.prepare("DELETE FROM harakat WHERE id = ?");
+      db.exec("BEGIN");
+      try {
+        for (const h of inSpan) remove.run(h.id);
+        db.exec("COMMIT");
+      } catch (err) {
+        db.exec("ROLLBACK");
+        throw err;
+      }
+      return inSpan.map((h) => ({ ref: { part: h.part, line: h.line, word: h.word, letter: h.letter }, marks: h.marks }));
     },
   };
 };

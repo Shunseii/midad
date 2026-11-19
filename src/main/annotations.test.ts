@@ -208,6 +208,24 @@ describe("harakat", () => {
     await expect(annotations.removeHarakat({ ...at, letter: 2 })).rejects.toThrow(/no harakat/i);
   });
 
+  it("clears every mark inside a span, keeps the rest, and returns what it removed", async () => {
+    await annotations.setHarakat({ ...at, letter: 2, marks: FATHA });
+    await annotations.setHarakat({ ...at, letter: 4, marks: KASRA, author: "agent" });
+    await annotations.setHarakat({ ...at, word: 1, letter: 2, marks: FATHA });
+    const span = { part: "matn" as const, start: { line: 2, word: 2 }, end: { line: 2, word: 3 } };
+    const removed = await annotations.clearHarakat({ bookId: "b1", position: 1, span });
+    expect(removed).toEqual([
+      { ref: { part: "matn", line: 2, word: 3, letter: 2 }, marks: FATHA },
+      { ref: { part: "matn", line: 2, word: 3, letter: 4 }, marks: KASRA },
+    ]);
+    expect((await onPage()).harakat).toEqual([expect.objectContaining({ line: 2, word: 1, letter: 2 })]);
+  });
+
+  it("clears nothing, without failing, when the span has no marks", async () => {
+    const span = { part: "matn" as const, start: { line: 2, word: 1 }, end: { line: 2, word: 3 } };
+    expect(await annotations.clearHarakat({ bookId: "b1", position: 1, span })).toEqual([]);
+  });
+
   it("stays fresh when an overwrite only adds corpus harakat, and goes stale when the letter changes", async () => {
     await annotations.setHarakat({ ...at, letter: 4, marks: FATHA });
     await annotations.setHarakat({ ...at, word: 1, letter: 2, marks: FATHA });

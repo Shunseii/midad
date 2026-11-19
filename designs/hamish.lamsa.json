@@ -2,6 +2,38 @@
   "$schema": "https://lamsa.dev/schema/v1.json",
   "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%,\n  60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n",
   "nodes": {
+    "YfP2SLAF": {
+      "componentId": "RV1DOgzp",
+      "index": "a0065",
+      "name": "Clear my harakat",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "eraser"
+        }
+      },
+      "parentId": "IpfsEzi4",
+      "props": {
+        "variant": "ghost",
+        "label": "Clear my harakat"
+      },
+      "type": "instance"
+    },
+    "OZddstRb": {
+      "componentId": "RV1DOgzp",
+      "index": "a0065",
+      "name": "Clear my harakat",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "eraser"
+        }
+      },
+      "parentId": "hrXt6JlR",
+      "props": {
+        "variant": "ghost",
+        "label": "Clear my harakat"
+      },
+      "type": "instance"
+    },
     "TllpeHcf": {
       "type": "frame",
       "name": "Row · Text size",
