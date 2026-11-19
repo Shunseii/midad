@@ -12,10 +12,10 @@ import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annota
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
 import { ScanPane } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
-import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
+import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
 import { arabicNumber } from "../lib/format";
-import { createUndoStack, type UndoStack } from "../lib/undo";
+import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
 import { hamish, keys, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/hamish";
 
 interface TocEntry {
@@ -297,7 +297,6 @@ export const ReaderRoute = () => {
 
   const marker = useMarker(bookId);
   const setMarker = useSetMarker(bookId);
-  const [markerToast, setMarkerToast] = useState<{ id: number; page: number; undo: () => void } | null>(null);
   const pendingReveal = useRef<(Citation & { position: number }) | null>(null);
   const pendingRow = useRef<{ position: number; line: number; word: number } | null>(null);
   const hoveredRow = useRef<{ line: number; word: number } | null>(null);
@@ -366,17 +365,12 @@ export const ReaderRoute = () => {
     setPanelOpen(true);
   };
 
-  const dismissMarkerToast = useCallback(() => setMarkerToast(null), []);
-
-  const markRow = (at: { line: number; word: number }) => {
-    const previous = marker.data;
-    void setMarker({ position, ...at });
-    setMarkerToast({
-      id: Date.now(),
-      page: page.data?.number ?? position,
-      undo: () => void setMarker(previous ? { position: previous.position, line: previous.line, word: previous.word } : null),
-    });
+  const markerAt = (): MarkerAt => {
+    const m = marker.data;
+    return m ? { position: m.position, line: m.line, word: m.word } : null;
   };
+
+  const markRow = (at: { line: number; word: number }) => void edits().setMarker({ before: markerAt(), after: { position, ...at } });
 
   /** M marks the screen row under the pointer, or else the first row in view. */
   const markFromKeyboard = () => {
@@ -503,6 +497,8 @@ export const ReaderRoute = () => {
   // Undo and redo cover every edit on the current page; the stack starts over on a new page.
   const latestActions = useRef(actions);
   latestActions.current = actions;
+  const latestSetMarker = useRef(setMarker);
+  latestSetMarker.current = setMarker;
   const undoStack = useRef<{ position: number; stack: UndoStack } | null>(null);
   const edits = (): UndoStack => {
     if (undoStack.current?.position !== position) {
@@ -516,6 +512,7 @@ export const ReaderRoute = () => {
           updateNote: (input) => a().updateNote(input),
           deleteNote: (id) => a().deleteNote(id),
           setMarks: ({ ref, marks }) => (marks ? a().setHarakat({ ...ref, marks }) : a().removeHarakat(ref)),
+          setMarker: (at) => latestSetMarker.current(at),
         }),
       };
     }
@@ -781,7 +778,7 @@ export const ReaderRoute = () => {
               onHoverRow={(at) => {
                 hoveredRow.current = at;
               }}
-              onClearMark={() => void setMarker(null)}
+              onClearMark={() => void edits().setMarker({ before: markerAt(), after: null })}
               onWordHover={onWordHover}
               onWordClick={onWordClick}
             />
@@ -801,23 +798,6 @@ export const ReaderRoute = () => {
         )}
       </div>
 
-      {markerToast && (
-        <Toast key={markerToast.id} onDone={dismissMarkerToast}>
-          <span className="flex items-center gap-3">
-            <span>Marked as last read · page {arabicNumber(markerToast.page)}</span>
-            <button
-              type="button"
-              className="font-semibold"
-              onClick={() => {
-                markerToast.undo();
-                setMarkerToast(null);
-              }}
-            >
-              Undo
-            </button>
-          </span>
-        </Toast>
-      )}
 
       {lastToolbar.current &&
         (() => {

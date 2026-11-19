@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { HighlightColor, LetterRef, Span } from "../../../shared/annotations";
-import { createUndoStack, type PageWrites } from "./undo";
+import { createUndoStack, type MarkerAt, type PageWrites } from "./undo";
 
 const SPAN: Span = { part: "matn", start: { line: 2, word: 1 }, end: { line: 2, word: 3 } };
 const REF: LetterRef = { part: "matn", line: 2, word: 1, letter: 2 };
@@ -11,6 +11,7 @@ const fakePage = () => {
   const highlights = new Map<string, { span: Span; color: HighlightColor }>();
   const notes = new Map<string, { span: Span; body: string }>();
   const harakat = new Map<string, string>();
+  const book = { marker: null as MarkerAt };
   const writes: PageWrites = {
     addHighlight: async ({ span, color }) => {
       const id = `h${++next}`;
@@ -37,8 +38,11 @@ const fakePage = () => {
       if (marks) harakat.set(JSON.stringify(ref), marks);
       else harakat.delete(JSON.stringify(ref));
     },
+    setMarker: async (at) => {
+      book.marker = at;
+    },
   };
-  return { writes, highlights, notes, harakat };
+  return { writes, highlights, notes, harakat, book };
 };
 
 describe("undo stack", () => {
@@ -159,5 +163,31 @@ describe("undo stack", () => {
     await stack.addHighlight({ span: SPAN, color: "pink" });
     await Promise.all([stack.undo(), stack.undo()]);
     expect(page.highlights.size).toBe(0);
+  });
+
+  it("moves the last-read marker back to where it was, or clears it if there was none", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    const first = { position: 4, line: 2, word: 1 };
+    const second = { position: 4, line: 7, word: 3 };
+    await stack.setMarker({ before: null, after: first });
+    await stack.setMarker({ before: first, after: second });
+    await stack.undo();
+    expect(page.book.marker).toEqual(first);
+    await stack.undo();
+    expect(page.book.marker).toBeNull();
+    await stack.redo();
+    expect(page.book.marker).toEqual(first);
+  });
+
+  it("brings back a cleared marker", async () => {
+    const page = fakePage();
+    const at = { position: 4, line: 2, word: 1 };
+    page.book.marker = at;
+    const stack = createUndoStack(page.writes);
+    await stack.setMarker({ before: at, after: null });
+    expect(page.book.marker).toBeNull();
+    await stack.undo();
+    expect(page.book.marker).toEqual(at);
   });
 });
