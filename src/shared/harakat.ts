@@ -34,6 +34,9 @@ export interface Letter {
   marks: string;
 }
 
+/** Only Arabic letters take harakat; punctuation and digits in a word don't. */
+export const isArabicLetter = (ch: string): boolean => /^\p{L}$/u.test(ch) && /^\p{Script=Arabic}$/u.test(ch);
+
 /** Splits a word into base letters, each with the marks written after it. Marks before any letter are dropped. */
 export const lettersOf = (word: string): Letter[] => {
   const letters: Letter[] = [];

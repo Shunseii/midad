@@ -1,5 +1,6 @@
 import { Check, Copy, NotebookPen, Sparkles, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import * as Popover from "@radix-ui/react-popover";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { HIGHLIGHT_COLORS, type HighlightColor, type Note } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
 import { MARK_BG } from "./page-view";
@@ -8,9 +9,8 @@ import { Button, IconButton, Kbd, cx } from "./ui";
 const COLOR_NAMES: Record<HighlightColor, string> = { yellow: "Yellow", green: "Green", pink: "Pink", blue: "Blue" };
 
 /** Fixed-position box centred above `rect`, or below it when there isn't room above. */
-const placement = ({ rect, height, prefer = "above" }: { rect: DOMRect; height: number; prefer?: "above" | "below" }) => {
-  const roomAbove = rect.top > height + 80;
-  const above = prefer === "above" ? roomAbove : window.innerHeight - rect.bottom < height + 40 && roomAbove;
+const placement = ({ rect, height }: { rect: DOMRect; height: number }) => {
+  const above = rect.top > height + 80;
   return {
     left: Math.min(Math.max(rect.left + rect.width / 2, 220), window.innerWidth - 220),
     top: above ? rect.top - 10 : rect.bottom + 10,
@@ -85,74 +85,82 @@ const SaveStatus = ({ state }: { state: SaveState }) => {
   return null;
 };
 
-/** A hovered note, read-only: a few lines and where it sits. Clicking it opens the editor. */
-export const NotePeek = ({
+/**
+ * The floating layer a note shows in, anchored to the noted words. Radix
+ * places it (flipping above when there's no room below), animates it in and
+ * out, and closes it on Esc or a click elsewhere.
+ */
+export const NoteLayer = ({
   rect,
-  note,
-  lineLabel,
-  onEdit,
+  open,
+  onClose,
   onPointerInside,
+  children,
 }: {
   rect: DOMRect;
-  note: Note;
-  lineLabel: string;
-  onEdit: () => void;
+  open: boolean;
+  onClose: () => void;
   onPointerInside: (inside: boolean) => void;
-}) => {
-  const below = window.innerHeight - rect.bottom > 160;
-  const left = Math.min(Math.max(rect.left + rect.width / 2, 140), window.innerWidth - 140);
-  return (
-    <button
-      type="button"
-      aria-label={`Edit note on ${lineLabel}`}
-      onClick={onEdit}
-      onMouseEnter={() => onPointerInside(true)}
-      onMouseLeave={() => onPointerInside(false)}
-      style={{ left, top: below ? rect.bottom + 8 : rect.top - 8, transform: below ? "translate(-50%, 0)" : "translate(-50%, -100%)" }}
-      className="group fixed z-40 flex w-64 flex-col gap-1.5 rounded-lg border border-line bg-surface px-3 py-2.5 text-left shadow-md hover:border-accent"
-    >
-      <span
-        aria-hidden
-        className={cx(
-          "absolute left-1/2 size-2.5 -translate-x-1/2 rotate-45 border-line bg-surface group-hover:border-accent",
-          below ? "-top-1.5 border-l border-t" : "-bottom-1.5 border-b border-r",
-        )}
-      />
-      <span dir="auto" className="line-clamp-3 text-sm leading-snug text-ink [unicode-bidi:plaintext]">
-        {note.body}
+  children: ReactNode;
+}) => (
+  <Popover.Root open={open} onOpenChange={(next) => !next && onClose()}>
+    <Popover.Anchor virtualRef={{ current: { getBoundingClientRect: () => rect } }} />
+    <Popover.Portal>
+      <Popover.Content
+        side="bottom"
+        sideOffset={8}
+        collisionPadding={12}
+        // The editor focuses its own text field; a peek takes no focus at all.
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onMouseEnter={() => onPointerInside(true)}
+        onMouseLeave={() => onPointerInside(false)}
+        className="popover z-40 outline-none"
+      >
+        {children}
+        <Popover.Arrow width={12} height={6} className="fill-surface [filter:drop-shadow(0_1px_0_var(--color-line))]" />
+      </Popover.Content>
+    </Popover.Portal>
+  </Popover.Root>
+);
+
+/** A hovered note, read-only: a few lines and where it sits. Clicking it opens the editor. */
+export const NotePeek = ({ note, lineLabel, onEdit }: { note: Note; lineLabel: string; onEdit: () => void }) => (
+  <button
+    type="button"
+    aria-label={`Edit note on ${lineLabel}`}
+    onClick={onEdit}
+    className="group flex w-64 flex-col gap-1.5 rounded-lg border border-line bg-surface px-3 py-2.5 text-left shadow-md hover:border-accent"
+  >
+    <span dir="auto" className="line-clamp-3 text-sm leading-snug text-ink [unicode-bidi:plaintext]">
+      {note.body}
+    </span>
+    <span className="flex items-center gap-2 text-xs text-ink-3">
+      <span className="flex-1 first-letter:uppercase">
+        {lineLabel} · {timeAgo(note.updatedAt)}
       </span>
-      <span className="flex items-center gap-2 text-xs text-ink-3">
-        <span className="flex-1 first-letter:uppercase">
-          {lineLabel} · {timeAgo(note.updatedAt)}
-        </span>
-        <span className="group-hover:text-accent">Click to edit</span>
-      </span>
-    </button>
-  );
-};
+      <span className="group-hover:text-accent">Click to edit</span>
+    </span>
+  </button>
+);
 
 /**
  * Edits a note in place. A new note (no `note` yet) is created on the first
  * non-empty text; after that every pause in typing saves.
  */
-export const NotePopover = ({
-  rect,
+export const NoteEditor = ({
   note,
   lineLabel,
   onCreate,
   onUpdate,
   onDelete,
   onClose,
-  onPointerInside,
 }: {
-  rect: DOMRect;
   note: Note | null;
   lineLabel: string;
   onCreate: (body: string) => Promise<{ id: string }>;
   onUpdate: (input: { id: string; body: string }) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   onClose: () => void;
-  onPointerInside: (inside: boolean) => void;
 }) => {
   const [body, setBody] = useState(note?.body ?? "");
   const [save, setSave] = useState<SaveState>("idle");
@@ -182,7 +190,7 @@ export const NotePopover = ({
   latest.current = { body, persist };
   useEffect(
     () => () => {
-      // Save what was typed in the last half second when the popover closes.
+      // Save what was typed in the last half second when the editor goes away.
       if (timer.current) {
         clearTimeout(timer.current);
         latest.current.persist(latest.current.body);
@@ -200,20 +208,7 @@ export const NotePopover = ({
   };
 
   return (
-    <div
-      role="dialog"
-      aria-label="Note"
-      style={placement({ rect, height: 200, prefer: "below" })}
-      onMouseEnter={() => onPointerInside(true)}
-      onMouseLeave={() => onPointerInside(false)}
-      onKeyDown={(e) => {
-        if (e.key === "Escape") {
-          e.stopPropagation();
-          onClose();
-        }
-      }}
-      className="fixed z-40 flex w-108 flex-col gap-2.5 rounded-xl border border-line bg-surface p-3 shadow-lg"
-    >
+    <div role="dialog" aria-label="Note" className="flex w-108 max-w-[calc(100vw-2rem)] flex-col gap-2.5 rounded-xl border border-line bg-surface p-3 shadow-lg">
       <div className="flex items-center gap-2 text-xs text-ink-3">
         <NotebookPen className="size-3.5" />
         <span className="flex-1">

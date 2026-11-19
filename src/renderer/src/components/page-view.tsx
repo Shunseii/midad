@@ -154,6 +154,7 @@ const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick
           data-line={line}
           data-w={token.word}
           onMouseEnter={(e) => onWordHover(target(e), note)}
+          onMouseLeave={(e) => note && onWordHover(target(e), null)}
           onClick={(e) => onWordClick(target(e), highlight)}
           className={cx(
             highlight && MARK_BG[highlight.color],

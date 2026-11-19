@@ -3,11 +3,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, wordsOf } from "../../../shared/annotations";
-import { lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
+import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, StoredPage } from "../../../shared/library";
 import { InlinePanel, SideSheet } from "../components/side-sheet";
 import { useMediaQuery } from "../lib/media";
-import { NotePeek, NotePopover, SelectionToolbar } from "../components/annotation-popovers";
+import { NoteEditor, NoteLayer, NotePeek, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
 import { ScanPane } from "../components/scan-pane";
@@ -55,7 +55,7 @@ type Toolbar =
   | { mode: "selection"; span: Span; rect: DOMRect; text: string }
   | { mode: "highlight"; highlight: Highlight; rect: DOMRect };
 
-interface NoteEditor {
+interface NoteState {
   note: Note | null;
   span: Span;
   rect: DOMRect;
@@ -230,16 +230,27 @@ const DisplayMenu = ({
   </div>
 );
 
-/** Moves the typing target by `delta` letters, crossing into neighbouring words on the same line. */
+const baseAt = ({ page, ref }: { page: StoredPage["page"]; ref: LetterRef }): string | undefined => {
+  const word = wordsOf(lineText({ page, part: ref.part, line: ref.line }) ?? "")[ref.word - 1];
+  return word ? lettersOf(word)[ref.letter - 1]?.base : undefined;
+};
+
+/** Whether a letter can take harakat: Arabic letters can, brackets and digits can't. */
+const takesHarakat = ({ page, ref }: { page: StoredPage["page"]; ref: LetterRef }) => isArabicLetter(baseAt({ page, ref }) ?? "");
+
+/** Moves the typing target by `delta` letters, crossing into neighbouring words on the same line and skipping punctuation. */
 const moveTarget = ({ page, target, delta }: { page: StoredPage["page"]; target: LetterRef; delta: number }): LetterRef => {
   const text = lineText({ page, part: target.part, line: target.line }) ?? "";
   const counts = wordsOf(text).map((w) => lettersOf(w).length);
-  const letter = target.letter + delta;
-  if (letter >= 1 && letter <= (counts[target.word - 1] ?? 0)) return { ...target, letter };
-  const word = target.word + delta;
-  const size = counts[word - 1];
-  if (!size) return target;
-  return { ...target, word, letter: delta > 0 ? 1 : size };
+  const step = (from: LetterRef): LetterRef | null => {
+    const letter = from.letter + delta;
+    if (letter >= 1 && letter <= (counts[from.word - 1] ?? 0)) return { ...from, letter };
+    const word = from.word + delta;
+    const size = counts[word - 1];
+    return size ? { ...from, word, letter: delta > 0 ? 1 : size } : null;
+  };
+  for (let next = step(target); next; next = step(next)) if (takesHarakat({ page, ref: next })) return next;
+  return target;
 };
 
 export const ReaderRoute = () => {
@@ -266,9 +277,14 @@ export const ReaderRoute = () => {
   const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: PANEL_WIDTH });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
-  const [noteEditor, setNoteEditor] = useState<NoteEditor | null>(null);
+  const [noteEditor, setNoteEditor] = useState<NoteState | null>(null);
+  // Kept after closing so the popover can animate out with its content.
+  const lastNote = useRef<NoteState | null>(null);
+  if (noteEditor) lastNote.current = noteEditor;
   const pageRoot = useRef<HTMLDivElement>(null);
   const pointerInNote = useRef(false);
+  // A popover that closes under the pointer never sees it leave.
+  if (!noteEditor) pointerInNote.current = false;
   const reselect = useRef<Span | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -368,10 +384,12 @@ export const ReaderRoute = () => {
     markRow({ line: Number(word.dataset.line), word: row?.word ?? Number(word.dataset.w) });
   };
 
-  const scheduleNoteClose = () => {
+  /** Closes the note shortly, unless the pointer comes back. Leaving the popover itself closes even the editor. */
+  const scheduleNoteClose = ({ left = false }: { left?: boolean } = {}) => {
     clearTimeout(closeTimer.current);
     closeTimer.current = setTimeout(() => {
-      if (!pointerInNote.current && !focusInNoteEditor()) setNoteEditor(null);
+      if (pointerInNote.current) return;
+      if (left || !focusInNoteEditor()) setNoteEditor(null);
     }, 300);
   };
 
@@ -388,7 +406,10 @@ export const ReaderRoute = () => {
 
   const onWordClick = (word: WordTarget, highlight: Highlight | null) => {
     if (!window.getSelection()?.isCollapsed) return;
-    if (word.letter !== null) setTarget({ part: word.part, line: word.ref.line, word: word.ref.word, letter: word.letter });
+    if (word.letter !== null) {
+      const ref = { part: word.part, line: word.ref.line, word: word.ref.word, letter: word.letter };
+      setTarget(page.data && takesHarakat({ page: page.data.page, ref }) ? ref : null);
+    }
     if (!highlight) return;
     setNoteEditor(null);
     setToolbar({ mode: "highlight", highlight, rect: word.element.getBoundingClientRect() });
@@ -815,36 +836,35 @@ export const ReaderRoute = () => {
           }}
         />
       )}
-      {noteEditor?.mode === "peek" && noteEditor.note && (
-        <NotePeek
-          key={noteEditor.note.id}
-          rect={noteEditor.rect}
-          note={noteEditor.note}
-          lineLabel={spanLabel(noteEditor.span).toLowerCase()}
-          onEdit={() => setNoteEditor({ ...noteEditor, mode: "edit" })}
-          onPointerInside={(inside) => {
-            pointerInNote.current = inside;
-            if (inside) clearTimeout(closeTimer.current);
-            else scheduleNoteClose();
-          }}
-        />
-      )}
-      {noteEditor?.mode === "edit" && (
-        <NotePopover
-          key={noteEditor.note?.id ?? "new"}
-          rect={noteEditor.rect}
-          note={noteEditor.note}
-          lineLabel={spanLabel(noteEditor.span).toLowerCase()}
-          onCreate={(body) => noteWrites.create({ span: noteEditor.span, body })}
-          onUpdate={noteWrites.update}
-          onDelete={noteWrites.remove}
+      {lastNote.current && (
+        <NoteLayer
+          rect={lastNote.current.rect}
+          open={noteEditor !== null}
           onClose={() => setNoteEditor(null)}
           onPointerInside={(inside) => {
             pointerInNote.current = inside;
             if (inside) clearTimeout(closeTimer.current);
-            else scheduleNoteClose();
+            else scheduleNoteClose({ left: true });
           }}
-        />
+        >
+          {(() => {
+            const shown = lastNote.current;
+            const lineLabel = spanLabel(shown.span).toLowerCase();
+            return shown.mode === "peek" && shown.note ? (
+              <NotePeek key={shown.note.id} note={shown.note} lineLabel={lineLabel} onEdit={() => setNoteEditor({ ...shown, mode: "edit" })} />
+            ) : (
+              <NoteEditor
+                key={shown.note?.id ?? "new"}
+                note={shown.note}
+                lineLabel={lineLabel}
+                onCreate={(body) => noteWrites.create({ span: shown.span, body })}
+                onUpdate={noteWrites.update}
+                onDelete={noteWrites.remove}
+                onClose={() => setNoteEditor(null)}
+              />
+            );
+          })()}
+        </NoteLayer>
       )}
     </div>
   );

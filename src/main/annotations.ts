@@ -14,7 +14,7 @@ import {
   type UserHarakat,
   wordsOf,
 } from "../shared/annotations";
-import { lettersOf, normalizeMarks } from "../shared/harakat";
+import { isArabicLetter, lettersOf, normalizeMarks } from "../shared/harakat";
 import type { Footnote, MatnBlock, Page } from "../shared/page";
 
 /**
@@ -122,7 +122,6 @@ const letterAt = ({ page, ref }: { page: Page; ref: LetterRef }): string | null 
   return (word && lettersOf(word)[ref.letter - 1]?.base) ?? null;
 };
 
-const isArabicLetter = (ch: string) => /^\p{L}$/u.test(ch) && /^\p{Script=Arabic}$/u.test(ch);
 
 const describeRef = (ref: LetterRef) => `${ref.part} line ${ref.line}, word ${ref.word}, letter ${ref.letter}`;
 
