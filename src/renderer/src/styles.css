@@ -60,34 +60,6 @@
   --text-ar-small--line-height: 1.75rem;
   --font-mono: ui-monospace, "JetBrains Mono", monospace;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --animate-mark-bar: mark-bar 350ms var(--ease-out);
-  --animate-mark-drop: mark-drop 450ms var(--ease-out);
-  --animate-mark-bar-out: mark-bar 200ms ease-in reverse forwards;
-  --animate-mark-lift: mark-lift 200ms ease-in forwards;
-
-  @keyframes mark-bar {
-    from {
-      scale: 1 0;
-    }
-  }
-  @keyframes mark-lift {
-    to {
-      opacity: 0;
-      translate: 0 -0.5rem;
-      scale: 0.8;
-    }
-  }
-  @keyframes mark-drop {
-    from {
-      opacity: 0;
-      translate: 0 -0.75rem;
-      scale: 0.6;
-    }
-    60% {
-      opacity: 1;
-      translate: 0 0.125rem;
-    }
-  }
 }
 
 html,
