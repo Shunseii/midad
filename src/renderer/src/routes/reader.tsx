@@ -277,6 +277,9 @@ export const ReaderRoute = () => {
   const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: PANEL_WIDTH });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
+  // Kept after closing so the toolbar can animate out with its content.
+  const lastToolbar = useRef<Toolbar | null>(null);
+  if (toolbar) lastToolbar.current = toolbar;
   const [noteEditor, setNoteEditor] = useState<NoteState | null>(null);
   // Kept after closing so the popover can animate out with its content.
   const lastNote = useRef<NoteState | null>(null);
@@ -810,32 +813,38 @@ export const ReaderRoute = () => {
         </Toast>
       )}
 
-      {toolbar && (
-        <SelectionToolbar
-          rect={toolbar.rect}
-          mode={toolbar.mode}
-          onHighlight={(color) => {
-            if (toolbar.mode === "selection") void edits().addHighlight({ span: toolbar.span, color });
-            finishToolbar();
-          }}
-          onRemoveHighlight={() => {
-            if (toolbar.mode === "highlight") removeHighlight(toolbar.highlight.id);
-            finishToolbar();
-          }}
-          onNote={openNoteFromToolbar}
-          onCopy={() => {
-            if (toolbar.mode === "selection") {
-              void navigator.clipboard.writeText(toolbar.text);
-              rememberCopy({ text: toolbar.text, span: toolbar.span, position });
-            }
-            finishToolbar();
-          }}
-          onAsk={() => {
-            if (toolbar.mode === "selection") openAsk({ span: toolbar.span, text: page.data ? quoteSpan({ page: page.data.page, span: toolbar.span }) : toolbar.text, position });
-            finishToolbar();
-          }}
-        />
-      )}
+      {lastToolbar.current &&
+        (() => {
+          const shown = lastToolbar.current;
+          return (
+            <SelectionToolbar
+              open={toolbar !== null}
+              rect={shown.rect}
+              mode={shown.mode}
+              onDismiss={() => setToolbar(null)}
+              onHighlight={(color) => {
+                if (shown.mode === "selection") void edits().addHighlight({ span: shown.span, color });
+                finishToolbar();
+              }}
+              onRemoveHighlight={() => {
+                if (shown.mode === "highlight") removeHighlight(shown.highlight.id);
+                finishToolbar();
+              }}
+              onNote={openNoteFromToolbar}
+              onCopy={() => {
+                if (shown.mode === "selection") {
+                  void navigator.clipboard.writeText(shown.text);
+                  rememberCopy({ text: shown.text, span: shown.span, position });
+                }
+                finishToolbar();
+              }}
+              onAsk={() => {
+                if (shown.mode === "selection") openAsk({ span: shown.span, text: page.data ? quoteSpan({ page: page.data.page, span: shown.span }) : shown.text, position });
+                finishToolbar();
+              }}
+            />
+          );
+        })()}
       {lastNote.current && (
         <NoteLayer
           rect={lastNote.current.rect}

@@ -16,11 +16,22 @@ function PopoverContent({
   alignOffset = 0,
   side = "bottom",
   sideOffset = 4,
+  anchor,
+  collisionPadding,
+  collisionAvoidance,
+  positionMethod,
   ...props
 }: PopoverPrimitive.Popup.Props &
   Pick<
     PopoverPrimitive.Positioner.Props,
-    "align" | "alignOffset" | "side" | "sideOffset"
+    | "align"
+    | "alignOffset"
+    | "side"
+    | "sideOffset"
+    | "anchor"
+    | "collisionPadding"
+    | "collisionAvoidance"
+    | "positionMethod"
   >) {
   return (
     <PopoverPrimitive.Portal>
@@ -29,6 +40,10 @@ function PopoverContent({
         alignOffset={alignOffset}
         side={side}
         sideOffset={sideOffset}
+        anchor={anchor}
+        collisionPadding={collisionPadding}
+        collisionAvoidance={collisionAvoidance}
+        positionMethod={positionMethod}
         className="isolate z-50"
       >
         <PopoverPrimitive.Popup
@@ -41,6 +56,24 @@ function PopoverContent({
         />
       </PopoverPrimitive.Positioner>
     </PopoverPrimitive.Portal>
+  )
+}
+
+/** A small triangle pointing at the anchor, drawn in the popup's surface colour with a hairline edge. */
+function PopoverArrow({ className, ...props }: PopoverPrimitive.Arrow.Props) {
+  return (
+    <PopoverPrimitive.Arrow
+      data-slot="popover-arrow"
+      className={cn(
+        "h-1.5 w-3 data-[side=bottom]:bottom-full data-[side=bottom]:translate-y-px data-[side=bottom]:rotate-180 data-[side=top]:top-full data-[side=top]:-translate-y-px",
+        className
+      )}
+      {...props}
+    >
+      <svg viewBox="0 0 12 6" aria-hidden className="block size-full fill-popover drop-shadow-[0_1px_0_var(--color-line)]">
+        <path d="M0 0h12L6 6z" />
+      </svg>
+    </PopoverPrimitive.Arrow>
   )
 }
 
@@ -79,6 +112,7 @@ function PopoverDescription({
 
 export {
   Popover,
+  PopoverArrow,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,

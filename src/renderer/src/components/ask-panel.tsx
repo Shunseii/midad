@@ -1,12 +1,12 @@
 import { ArrowUp, Copy, Languages, Lightbulb, ListTree, NotebookPen, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
-import { type ClipboardEvent, type ReactNode, type KeyboardEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type ClipboardEvent, type ReactNode, type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import { quoteSpan, type Span } from "../../../shared/annotations";
 import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
 import { copiedPassage } from "../lib/copied";
 import { arabicNumber } from "../lib/format";
 import { hamish, usePage } from "../lib/hamish";
-import { createPortal } from "react-dom";
 import { Button, IconButton, cx } from "./ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export interface AskSelection {
   span: Span;
@@ -117,8 +117,8 @@ const quoteCitation = (span: Span): Omit<Cite, "kind"> => ({
 
 /**
  * A citation or quote: a small label that shows the exact words on hover and
- * jumps to them on click. The words show in a fixed layer so the panel's
- * scrolling doesn't clip them.
+ * jumps to them on click. The words show in a portalled tooltip so the
+ * panel's scrolling doesn't clip them.
  */
 const CiteChip = ({
   label,
@@ -133,13 +133,10 @@ const CiteChip = ({
   onRemove?: () => void;
   /** Inside a sent question, which already has the accent tint. */
   onBubble?: boolean;
-}) => {
-  const [at, setAt] = useState<DOMRect | null>(null);
-  const show = (e: MouseEvent<HTMLElement>) => text && setAt(e.currentTarget.getBoundingClientRect());
-  return (
-    <span
-      onMouseEnter={show}
-      onMouseLeave={() => setAt(null)}
+}) => (
+  <Tooltip disabled={!text} disableHoverablePopup>
+    <TooltipTrigger
+      render={<span />}
       className={cx(
         "mx-0.5 inline-flex translate-y-px items-center gap-1 rounded-md align-baseline font-sans text-xs text-accent",
         onBubble ? "bg-surface" : "bg-accent-soft",
@@ -159,23 +156,18 @@ const CiteChip = ({
           <X aria-hidden className="size-3" />
         </button>
       )}
-      {at &&
-        text &&
-        createPortal(
-        <span
-          role="tooltip"
-          style={{ left: Math.min(Math.max(at.left + at.width / 2, 170), window.innerWidth - 170), top: at.top - 6 }}
-          className="pointer-events-none fixed z-50 w-max max-w-80 -translate-x-1/2 -translate-y-full rounded-lg border border-line bg-surface px-3 py-2 shadow-md"
-        >
-          <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
-            {text}
-          </span>
-        </span>,
-          document.body,
-        )}
-    </span>
-  );
-};
+    </TooltipTrigger>
+    <TooltipContent
+      sideOffset={6}
+      // Keeps the surface look of the reader's other floating layers; the dark arrow doesn't fit it.
+      className="block w-max max-w-80 rounded-lg border border-line bg-surface px-3 py-2 text-ink shadow-md *:data-side:hidden"
+    >
+      <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
+        {text}
+      </span>
+    </TooltipContent>
+  </Tooltip>
+);
 
 /** An answer's citation: its words come from the page the question was asked on. */
 const AnswerCite = ({ bookId, cite, position, onCite }: { bookId: string; cite: Cite; position: number; onCite: (c: Citation) => void }) => {

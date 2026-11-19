@@ -1,75 +1,86 @@
 import { Check, Copy, NotebookPen, Sparkles, Trash2 } from "lucide-react";
-import * as Popover from "@radix-ui/react-popover";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { HIGHLIGHT_COLORS, type HighlightColor, type Note } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
 import { MARK_BG } from "./page-view";
+import { Popover, PopoverArrow, PopoverContent } from "./ui/popover";
 import { Button, IconButton, Kbd, cx } from "./ui";
 
 const COLOR_NAMES: Record<HighlightColor, string> = { yellow: "Yellow", green: "Green", pink: "Pink", blue: "Blue" };
 
-/** Fixed-position box centred above `rect`, or below it when there isn't room above. */
-const placement = ({ rect, height }: { rect: DOMRect; height: number }) => {
-  const above = rect.top > height + 80;
-  return {
-    left: Math.min(Math.max(rect.left + rect.width / 2, 220), window.innerWidth - 220),
-    top: above ? rect.top - 10 : rect.bottom + 10,
-    transform: above ? "translate(-50%, -100%)" : "translate(-50%, 0)",
-  };
-};
+const toAnchor = (rect: DOMRect) => ({ getBoundingClientRect: () => rect });
+
+/** Shared by the note layer and the selection toolbar: no chrome of its own, grows from the anchor, and takes no focus. */
+const FLOATING_LAYER = "w-auto gap-0 rounded-none bg-transparent p-0 shadow-none ring-0 duration-150 data-closed:pointer-events-none motion-reduce:animate-none";
 
 export const SelectionToolbar = ({
+  open,
   rect,
   mode,
+  onDismiss,
   onHighlight,
   onRemoveHighlight,
   onNote,
   onCopy,
   onAsk,
 }: {
-  onAsk: () => void;
+  open: boolean;
   rect: DOMRect;
   mode: "selection" | "highlight";
+  onDismiss: () => void;
+  onAsk: () => void;
   onHighlight: (color: HighlightColor) => void;
   onRemoveHighlight: () => void;
   onNote: () => void;
   onCopy: () => void;
-}) => (
-  <div
-    role="toolbar"
-    aria-label="Annotate"
-    style={placement({ rect, height: 44 })}
-    onMouseDown={(e) => e.preventDefault()}
-    className="fixed z-40 flex items-center gap-1 rounded-xl border border-line bg-surface p-1.5 shadow-lg"
-  >
-    {mode === "selection" ? (
-      HIGHLIGHT_COLORS.map((color) => (
-        <button
-          key={color}
-          type="button"
-          aria-label={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
-          title={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
-          onClick={() => onHighlight(color)}
-          className={cx("mx-0.5 size-5 rounded-full ring-1 ring-line transition-transform hover:scale-110", MARK_BG[color])}
-        />
-      ))
-    ) : (
-      <Button variant="ghost" size="sm" icon={Trash2} onClick={onRemoveHighlight}>
-        Remove
-      </Button>
-    )}
-    <div className="mx-1 h-5 w-px bg-line" />
-    <Button variant="ghost" size="sm" icon={NotebookPen} onClick={onNote}>
-      Note
-    </Button>
-    {mode === "selection" && (
-      <Button variant="ghost" size="sm" icon={Sparkles} onClick={onAsk}>
-        Ask
-      </Button>
-    )}
-    {mode === "selection" && <IconButton icon={Copy} label="Copy" onClick={onCopy} />}
-  </div>
-);
+}) => {
+  const anchor = useMemo(() => toAnchor(rect), [rect]);
+  return (
+    <Popover open={open} onOpenChange={(next) => !next && onDismiss()}>
+      <PopoverContent
+        anchor={anchor}
+        side="top"
+        sideOffset={10}
+        // The top padding keeps it from sliding under the reader's header; it flips below instead.
+        collisionPadding={{ top: 68, right: 12, bottom: 12, left: 12 }}
+        initialFocus={false}
+        finalFocus={false}
+        role="toolbar"
+        aria-label="Annotate"
+        onMouseDown={(e) => e.preventDefault()}
+        className={cn(FLOATING_LAYER, "flex-row items-center gap-1 rounded-xl border border-line bg-surface p-1.5 shadow-lg")}
+      >
+        {mode === "selection" ? (
+          HIGHLIGHT_COLORS.map((color) => (
+            <button
+              key={color}
+              type="button"
+              aria-label={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
+              title={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
+              onClick={() => onHighlight(color)}
+              className={cx("mx-0.5 size-5 rounded-full ring-1 ring-line transition-transform hover:scale-110", MARK_BG[color])}
+            />
+          ))
+        ) : (
+          <Button variant="ghost" size="sm" icon={Trash2} onClick={onRemoveHighlight}>
+            Remove
+          </Button>
+        )}
+        <div className="mx-1 h-5 w-px bg-line" />
+        <Button variant="ghost" size="sm" icon={NotebookPen} onClick={onNote}>
+          Note
+        </Button>
+        {mode === "selection" && (
+          <Button variant="ghost" size="sm" icon={Sparkles} onClick={onAsk}>
+            Ask
+          </Button>
+        )}
+        {mode === "selection" && <IconButton icon={Copy} label="Copy" onClick={onCopy} />}
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
@@ -86,9 +97,10 @@ const SaveStatus = ({ state }: { state: SaveState }) => {
 };
 
 /**
- * The floating layer a note shows in, anchored to the noted words. Radix
+ * The floating layer a note shows in, anchored to the noted words. Base UI
  * places it (flipping above when there's no room below), animates it in and
- * out, and closes it on Esc or a click elsewhere.
+ * out, closes it on Esc or a click elsewhere, and unmounts the content once
+ * it has animated out.
  */
 export const NoteLayer = ({
   rect,
@@ -102,26 +114,28 @@ export const NoteLayer = ({
   onClose: () => void;
   onPointerInside: (inside: boolean) => void;
   children: ReactNode;
-}) => (
-  <Popover.Root open={open} onOpenChange={(next) => !next && onClose()}>
-    <Popover.Anchor virtualRef={{ current: { getBoundingClientRect: () => rect } }} />
-    <Popover.Portal>
-      <Popover.Content
+}) => {
+  const anchor = useMemo(() => toAnchor(rect), [rect]);
+  return (
+    <Popover open={open} onOpenChange={(next) => !next && onClose()}>
+      <PopoverContent
+        anchor={anchor}
         side="bottom"
         sideOffset={8}
         collisionPadding={12}
         // The editor focuses its own text field; a peek takes no focus at all.
-        onOpenAutoFocus={(e) => e.preventDefault()}
+        initialFocus={false}
+        finalFocus={false}
         onMouseEnter={() => onPointerInside(true)}
         onMouseLeave={() => onPointerInside(false)}
-        className="popover z-40 outline-none"
+        className={FLOATING_LAYER}
       >
         {children}
-        <Popover.Arrow width={12} height={6} className="fill-surface [filter:drop-shadow(0_1px_0_var(--color-line))]" />
-      </Popover.Content>
-    </Popover.Portal>
-  </Popover.Root>
-);
+        <PopoverArrow />
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 /** A hovered note, read-only: a few lines and where it sits. Clicking it opens the editor. */
 export const NotePeek = ({ note, lineLabel, onEdit }: { note: Note; lineLabel: string; onEdit: () => void }) => (
