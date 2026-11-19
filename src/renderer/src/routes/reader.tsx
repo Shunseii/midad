@@ -181,11 +181,15 @@ const ContentsRail = ({
 };
 
 const DisplayMenu = ({
+  lineNumbers,
+  onLineNumbers,
   showHarakat,
   onShowHarakat,
   showMine,
   onShowMine,
 }: {
+  lineNumbers: boolean;
+  onLineNumbers: (v: boolean) => void;
   showHarakat: boolean;
   onShowHarakat: (v: boolean) => void;
   showMine: boolean;
@@ -209,6 +213,13 @@ const DisplayMenu = ({
         </span>
       </div>
       <Switch label="Show my harakat" checked={showMine} onChange={onShowMine} disabled={!showHarakat} />
+    </div>
+    <div className="flex items-center gap-3">
+      <div className="flex flex-1 flex-col gap-0.5">
+        <span className="text-sm font-medium">Line numbers</span>
+        <span className="text-xs text-ink-3">The numbers notes and Ask AI use</span>
+      </div>
+      <Switch label="Show line numbers" checked={lineNumbers} onChange={onLineNumbers} />
     </div>
     <div className="h-px bg-line" />
     <p className="text-xs text-ink-3">
@@ -266,6 +277,7 @@ export const ReaderRoute = () => {
   const [contentsOpen, setContentsOpen] = usePref({ key: "reader.contentsOpen", fallback: true });
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
+  const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
   const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -641,7 +653,7 @@ export const ReaderRoute = () => {
         <div className="relative">
           <IconButton icon={Type} label="Text display" selected={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
           {menuOpen && (
-            <DisplayMenu showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
+            <DisplayMenu lineNumbers={lineNumbers} onLineNumbers={setLineNumbers} showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
           )}
         </div>
         <IconButton icon={FileImage} label={showScan ? "Hide scan (S)" : "Show scan (S)"} selected={showScan} onClick={() => setShowScan(!showScan)} />
@@ -699,7 +711,7 @@ export const ReaderRoute = () => {
             <PageView
               stored={page.data}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
-              display={{ showHarakat, showMine, target }}
+              display={{ showHarakat, showMine, lineNumbers, target }}
               marker={marker.data?.position === position ? marker.data : null}
               onMark={markRow}
               onHoverRow={(at) => {

@@ -36,6 +36,7 @@ export interface WordTarget {
 export interface Display {
   showHarakat: boolean;
   showMine: boolean;
+  lineNumbers: boolean;
   /** The letter the reader is typing harakat on. */
   target: LetterRef | null;
 }
@@ -200,6 +201,14 @@ export const rowOfWord = (rows: ScreenRow[], word: number): ScreenRow | null =>
 const rowStyle = (row: ScreenRow) => ({ top: row.top, height: row.height });
 
 /** A matn paragraph with its margin: the last-read marker on one screen row, or on hover a button beside the row. */
+/** The matn line's number, in the left margin beside its first row. */
+const LineNumber = ({ line }: { line: number }) => (
+  // The wrapper keeps the line's font so 1lh is one row of text; the number itself is small.
+  <span aria-hidden data-overlay className="pointer-events-none absolute -left-6 top-0 flex h-[1lh] w-5 select-none items-center @3xl:-left-10 @3xl:w-7">
+    <span className="font-sans text-xs font-normal tabular-nums text-ink-3">{line}</span>
+  </span>
+);
+
 const MatnParagraph = ({
   line,
   markerWord,
@@ -357,8 +366,9 @@ export const PageView = ({
           <h2
             key={b.line}
             data-line-block={`matn-${b.line}`}
-            className={cx("ar my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-body")}
+            className={cx("ar relative my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-body")}
           >
+            {display.lineNumbers && <LineNumber line={b.line} />}
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
           </h2>
         ) : (
@@ -371,6 +381,7 @@ export const PageView = ({
             onClearMark={onClearMark}
             onHoverRow={onHoverRow}
           >
+            {display.lineNumbers && <LineNumber line={b.line} />}
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
           </MatnParagraph>
         ),
