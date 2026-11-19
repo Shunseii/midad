@@ -27,8 +27,9 @@ Writing (labelled as written by the agent)
 position in the book (1 = first page), as shown in the reader's pager.
 <span> is --line <n> --words <a[-b]>, or --from <line:word> --to <line:word>.
 Add --hashiya to address the ḥāshiya: its footnotes are lines 1, 2… in order.
---words on page numbers each word, the numbers spans use. Letters count base
-letters only. Mark names: ${Object.keys(MARK).join(", ")}; join two with +.
+--words on page numbers each word, the numbers spans use. Letters count every
+character that isn't a mark, so a leading [ or ( is letter 1; only Arabic
+letters take harakat. Mark names: ${Object.keys(MARK).join(", ")}; join two with +.
 Add --json to any command for JSON output.
 `;
 

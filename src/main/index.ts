@@ -32,6 +32,8 @@ const corpus: CorpusSource = {
 
 const dbPath = join(userData, "hamish.db");
 const db = new DatabaseSync(dbPath);
+// The hamish CLI (and Ask AI through it) writes to the same file.
+db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
 const library = createLibrary({ db, corpus });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
@@ -95,7 +97,12 @@ const handlers: HamishApi = {
 const dataVersion = () => (db.prepare("PRAGMA data_version").get() as { data_version: number }).data_version;
 let seenVersion = dataVersion();
 setInterval(() => {
-  const version = dataVersion();
+  let version: number;
+  try {
+    version = dataVersion();
+  } catch {
+    return;
+  }
   if (version === seenVersion) return;
   seenVersion = version;
   for (const win of BrowserWindow.getAllWindows()) win.webContents.send(LIBRARY_CHANGED);

@@ -30,7 +30,7 @@ const page = (fileId: string, pageNumber: number, text: string): ExportFile => (
 });
 
 class FakeCorpus implements CorpusSource {
-  files: ExportFile[] = [page("f1", 1, PAGE_1), page("f2", 2, "header\n\n---\nصفحة ثانية")];
+  files: ExportFile[] = [page("f1", 1, PAGE_1), page("f2", 2, "header\n\n---\nصفحة ثانية"), page("f3", 3, "header\n\n---\n[بيان التوحيد]")];
   async getBook(id: string) {
     return { id, title: "t", work: null };
   }
@@ -195,9 +195,10 @@ describe("harakat", () => {
     ["a word that doesn't exist", { word: 9, letter: 1, marks: FATHA }, /no letter/],
     ["something that isn't a haraka", { letter: 1, marks: "ب" }, /isn't a haraka/],
     ["two vowels", { letter: 1, marks: `${FATHA}${KASRA}` }, /at most one/],
+    ["punctuation, naming the word's first Arabic letter", { position: 3, line: 1, word: 1, letter: 1, marks: FATHA }, /"\[" is not an Arabic letter.*letter 2/],
   ])("refuses %s", async (_label, over, message) => {
     await expect(annotations.setHarakat({ ...at, ...over })).rejects.toThrow(message);
-    expect((await onPage()).harakat).toHaveLength(0);
+    expect((await onPage("position" in over ? over.position : 1)).harakat).toHaveLength(0);
   });
 
   it("removes a letter's marks, and refuses a letter without any", async () => {

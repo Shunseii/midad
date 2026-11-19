@@ -111,12 +111,18 @@ const isStale = ({ page, span, quote }: { page: Page; span: Span; quote: string 
   }
 };
 
+const wordAt = ({ page, ref }: { page: Page; ref: LetterRef }): string | undefined => {
+  const text = lineText({ page, part: ref.part, line: ref.line });
+  return text === null ? undefined : wordsOf(text)[ref.word - 1];
+};
+
 /** The base letter at a LetterRef, or null when the page has no such letter. */
 const letterAt = ({ page, ref }: { page: Page; ref: LetterRef }): string | null => {
-  const text = lineText({ page, part: ref.part, line: ref.line });
-  const word = text === null ? undefined : wordsOf(text)[ref.word - 1];
+  const word = wordAt({ page, ref });
   return (word && lettersOf(word)[ref.letter - 1]?.base) ?? null;
 };
+
+const isArabicLetter = (ch: string) => /^\p{L}$/u.test(ch) && /^\p{Script=Arabic}$/u.test(ch);
 
 const describeRef = (ref: LetterRef) => `${ref.part} line ${ref.line}, word ${ref.word}, letter ${ref.letter}`;
 
@@ -263,6 +269,12 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
       const row = pageAt({ bookId, position });
       const base = letterAt({ page: toPage(row), ref });
       if (base === null) throw new Error(`Page ${position} has no letter at ${describeRef(ref)}.`);
+      if (!isArabicLetter(base)) {
+        const word = wordAt({ page: toPage(row), ref });
+        const first = word ? lettersOf(word).findIndex((l) => isArabicLetter(l.base)) : -1;
+        const hint = first === -1 ? "" : ` The word's first Arabic letter is letter ${first + 1}.`;
+        throw new Error(`"${base}" is not an Arabic letter, so it can't take harakat (${describeRef(ref)}).${hint}`);
+      }
       db.prepare(
         `INSERT INTO harakat (id, book_id, file_id, part, line, word, letter, marks, base, author, created_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
