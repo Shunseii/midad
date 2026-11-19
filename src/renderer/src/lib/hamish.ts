@@ -90,8 +90,9 @@ export const useAnnotationActions = ({ bookId, position }: { bookId: string; pos
   const refresh = () => client.invalidateQueries({ queryKey: key });
   return {
     addHighlight: async ({ span, color }: { span: Span; color: HighlightColor }) => {
-      await hamish["highlights.add"]({ bookId, position, span, color });
+      const highlight = await hamish["highlights.add"]({ bookId, position, span, color });
       await refresh();
+      return highlight;
     },
     removeHighlight: async (id: string) => {
       await hamish["highlights.remove"]({ id });

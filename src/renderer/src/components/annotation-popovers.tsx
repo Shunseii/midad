@@ -101,7 +101,7 @@ export const NotePopover = ({
   rect: DOMRect;
   note: Note | null;
   lineLabel: string;
-  onCreate: (body: string) => Promise<Note>;
+  onCreate: (body: string) => Promise<{ id: string }>;
   onUpdate: (input: { id: string; body: string }) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
   onClose: () => void;

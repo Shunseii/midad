@@ -13,7 +13,7 @@ import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, sel
 import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
 import { arabicNumber } from "../lib/format";
-import { EMPTY_HISTORY, type History, record, redo, undo } from "../lib/history";
+import { createUndoStack, type UndoStack } from "../lib/undo";
 import { hamish, keys, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/hamish";
 
 interface TocEntry {
@@ -219,12 +219,6 @@ const moveTarget = ({ page, target, delta }: { page: StoredPage["page"]; target:
   return { ...target, word, letter: delta > 0 ? 1 : size };
 };
 
-interface HarakatEdit {
-  ref: LetterRef;
-  before: string;
-  after: string;
-}
-
 export const ReaderRoute = () => {
   const { bookId = "" } = useParams();
   const [search, setSearch] = useSearchParams();
@@ -234,7 +228,6 @@ export const ReaderRoute = () => {
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
   const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
-  const [edits, setEdits] = useState<{ position: number; history: History<HarakatEdit> }>({ position: 0, history: EMPTY_HISTORY });
   const [menuOpen, setMenuOpen] = useState(false);
   const [panelOpen, setPanelOpen] = usePref({ key: "reader.panelOpen", fallback: false });
   const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: PANEL_WIDTH });
@@ -441,27 +434,58 @@ export const ReaderRoute = () => {
       (h) => !h.stale && h.part === ref.part && h.line === ref.line && h.word === ref.word && h.letter === ref.letter,
     )?.marks ?? "";
 
-  /** Undo and redo cover harakat typed on the current page. */
-  const pageHistory = edits.position === position ? edits.history : EMPTY_HISTORY;
-
-  const applyMarks = (ref: LetterRef, marks: string) =>
-    void (marks ? actions.setHarakat({ ...ref, marks }) : actions.removeHarakat(ref));
-
-  const editMarks = (ref: LetterRef, after: string) => {
-    const before = mineAt(ref);
-    if (before === after) return;
-    applyMarks(ref, after);
-    setEdits({ position, history: record(pageHistory, { ref, before, after }) });
+  // Undo and redo cover every edit on the current page; the stack starts over on a new page.
+  const latestActions = useRef(actions);
+  latestActions.current = actions;
+  const undoStack = useRef<{ position: number; stack: UndoStack } | null>(null);
+  const edits = (): UndoStack => {
+    if (undoStack.current?.position !== position) {
+      const a = () => latestActions.current;
+      undoStack.current = {
+        position,
+        stack: createUndoStack({
+          addHighlight: async (input) => (await a().addHighlight(input)).id,
+          removeHighlight: (id) => a().removeHighlight(id),
+          addNote: async (input) => (await a().addNote(input)).id,
+          updateNote: (input) => a().updateNote(input),
+          deleteNote: (id) => a().deleteNote(id),
+          setMarks: ({ ref, marks }) => (marks ? a().setHarakat({ ...ref, marks }) : a().removeHarakat(ref)),
+        }),
+      };
+    }
+    return undoStack.current.stack;
   };
+
+  const editMarks = (ref: LetterRef, after: string) => void edits().setMarks({ ref, before: mineAt(ref), after });
 
   const typeMark = (ref: LetterRef, typed: string) => editMarks(ref, mergeMarks({ existing: mineAt(ref), typed }));
 
+  const removeHighlight = (id: string) => {
+    const h = annotations.data?.highlights.find((x) => x.id === id);
+    if (h) void edits().removeHighlight({ id, span: h.span, color: h.color });
+  };
+
+  const noteWrites = {
+    create: async ({ span, body }: { span: Span; body: string }) => {
+      return { id: await edits().addNote({ span, body }) };
+    },
+    update: async ({ id, body }: { id: string; body: string }) => {
+      const before = annotations.data?.notes.find((n) => n.id === id)?.body ?? "";
+      await edits().updateNote({ id, before, after: body });
+    },
+    remove: async (id: string) => {
+      const n = annotations.data?.notes.find((x) => x.id === id);
+      if (n) await edits().deleteNote({ id, span: n.span, body: n.body });
+    },
+  };
+
   const step = (direction: "undo" | "redo") => {
-    const { history, entry } = (direction === "undo" ? undo : redo)(pageHistory);
-    if (!entry) return;
-    applyMarks(entry.ref, direction === "undo" ? entry.before : entry.after);
-    setEdits({ position, history });
-    setTarget(entry.ref);
+    void edits()
+      [direction]()
+      .then((change) => {
+        if (change?.kind === "harakat") setTarget(change.ref);
+      })
+      .catch((err: unknown) => console.error(`Couldn't ${direction}:`, err));
   };
 
   const finishToolbar = () => {
@@ -656,8 +680,8 @@ export const ReaderRoute = () => {
             annotations={annotations.data}
             onClose={() => setPanelOpen(false)}
             onGoTo={(span) => revealSpan({ root: pageRoot.current, span })}
-            onRemoveHighlight={(id) => void actions.removeHighlight(id)}
-            onDeleteNote={(id) => void actions.deleteNote(id)}
+            onRemoveHighlight={removeHighlight}
+            onDeleteNote={(id) => void noteWrites.remove(id)}
             width={panelWidth}
             onResize={(w) => setPanelWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
             onResetSize={() => setPanelWidth(PANEL_WIDTH)}
@@ -703,11 +727,11 @@ export const ReaderRoute = () => {
           rect={toolbar.rect}
           mode={toolbar.mode}
           onHighlight={(color) => {
-            if (toolbar.mode === "selection") void actions.addHighlight({ span: toolbar.span, color });
+            if (toolbar.mode === "selection") void edits().addHighlight({ span: toolbar.span, color });
             finishToolbar();
           }}
           onRemoveHighlight={() => {
-            if (toolbar.mode === "highlight") void actions.removeHighlight(toolbar.highlight.id);
+            if (toolbar.mode === "highlight") removeHighlight(toolbar.highlight.id);
             finishToolbar();
           }}
           onNote={openNoteFromToolbar}
@@ -730,9 +754,9 @@ export const ReaderRoute = () => {
           rect={noteEditor.rect}
           note={noteEditor.note}
           lineLabel={spanLabel(noteEditor.span).toLowerCase()}
-          onCreate={(body) => actions.addNote({ span: noteEditor.span, body })}
-          onUpdate={actions.updateNote}
-          onDelete={actions.deleteNote}
+          onCreate={(body) => noteWrites.create({ span: noteEditor.span, body })}
+          onUpdate={noteWrites.update}
+          onDelete={noteWrites.remove}
           onClose={() => setNoteEditor(null)}
           onPointerInside={(inside) => {
             pointerInNote.current = inside;
