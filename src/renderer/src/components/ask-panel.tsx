@@ -1,10 +1,11 @@
-import { ArrowUp, Copy, Languages, Lightbulb, ListTree, NotebookPen, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
-import { type ClipboardEvent, type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
-import type { Part, Span } from "../../../shared/annotations";
-import { parseCitations, type Segment } from "../../../shared/ask";
+import { ArrowUp, Copy, Languages, Lightbulb, ListTree, NotebookPen, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
+import { type ClipboardEvent, type ReactNode, type KeyboardEvent, type MouseEvent, useCallback, useEffect, useRef, useState } from "react";
+import { quoteSpan, type Span } from "../../../shared/annotations";
+import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
 import { copiedPassage } from "../lib/copied";
 import { arabicNumber } from "../lib/format";
-import { hamish } from "../lib/hamish";
+import { hamish, usePage } from "../lib/hamish";
+import { createPortal } from "react-dom";
 import { Button, IconButton, cx } from "./ui";
 
 export interface AskSelection {
@@ -96,13 +97,96 @@ export const useAskConversation = (bookId: string) => {
 
 const ARABIC_START = /^[^\p{L}]*\p{Script=Arabic}/u;
 
-const citeLabel = (s: Extract<Segment, { kind: "cite" }>) => {
-  const range = s.from === s.to ? `${s.from}` : `${s.from}–${s.to}`;
-  return s.part === "matn" ? `line ${range}` : `ḥāshiya ${arabicNumber(s.from)}${s.to === s.from ? "" : `–${arabicNumber(s.to)}`}`;
+type Cite = Extract<Segment, { kind: "cite" }>;
+
+/** Where a citation or quote points, for jumping to it on the page. */
+export type Citation = Omit<Cite, "kind"> & { position: number };
+
+const citeLabel = (c: Omit<Cite, "kind">) => {
+  if (c.part === "hashiya") return `ḥāshiya ${arabicNumber(c.from)}${c.to === c.from ? "" : `–${arabicNumber(c.to)}`}`;
+  return c.from === c.to ? `line ${c.from}` : `lines ${c.from}–${c.to}`;
+};
+
+/** A pasted span as a citation: part of one line keeps its words, more than one line cites the lines. */
+const quoteCitation = (span: Span): Omit<Cite, "kind"> => ({
+  part: span.part,
+  from: span.start.line,
+  to: span.end.line,
+  words: span.start.line === span.end.line ? { from: span.start.word, to: span.end.word } : null,
+});
+
+/**
+ * A citation or quote: a small label that shows the exact words on hover and
+ * jumps to them on click. The words show in a fixed layer so the panel's
+ * scrolling doesn't clip them.
+ */
+const CiteChip = ({
+  label,
+  text,
+  onClick,
+  onRemove,
+  onBubble = false,
+}: {
+  label: string;
+  text: string | null;
+  onClick?: () => void;
+  onRemove?: () => void;
+  /** Inside a sent question, which already has the accent tint. */
+  onBubble?: boolean;
+}) => {
+  const [at, setAt] = useState<DOMRect | null>(null);
+  const show = (e: MouseEvent<HTMLElement>) => text && setAt(e.currentTarget.getBoundingClientRect());
+  return (
+    <span
+      onMouseEnter={show}
+      onMouseLeave={() => setAt(null)}
+      className={cx(
+        "mx-0.5 inline-flex translate-y-px items-center gap-1 rounded-md align-baseline font-sans text-xs text-accent",
+        onBubble ? "bg-surface" : "bg-accent-soft",
+      )}
+    >
+      <button
+        type="button"
+        disabled={!onClick}
+        onClick={onClick}
+        className={cx("inline-flex items-center gap-1 rounded-md py-0.5 pl-1.5", onRemove ? "pr-0.5" : "pr-1.5", onClick && "hover:underline")}
+      >
+        <QuoteIcon aria-hidden className="size-3" />
+        {label}
+      </button>
+      {onRemove && (
+        <button type="button" aria-label={`Remove ${label}`} onClick={onRemove} className="rounded-sm py-0.5 pr-1 hover:text-ink">
+          <X aria-hidden className="size-3" />
+        </button>
+      )}
+      {at &&
+        text &&
+        createPortal(
+        <span
+          role="tooltip"
+          style={{ left: Math.min(Math.max(at.left + at.width / 2, 170), window.innerWidth - 170), top: at.top - 6 }}
+          className="pointer-events-none fixed z-50 w-max max-w-80 -translate-x-1/2 -translate-y-full rounded-lg border border-line bg-surface px-3 py-2 shadow-md"
+        >
+          <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
+            {text}
+          </span>
+        </span>,
+          document.body,
+        )}
+    </span>
+  );
+};
+
+/** An answer's citation: its words come from the page the question was asked on. */
+const AnswerCite = ({ bookId, cite, position, onCite }: { bookId: string; cite: Cite; position: number; onCite: (c: Citation) => void }) => {
+  const page = usePage({ bookId, position });
+  const span = page.data ? citeSpan({ cite, page: page.data.page }) : null;
+  const { kind: _, ...where } = cite;
+  return <CiteChip label={citeLabel(cite)} text={span && page.data ? quoteSpan({ page: page.data.page, span }) : null} onClick={() => onCite({ ...where, position })} />;
 };
 
 /** An answer, one element per line so each line takes its own direction. Citations become chips. */
-const Answer = ({ text, onCite }: { text: string; onCite: (cite: Extract<Segment, { kind: "cite" }>) => void }) => (
+const Answer = ({ text, cite }: { text: string; cite: (c: Cite, key: number) => ReactNode }) => (
   <div className="flex flex-col gap-3">
     {text
       .trim()
@@ -115,21 +199,7 @@ const Answer = ({ text, onCite }: { text: string; onCite: (cite: Extract<Segment
               dir="auto"
               className={cx("[unicode-bidi:plaintext]", ARABIC_START.test(line) ? "ar text-ar-body" : "text-body leading-relaxed")}
             >
-              {parseCitations(line).map((s, i) =>
-                s.kind === "text" ? (
-                  <span key={i}>{s.text}</span>
-                ) : (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => onCite(s)}
-                    className="mx-0.5 inline-flex translate-y-px items-center gap-1 rounded-md bg-accent-soft px-1.5 py-0.5 align-baseline font-sans text-xs text-accent hover:bg-accent hover:text-on-accent"
-                  >
-                    <ListTree aria-hidden className="size-3" />
-                    {citeLabel(s)}
-                  </button>
-                ),
-              )}
+              {parseCitations(line).map((s, i) => (s.kind === "text" ? <span key={i}>{s.text}</span> : cite(s, i)))}
             </p>
           ))}
         </div>
@@ -143,27 +213,39 @@ const plainAnswer = (text: string) =>
     .join("")
     .trim();
 
-const quoteLabel = (q: Quote) => {
-  if (!q.span) return "Pasted";
-  const { part, start, end } = q.span;
-  const lines = start.line === end.line ? `${start.line}` : `${start.line}–${end.line}`;
-  return `${part === "matn" ? "Line" : "Ḥāshiya"} ${lines}`;
-};
+const quoteLabel = (q: Quote) => (q.span ? citeLabel(quoteCitation(q.span)) : "Pasted");
 
-/** A quoted passage in the composer or a sent question. */
-const QuoteBlock = ({ quote, onRemove }: { quote: Quote; onRemove?: () => void }) => (
-  <div className="flex flex-col gap-1 rounded-lg border-r-2 border-accent bg-surface px-3 py-2">
-    <div className="flex items-center gap-1.5 text-xs text-ink-3">
-      <TextQuote aria-hidden className="size-3.5" />
-      {quoteLabel(quote)}
-      <span className="flex-1" />
-      {onRemove && <IconButton icon={X} label="Remove quote" onClick={onRemove} />}
-    </div>
-    <p className="ar line-clamp-4 text-right text-ar-body">{quote.text}</p>
+/** Pasted passages, as chips like the answer's citations: hover for the words, click to jump to them. */
+const QuoteChips = ({
+  quotes,
+  onCite,
+  onRemove,
+  onBubble,
+}: {
+  quotes: Quote[];
+  onCite: (c: Citation) => void;
+  onRemove?: (id: string) => void;
+  onBubble?: boolean;
+}) => (
+  <div className="-mx-0.5 flex flex-wrap gap-y-1">
+    {quotes.map((q) => {
+      const { span } = q;
+      return (
+        <CiteChip
+          key={q.id}
+          label={quoteLabel(q)}
+          text={q.text}
+          onBubble={onBubble}
+          onClick={span ? () => onCite({ ...quoteCitation(span), position: q.position }) : undefined}
+          onRemove={onRemove && (() => onRemove(q.id))}
+        />
+      );
+    })}
   </div>
 );
 
 export const AskPanel = ({
+  bookId,
   conversation,
   position,
   pageNumber,
@@ -172,12 +254,13 @@ export const AskPanel = ({
   onCite,
   onSaveNote,
 }: {
+  bookId: string;
   conversation: ReturnType<typeof useAskConversation>;
   position: number;
   pageNumber: number;
   selection: AskSelection | null;
   onClearSelection: () => void;
-  onCite: (cite: { part: Part; from: number; to: number; position: number }) => void;
+  onCite: (cite: Citation) => void;
   onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
 }) => {
   const { turns, ask, busy, stop, retry, reset } = conversation;
@@ -277,14 +360,14 @@ export const AskPanel = ({
         {turns.map((turn) => (
           <div key={turn.id} className="flex flex-col gap-3">
             <div className="flex max-w-[85%] flex-col gap-2 self-end rounded-xl bg-accent-soft px-3.5 py-2.5">
-              {turn.quotes.map((q) => (
-                <QuoteBlock key={q.id} quote={q} />
-              ))}
+              {turn.quotes.length > 0 && <QuoteChips quotes={turn.quotes} onCite={onCite} onBubble />}
               <p dir="auto" className="text-body [unicode-bidi:plaintext]">
                 {turn.question}
               </p>
             </div>
-            {turn.answer && <Answer text={turn.answer} onCite={(c) => onCite({ ...c, position: turn.position })} />}
+            {turn.answer && (
+              <Answer text={turn.answer} cite={(c, key) => <AnswerCite key={key} bookId={bookId} cite={c} position={turn.position} onCite={onCite} />} />
+            )}
             {turn.status === "streaming" && (
               <p className="flex items-center gap-2 text-xs text-ink-3">
                 <span className="size-1.5 animate-pulse rounded-full bg-accent" />
@@ -320,9 +403,7 @@ export const AskPanel = ({
 
       <div className="shrink-0 p-4 pt-0">
         <div className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-3 focus-within:border-ink-3">
-          {quotes.map((q) => (
-            <QuoteBlock key={q.id} quote={q} onRemove={() => setQuotes((all) => all.filter((x) => x.id !== q.id))} />
-          ))}
+          {quotes.length > 0 && <QuoteChips quotes={quotes} onCite={onCite} onRemove={(id) => setQuotes((all) => all.filter((x) => x.id !== id))} />}
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}

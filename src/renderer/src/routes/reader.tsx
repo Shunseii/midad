@@ -88,6 +88,14 @@ interface LineRange {
   to: number;
 }
 
+/** An Ask AI citation or pasted quote: whole lines, or with `words`, part of one line. */
+type Citation = LineRange & { words: { from: number; to: number } | null };
+
+const revealCitation = ({ root, cite }: { root: HTMLElement | null; cite: Citation }) => {
+  if (!cite.words) return revealLines({ root, ...cite });
+  revealSpan({ root, span: { part: cite.part, start: { line: cite.from, word: cite.words.from }, end: { line: cite.from, word: cite.words.to } } });
+};
+
 /** Scrolls to some lines and tints them for a moment. */
 const revealLines = ({ root, part, from, to }: LineRange & { root: HTMLElement | null }) => {
   const blocks: HTMLElement[] = [];
@@ -274,7 +282,7 @@ export const ReaderRoute = () => {
   const marker = useMarker(bookId);
   const setMarker = useSetMarker(bookId);
   const [markerToast, setMarkerToast] = useState<{ id: number; page: number; undo: () => void } | null>(null);
-  const pendingReveal = useRef<(LineRange & { position: number }) | null>(null);
+  const pendingReveal = useRef<(Citation & { position: number }) | null>(null);
   const pendingRow = useRef<{ position: number; line: number; word: number } | null>(null);
   const hoveredRow = useRef<{ line: number; word: number } | null>(null);
   const conversation = useAskConversation(bookId);
@@ -317,7 +325,7 @@ export const ReaderRoute = () => {
     const reveal = pendingReveal.current;
     if (reveal && page.data?.position === reveal.position) {
       pendingReveal.current = null;
-      requestAnimationFrame(() => revealLines({ root: pageRoot.current, ...reveal }));
+      requestAnimationFrame(() => revealCitation({ root: pageRoot.current, cite: reveal }));
     }
     const row = pendingRow.current;
     if (row && page.data?.position === row.position) {
@@ -326,10 +334,10 @@ export const ReaderRoute = () => {
     }
   });
 
-  const citeLines = ({ position: at, ...range }: LineRange & { position: number }) => {
-    if (at === position) revealLines({ root: pageRoot.current, ...range });
+  const citeLines = ({ position: at, ...cite }: Citation & { position: number }) => {
+    if (at === position) revealCitation({ root: pageRoot.current, cite });
     else {
-      pendingReveal.current = { position: at, ...range };
+      pendingReveal.current = { position: at, ...cite };
       go(at);
     }
   };
@@ -721,6 +729,7 @@ export const ReaderRoute = () => {
             onResetSize={() => setPanelWidth(PANEL_WIDTH)}
             askPanel={
               <AskPanel
+                bookId={bookId}
                 conversation={conversation}
                 position={position}
                 pageNumber={page.data?.number ?? position}

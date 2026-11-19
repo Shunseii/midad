@@ -1,4 +1,5 @@
-import type { Part, Span } from "./annotations";
+import { lineText, type Part, type Span, wordsOf } from "./annotations";
+import type { Page } from "./page";
 
 /**
  * Ask AI runs a local Claude Code session. Each message carries a small hidden
@@ -14,7 +15,7 @@ Each message starts with a <reading-context> block naming the book, the page and
   hamish annotations <book> <page>      the reader's highlights, notes and harakat
 Answer from that page. Don't search for or cite other books.
 
-Cite the lines you rely on inline as [[line 2]], [[lines 2-3]] or [[ḥāshiya 1]]. Write nothing else inside double brackets.
+Cite what you rely on inline. For a phrase, cite its words, numbered as in hamish page --words: [[line 2:3-5]] is words 3 to 5 of line 2, [[line 2:4]] is word 4, [[ḥāshiya 1:2-3]] works the same way. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
 
 Only if the reader asks you to, you may add notes, highlights or harakat with hamish (run hamish --help); they are labelled as yours.
 
@@ -22,22 +23,43 @@ Arabic and English go on separate lines. An English paragraph may contain a few 
 
 Write plain text in short paragraphs separated by blank lines. No markdown headings, tables or bullet lists.`;
 
-export type Segment = { kind: "text"; text: string } | { kind: "cite"; part: Part; from: number; to: number };
+export type Segment =
+  | { kind: "text"; text: string }
+  /** Lines `from`–`to`, or with `words`, just those words of the one line. */
+  | { kind: "cite"; part: Part; from: number; to: number; words: { from: number; to: number } | null };
 
-const CITATION = /\[\[(lines?|ḥāshiya|hashiya|ḥashiya)\s+(\d+)(?:\s*[-–]\s*(\d+))?\]\]/g;
+const CITATION = /\[\[(lines?|ḥāshiya|hashiya|ḥashiya)\s+(\d+)(?:\s*[-–]\s*(\d+))?(?::(\d+)(?:\s*[-–]\s*(\d+))?)?\]\]/g;
 
 export const parseCitations = (text: string): Segment[] => {
   const segments: Segment[] = [];
   let last = 0;
   for (const m of text.matchAll(CITATION)) {
+    // Word numbers only make sense within a single line.
+    if (m[3] && m[4]) continue;
     const index = m.index ?? 0;
     if (index > last) segments.push({ kind: "text", text: text.slice(last, index) });
     const from = Number(m[2]);
-    segments.push({ kind: "cite", part: m[1]?.startsWith("line") ? "matn" : "hashiya", from, to: m[3] ? Number(m[3]) : from });
+    const words = m[4] ? { from: Number(m[4]), to: Number(m[5] ?? m[4]) } : null;
+    segments.push({ kind: "cite", part: m[1]?.startsWith("line") ? "matn" : "hashiya", from, to: m[3] ? Number(m[3]) : from, words });
     last = index + m[0].length;
   }
   if (last < text.length) segments.push({ kind: "text", text: text.slice(last) });
   return segments;
+};
+
+/** The words a citation points at on its page, or null when the page has no such lines or words. */
+export const citeSpan = ({ cite, page }: { cite: Extract<Segment, { kind: "cite" }>; page: Page }): Span | null => {
+  const count = (line: number) => {
+    const text = lineText({ page, part: cite.part, line });
+    return text === null ? 0 : wordsOf(text).length;
+  };
+  for (let line = cite.from; line <= cite.to; line += 1) if (!count(line)) return null;
+  if (cite.words) {
+    const { from, to } = cite.words;
+    if (from < 1 || to < from || to > count(cite.from)) return null;
+    return { part: cite.part, start: { line: cite.from, word: from }, end: { line: cite.from, word: to } };
+  }
+  return { part: cite.part, start: { line: cite.from, word: 1 }, end: { line: cite.to, word: count(cite.to) } };
 };
 
 const describeSpan = ({ part, start, end }: Span) => {

@@ -1,20 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { claudeArgs, parseCitations, readingContext, streamEvent } from "./ask";
+import { citeSpan, claudeArgs, parseCitations, readingContext, streamEvent } from "./ask";
+import { quoteSpan } from "./annotations";
+import { parsePage } from "./page";
 
 describe("parseCitations", () => {
   it("turns [[line n]] into a citation of that matn line", () => {
     expect(parseCitations("as [[line 2]] says")).toEqual([
       { kind: "text", text: "as " },
-      { kind: "cite", part: "matn", from: 2, to: 2 },
+      { kind: "cite", part: "matn", from: 2, to: 2, words: null },
       { kind: "text", text: " says" },
     ]);
   });
 
   it("reads line ranges and ḥāshiya footnotes, spelled either way", () => {
     expect(parseCitations("[[lines 2-3]][[ḥāshiya 1]][[hashiya 2]]")).toEqual([
-      { kind: "cite", part: "matn", from: 2, to: 3 },
-      { kind: "cite", part: "hashiya", from: 1, to: 1 },
-      { kind: "cite", part: "hashiya", from: 2, to: 2 },
+      { kind: "cite", part: "matn", from: 2, to: 3, words: null },
+      { kind: "cite", part: "hashiya", from: 1, to: 1, words: null },
+      { kind: "cite", part: "hashiya", from: 2, to: 2, words: null },
     ]);
   });
 
@@ -22,8 +24,50 @@ describe("parseCitations", () => {
     expect(parseCitations("see [[page 4]] and [x]")).toEqual([{ kind: "text", text: "see [[page 4]] and [x]" }]);
   });
 
+  it("reads word ranges within one line", () => {
+    expect(parseCitations("[[line 3:2-4]] and [[ḥāshiya 1:5]]")).toEqual([
+      { kind: "cite", part: "matn", from: 3, to: 3, words: { from: 2, to: 4 } },
+      { kind: "text", text: " and " },
+      { kind: "cite", part: "hashiya", from: 1, to: 1, words: { from: 5, to: 5 } },
+    ]);
+  });
+
+  it("leaves word ranges across several lines as text", () => {
+    expect(parseCitations("[[lines 2-3:1-2]]")).toEqual([{ kind: "text", text: "[[lines 2-3:1-2]]" }]);
+  });
+
   it("leaves a citation still being streamed as text", () => {
     expect(parseCitations("as [[line")).toEqual([{ kind: "text", text: "as [[line" }]);
+  });
+});
+
+describe("citeSpan", () => {
+  const page = parsePage(["h", "", "---", "الكلام هو اللفظ المركب المفيد", "بالوضع وأقسامه ثلاثة", "---", "### الحاشية", "(١) المراد بالوضع القصد هنا"].join("\n"));
+  const cite = (s: string) => {
+    const [segment] = parseCitations(s);
+    if (segment?.kind !== "cite") throw new Error("not a citation");
+    return segment;
+  };
+  const quoted = (s: string) => {
+    const span = citeSpan({ cite: cite(s), page });
+    return span && quoteSpan({ page, span });
+  };
+
+  it("covers just the cited words", () => {
+    expect(quoted("[[line 1:2-3]]")).toBe("هو اللفظ");
+  });
+
+  it("covers whole lines when no words are given", () => {
+    expect(quoted("[[lines 1-2]]")).toBe("الكلام هو اللفظ المركب المفيد بالوضع وأقسامه ثلاثة");
+  });
+
+  it("finds ḥāshiya words", () => {
+    expect(quoted("[[ḥāshiya 1:1]]")).toBe("المراد");
+  });
+
+  it("is null for lines or words the page doesn't have", () => {
+    expect(quoted("[[line 9]]")).toBeNull();
+    expect(quoted("[[line 2:2-7]]")).toBeNull();
   });
 });
 
