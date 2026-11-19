@@ -352,10 +352,12 @@ export const ReaderRoute = () => {
 
   const go = useCallback(
     (next: number) => {
-      if (next < 1 || next > total) return;
-      setSearch({ p: String(next) }, { replace: true });
+      if (next < 1 || next === position || next > total) return;
+      // The book reads right to left: the next page comes in from the left.
+      document.documentElement.dataset.turn = next > position ? "forward" : "back";
+      setSearch({ p: String(next) }, { replace: true, viewTransition: true });
     },
-    [total, setSearch],
+    [total, position, setSearch],
   );
 
   const dismiss = useCallback(() => {
@@ -365,6 +367,13 @@ export const ReaderRoute = () => {
   }, []);
 
   useEffect(dismiss, [position, dismiss]);
+  // Leaving the reader is a screen change, not a page turn.
+  useEffect(
+    () => () => {
+      delete document.documentElement.dataset.turn;
+    },
+    [],
+  );
 
   const resumed = useRef(false);
   useEffect(() => {
@@ -649,7 +658,7 @@ export const ReaderRoute = () => {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3 text-sm text-ink-2">
         This book isn't in your library.
-        <Link to="/" className="text-accent">
+        <Link to="/" viewTransition className="text-accent">
           Back to Library
         </Link>
       </div>
@@ -692,8 +701,8 @@ export const ReaderRoute = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="relative flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4">
-        <Link to="/" aria-label="Back to Library">
+      <header className="relative flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4 [view-transition-name:reader-header]">
+        <Link to="/" viewTransition aria-label="Back to Library">
           <IconButton icon={ArrowLeft} label="Back to Library" tabIndex={-1} />
         </Link>
         <IconButton
@@ -781,7 +790,7 @@ export const ReaderRoute = () => {
           onScroll={() => toolbar && setToolbar(null)}
         >
           {/* The wide right padding leaves room for the last-read marker in the margin. */}
-          <div className="px-6 py-10 @3xl:pl-12 @3xl:pr-40">
+          <div className="px-6 py-10 [view-transition-name:reader-page] @3xl:pl-12 @3xl:pr-40">
           {page.isPending && (
             <div className="mx-auto flex w-full max-w-160 flex-col gap-4">
               <Skeleton className="h-4 w-full" />

@@ -1,6 +1,6 @@
 {
   "$schema": "https://lamsa.dev/schema/v1.json",
-  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%,\n  60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n",
+  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%,\n  60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 180ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 220ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n:active-view-transition-type(forward)::view-transition-old(reader-page) {\n  animation-name: page-out-right;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-from-left;\n}\n\n:active-view-transition-type(back)::view-transition-old(reader-page) {\n  animation-name: page-out-left;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-from-right;\n}\n\n@keyframes page-out-right {\n  to {\n    opacity: 0;\n    translate: 2rem 0;\n  }\n}\n\n@keyframes page-out-left {\n  to {\n    opacity: 0;\n    translate: -2rem 0;\n  }\n}\n\n@keyframes page-in-from-left {\n  from {\n    opacity: 0;\n    translate: -2rem 0;\n  }\n}\n\n@keyframes page-in-from-right {\n  from {\n    opacity: 0;\n    translate: 2rem 0;\n  }\n}\n",
   "nodes": {
     "YfP2SLAF": {
       "componentId": "RV1DOgzp",
@@ -804,7 +804,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "0e5e4EWI": {
       "content": "Matn al-Ājurrūmiyya",
@@ -1270,7 +1271,8 @@
         "padding": "20px 16px",
         "width": 248
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: app-nav;"
     },
     "1PDlsP47": {
       "componentId": "3sdowoQk",
@@ -2005,7 +2007,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "2YS6Z4RD": {
       "index": "a001",
@@ -2508,7 +2511,8 @@
         "padding": "20px 16px",
         "width": 248
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: app-nav;"
     },
     "3L9izLtZ": {
       "content": "وأقسامُه ثلاثةٌ: ",
@@ -2887,7 +2891,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "43vrXDoo": {
       "content": "12",
@@ -3748,7 +3753,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "5VP5AgPj": {
       "content": "والفعلُ يُعرَفُ: بق",
@@ -4032,7 +4038,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "5uIz7IFb": {
       "index": "a00005",
@@ -5708,7 +5715,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "8Wc1ZSTz": {
       "content": "فالاسمُ يُعرَفُ: ",
@@ -6876,7 +6884,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "AVbPbXsd": {
       "content": "بابُ الكلامِ",
@@ -7586,7 +7595,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "BUtNMl1H": {
       "content": "، وسوف، وتاء التأنيث الساكنة",
@@ -8307,7 +8317,8 @@
         "padding": "20px 16px",
         "width": 248
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: app-nav;"
     },
     "CEt3AvZ7": {
       "index": "a005",
@@ -8412,7 +8423,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "CM4S28Le": {
       "index": "a001",
@@ -8512,7 +8524,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "CX1XvQYu": {
       "content": "(١).",
@@ -9382,7 +9395,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "DzAxmQ67": {
       "index": "a001",
@@ -10409,7 +10423,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "FOQN7o3k": {
       "content": "Line 3 · 2 days ago",
@@ -10952,7 +10967,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "GFBqtVKw": {
       "content": "Contents",
@@ -11474,7 +11490,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "H23BozV7": {
       "content": "بابُ الإعرابِ",
@@ -11864,7 +11881,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "HHdG8QYJ": {
       "content": "والحرفُ ما لا ",
@@ -12914,7 +12932,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "Ig5aDzrn": {
       "content": "Settings",
@@ -13758,7 +13777,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "Jq3thSyW": {
       "content": "بابُ الأفعالِ",
@@ -14248,7 +14268,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "KjiB0DQU": {
       "componentId": "RV1DOgzp",
@@ -14656,7 +14677,8 @@
         "padding": "20px 16px",
         "width": 248
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: app-nav;"
     },
     "LDnODcix": {
       "content": "بابُ الإعرابِ",
@@ -14780,7 +14802,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "LOssEUZR": {
       "content": "، وسوف، وتاء التأنيث الساكنة",
@@ -15363,7 +15386,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "MTpgZ7V9": {
       "content": "والحرفُ ما لا ",
@@ -15777,7 +15801,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "N3UzC1Pb": {
       "content": "“So what comes from someone asleep or absent-minded is not called kalām.”",
@@ -16063,7 +16088,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "NV58bAA5": {
       "content": "فالاسمُ يُعرَفُ: ",
@@ -16658,7 +16684,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "OiLkGljM": {
       "index": "a004",
@@ -16764,7 +16791,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "Oyzfe4mW": {
       "index": "a007",
@@ -17873,7 +17901,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "R6GiNkRp": {
       "componentId": "uJd03iQq",
@@ -18611,7 +18640,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "SQF6IEby": {
       "content": "َ",
@@ -19137,7 +19167,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "TGnCngRF": {
       "componentId": "RV1DOgzp",
@@ -19786,7 +19817,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "UCAWDyXC": {
       "componentId": "RV1DOgzp",
@@ -19841,7 +19873,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "ULiepKKX": {
       "content": "Claude answers from this page and links to the lines it uses.",
@@ -20120,7 +20153,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "Uixmncta": {
       "index": "a007",
@@ -20385,7 +20419,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "VHPJGnqG": {
       "index": "a004",
@@ -23228,7 +23263,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "aV2TWK3k": {
       "index": "a004",
@@ -23318,7 +23354,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "aZnJekwq": {
       "index": "a002",
@@ -23984,7 +24021,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "bR2HyzL7": {
       "componentId": "RV1DOgzp",
@@ -25918,7 +25956,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "eeasr5Hx": {
       "content": "(١) المرادُ بالوضعِ: القصدُ، فلا يُسمّى كلامًا ما صدرَ من النائمِ والساهي ونحوِهما.",
@@ -27285,7 +27324,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "h2DbTI5g": {
       "componentId": "HicNahFA",
@@ -27996,7 +28036,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "i1sNK0VC": {
       "index": "a001",
@@ -30679,7 +30720,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "mWlUOW7O": {
       "index": "a003",
@@ -30820,7 +30862,8 @@
         "padding": "20px 16px",
         "width": 248
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: app-nav;"
     },
     "muBKpMfV": {
       "componentId": "46QiZLNZ",
@@ -32096,7 +32139,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "oohxP743": {
       "content": "والفعلُ يُعرَفُ: بق",
@@ -33127,7 +33171,8 @@
         "padding": "20px 16px",
         "width": 248
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: app-nav;"
     },
     "qW1kB5il": {
       "index": "a001",
@@ -34904,7 +34949,8 @@
         "padding": "20px 16px",
         "width": 248
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: app-nav;"
     },
     "tPXEDdNQ": {
       "content": "بابُ الكلامِ",
@@ -34975,7 +35021,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "tVC5NMId": {
       "content": "، وسوف، وتاء التأنيث الساكنة",
@@ -36240,7 +36287,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "vQKqrlOD": {
       "index": "a000",
@@ -36256,7 +36304,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "vTf5RT5K": {
       "content": "مقدمة",
@@ -37322,7 +37371,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "xHHtglK1": {
       "index": "a001",
@@ -38067,7 +38117,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "yfBtLTn9": {
       "index": "a005",
@@ -43845,7 +43896,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "sjyVVcNe": {
       "componentId": "RV1DOgzp",
@@ -44563,7 +44615,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "qqtuQzKu": {
       "index": "a000",
@@ -45457,7 +45510,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "iT7rx5ry": {
       "componentId": "RV1DOgzp",
@@ -46175,7 +46229,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "iXKQlRnZ": {
       "index": "a000",
@@ -47025,7 +47080,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "8wb9IMAU": {
       "componentId": "RV1DOgzp",
@@ -47757,7 +47813,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "nCWcE4Hp": {
       "index": "a000",
@@ -48623,7 +48680,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "sUM4nkcg": {
       "componentId": "RV1DOgzp",
@@ -49342,7 +49400,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "HPPrge9j": {
       "index": "a000",
@@ -50670,7 +50729,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "iJOMRtPq": {
       "componentId": "RV1DOgzp",
@@ -51389,7 +51449,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "q4OINsmD": {
       "index": "a000",
@@ -52589,7 +52650,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "A5IerCzg": {
       "componentId": "RV1DOgzp",
@@ -52849,7 +52911,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "MtMS3Sp3": {
       "index": "a000",
@@ -53631,7 +53694,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "bE91EPxX": {
       "componentId": "RV1DOgzp",
@@ -54350,7 +54414,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "7efcT0Vi": {
       "index": "a000",
@@ -55165,7 +55230,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "LIByzJTd": {
       "componentId": "RV1DOgzp",
@@ -55426,7 +55492,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "Y563B1N6": {
       "index": "a000",
@@ -56769,7 +56836,8 @@
         "height": 60,
         "padding": "0 16px"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-header;"
     },
     "6aLjzAsN": {
       "componentId": "RV1DOgzp",
@@ -57030,7 +57098,8 @@
         "position": "relative",
         "width": 640
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "view-transition-name: reader-page;"
     },
     "H0SAoyaF": {
       "index": "a000",

@@ -94,3 +94,64 @@ body {
   direction: rtl;
   unicode-bidi: plaintext;
 }
+
+/*
+ * View transitions. Screen changes crossfade. A page turn slides the page a
+ * short way in reading direction, right to left, while the header and the
+ * side panels, which have names of their own, stay still.
+ */
+::view-transition-group(root) {
+  animation-duration: 180ms;
+  animation-timing-function: var(--ease-out);
+}
+
+::view-transition-group(reader-page) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out);
+}
+
+:root[data-turn="forward"]::view-transition-old(reader-page) {
+  animation: page-out-right 220ms var(--ease-out) both;
+}
+:root[data-turn="forward"]::view-transition-new(reader-page) {
+  animation: page-in-from-left 220ms var(--ease-out) both;
+}
+:root[data-turn="back"]::view-transition-old(reader-page) {
+  animation: page-out-left 220ms var(--ease-out) both;
+}
+:root[data-turn="back"]::view-transition-new(reader-page) {
+  animation: page-in-from-right 220ms var(--ease-out) both;
+}
+
+@keyframes page-out-right {
+  to {
+    opacity: 0;
+    translate: 2rem 0;
+  }
+}
+@keyframes page-out-left {
+  to {
+    opacity: 0;
+    translate: -2rem 0;
+  }
+}
+@keyframes page-in-from-left {
+  from {
+    opacity: 0;
+    translate: -2rem 0;
+  }
+}
+@keyframes page-in-from-right {
+  from {
+    opacity: 0;
+    translate: 2rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

@@ -46,6 +46,8 @@ export const InlinePanel = ({ side, open, children }: { side: "left" | "right"; 
     inert={!open}
     className={cx(
       "grid shrink-0 overflow-hidden transition-[grid-template-columns] duration-240 ease-out motion-reduce:transition-none",
+      // Named so a page turn leaves the panel where it is.
+      side === "left" ? "[view-transition-name:contents-panel]" : "[view-transition-name:side-panel]",
       open ? "grid-cols-[1fr]" : "grid-cols-[0fr]",
     )}
   >

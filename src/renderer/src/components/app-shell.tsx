@@ -8,6 +8,7 @@ const NavItem = ({ to, icon, label, count }: { to: string; icon: ReactNode; labe
   <NavLink
     to={to}
     end
+    viewTransition
     className={({ isActive }) =>
       cx(
         "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium transition-colors",
@@ -28,7 +29,7 @@ export const AppShell = () => {
 
   return (
     <div className="flex h-full">
-      <aside className="flex w-62 shrink-0 flex-col gap-1 border-r border-line bg-surface-2 px-4 py-6">
+      <aside className="flex w-62 shrink-0 flex-col gap-1 border-r border-line bg-surface-2 px-4 py-6 [view-transition-name:app-nav]">
         <div className="mb-5 flex items-baseline gap-2 px-2.5">
           <span className="ar text-ar-body font-bold text-accent">هامش</span>
           <span className="text-heading font-semibold">Hamish</span>

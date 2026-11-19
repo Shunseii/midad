@@ -63,7 +63,7 @@ export const ImportDialog = ({
               <Button size="sm" onClick={() => void corpusBooks.refetch()}>
                 Retry
               </Button>
-              <Link to="/settings" onClick={onClose}>
+              <Link to="/settings" viewTransition onClick={onClose}>
                 <Button size="sm" variant="secondary">
                   Open settings
                 </Button>

@@ -21,7 +21,7 @@ const BookCard = ({ book, onSync }: { book: LibraryBook; onSync: () => void }) =
         <div className="flex-1" />
         <IconButton icon={RefreshCw} label="Sync with corpus" onClick={onSync} className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100" />
       </div>
-      <Link to={`/read/${book.bookId}`} className="flex flex-col items-end gap-0.5 text-right after:absolute after:inset-0 after:content-['']">
+      <Link to={`/read/${book.bookId}`} viewTransition className="flex flex-col items-end gap-0.5 text-right after:absolute after:inset-0 after:content-['']">
         <span className="ar text-ar-body font-bold">{book.title}</span>
         <span className="ar text-ar-small text-ink-2">{[book.author, book.edition].filter(Boolean).join(" · ") || " "}</span>
       </Link>
@@ -42,7 +42,7 @@ const ContinueCard = ({ book }: { book: LibraryBook }) => {
       </div>
       <Progress value={position / Math.max(1, book.pageCount)} />
       <div className="flex items-center gap-4">
-        <Button icon={BookOpen} onClick={() => navigate(`/read/${book.bookId}`)}>
+        <Button icon={BookOpen} onClick={() => void navigate(`/read/${book.bookId}`, { viewTransition: true })}>
           Resume reading
         </Button>
         <span className="text-sm text-ink-2">
@@ -104,7 +104,7 @@ export const LibraryRoute = () => {
       {!configured && settings.isSuccess && (
         <div className="flex items-center gap-4 rounded-xl bg-warn-soft px-5 py-4 text-sm text-warn">
           <span className="flex-1">Set up the corpus connection to import books.</span>
-          <Link to="/settings">
+          <Link to="/settings" viewTransition>
             <Button size="sm" variant="secondary">
               Open settings
             </Button>
