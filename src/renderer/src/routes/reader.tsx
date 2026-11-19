@@ -701,7 +701,8 @@ export const ReaderRoute = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="relative flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4 [view-transition-name:reader-header]">
+      {/* z-20: the view-transition name makes the header its own stacking layer, and its display menu must sit above the page. */}
+      <header className="relative z-20 flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4 [view-transition-name:reader-header]">
         <Link to="/" viewTransition aria-label="Back to Library">
           <IconButton icon={ArrowLeft} label="Back to Library" tabIndex={-1} />
         </Link>
