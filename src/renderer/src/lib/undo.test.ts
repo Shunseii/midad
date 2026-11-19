@@ -168,8 +168,8 @@ describe("undo stack", () => {
   it("moves the last-read marker back to where it was, or clears it if there was none", async () => {
     const page = fakePage();
     const stack = createUndoStack(page.writes);
-    const first = { position: 4, line: 2, word: 1 };
-    const second = { position: 4, line: 7, word: 3 };
+    const first = { position: 4, part: "matn" as const, line: 2, word: 1 };
+    const second = { position: 4, part: "hashiya" as const, line: 7, word: 3 };
     await stack.setMarker({ before: null, after: first });
     await stack.setMarker({ before: first, after: second });
     await stack.undo();
@@ -182,7 +182,7 @@ describe("undo stack", () => {
 
   it("brings back a cleared marker", async () => {
     const page = fakePage();
-    const at = { position: 4, line: 2, word: 1 };
+    const at = { position: 4, part: "matn" as const, line: 2, word: 1 };
     page.book.marker = at;
     const stack = createUndoStack(page.writes);
     await stack.setMarker({ before: at, after: null });

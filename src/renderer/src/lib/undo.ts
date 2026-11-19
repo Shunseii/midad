@@ -1,7 +1,7 @@
-import type { HighlightColor, LetterRef, Span } from "../../../shared/annotations";
+import type { HighlightColor, LetterRef, Part, Span } from "../../../shared/annotations";
 
 /** Where the book's last-read marker sits; `null` when there is none. */
-export type MarkerAt = { position: number; line: number; word: number } | null;
+export type MarkerAt = { position: number; part: Part; line: number; word: number } | null;
 import { EMPTY_HISTORY, type History, record, redo, undo } from "./history";
 
 /** The writes the stack makes on one page. Adds return the new item's id. */

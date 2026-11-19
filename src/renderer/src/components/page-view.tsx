@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { type ReactNode, type MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, type ReactNode, type MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -182,7 +182,7 @@ export interface ScreenRow {
 export const screenRows = (block: HTMLElement): ScreenRow[] => {
   const base = block.getBoundingClientRect();
   const rows: ScreenRow[] = [];
-  for (const el of block.querySelectorAll<HTMLElement>("[data-part=matn][data-w]")) {
+  for (const el of block.querySelectorAll<HTMLElement>("[data-w]")) {
     const r = el.getBoundingClientRect();
     const top = r.top - base.top;
     const word = Number(el.dataset.w);
@@ -201,7 +201,6 @@ export const rowOfWord = (rows: ScreenRow[], word: number): ScreenRow | null =>
 
 const rowStyle = (row: ScreenRow) => ({ top: row.top, height: row.height });
 
-/** A matn paragraph with its margin: the last-read marker on one screen row, or on hover a button beside the row. */
 /** The matn line's number, in the left margin beside its first row. */
 const LineNumber = ({ line }: { line: number }) => (
   // The wrapper keeps the line's font so 1lh is one row of text; the number itself is small.
@@ -210,22 +209,30 @@ const LineNumber = ({ line }: { line: number }) => (
   </span>
 );
 
-const MatnParagraph = ({
+/** A line of text with its margin: the last-read marker on one screen row, or on hover a button beside the row. */
+const MarkableLine = ({
+  as: Tag,
+  part,
   line,
+  className,
   markerWord,
+  fresh,
   layoutKey,
   onMark,
   onClearMark,
-  onHoverRow,
   children,
 }: {
+  as: "p" | "h2";
+  part: Part;
   line: number;
+  className: string;
   markerWord: number | null;
+  /** The marker was just placed here, so it animates in. */
+  fresh: boolean;
   /** Changes when the text may have reflowed (e.g. harakat shown or hidden). */
   layoutKey: string;
   onMark: (word: number) => void;
   onClearMark: () => void;
-  onHoverRow: (at: { line: number; word: number } | null) => void;
   children: ReactNode;
 }) => {
   const ref = useRef<HTMLParagraphElement>(null);
@@ -253,57 +260,42 @@ const MatnParagraph = ({
     return rows.find((r) => y < r.top + r.height) ?? rows.at(-1) ?? null;
   };
 
-  // The row under the pointer, over the text or the margin, is what M marks.
-  const trackRow = (e: ReactMouseEvent<HTMLElement>) => {
-    const row = rowAt(e.clientY);
-    onHoverRow(row ? { line, word: row.word } : null);
-    return row;
-  };
-
-  const leave = () => {
-    setHover(null);
-    onHoverRow(null);
-  };
-
   return (
-    <p
-      ref={ref}
-      data-line-block={`matn-${line}`}
-      onMouseMove={trackRow}
-      onMouseLeave={leave}
-      className="ar relative whitespace-pre-line rounded-lg text-right text-ar-reading"
-    >
+    <Tag ref={ref} data-line-block={`${part}-${line}`} className={cx("relative", className)}>
       {children}
-      {/* The margin beside the paragraph: the mark button shows only while the pointer is here. */}
+      {/* The margin beside the line: the mark button shows only while the pointer is here. */}
       <span
         aria-hidden
         onMouseMove={(e) => {
-          e.stopPropagation();
-          const row = trackRow(e);
+          const row = rowAt(e.clientY);
           if (row?.word !== hover?.word) setHover(row);
         }}
         onMouseLeave={() => setHover(null)}
         className="absolute inset-y-0 left-full hidden w-36 @3xl:block"
       />
       {marked && (
-        <>
+        <Fragment key={fresh ? `${markerWord}` : "settled"}>
           <button
             type="button"
             onClick={onClearMark}
             onMouseDown={(e) => e.stopPropagation()}
-            title="Clear the last-read marker"
+            aria-label="Clear the last-read marker"
             style={rowStyle(marked)}
             className="absolute left-full ml-6 hidden select-none items-start gap-3 font-sans @3xl:flex"
           >
-            <span className="w-0.5 self-stretch rounded-full bg-accent" />
-            <span className="flex flex-col items-center gap-1 text-accent">
+            <span className={cx("w-0.5 origin-top self-stretch rounded-full bg-accent", fresh && "motion-safe:animate-mark-bar")} />
+            <span className={cx("flex flex-col items-center gap-1 text-accent", fresh && "motion-safe:animate-mark-drop")}>
               <Bookmark aria-hidden className="size-5 fill-current" />
               <span className="whitespace-nowrap text-overline font-semibold uppercase tracking-widest">Last read</span>
             </span>
           </button>
           {/* Without room for the margin, the marked row gets a bar beside it. */}
-          <span aria-hidden style={rowStyle(marked)} className="absolute -right-3 w-0.5 rounded-full bg-accent @3xl:hidden" />
-        </>
+          <span
+            aria-hidden
+            style={rowStyle(marked)}
+            className={cx("absolute -right-3 w-0.5 origin-top rounded-full bg-accent @3xl:hidden", fresh && "motion-safe:animate-mark-bar")}
+          />
+        </Fragment>
       )}
       {hover && hover.word !== marked?.word && (
         <span
@@ -317,16 +309,13 @@ const MatnParagraph = ({
             onClick={() => onMark(hover.word)}
             onMouseDown={(e) => e.stopPropagation()}
             aria-label="Mark as last read"
-            className="group/mark relative flex size-8 items-center justify-center rounded-md border border-line bg-surface text-ink-2 hover:text-accent"
+            className="flex size-8 items-center justify-center rounded-md border border-line bg-surface text-ink-2 transition-colors hover:text-accent"
           >
             <BookmarkPlus aria-hidden className="size-4" />
-            <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden whitespace-nowrap rounded-md bg-ink px-2 py-1 text-xs text-bg group-hover/mark:block">
-              Mark as last read · M
-            </span>
           </button>
         </span>
       )}
-    </p>
+    </Tag>
   );
 };
 
@@ -337,7 +326,6 @@ export const PageView = ({
   marker,
   onMark,
   onClearMark,
-  onHoverRow,
   onWordHover,
   onWordClick,
 }: {
@@ -345,16 +333,25 @@ export const PageView = ({
   annotations: PageAnnotations;
   display: Display;
   /** The word on this page holding the last-read marker, if any. */
-  marker: { line: number; word: number } | null;
-  onMark: (at: { line: number; word: number }) => void;
+  marker: { part: Part; line: number; word: number; setAt: number } | null;
+  onMark: (at: { part: Part; line: number; word: number }) => void;
   onClearMark: () => void;
-  onHoverRow: (at: { line: number; word: number } | null) => void;
   onWordHover: LineProps["onWordHover"];
   onWordClick: LineProps["onWordClick"];
 }) => {
   const { page } = stored;
   const lineProps = { annotations, display, onWordHover, onWordClick };
   const t = (s: string) => (display.showHarakat ? s : stripHarakat(s));
+  const fresh = marker !== null && Date.now() - marker.setAt < 2000;
+  const markable = (part: Part, line: number) => ({
+    part,
+    line,
+    markerWord: marker?.part === part && marker.line === line ? marker.word : null,
+    fresh,
+    layoutKey: `${display.showHarakat}-${display.showMine}`,
+    onMark: (word: number) => onMark({ part, line, word }),
+    onClearMark,
+  });
   return (
     <article className="mx-auto flex w-full max-w-160 flex-col pb-24">
       <div className="mb-4 flex items-baseline justify-between border-b border-line pb-4 text-ink-3" dir="rtl">
@@ -364,37 +361,30 @@ export const PageView = ({
       {page.matn.length === 0 && <p className="py-12 text-center text-sm text-ink-3">This page has no main text.</p>}
       {page.matn.map((b) =>
         b.kind === "heading" ? (
-          <h2
+          <MarkableLine
             key={b.line}
-            data-line-block={`matn-${b.line}`}
-            className={cx("ar relative my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-body")}
+            as="h2"
+            {...markable("matn", b.line)}
+            className={cx("ar my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-body")}
           >
             {display.lineNumbers && <LineNumber line={b.line} />}
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
-          </h2>
+          </MarkableLine>
         ) : (
-          <MatnParagraph
-            key={b.line}
-            line={b.line}
-            markerWord={marker?.line === b.line ? marker.word : null}
-            layoutKey={`${display.showHarakat}-${display.showMine}`}
-            onMark={(word) => onMark({ line: b.line, word })}
-            onClearMark={onClearMark}
-            onHoverRow={onHoverRow}
-          >
+          <MarkableLine key={b.line} as="p" {...markable("matn", b.line)} className="ar whitespace-pre-line rounded-lg text-right text-ar-reading">
             {display.lineNumbers && <LineNumber line={b.line} />}
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
-          </MatnParagraph>
+          </MarkableLine>
         ),
       )}
       {page.hashiya.length > 0 && (
         <section className="mt-8 flex flex-col gap-2 border-t border-line pt-4" dir="rtl">
           <h3 className="ar text-ar-small font-bold text-ink-3">الحاشية</h3>
           {page.hashiya.map((f, i) => (
-            <p key={`${f.marker ?? "u"}-${i}`} data-line-block={`hashiya-${i + 1}`} className="ar text-right text-ar-small text-ink-2">
+            <MarkableLine key={`${f.marker ?? "u"}-${i}`} as="p" {...markable("hashiya", i + 1)} className="ar text-right text-ar-small text-ink-2">
               {f.marker && `(${f.marker}) `}
               <Line part="hashiya" line={i + 1} text={f.text} {...lineProps} />
-            </p>
+            </MarkableLine>
           ))}
         </section>
       )}

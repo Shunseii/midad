@@ -119,13 +119,13 @@ const revealLines = ({ root, part, from, to }: LineRange & { root: HTMLElement |
 };
 
 /** Scrolls to the screen row a word is on and tints that row for a moment. */
-const revealRow = ({ root, line, word }: { root: HTMLElement | null; line: number; word: number }) => {
-  const block = root?.querySelector<HTMLElement>(`p[data-line-block="matn-${line}"]`);
+const revealRow = ({ root, part, line, word }: { root: HTMLElement | null; part: Part; line: number; word: number }) => {
+  const block = root?.querySelector<HTMLElement>(`[data-line-block="${part}-${line}"]`);
   if (!block) return;
   const rows = screenRows(block);
   const row = rowOfWord(rows, word);
   const next = row && rows[rows.indexOf(row) + 1];
-  const onRow = [...block.querySelectorAll<HTMLElement>("[data-part=matn][data-w]")].filter((el) => {
+  const onRow = [...block.querySelectorAll<HTMLElement>("[data-w]")].filter((el) => {
     const w = Number(el.dataset.w);
     return row !== null && w >= row.word && (!next || w < next.word);
   });
@@ -298,8 +298,7 @@ export const ReaderRoute = () => {
   const marker = useMarker(bookId);
   const setMarker = useSetMarker(bookId);
   const pendingReveal = useRef<(Citation & { position: number }) | null>(null);
-  const pendingRow = useRef<{ position: number; line: number; word: number } | null>(null);
-  const hoveredRow = useRef<{ line: number; word: number } | null>(null);
+  const pendingRow = useRef<{ position: number; part: Part; line: number; word: number } | null>(null);
   const conversation = useAskConversation(bookId);
   const [askSelection, setAskSelection] = useState<AskSelection | null>(null);
   const client = useQueryClient();
@@ -367,23 +366,10 @@ export const ReaderRoute = () => {
 
   const markerAt = (): MarkerAt => {
     const m = marker.data;
-    return m ? { position: m.position, line: m.line, word: m.word } : null;
+    return m ? { position: m.position, part: m.part, line: m.line, word: m.word } : null;
   };
 
-  const markRow = (at: { line: number; word: number }) => void edits().setMarker({ before: markerAt(), after: { position, ...at } });
-
-  /** M marks the screen row under the pointer, or else the first row in view. */
-  const markFromKeyboard = () => {
-    const root = pageRoot.current;
-    if (!root) return;
-    if (hoveredRow.current) return markRow(hoveredRow.current);
-    const top = root.getBoundingClientRect().top;
-    const word = [...root.querySelectorAll<HTMLElement>("p [data-part=matn][data-w]")].find((w) => w.getBoundingClientRect().top >= top);
-    const block = word?.closest<HTMLElement>("p[data-line-block]");
-    if (!word || !block) return;
-    const row = rowOfWord(screenRows(block), Number(word.dataset.w));
-    markRow({ line: Number(word.dataset.line), word: row?.word ?? Number(word.dataset.w) });
-  };
+  const markRow = (at: { part: Part; line: number; word: number }) => void edits().setMarker({ before: markerAt(), after: { position, ...at } });
 
   /** Closes the note shortly, unless the pointer comes back. Leaving the popover itself closes even the editor. */
   const scheduleNoteClose = ({ left = false }: { left?: boolean } = {}) => {
@@ -606,7 +592,6 @@ export const ReaderRoute = () => {
     if (e.key === "ArrowLeft" || e.key === "PageDown") go(position + 1);
     else if (e.key === "ArrowRight" || e.key === "PageUp") go(position - 1);
     else if (e.code === "KeyH" && !e.shiftKey) setShowHarakat(!showHarakat);
-    else if (e.code === "KeyM" && !e.shiftKey) markFromKeyboard();
     else if (e.code === "KeyS" && !e.shiftKey) setShowScan(!showScan);
     else if (e.key === "Escape") {
       setMenuOpen(false);
@@ -775,9 +760,6 @@ export const ReaderRoute = () => {
               display={{ showHarakat, showMine, lineNumbers, target }}
               marker={marker.data?.position === position ? marker.data : null}
               onMark={markRow}
-              onHoverRow={(at) => {
-                hoveredRow.current = at;
-              }}
               onClearMark={() => void edits().setMarker({ before: markerAt(), after: null })}
               onWordHover={onWordHover}
               onWordClick={onWordClick}

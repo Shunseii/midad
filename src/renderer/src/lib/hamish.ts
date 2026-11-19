@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { HighlightColor, LetterRef, PageAnnotations, Span } from "../../../shared/annotations";
+import type { HighlightColor, LetterRef, PageAnnotations, Part, Span } from "../../../shared/annotations";
 import type { HamishApi, HamishEvents, SyncInput } from "../../../shared/ipc";
 
 declare global {
@@ -70,7 +70,7 @@ export const useMarker = (bookId: string) =>
 /** Moves or clears the book's last-read marker; `null` clears it. */
 export const useSetMarker = (bookId: string) => {
   const client = useQueryClient();
-  return async (at: { position: number; line: number; word: number } | null) => {
+  return async (at: { position: number; part: Part; line: number; word: number } | null) => {
     if (at) await hamish["marker.set"]({ bookId, ...at });
     else await hamish["marker.clear"]({ bookId });
     await client.invalidateQueries({ queryKey: keys.marker(bookId) });

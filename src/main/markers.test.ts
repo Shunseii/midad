@@ -15,7 +15,7 @@ const page = (fileId: string, pageNumber: number, text: string): ExportFile => (
 });
 
 // Page 1 has matn lines 1–3, page 2 has one line.
-const PAGE_1 = ["h", "", "---", "## باب الكلام", "الكلام هو اللفظ", "وأقسامه ثلاثة"].join("\n");
+const PAGE_1 = ["h", "", "---", "## باب الكلام", "الكلام هو اللفظ", "وأقسامه ثلاثة", "", "## الحاشية", "(١) قوله: الكلام إلخ"].join("\n");
 const PAGE_2 = "h\n\n---\nصفحة ثانية";
 
 class FakeCorpus implements CorpusSource {
@@ -49,14 +49,14 @@ describe("last-read marker", () => {
 
   it("returns the page, line and word it was set on", async () => {
     await markers.set({ bookId: "b1", position: 1, line: 3, word: 2 });
-    expect(await markers.get({ bookId: "b1" })).toEqual({ position: 1, line: 3, word: 2, setAt: 1000 });
+    expect(await markers.get({ bookId: "b1" })).toEqual({ position: 1, part: "matn", line: 3, word: 2, setAt: 1000 });
   });
 
   it("keeps one marker per book: setting it again moves it", async () => {
     await markers.set({ bookId: "b1", position: 1, line: 3, word: 1 });
     clock = 2000;
     await markers.set({ bookId: "b1", position: 2, line: 1, word: 2 });
-    expect(await markers.get({ bookId: "b1" })).toEqual({ position: 2, line: 1, word: 2, setAt: 2000 });
+    expect(await markers.get({ bookId: "b1" })).toEqual({ position: 2, part: "matn", line: 1, word: 2, setAt: 2000 });
   });
 
   it.each([
@@ -68,6 +68,17 @@ describe("last-read marker", () => {
   ])("refuses %s", async (_label, at, message) => {
     await expect(markers.set({ bookId: "b1", ...at })).rejects.toThrow(message);
     expect(await markers.get({ bookId: "b1" })).toBeNull();
+  });
+
+  it("marks a word in the ḥāshiya, or a heading", async () => {
+    await markers.set({ bookId: "b1", position: 1, part: "hashiya", line: 1, word: 2 });
+    expect(await markers.get({ bookId: "b1" })).toMatchObject({ part: "hashiya", line: 1, word: 2 });
+    await markers.set({ bookId: "b1", position: 1, part: "matn", line: 1, word: 1 });
+    expect(await markers.get({ bookId: "b1" })).toMatchObject({ part: "matn", line: 1, word: 1 });
+  });
+
+  it("refuses a ḥāshiya line that isn't on the page", async () => {
+    await expect(markers.set({ bookId: "b1", position: 1, part: "hashiya", line: 2, word: 1 })).rejects.toThrow(/no ḥāshiya line 2/);
   });
 
   it("clears the marker", async () => {
@@ -82,7 +93,7 @@ describe("last-read marker", () => {
     await lib.importBook({ corpusBookId: "b1" });
     db.exec("CREATE TABLE markers (book_id TEXT PRIMARY KEY, file_id TEXT NOT NULL, line INTEGER NOT NULL, set_at INTEGER NOT NULL)");
     db.exec("INSERT INTO markers VALUES ('b1', 'f1', 2, 5)");
-    expect(await createMarkers({ db }).get({ bookId: "b1" })).toEqual({ position: 1, line: 2, word: 1, setAt: 5 });
+    expect(await createMarkers({ db }).get({ bookId: "b1" })).toEqual({ position: 1, part: "matn", line: 2, word: 1, setAt: 5 });
   });
 
   it("follows its page when a sync adds a page before it", async () => {

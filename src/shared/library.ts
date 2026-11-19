@@ -1,3 +1,4 @@
+import type { Part } from "./annotations";
 import type { Page } from "./page";
 
 export interface ReadingProgress {
@@ -59,6 +60,7 @@ export interface ImportResult {
 /** Where the reader last marked their place: a word on a page, whose screen row is marked. */
 export interface LastRead {
   position: number;
+  part: Part;
   line: number;
   word: number;
   setAt: number;
