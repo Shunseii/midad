@@ -309,7 +309,7 @@ const MarkableLine = ({
   };
 
   return (
-    <Tag ref={ref} data-line-block={`${part}-${line}`} className={cx("relative", className)}>
+    <Tag ref={ref} data-line-block={`${part}-${line}`} onMouseLeave={() => setHover(null)} className={cx("relative", className)}>
       {children}
       {/* The margin beside the line: the mark button shows only while the pointer is here. */}
       <span
@@ -327,6 +327,7 @@ const MarkableLine = ({
         <span
           style={rowStyle(hover)}
           onMouseEnter={() => setHover(hover)}
+          onMouseLeave={() => setHover(null)}
           className="absolute left-full ml-6 hidden select-none items-center gap-3 font-sans @3xl:flex"
         >
           <span className="w-px self-stretch bg-line" />
