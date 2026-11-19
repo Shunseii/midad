@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { type ReactNode, type MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, type ReactNode, type MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -37,6 +37,8 @@ export interface Display {
   showHarakat: boolean;
   showMine: boolean;
   lineNumbers: boolean;
+  /** How much larger than normal the page text is drawn; 1 is the normal size. */
+  textScale: number;
   /** The letter the reader is typing harakat on. */
   target: LetterRef | null;
 }
@@ -343,12 +345,15 @@ export const PageView = ({
     part,
     line,
     markerWord: marker?.part === part && marker.line === line ? marker.word : null,
-    layoutKey: `${display.showHarakat}-${display.showMine}`,
+    layoutKey: `${display.showHarakat}-${display.showMine}-${display.textScale}`,
     onMark: (word: number) => onMark({ part, line, word }),
     onClearMark,
   });
   return (
-    <article className="mx-auto flex w-full max-w-160 flex-col pb-24">
+    <article
+      style={{ "--text-scale": display.textScale } as CSSProperties}
+      className="reader-text mx-auto flex w-full max-w-160 flex-col pb-24"
+    >
       <div className="mb-4 flex items-baseline justify-between border-b border-line pb-4 text-ink-3" dir="rtl">
         <span className="ar text-ar-small">{t(page.header ?? "")}</span>
         <span className="ar text-ar-small">{arabicNumber(stored.number ?? stored.position)}</span>

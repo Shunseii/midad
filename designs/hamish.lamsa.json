@@ -2,6 +2,222 @@
   "$schema": "https://lamsa.dev/schema/v1.json",
   "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%,\n  60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n",
   "nodes": {
+    "TllpeHcf": {
+      "type": "frame",
+      "name": "Row · Text size",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 12
+      },
+      "parentId": "1rKewHXe",
+      "index": "a0008"
+    },
+    "gbySAjib": {
+      "type": "frame",
+      "name": "Text",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "parentId": "TllpeHcf",
+      "index": "a0"
+    },
+    "IzsWfKnQ": {
+      "type": "text",
+      "name": "Text size",
+      "content": "Text size",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px",
+        "color": "{color.ink}"
+      },
+      "parentId": "gbySAjib",
+      "index": "a0"
+    },
+    "QHMXkewS": {
+      "type": "text",
+      "name": "Caption",
+      "content": "The page's Arabic text",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "font-weight": 400,
+        "line-height": "16px",
+        "color": "{color.ink-3}"
+      },
+      "parentId": "gbySAjib",
+      "index": "a1"
+    },
+    "NHTF1e9S": {
+      "type": "frame",
+      "name": "Stepper",
+      "style": {
+        "display": "flex",
+        "align-items": "center",
+        "gap": 4
+      },
+      "parentId": "TllpeHcf",
+      "index": "a1"
+    },
+    "N4vopQ9P": {
+      "type": "instance",
+      "name": "Smaller",
+      "componentId": "RV1DOgzp",
+      "props": {
+        "label": "Smaller text"
+      },
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "minus"
+        }
+      },
+      "parentId": "NHTF1e9S",
+      "index": "a0"
+    },
+    "CUMh5Qhp": {
+      "type": "text",
+      "name": "Value",
+      "content": "100%",
+      "style": {
+        "width": 48,
+        "text-align": "center",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "line-height": "20px",
+        "color": "{color.ink-2}",
+        "font-variant-numeric": "tabular-nums"
+      },
+      "parentId": "NHTF1e9S",
+      "index": "a1"
+    },
+    "A6CM54Ev": {
+      "type": "instance",
+      "name": "Larger",
+      "componentId": "RV1DOgzp",
+      "props": {
+        "label": "Larger text"
+      },
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "plus"
+        }
+      },
+      "parentId": "NHTF1e9S",
+      "index": "a2"
+    },
+    "PbJVmQo3": {
+      "type": "frame",
+      "name": "Row · Text size",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 12
+      },
+      "parentId": "PZagMSx3",
+      "index": "a0008"
+    },
+    "kSWIh0sU": {
+      "type": "frame",
+      "name": "Text",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "parentId": "PbJVmQo3",
+      "index": "a0"
+    },
+    "fkwveP5a": {
+      "type": "text",
+      "name": "Text size",
+      "content": "Text size",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px",
+        "color": "{color.ink}"
+      },
+      "parentId": "kSWIh0sU",
+      "index": "a0"
+    },
+    "GN8vAOga": {
+      "type": "text",
+      "name": "Caption",
+      "content": "The page's Arabic text",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "font-weight": 400,
+        "line-height": "16px",
+        "color": "{color.ink-3}"
+      },
+      "parentId": "kSWIh0sU",
+      "index": "a1"
+    },
+    "SEHbj0bq": {
+      "type": "frame",
+      "name": "Stepper",
+      "style": {
+        "display": "flex",
+        "align-items": "center",
+        "gap": 4
+      },
+      "parentId": "PbJVmQo3",
+      "index": "a1"
+    },
+    "AnW9GZgd": {
+      "type": "instance",
+      "name": "Smaller",
+      "componentId": "RV1DOgzp",
+      "props": {
+        "label": "Smaller text"
+      },
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "minus"
+        }
+      },
+      "parentId": "SEHbj0bq",
+      "index": "a0"
+    },
+    "UZj7oOvJ": {
+      "type": "text",
+      "name": "Value",
+      "content": "100%",
+      "style": {
+        "width": 48,
+        "text-align": "center",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "line-height": "20px",
+        "color": "{color.ink-2}",
+        "font-variant-numeric": "tabular-nums"
+      },
+      "parentId": "SEHbj0bq",
+      "index": "a1"
+    },
+    "o5S4C0Tg": {
+      "type": "instance",
+      "name": "Larger",
+      "componentId": "RV1DOgzp",
+      "props": {
+        "label": "Larger text"
+      },
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "plus"
+        }
+      },
+      "parentId": "SEHbj0bq",
+      "index": "a2"
+    },
     "01tFx8yA": {
       "index": "a000",
       "name": "Running header",

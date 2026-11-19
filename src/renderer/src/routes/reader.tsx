@@ -1,4 +1,4 @@
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles, Type } from "lucide-react";
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, Minus, NotebookPen, PanelLeftClose, PanelLeftOpen, Plus, Sparkles, Type } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
@@ -182,7 +182,41 @@ const ContentsRail = ({
   );
 };
 
+/** The text sizes the reader steps through, as multiples of the normal size. */
+const TEXT_SCALES = [0.875, 1, 1.125, 1.25, 1.5, 1.75, 2];
+const SMALLEST = 0.875;
+const LARGEST = 2;
+
+const stepScale = ({ scale, by }: { scale: number; by: 1 | -1 }) => {
+  const at = TEXT_SCALES.findIndex((s) => s >= scale);
+  const index = Math.min(Math.max((at === -1 ? TEXT_SCALES.length - 1 : at) + by, 0), TEXT_SCALES.length - 1);
+  return TEXT_SCALES[index] ?? 1;
+};
+
+const TextSize = ({ scale, onScale }: { scale: number; onScale: (v: number) => void }) => (
+  <div className="flex items-center gap-3">
+    <div className="flex flex-1 flex-col gap-0.5">
+      <span className="text-sm font-medium">Text size</span>
+      <span className="text-xs text-ink-3">The page's Arabic text</span>
+    </div>
+    <div className="flex items-center gap-1">
+      <IconButton icon={Minus} label="Smaller text" disabled={scale <= SMALLEST} onClick={() => onScale(stepScale({ scale, by: -1 }))} />
+      <button
+        type="button"
+        title="Reset to normal size"
+        onClick={() => onScale(1)}
+        className="w-12 rounded-md py-1 text-center text-sm tabular-nums text-ink-2 hover:bg-ink/6"
+      >
+        {Math.round(scale * 100)}%
+      </button>
+      <IconButton icon={Plus} label="Larger text" disabled={scale >= LARGEST} onClick={() => onScale(stepScale({ scale, by: 1 }))} />
+    </div>
+  </div>
+);
+
 const DisplayMenu = ({
+  textScale,
+  onTextScale,
   lineNumbers,
   onLineNumbers,
   showHarakat,
@@ -190,6 +224,8 @@ const DisplayMenu = ({
   showMine,
   onShowMine,
 }: {
+  textScale: number;
+  onTextScale: (v: number) => void;
   lineNumbers: boolean;
   onLineNumbers: (v: boolean) => void;
   showHarakat: boolean;
@@ -199,6 +235,7 @@ const DisplayMenu = ({
 }) => (
   <div className="absolute right-0 top-11 z-40 flex w-80 flex-col gap-3.5 rounded-xl border border-line bg-surface p-4 shadow-lg">
     <span className="text-sm font-medium">Text display</span>
+    <TextSize scale={textScale} onScale={onTextScale} />
     <div className="flex items-center gap-3">
       <div className="flex flex-1 flex-col gap-0.5">
         <span className="text-sm font-medium">Harakat</span>
@@ -267,6 +304,7 @@ export const ReaderRoute = () => {
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
   const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
+  const [textScale, setTextScale] = usePref({ key: "reader.textScale", fallback: 1 });
   const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -683,7 +721,7 @@ export const ReaderRoute = () => {
         <div className="relative">
           <IconButton icon={Type} label="Text display" selected={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
           {menuOpen && (
-            <DisplayMenu lineNumbers={lineNumbers} onLineNumbers={setLineNumbers} showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
+            <DisplayMenu textScale={textScale} onTextScale={setTextScale} lineNumbers={lineNumbers} onLineNumbers={setLineNumbers} showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
           )}
         </div>
         <IconButton icon={FileImage} label={showScan ? "Hide scan (S)" : "Show scan (S)"} selected={showScan} onClick={() => setShowScan(!showScan)} />
@@ -757,7 +795,7 @@ export const ReaderRoute = () => {
             <PageView
               stored={page.data}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
-              display={{ showHarakat, showMine, lineNumbers, target }}
+              display={{ showHarakat, showMine, lineNumbers, textScale, target }}
               marker={marker.data?.position === position ? marker.data : null}
               onMark={markRow}
               onClearMark={() => void edits().setMarker({ before: markerAt(), after: null })}

@@ -62,6 +62,18 @@
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/* The reader's text size scales the page's Arabic type, and nothing outside the page. */
+.reader-text {
+  --text-ar-display: calc(1.875rem * var(--text-scale, 1));
+  --text-ar-display--line-height: calc(3.25rem * var(--text-scale, 1));
+  --text-ar-reading: calc(1.625rem * var(--text-scale, 1));
+  --text-ar-reading--line-height: calc(3.25rem * var(--text-scale, 1));
+  --text-ar-body: calc(1.25rem * var(--text-scale, 1));
+  --text-ar-body--line-height: calc(2.25rem * var(--text-scale, 1));
+  --text-ar-small: calc(1rem * var(--text-scale, 1));
+  --text-ar-small--line-height: calc(1.75rem * var(--text-scale, 1));
+}
+
 html,
 body,
 #root {
