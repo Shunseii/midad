@@ -1,10 +1,10 @@
-import * as Dialog from "@radix-ui/react-dialog";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { cx } from "./ui";
+import { Sheet, SheetContent, SheetTitle } from "./ui/sheet";
 
 /**
  * A side panel that slides over the page, for windows too narrow to show it
- * beside the text. Radix handles focus, Esc and the click-away scrim.
+ * beside the text. Base UI handles focus, Esc and the click-away scrim.
  */
 export const SideSheet = ({
   side,
@@ -18,23 +18,24 @@ export const SideSheet = ({
   onOpenChange: (open: boolean) => void;
   title: string;
   children: ReactNode;
-}) => (
-  <Dialog.Root open={open} onOpenChange={onOpenChange}>
-    <Dialog.Portal>
-      <Dialog.Overlay className="sheet-scrim fixed inset-0 z-50 bg-scrim" />
-      <Dialog.Content
-        aria-describedby={undefined}
-        // Keep focus on the sheet itself rather than ringing its first button.
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        data-side={side}
-        className={cx("sheet fixed inset-y-0 z-50 flex max-w-[90vw] shadow-lg outline-none", side === "left" ? "left-0" : "right-0")}
+}) => {
+  const popupRef = useRef<HTMLDivElement>(null);
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        ref={popupRef}
+        side={side}
+        showCloseButton={false}
+        // Focus the sheet itself rather than ringing its first button.
+        initialFocus={popupRef}
+        className="sheet max-w-[90vw] bg-transparent"
       >
-        <Dialog.Title className="sr-only">{title}</Dialog.Title>
+        <SheetTitle className="sr-only">{title}</SheetTitle>
         {children}
-      </Dialog.Content>
-    </Dialog.Portal>
-  </Dialog.Root>
-);
+      </SheetContent>
+    </Sheet>
+  );
+};
 
 /**
  * A side panel beside the text in wide windows. It stays mounted and opens by
