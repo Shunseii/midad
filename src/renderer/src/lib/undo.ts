@@ -26,6 +26,7 @@ export type Change =
   | { kind: "note-edit"; id: string; before: string; after: string }
   | { kind: "harakat"; ref: LetterRef; before: string; after: string }
   | { kind: "harakat-clear"; span: Span; removed: ClearedMark[] }
+  | { kind: "highlights-clear"; removed: { id: string; span: Span; color: HighlightColor }[] }
   | { kind: "marker"; before: MarkerAt; after: MarkerAt };
 
 /**
@@ -60,6 +61,10 @@ export const createUndoStack = (writes: PageWrites) => {
     else await writes.deleteNote(current(c.id));
   };
 
+  const clearedHighlights = async (removed: Extract<Change, { kind: "highlights-clear" }>["removed"], present: boolean) => {
+    for (const h of removed) await highlight({ kind: "highlight", op: "add", ...h }, present);
+  };
+
   const restoreMarks = async (removed: ClearedMark[]) => {
     for (const { ref, marks } of removed) await writes.setMarks({ ref, marks });
   };
@@ -75,6 +80,8 @@ export const createUndoStack = (writes: PageWrites) => {
         return writes.updateNote({ id: current(c.id), body: forward ? c.after : c.before });
       case "harakat":
         return writes.setMarks({ ref: c.ref, marks: forward ? c.after : c.before });
+      case "highlights-clear":
+        return clearedHighlights(c.removed, !forward);
       case "harakat-clear":
         return forward ? writes.clearMarks(c.span).then(() => undefined) : restoreMarks(c.removed);
       case "marker":
@@ -136,6 +143,14 @@ export const createUndoStack = (writes: PageWrites) => {
         if (before === after) return;
         await writes.setMarks({ ref, marks: after });
         history = record(history, { kind: "harakat", ref, before, after });
+      });
+    },
+    /** Removes several highlights as one undo step. */
+    clearHighlights(removed: { id: string; span: Span; color: HighlightColor }[]): Promise<void> {
+      return serial(async () => {
+        if (removed.length === 0) return;
+        for (const h of removed) await writes.removeHighlight(h.id);
+        history = record(history, { kind: "highlights-clear", removed });
       });
     },
     /** Clears the span's added marks as one undo step. Resolves to how many letters lost their marks. */

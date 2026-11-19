@@ -214,6 +214,20 @@ describe("undo stack", () => {
     expect(page.harakat.size).toBe(1);
   });
 
+  it("clears several highlights in one step and brings them all back, then clears them again", async () => {
+    const page = fakePage();
+    const a = await page.writes.addHighlight({ span: SPAN, color: "yellow" });
+    const b = await page.writes.addHighlight({ span: { ...SPAN, start: { line: 3, word: 1 }, end: { line: 3, word: 2 } }, color: "blue" });
+    const stack = createUndoStack(page.writes);
+    await stack.clearHighlights([...page.highlights].map(([id, h]) => ({ id, ...h })));
+    expect(page.highlights.size).toBe(0);
+    await stack.undo();
+    expect([...page.highlights.values()].map((h) => h.color).sort()).toEqual(["blue", "yellow"]);
+    expect(page.highlights.has(a) || page.highlights.has(b)).toBe(false);
+    await stack.redo();
+    expect(page.highlights.size).toBe(0);
+  });
+
   it("adds no undo step when there was nothing to clear", async () => {
     const page = fakePage();
     const stack = createUndoStack(page.writes);

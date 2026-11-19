@@ -99,6 +99,10 @@ const compareRefs = (a: WordRef, b: WordRef): number => a.line - b.line || a.wor
 export const compareSpans = (a: Span, b: Span): number =>
   (a.part === b.part ? 0 : a.part === "matn" ? -1 : 1) || compareRefs(a.start, b.start);
 
+/** Whether two spans share at least one word. */
+export const spansOverlap = (a: Span, b: Span): boolean =>
+  a.part === b.part && compareRefs(a.start, b.end) <= 0 && compareRefs(b.start, a.end) <= 0;
+
 export const spanContains = ({ span, part, ref }: { span: Span; part: Part; ref: WordRef }): boolean =>
   span.part === part && compareRefs(span.start, ref) <= 0 && compareRefs(ref, span.end) <= 0;
 
