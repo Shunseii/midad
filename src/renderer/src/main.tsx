@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { HashRouter, Route, Routes } from "react-router";
+import { createHashRouter, RouterProvider } from "react-router";
 import { AppShell } from "./components/app-shell";
 import { LibraryRoute } from "./routes/library";
 import { ReaderRoute } from "./routes/reader";
@@ -17,6 +17,17 @@ const queryClient = new QueryClient({
 // The hamish CLI writes to the same library; show its changes as they land.
 window.hamishEvents.onLibraryChanged(() => void queryClient.invalidateQueries({ queryKey: ["library"] }));
 
+const router = createHashRouter([
+  {
+    element: <AppShell />,
+    children: [
+      { index: true, element: <LibraryRoute /> },
+      { path: "settings", element: <SettingsRoute /> },
+    ],
+  },
+  { path: "read/:bookId", element: <ReaderRoute /> },
+]);
+
 const root = document.getElementById("root");
 if (!root) throw new Error("#root is missing from index.html");
 
@@ -24,15 +35,7 @@ createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider delay={400}>
-      <HashRouter>
-        <Routes>
-          <Route element={<AppShell />}>
-            <Route index element={<LibraryRoute />} />
-            <Route path="settings" element={<SettingsRoute />} />
-          </Route>
-          <Route path="read/:bookId" element={<ReaderRoute />} />
-        </Routes>
-      </HashRouter>
+      <RouterProvider router={router} />
       <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
