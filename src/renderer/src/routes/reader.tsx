@@ -5,7 +5,7 @@ import { Link, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, wordsOf } from "../../../shared/annotations";
 import { lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, StoredPage } from "../../../shared/library";
-import { SideSheet } from "../components/side-sheet";
+import { InlinePanel, SideSheet } from "../components/side-sheet";
 import { useMediaQuery } from "../lib/media";
 import { NotePeek, NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
@@ -698,7 +698,9 @@ export const ReaderRoute = () => {
 
       <div className="flex min-h-0 flex-1">
         {wide ? (
-          contentsOpen && <ContentsRail entries={toc} current={position} markerAt={marker.data?.position ?? null} onGo={go} />
+          <InlinePanel side="left" open={contentsOpen}>
+            <ContentsRail entries={toc} current={position} markerAt={marker.data?.position ?? null} onGo={go} />
+          </InlinePanel>
         ) : (
           <SideSheet side="left" title="Contents" open={contentsOpen} onOpenChange={setContentsOpen}>
             <ContentsRail
@@ -759,7 +761,9 @@ export const ReaderRoute = () => {
         {showScan && page.data && <ScanPane bookId={bookId} fileId={page.data.fileId} onClose={() => setShowScan(false)} />}
         </div>
         {wide ? (
-          panelOpen && sidePanel
+          <InlinePanel side="right" open={panelOpen}>
+            {sidePanel}
+          </InlinePanel>
         ) : (
           <SideSheet side="right" title={panelTab === "ask" ? "Ask AI" : "Highlights and notes"} open={panelOpen} onOpenChange={setPanelOpen}>
             {sidePanel}

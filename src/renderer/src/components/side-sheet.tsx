@@ -35,3 +35,19 @@ export const SideSheet = ({
     </Dialog.Portal>
   </Dialog.Root>
 );
+
+/**
+ * A side panel beside the text in wide windows. It stays mounted and opens by
+ * growing its column from nothing, so the page eases aside instead of jumping.
+ */
+export const InlinePanel = ({ side, open, children }: { side: "left" | "right"; open: boolean; children: ReactNode }) => (
+  <div
+    inert={!open}
+    className={cx(
+      "grid shrink-0 overflow-hidden transition-[grid-template-columns] duration-240 ease-out motion-reduce:transition-none",
+      open ? "grid-cols-[1fr]" : "grid-cols-[0fr]",
+    )}
+  >
+    <div className={cx("flex min-h-0 min-w-0", side === "right" && "justify-end")}>{children}</div>
+  </div>
+);
