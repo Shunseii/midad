@@ -286,8 +286,12 @@ export const ReaderRoute = () => {
   if (noteEditor) lastNote.current = noteEditor;
   const pageRoot = useRef<HTMLDivElement>(null);
   const pointerInNote = useRef(false);
+  const leftNote = useRef(false);
   // A popover that closes under the pointer never sees it leave.
-  if (!noteEditor) pointerInNote.current = false;
+  if (!noteEditor) {
+    pointerInNote.current = false;
+    leftNote.current = false;
+  }
   const reselect = useRef<Span | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -389,10 +393,12 @@ export const ReaderRoute = () => {
 
   /** Closes the note shortly, unless the pointer comes back. Leaving the popover itself closes even the editor. */
   const scheduleNoteClose = ({ left = false }: { left?: boolean } = {}) => {
+    // Words the pointer crosses on its way out reschedule the close; they mustn't drop the "left the popover" reason.
+    leftNote.current ||= left;
     clearTimeout(closeTimer.current);
     closeTimer.current = setTimeout(() => {
       if (pointerInNote.current) return;
-      if (left || !focusInNoteEditor()) setNoteEditor(null);
+      if (leftNote.current || !focusInNoteEditor()) setNoteEditor(null);
     }, 300);
   };
 
@@ -852,7 +858,10 @@ export const ReaderRoute = () => {
           onClose={() => setNoteEditor(null)}
           onPointerInside={(inside) => {
             pointerInNote.current = inside;
-            if (inside) clearTimeout(closeTimer.current);
+            if (inside) {
+              clearTimeout(closeTimer.current);
+              leftNote.current = false;
+            }
             else scheduleNoteClose({ left: true });
           }}
         >

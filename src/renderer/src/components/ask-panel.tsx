@@ -160,7 +160,8 @@ const CiteChip = ({
     <TooltipContent
       sideOffset={6}
       // Keeps the surface look of the reader's other floating layers; the dark arrow doesn't fit it.
-      className="block w-max max-w-80 rounded-lg border border-line bg-surface px-3 py-2 text-ink shadow-md *:data-side:hidden"
+      arrow={false}
+      className="block w-max max-w-80 rounded-lg border border-line bg-surface px-3 py-2 text-ink shadow-md"
     >
       <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
         {text}
