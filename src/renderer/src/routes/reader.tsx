@@ -5,7 +5,7 @@ import { Link, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, wordsOf } from "../../../shared/annotations";
 import { lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, StoredPage } from "../../../shared/library";
-import { NotePopover, SelectionToolbar } from "../components/annotation-popovers";
+import { NotePeek, NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
 import { ScanPane } from "../components/scan-pane";
@@ -57,6 +57,8 @@ interface NoteEditor {
   note: Note | null;
   span: Span;
   rect: DOMRect;
+  /** Hovering shows a read-only peek; clicking it (or adding a note) edits. */
+  mode: "peek" | "edit";
 }
 
 const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
@@ -377,7 +379,8 @@ export const ReaderRoute = () => {
     }
     clearTimeout(closeTimer.current);
     if (toolbar || focusInNoteEditor() || noteEditor?.note?.id === note.id) return;
-    setNoteEditor({ note, span: note.span, rect: target.element.getBoundingClientRect() });
+    if (noteEditor?.mode === "edit" && pointerInNote.current) return;
+    setNoteEditor({ note, span: note.span, rect: target.element.getBoundingClientRect(), mode: "peek" });
   };
 
   const onWordClick = (word: WordTarget, highlight: Highlight | null) => {
@@ -526,7 +529,7 @@ export const ReaderRoute = () => {
   const openNoteFromToolbar = () => {
     if (!toolbar) return;
     const span = toolbar.mode === "selection" ? toolbar.span : toolbar.highlight.span;
-    setNoteEditor({ note: null, span, rect: toolbar.rect });
+    setNoteEditor({ note: null, span, rect: toolbar.rect, mode: "edit" });
     finishToolbar();
   };
 
@@ -779,7 +782,21 @@ export const ReaderRoute = () => {
           }}
         />
       )}
-      {noteEditor && (
+      {noteEditor?.mode === "peek" && noteEditor.note && (
+        <NotePeek
+          key={noteEditor.note.id}
+          rect={noteEditor.rect}
+          note={noteEditor.note}
+          lineLabel={spanLabel(noteEditor.span).toLowerCase()}
+          onEdit={() => setNoteEditor({ ...noteEditor, mode: "edit" })}
+          onPointerInside={(inside) => {
+            pointerInNote.current = inside;
+            if (inside) clearTimeout(closeTimer.current);
+            else scheduleNoteClose();
+          }}
+        />
+      )}
+      {noteEditor?.mode === "edit" && (
         <NotePopover
           key={noteEditor.note?.id ?? "new"}
           rect={noteEditor.rect}

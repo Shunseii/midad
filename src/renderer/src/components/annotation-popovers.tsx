@@ -8,8 +8,9 @@ import { Button, IconButton, Kbd, cx } from "./ui";
 const COLOR_NAMES: Record<HighlightColor, string> = { yellow: "Yellow", green: "Green", pink: "Pink", blue: "Blue" };
 
 /** Fixed-position box centred above `rect`, or below it when there isn't room above. */
-const placement = ({ rect, height }: { rect: DOMRect; height: number }) => {
-  const above = rect.top > height + 80;
+const placement = ({ rect, height, prefer = "above" }: { rect: DOMRect; height: number; prefer?: "above" | "below" }) => {
+  const roomAbove = rect.top > height + 80;
+  const above = prefer === "above" ? roomAbove : window.innerHeight - rect.bottom < height + 40 && roomAbove;
   return {
     left: Math.min(Math.max(rect.left + rect.width / 2, 220), window.innerWidth - 220),
     top: above ? rect.top - 10 : rect.bottom + 10,
@@ -84,6 +85,52 @@ const SaveStatus = ({ state }: { state: SaveState }) => {
   return null;
 };
 
+/** A hovered note, read-only: a few lines and where it sits. Clicking it opens the editor. */
+export const NotePeek = ({
+  rect,
+  note,
+  lineLabel,
+  onEdit,
+  onPointerInside,
+}: {
+  rect: DOMRect;
+  note: Note;
+  lineLabel: string;
+  onEdit: () => void;
+  onPointerInside: (inside: boolean) => void;
+}) => {
+  const below = window.innerHeight - rect.bottom > 160;
+  const left = Math.min(Math.max(rect.left + rect.width / 2, 140), window.innerWidth - 140);
+  return (
+    <button
+      type="button"
+      aria-label={`Edit note on ${lineLabel}`}
+      onClick={onEdit}
+      onMouseEnter={() => onPointerInside(true)}
+      onMouseLeave={() => onPointerInside(false)}
+      style={{ left, top: below ? rect.bottom + 8 : rect.top - 8, transform: below ? "translate(-50%, 0)" : "translate(-50%, -100%)" }}
+      className="group fixed z-40 flex w-64 flex-col gap-1.5 rounded-lg border border-line bg-surface px-3 py-2.5 text-left shadow-md hover:border-accent"
+    >
+      <span
+        aria-hidden
+        className={cx(
+          "absolute left-1/2 size-2.5 -translate-x-1/2 rotate-45 border-line bg-surface group-hover:border-accent",
+          below ? "-top-1.5 border-l border-t" : "-bottom-1.5 border-b border-r",
+        )}
+      />
+      <span dir="auto" className="line-clamp-3 text-sm leading-snug text-ink [unicode-bidi:plaintext]">
+        {note.body}
+      </span>
+      <span className="flex items-center gap-2 text-xs text-ink-3">
+        <span className="flex-1 first-letter:uppercase">
+          {lineLabel} · {timeAgo(note.updatedAt)}
+        </span>
+        <span className="group-hover:text-accent">Click to edit</span>
+      </span>
+    </button>
+  );
+};
+
 /**
  * Edits a note in place. A new note (no `note` yet) is created on the first
  * non-empty text; after that every pause in typing saves.
@@ -156,7 +203,7 @@ export const NotePopover = ({
     <div
       role="dialog"
       aria-label="Note"
-      style={placement({ rect, height: 200 })}
+      style={placement({ rect, height: 200, prefer: "below" })}
       onMouseEnter={() => onPointerInside(true)}
       onMouseLeave={() => onPointerInside(false)}
       onKeyDown={(e) => {
@@ -175,7 +222,7 @@ export const NotePopover = ({
         <IconButton icon={Trash2} label="Delete note" onClick={() => void remove()} />
       </div>
       <textarea
-        autoFocus={!note}
+        autoFocus
         dir="auto"
         value={body}
         onChange={(e) => change(e.target.value)}
