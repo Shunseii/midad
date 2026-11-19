@@ -50,3 +50,44 @@ body {
   direction: rtl;
   unicode-bidi: plaintext;
 }
+
+/* Side sheets (components/side-sheet.tsx): Radix sets data-state, so these play on open and close. */
+@keyframes sheet-in-left {
+  from {
+    translate: -100% 0;
+  }
+}
+@keyframes sheet-in-right {
+  from {
+    translate: 100% 0;
+  }
+}
+@keyframes sheet-fade {
+  from {
+    opacity: 0;
+  }
+}
+.sheet[data-side="left"][data-state="open"] {
+  animation: sheet-in-left 240ms var(--ease-out);
+}
+.sheet[data-side="right"][data-state="open"] {
+  animation: sheet-in-right 240ms var(--ease-out);
+}
+.sheet[data-side="left"][data-state="closed"] {
+  animation: sheet-in-left 160ms var(--ease-out) reverse;
+}
+.sheet[data-side="right"][data-state="closed"] {
+  animation: sheet-in-right 160ms var(--ease-out) reverse;
+}
+.sheet-scrim[data-state="open"] {
+  animation: sheet-fade 240ms var(--ease-out);
+}
+.sheet-scrim[data-state="closed"] {
+  animation: sheet-fade 160ms var(--ease-out) reverse;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet,
+  .sheet-scrim {
+    animation: none !important;
+  }
+}

@@ -5,6 +5,8 @@ import { Link, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, wordsOf } from "../../../shared/annotations";
 import { lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, StoredPage } from "../../../shared/library";
+import { SideSheet } from "../components/side-sheet";
+import { useMediaQuery } from "../lib/media";
 import { NotePeek, NotePopover, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
@@ -244,14 +246,23 @@ export const ReaderRoute = () => {
   const { bookId = "" } = useParams();
   const [search, setSearch] = useSearchParams();
   const book = useBook(bookId);
-  const [contentsOpen, setContentsOpen] = usePref({ key: "reader.contentsOpen", fallback: true });
+  // Wide windows show contents and the side panel beside the text (remembered);
+  // narrower ones slide them over the page, closed until asked for.
+  const wide = useMediaQuery("(min-width: 80rem)");
+  const [contentsPref, setContentsPref] = usePref({ key: "reader.contentsOpen", fallback: true });
+  const [contentsSheet, setContentsSheet] = useState(false);
+  const contentsOpen = wide ? contentsPref : contentsSheet;
+  const setContentsOpen = wide ? setContentsPref : setContentsSheet;
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
   const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
   const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [panelOpen, setPanelOpen] = usePref({ key: "reader.panelOpen", fallback: false });
+  const [panelPref, setPanelPref] = usePref({ key: "reader.panelOpen", fallback: false });
+  const [panelSheet, setPanelSheet] = useState(false);
+  const panelOpen = wide ? panelPref : panelSheet;
+  const setPanelOpen = wide ? setPanelPref : setPanelSheet;
   const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: PANEL_WIDTH });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
@@ -317,6 +328,8 @@ export const ReaderRoute = () => {
   });
 
   const citeLines = ({ position: at, ...cite }: Citation & { position: number }) => {
+    // A sheet covers the page, so step out of the way to show where the citation points.
+    if (!wide) setPanelOpen(false);
     if (at === position) revealCitation({ root: pageRoot.current, cite });
     else {
       pendingReveal.current = { position: at, ...cite };
@@ -532,6 +545,7 @@ export const ReaderRoute = () => {
   const keyHandler = useRef<(e: KeyboardEvent) => void>(() => {});
   keyHandler.current = (e: KeyboardEvent) => {
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    if (e.target instanceof Element && e.target.closest(".sheet")) return;
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
       e.preventDefault();
       step(e.code === "KeyY" || e.shiftKey ? "redo" : "undo");
@@ -591,6 +605,40 @@ export const ReaderRoute = () => {
     );
   }
 
+  const sidePanel = (
+    <AnnotationsPanel
+      tab={panelTab}
+      onTab={setPanelTab}
+      annotations={annotations.data}
+      onClose={() => setPanelOpen(false)}
+      onGoTo={(span) => {
+        if (!wide) setPanelOpen(false);
+        revealSpan({ root: pageRoot.current, span });
+      }}
+      onRemoveHighlight={removeHighlight}
+      onDeleteNote={(id) => void noteWrites.remove(id)}
+      width={panelWidth}
+      onResize={(w) => setPanelWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
+      onResetSize={() => setPanelWidth(PANEL_WIDTH)}
+      askPanel={
+        <AskPanel
+          bookId={bookId}
+          conversation={conversation}
+          position={position}
+          pageNumber={page.data?.number ?? position}
+          selection={askSelection}
+          onClearSelection={() => setAskSelection(null)}
+          onCite={citeLines}
+          onSaveNote={(turn, body) => {
+            void hamish["notes.add"]({ bookId, position: turn.position, span: turn.selection.span, body }).then(() =>
+              client.invalidateQueries({ queryKey: keys.annotations(bookId, turn.position) }),
+            );
+          }}
+        />
+      }
+    />
+  );
+
   return (
     <div className="flex h-full flex-col">
       <header className="relative flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4">
@@ -649,7 +697,21 @@ export const ReaderRoute = () => {
       </header>
 
       <div className="flex min-h-0 flex-1">
-        {contentsOpen && <ContentsRail entries={toc} current={position} markerAt={marker.data?.position ?? null} onGo={go} />}
+        {wide ? (
+          contentsOpen && <ContentsRail entries={toc} current={position} markerAt={marker.data?.position ?? null} onGo={go} />
+        ) : (
+          <SideSheet side="left" title="Contents" open={contentsOpen} onOpenChange={setContentsOpen}>
+            <ContentsRail
+              entries={toc}
+              current={position}
+              markerAt={marker.data?.position ?? null}
+              onGo={(at) => {
+                setContentsOpen(false);
+                go(at);
+              }}
+            />
+          </SideSheet>
+        )}
         {/* The scan sits beside the text, or replaces it when there isn't room for both. */}
         <div className="@container flex min-w-0 flex-1">
         <div
@@ -696,35 +758,12 @@ export const ReaderRoute = () => {
         </div>
         {showScan && page.data && <ScanPane bookId={bookId} fileId={page.data.fileId} onClose={() => setShowScan(false)} />}
         </div>
-        {panelOpen && (
-          <AnnotationsPanel
-            tab={panelTab}
-            onTab={setPanelTab}
-            annotations={annotations.data}
-            onClose={() => setPanelOpen(false)}
-            onGoTo={(span) => revealSpan({ root: pageRoot.current, span })}
-            onRemoveHighlight={removeHighlight}
-            onDeleteNote={(id) => void noteWrites.remove(id)}
-            width={panelWidth}
-            onResize={(w) => setPanelWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
-            onResetSize={() => setPanelWidth(PANEL_WIDTH)}
-            askPanel={
-              <AskPanel
-                bookId={bookId}
-                conversation={conversation}
-                position={position}
-                pageNumber={page.data?.number ?? position}
-                selection={askSelection}
-                onClearSelection={() => setAskSelection(null)}
-                onCite={citeLines}
-                onSaveNote={(turn, body) => {
-                  void hamish["notes.add"]({ bookId, position: turn.position, span: turn.selection.span, body }).then(() =>
-                    client.invalidateQueries({ queryKey: keys.annotations(bookId, turn.position) }),
-                  );
-                }}
-              />
-            }
-          />
+        {wide ? (
+          panelOpen && sidePanel
+        ) : (
+          <SideSheet side="right" title={panelTab === "ask" ? "Ask AI" : "Highlights and notes"} open={panelOpen} onOpenChange={setPanelOpen}>
+            {sidePanel}
+          </SideSheet>
         )}
       </div>
 
