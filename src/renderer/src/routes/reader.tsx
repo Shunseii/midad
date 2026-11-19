@@ -240,36 +240,6 @@ const moveTarget = ({ page, target, delta }: { page: StoredPage["page"]; target:
   return { ...target, word, letter: delta > 0 ? 1 : size };
 };
 
-const HARAKAT_KEYS: [string, string][] = [
-  ["Q", "fatha"],
-  ["A", "kasra"],
-  ["E", "damma"],
-  ["X", "sukūn"],
-  ["`", "shadda"],
-];
-
-/** While a letter is targeted: which keys type which haraka, for keyboards without the Arabic layout. */
-const HarakatKeys = () => (
-  <div className="pointer-events-none sticky bottom-4 flex justify-center px-4">
-    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 rounded-lg border border-line bg-surface px-3 py-2 shadow-md">
-      {HARAKAT_KEYS.map(([key, name]) => (
-        <span key={key} className="flex items-center gap-1 text-xs text-ink-3">
-          <Kbd>⇧{key}</Kbd>
-          {name}
-        </span>
-      ))}
-      <span className="flex items-center gap-1 text-xs text-ink-3">
-        <Kbd>⌫</Kbd>
-        clear
-      </span>
-      <span className="flex items-center gap-1 text-xs text-ink-3">
-        <Kbd>Esc</Kbd>
-        done
-      </span>
-    </div>
-  </div>
-);
-
 export const ReaderRoute = () => {
   const { bookId = "" } = useParams();
   const [search, setSearch] = useSearchParams();
@@ -723,7 +693,6 @@ export const ReaderRoute = () => {
             />
           )}
           </div>
-          {target && <HarakatKeys />}
         </div>
         {showScan && page.data && <ScanPane bookId={bookId} fileId={page.data.fileId} onClose={() => setShowScan(false)} />}
         </div>
