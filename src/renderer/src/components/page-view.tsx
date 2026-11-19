@@ -62,8 +62,8 @@ const noteAt = (notes: Note[], part: Part, ref: WordRef) =>
 
 const isLastWord = (span: Span, ref: WordRef) => span.end.line === ref.line && span.end.word === ref.word;
 
-const TARGET_LETTER =
-  "pointer-events-none absolute inset-0 -z-20 select-none rounded-sm bg-accent-soft shadow-[-2px_0_0_var(--color-ink-added)]";
+/** A short tick under the targeted letter, below where a kasra sits. */
+const TARGET_TICK = "pointer-events-none absolute inset-x-px bottom-1 h-0.5 select-none rounded-full bg-accent";
 
 /**
  * A word's letters with the reader's marks drawn in their own colour. Letters
@@ -90,9 +90,8 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
     // on a red copy of the letter underneath; the letter itself covers the red base.
     const { before, after } = inContext({ letters, index: i });
     nodes.push(
-      <span key={letter} className="relative isolate">
-        {/* The target's background sits on its own layer: on the letter itself it would cover the red copy. */}
-        {letter === targetLetter && <span data-overlay aria-hidden className={TARGET_LETTER} />}
+      <span key={letter} className={cx("relative isolate", letter === targetLetter && "text-accent")}>
+        {letter === targetLetter && <span data-overlay aria-hidden className={TARGET_TICK} />}
         {l.base}
         {marks.corpus}
         {marks.mine && (

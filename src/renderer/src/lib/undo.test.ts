@@ -151,4 +151,13 @@ describe("undo stack", () => {
     await stack.redo();
     expect([...page.notes.values()]).toEqual([{ span: SPAN, body: "hello" }]);
   });
+
+  it("runs quick presses one after another, so each undoes a different change", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    await stack.addHighlight({ span: SPAN, color: "blue" });
+    await stack.addHighlight({ span: SPAN, color: "pink" });
+    await Promise.all([stack.undo(), stack.undo()]);
+    expect(page.highlights.size).toBe(0);
+  });
 });
