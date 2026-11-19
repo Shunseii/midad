@@ -10,7 +10,8 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": { "@/*": ["./src/renderer/src/*"] }
   },
   "include": ["src", "electron.vite.config.ts"]
 }
