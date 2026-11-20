@@ -108,8 +108,12 @@ const Corpus = () => {
 
   const runTest = async () => {
     setTest({ kind: "testing" });
-    const result = await midad["settings.test"]({ endpoint, key: key || undefined });
-    setTest(result.ok ? { kind: "ok" } : { kind: "error", message: result.message });
+    try {
+      const result = await midad["settings.test"]({ endpoint, key: key || undefined });
+      setTest(result.ok ? { kind: "ok" } : { kind: "error", message: result.message });
+    } catch (err) {
+      setTest({ kind: "error", message: err instanceof Error ? err.message : String(err) });
+    }
   };
 
   const onSave = () =>
