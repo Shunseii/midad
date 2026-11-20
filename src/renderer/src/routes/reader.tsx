@@ -205,6 +205,8 @@ const ContentsRail = ({
 const TEXT_SCALES = [0.875, 1, 1.125, 1.25, 1.5, 1.75, 2];
 const SMALLEST = 0.875;
 const LARGEST = 2;
+/** Wheel distance per text size step; one mouse notch is usually 100. */
+const WHEEL_STEP = 100;
 
 const stepScale = ({ scale, by }: { scale: number; by: 1 | -1 }) => {
   const at = TEXT_SCALES.findIndex((s) => s >= scale);
@@ -219,16 +221,16 @@ const TextSize = ({ scale, onScale }: { scale: number; onScale: (v: number) => v
       <span className="text-xs text-ink-3">The page's Arabic text</span>
     </div>
     <div className="flex items-center gap-1">
-      <IconButton icon={Minus} label="Smaller text" disabled={scale <= SMALLEST} onClick={() => onScale(stepScale({ scale, by: -1 }))} />
+      <IconButton icon={Minus} label="Smaller text (Ctrl+−)" disabled={scale <= SMALLEST} onClick={() => onScale(stepScale({ scale, by: -1 }))} />
       <button
         type="button"
-        title="Reset to normal size"
+        title="Reset to normal size (Ctrl+0)"
         onClick={() => onScale(1)}
         className="w-12 rounded-md py-1 text-center text-sm tabular-nums text-ink-2 hover:bg-ink/6"
       >
         {Math.round(scale * 100)}%
       </button>
-      <IconButton icon={Plus} label="Larger text" disabled={scale >= LARGEST} onClick={() => onScale(stepScale({ scale, by: 1 }))} />
+      <IconButton icon={Plus} label="Larger text (Ctrl+=)" disabled={scale >= LARGEST} onClick={() => onScale(stepScale({ scale, by: 1 }))} />
     </div>
   </div>
 );
@@ -655,8 +657,41 @@ export const ReaderRoute = () => {
     }
   }, [book.data, bookId, position, total]);
 
+  const latestScale = useRef(textScale);
+  latestScale.current = textScale;
+  const zoomBy = (by: 1 | -1) => setTextScale(stepScale({ scale: latestScale.current, by }));
+
+  /** Ctrl with =, - or 0 sizes the page's text instead of zooming the whole window. */
+  const zoomKeys = (e: KeyboardEvent) => {
+    if (!(e.ctrlKey || e.metaKey) || e.altKey) return false;
+    if (e.code === "Equal" || e.code === "NumpadAdd") zoomBy(1);
+    else if (e.code === "Minus" || e.code === "NumpadSubtract") zoomBy(-1);
+    else if (e.code === "Digit0" || e.code === "Numpad0") setTextScale(1);
+    else return false;
+    e.preventDefault();
+    return true;
+  };
+
+  // Ctrl+wheel (and trackpad pinch, which arrives as one) steps the text size too.
+  const wheelZoom = useRef({ zoomBy, owed: 0 });
+  wheelZoom.current.zoomBy = zoomBy;
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      if (!e.ctrlKey) return;
+      e.preventDefault();
+      const z = wheelZoom.current;
+      z.owed += e.deltaY;
+      if (Math.abs(z.owed) < WHEEL_STEP) return;
+      z.zoomBy(z.owed < 0 ? 1 : -1);
+      z.owed = 0;
+    };
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, []);
+
   const keyHandler = useRef<(e: KeyboardEvent) => void>(() => {});
   keyHandler.current = (e: KeyboardEvent) => {
+    if (zoomKeys(e)) return;
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
     if (e.target instanceof Element && e.target.closest(".sheet")) return;
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
