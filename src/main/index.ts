@@ -1,8 +1,9 @@
+import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, protocol, shell } from "electron";
 import { readingContext } from "../shared/ask";
-import { ASK_EVENT, type HamishApi, LIBRARY_CHANGED } from "../shared/ipc";
+import { ASK_EVENT, type MidadApi, LIBRARY_CHANGED } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
@@ -11,11 +12,32 @@ import { type CorpusSource, createCorpusClient } from "./corpus";
 import { createLibrary } from "./library";
 import { createSettings } from "./settings";
 
-app.setName("hamish");
+app.setName("midad");
 // A separate profile (settings + library) for development and testing.
-if (process.env.HAMISH_USER_DATA) app.setPath("userData", process.env.HAMISH_USER_DATA);
+if (process.env.MIDAD_USER_DATA) app.setPath("userData", process.env.MIDAD_USER_DATA);
 
 const userData = app.getPath("userData");
+
+/**
+ * The app was called Hamish. Electron creates the new profile folder before this
+ * runs, so carry over the app's own data (library, settings, scans) item by item.
+ */
+const moveLegacyData = () => {
+  const legacyDir = join(app.getPath("appData"), "hamish");
+  if (!existsSync(legacyDir) || existsSync(join(userData, "midad.db"))) return;
+  mkdirSync(userData, { recursive: true });
+  const moves: [string, string][] = [
+    ["hamish.db", "midad.db"],
+    ["hamish.db-wal", "midad.db-wal"],
+    ["hamish.db-shm", "midad.db-shm"],
+    ["settings.json", "settings.json"],
+    ["scans", "scans"],
+  ];
+  for (const [from, to] of moves) {
+    if (existsSync(join(legacyDir, from)) && !existsSync(join(userData, to))) renameSync(join(legacyDir, from), join(userData, to));
+  }
+};
+if (!process.env.MIDAD_USER_DATA) moveLegacyData();
 const settings = createSettings({ dir: userData });
 
 const corpusClient = () => {
@@ -30,19 +52,19 @@ const corpus: CorpusSource = {
   exportBook: (id) => corpusClient().exportBook(id),
 };
 
-const dbPath = join(userData, "hamish.db");
+const dbPath = join(userData, "midad.db");
 const db = new DatabaseSync(dbPath);
-// The hamish CLI (and Ask AI through it) writes to the same file.
+// The midad CLI (and Ask AI through it) writes to the same file.
 db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
 const library = createLibrary({ db, corpus });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
 const scans = createScans({ dir: join(userData, "scans"), fetchScan: (input) => corpusClient().fetchScan(input) });
 
-// Page scans load as <img src="hamish-scan://scan/<bookId>/<fileId>">.
-protocol.registerSchemesAsPrivileged([{ scheme: "hamish-scan", privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
+// Page scans load as <img src="midad-scan://scan/<bookId>/<fileId>">.
+protocol.registerSchemesAsPrivileged([{ scheme: "midad-scan", privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
 const ask = createAsk({
-  cliPath: join(app.getAppPath(), "out", "cli", "hamish.mjs"),
+  cliPath: join(app.getAppPath(), "out", "cli", "midad.mjs"),
   dbPath,
   workDir: join(userData, "ask"),
   onEvent: (requestId, event) => {
@@ -50,7 +72,7 @@ const ask = createAsk({
   },
 });
 
-const handlers: HamishApi = {
+const handlers: MidadApi = {
   "settings.get": async () => settings.get(),
   "settings.save": async (input) => settings.save(input),
   "settings.test": async ({ endpoint, key }) => {
@@ -94,7 +116,7 @@ const handlers: HamishApi = {
   "ai.cancel": async (input) => ask.cancel(input),
 };
 
-// data_version changes only when another connection (the hamish CLI) commits.
+// data_version changes only when another connection (the midad CLI) commits.
 const dataVersion = () => (db.prepare("PRAGMA data_version").get() as { data_version: number }).data_version;
 let seenVersion = dataVersion();
 setInterval(() => {
@@ -119,7 +141,8 @@ const createWindow = () => {
     height: 900,
     minWidth: 960,
     minHeight: 640,
-    title: "Hamish",
+    title: "Midad",
+    icon: join(app.getAppPath(), "resources", "icon.png"),
     autoHideMenuBar: true,
     webPreferences: {
       preload: join(import.meta.dirname, "../preload/index.cjs"),
@@ -142,7 +165,7 @@ const createWindow = () => {
 };
 
 void app.whenReady().then(() => {
-  protocol.handle("hamish-scan", async (request) => {
+  protocol.handle("midad-scan", async (request) => {
     const [bookId = "", fileId = ""] = new URL(request.url).pathname.split("/").filter(Boolean).map(decodeURIComponent);
     try {
       const scan = await scans.get({ bookId, fileId });

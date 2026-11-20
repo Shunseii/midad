@@ -4,7 +4,7 @@ import { quoteSpan, type Span } from "../../../shared/annotations";
 import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
 import { copiedPassage } from "../lib/copied";
 import { arabicNumber } from "../lib/format";
-import { hamish, usePage } from "../lib/hamish";
+import { midad, usePage } from "../lib/midad";
 import { Button, IconButton, cx } from "./ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -52,7 +52,7 @@ export const useAskConversation = (bookId: string) => {
 
   useEffect(
     () =>
-      window.hamishEvents.onAskEvent((requestId, event) => {
+      window.midadEvents.onAskEvent((requestId, event) => {
         if (event.kind === "delta") update(requestId, (t) => ({ answer: t.answer + event.text, activity: null }));
         if (event.kind === "tool") update(requestId, (t) => ({ activity: "Reading the page…", answer: t.answer && !t.answer.endsWith("\n\n") ? `${t.answer}\n\n` : t.answer }));
       }),
@@ -63,7 +63,7 @@ export const useAskConversation = (bookId: string) => {
     const id = crypto.randomUUID();
     const started = generation.current;
     setTurns((all) => [...all, { id, question, quotes, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }]);
-    hamish["ai.ask"]({
+    midad["ai.ask"]({
       requestId: id,
       bookId,
       position,
@@ -82,7 +82,7 @@ export const useAskConversation = (bookId: string) => {
 
   const busy = turns.some((t) => t.status === "streaming");
   const stop = () => {
-    for (const t of turns) if (t.status === "streaming") void hamish["ai.cancel"]({ requestId: t.id });
+    for (const t of turns) if (t.status === "streaming") void midad["ai.cancel"]({ requestId: t.id });
   };
   const retry = (turn: Turn) => ask({ question: turn.question, position: turn.position, selection: turn.selection, quotes: turn.quotes });
   /** Drops the conversation; the next question starts a fresh Claude session. */

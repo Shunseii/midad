@@ -7,8 +7,8 @@
 
 /*
  * shadcn/ui (components/ui/*) names its colours background, primary, muted and so on.
- * They point at Hamish's own tokens (src/styles/tokens.css), so one palette drives both,
- * light and dark. shadcn's "accent" is never used by these components; Hamish's accent
+ * They point at Midad's own tokens (src/styles/tokens.css), so one palette drives both,
+ * light and dark. shadcn's "accent" is never used by these components; Midad's accent
  * stays the brand colour.
  */
 @theme inline {
@@ -50,7 +50,7 @@
   }
 }
 
-/* Type scale from designs/hamish-components.lamsa.json (Type scale board). */
+/* Type scale from designs/midad-components.lamsa.json (Type scale board). */
 @theme {
   --text-display: 2rem;
   --text-display--line-height: 2.5rem;

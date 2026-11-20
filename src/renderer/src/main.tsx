@@ -14,8 +14,8 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: 30_000 } },
 });
 
-// The hamish CLI writes to the same library; show its changes as they land.
-window.hamishEvents.onLibraryChanged(() => void queryClient.invalidateQueries({ queryKey: ["library"] }));
+// The midad CLI writes to the same library; show its changes as they land.
+window.midadEvents.onLibraryChanged(() => void queryClient.invalidateQueries({ queryKey: ["library"] }));
 
 const router = createHashRouter([
   {

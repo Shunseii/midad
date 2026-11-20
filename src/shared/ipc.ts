@@ -21,7 +21,7 @@ export interface PublicSettings {
 export type SyncInput = { bookId: string; mode: "new" } | { bookId: string; mode: "overwrite"; fileIds: string[] };
 
 /** Everything the renderer can ask the main process for. Each key is one IPC channel. */
-export interface HamishApi {
+export interface MidadApi {
   "settings.get": () => Promise<PublicSettings>;
   "settings.save": (input: { endpoint: string; key?: string }) => Promise<PublicSettings>;
   "settings.test": (input: { endpoint: string; key?: string }) => Promise<{ ok: true } | { ok: false; message: string }>;
@@ -62,7 +62,7 @@ export interface AskInput {
   sessionId: string | null;
 }
 
-export type Channel = keyof HamishApi;
+export type Channel = keyof MidadApi;
 
 export const CHANNELS = [
   "settings.get",
@@ -93,8 +93,8 @@ export const CHANNELS = [
 ] as const satisfies readonly Channel[];
 
 /** Pushed from the main process to the renderer. */
-export interface HamishEvents {
-  /** Another process (the hamish CLI) changed the library. Returns an unsubscribe function. */
+export interface MidadEvents {
+  /** Another process (the midad CLI) changed the library. Returns an unsubscribe function. */
   onLibraryChanged: (callback: () => void) => () => void;
   /** Progress of an Ask AI request. Returns an unsubscribe function. */
   onAskEvent: (callback: (requestId: string, event: StreamEvent) => void) => () => void;

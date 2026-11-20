@@ -1,15 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { HighlightColor, LetterRef, PageAnnotations, Part, Span } from "../../../shared/annotations";
-import type { HamishApi, HamishEvents, SyncInput } from "../../../shared/ipc";
+import type { MidadApi, MidadEvents, SyncInput } from "../../../shared/ipc";
 
 declare global {
   interface Window {
-    hamish: HamishApi;
-    hamishEvents: HamishEvents;
+    midad: MidadApi;
+    midadEvents: MidadEvents;
   }
 }
 
-export const hamish = window.hamish;
+export const midad = window.midad;
 
 export const keys = {
   settings: ["settings"] as const,
@@ -22,27 +22,27 @@ export const keys = {
   marker: (bookId: string) => ["library", bookId, "marker"] as const,
 };
 
-export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: () => hamish["settings.get"]() });
+export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: () => midad["settings.get"]() });
 
-export const useLibrary = () => useQuery({ queryKey: keys.library, queryFn: () => hamish["library.list"]() });
+export const useLibrary = () => useQuery({ queryKey: keys.library, queryFn: () => midad["library.list"]() });
 
 export const useBook = (bookId: string) =>
-  useQuery({ queryKey: keys.book(bookId), queryFn: () => hamish["library.get"](bookId) });
+  useQuery({ queryKey: keys.book(bookId), queryFn: () => midad["library.get"](bookId) });
 
 export const usePage = ({ bookId, position }: { bookId: string; position: number }) =>
   useQuery({
     queryKey: keys.page(bookId, position),
-    queryFn: () => hamish["library.page"]({ bookId, position }),
+    queryFn: () => midad["library.page"]({ bookId, position }),
     placeholderData: (previous) => previous,
   });
 
 export const useCorpusBooks = ({ enabled }: { enabled: boolean }) =>
-  useQuery({ queryKey: keys.corpusBooks, queryFn: () => hamish["corpus.listBooks"](), enabled, retry: false });
+  useQuery({ queryKey: keys.corpusBooks, queryFn: () => midad["corpus.listBooks"](), enabled, retry: false });
 
 export const useSyncPreview = ({ bookId, enabled }: { bookId: string; enabled: boolean }) =>
   useQuery({
     queryKey: keys.syncPreview(bookId),
-    queryFn: () => hamish["library.previewSync"]({ bookId }),
+    queryFn: () => midad["library.previewSync"]({ bookId }),
     enabled,
     retry: false,
     gcTime: 0,
@@ -51,7 +51,7 @@ export const useSyncPreview = ({ bookId, enabled }: { bookId: string; enabled: b
 export const useImportBook = () => {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (corpusBookId: string) => hamish["library.import"]({ corpusBookId }),
+    mutationFn: (corpusBookId: string) => midad["library.import"]({ corpusBookId }),
     onSuccess: () => client.invalidateQueries({ queryKey: keys.library }),
   });
 };
@@ -59,20 +59,20 @@ export const useImportBook = () => {
 export const useSyncBook = () => {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (input: SyncInput) => hamish["library.sync"](input),
+    mutationFn: (input: SyncInput) => midad["library.sync"](input),
     onSuccess: (_result, input) => client.invalidateQueries({ queryKey: keys.book(input.bookId) }),
   });
 };
 
 export const useMarker = (bookId: string) =>
-  useQuery({ queryKey: keys.marker(bookId), queryFn: () => hamish["marker.get"]({ bookId }) });
+  useQuery({ queryKey: keys.marker(bookId), queryFn: () => midad["marker.get"]({ bookId }) });
 
 /** Moves or clears the book's last-read marker; `null` clears it. */
 export const useSetMarker = (bookId: string) => {
   const client = useQueryClient();
   return async (at: { position: number; part: Part; line: number; word: number } | null) => {
-    if (at) await hamish["marker.set"]({ bookId, ...at });
-    else await hamish["marker.clear"]({ bookId });
+    if (at) await midad["marker.set"]({ bookId, ...at });
+    else await midad["marker.clear"]({ bookId });
     await client.invalidateQueries({ queryKey: keys.marker(bookId) });
   };
 };
@@ -80,7 +80,7 @@ export const useSetMarker = (bookId: string) => {
 export const useAnnotations = ({ bookId, position }: { bookId: string; position: number }) =>
   useQuery({
     queryKey: keys.annotations(bookId, position),
-    queryFn: () => hamish["annotations.list"]({ bookId, position }),
+    queryFn: () => midad["annotations.list"]({ bookId, position }),
   });
 
 /** Highlight and note writes for one page. Each refreshes that page's annotations. */
@@ -90,21 +90,21 @@ export const useAnnotationActions = ({ bookId, position }: { bookId: string; pos
   const refresh = () => client.invalidateQueries({ queryKey: key });
   return {
     addHighlight: async ({ span, color }: { span: Span; color: HighlightColor }) => {
-      const highlight = await hamish["highlights.add"]({ bookId, position, span, color });
+      const highlight = await midad["highlights.add"]({ bookId, position, span, color });
       await refresh();
       return highlight;
     },
     removeHighlight: async (id: string) => {
-      await hamish["highlights.remove"]({ id });
+      await midad["highlights.remove"]({ id });
       await refresh();
     },
     addNote: async ({ span, body }: { span: Span; body: string }) => {
-      const note = await hamish["notes.add"]({ bookId, position, span, body });
+      const note = await midad["notes.add"]({ bookId, position, span, body });
       await refresh();
       return note;
     },
     updateNote: async ({ id, body }: { id: string; body: string }) => {
-      await hamish["notes.update"]({ id, body });
+      await midad["notes.update"]({ id, body });
       client.setQueryData<PageAnnotations>(key, (current) =>
         current && {
           ...current,
@@ -113,19 +113,19 @@ export const useAnnotationActions = ({ bookId, position }: { bookId: string; pos
       );
     },
     deleteNote: async (id: string) => {
-      await hamish["notes.delete"]({ id });
+      await midad["notes.delete"]({ id });
       await refresh();
     },
     setHarakat: async ({ marks, ...ref }: LetterRef & { marks: string }) => {
-      await hamish["harakat.set"]({ bookId, position, marks, ...ref });
+      await midad["harakat.set"]({ bookId, position, marks, ...ref });
       await refresh();
     },
     removeHarakat: async (ref: LetterRef) => {
-      await hamish["harakat.remove"]({ bookId, position, ...ref });
+      await midad["harakat.remove"]({ bookId, position, ...ref });
       await refresh();
     },
     clearHarakat: async (span: Span) => {
-      const removed = await hamish["harakat.clear"]({ bookId, position, span });
+      const removed = await midad["harakat.clear"]({ bookId, position, span });
       await refresh();
       return removed;
     },
@@ -135,7 +135,7 @@ export const useAnnotationActions = ({ bookId, position }: { bookId: string; pos
 export const useSaveSettings = () => {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (input: { endpoint: string; key?: string }) => hamish["settings.save"](input),
+    mutationFn: (input: { endpoint: string; key?: string }) => midad["settings.save"](input),
     onSuccess: (settings) => {
       client.setQueryData(keys.settings, settings);
       void client.invalidateQueries({ queryKey: keys.corpusBooks });
@@ -143,10 +143,21 @@ export const useSaveSettings = () => {
   });
 };
 
+const LEGACY_PREFIX = "hamish.";
+try {
+  for (const key of Object.keys(localStorage).filter((k) => k.startsWith(LEGACY_PREFIX))) {
+    const renamed = `midad.${key.slice(LEGACY_PREFIX.length)}`;
+    if (localStorage.getItem(renamed) === null) localStorage.setItem(renamed, localStorage.getItem(key) ?? "");
+    localStorage.removeItem(key);
+  }
+} catch {
+  // Storage can be unavailable; there is nothing to carry over then.
+}
+
 /** Reader display preferences are per-viewer conveniences, kept in localStorage. */
 export const readPref = <T>({ key, fallback }: { key: string; fallback: T }): T => {
   try {
-    const raw = localStorage.getItem(`hamish.${key}`);
+    const raw = localStorage.getItem(`midad.${key}`);
     return raw === null ? fallback : (JSON.parse(raw) as T);
   } catch {
     return fallback;
@@ -155,7 +166,7 @@ export const readPref = <T>({ key, fallback }: { key: string; fallback: T }): T 
 
 export const writePref = ({ key, value }: { key: string; value: unknown }) => {
   try {
-    localStorage.setItem(`hamish.${key}`, JSON.stringify(value));
+    localStorage.setItem(`midad.${key}`, JSON.stringify(value));
   } catch {
     // Storage can be unavailable; preferences then last for the session only.
   }

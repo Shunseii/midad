@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { StreamEvent } from "../shared/ask";
-import { ASK_EVENT, CHANNELS, type HamishApi, type HamishEvents, LIBRARY_CHANGED } from "../shared/ipc";
+import { ASK_EVENT, CHANNELS, type MidadApi, type MidadEvents, LIBRARY_CHANGED } from "../shared/ipc";
 
 // Electron prefixes errors thrown in the main process; strip it so the UI can
 // show the original message.
@@ -14,11 +14,11 @@ const invoke = async (channel: string, arg: unknown) => {
   }
 };
 
-const api = Object.fromEntries(CHANNELS.map((c) => [c, (arg: unknown) => invoke(c, arg)])) as unknown as HamishApi;
+const api = Object.fromEntries(CHANNELS.map((c) => [c, (arg: unknown) => invoke(c, arg)])) as unknown as MidadApi;
 
-contextBridge.exposeInMainWorld("hamish", api);
+contextBridge.exposeInMainWorld("midad", api);
 
-const events: HamishEvents = {
+const events: MidadEvents = {
   onLibraryChanged: (callback) => {
     const listener = () => callback();
     ipcRenderer.on(LIBRARY_CHANGED, listener);
@@ -31,4 +31,4 @@ const events: HamishEvents = {
   },
 };
 
-contextBridge.exposeInMainWorld("hamishEvents", events);
+contextBridge.exposeInMainWorld("midadEvents", events);

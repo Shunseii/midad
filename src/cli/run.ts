@@ -6,23 +6,23 @@ import type { LibraryBook, StoredPage } from "../shared/library";
 import { createAnnotations } from "../main/annotations";
 import { createLibrary } from "../main/library";
 
-export const USAGE = `Usage: hamish <command> [options]
+export const USAGE = `Usage: midad <command> [options]
 
 Reading
-  hamish books                                   List the books in the library
-  hamish page <book> <page> [--words]            Print a page: numbered matn lines, then ḥāshiya (ḥ1, ḥ2…)
-  hamish lines <book> <page> --line <n[-m]>      Print some matn lines (add --hashiya for footnotes)
-  hamish annotations <book> <page>               List highlights, notes and harakat with their ids
+  midad books                                   List the books in the library
+  midad page <book> <page> [--words]            Print a page: numbered matn lines, then ḥāshiya (ḥ1, ḥ2…)
+  midad lines <book> <page> --line <n[-m]>      Print some matn lines (add --hashiya for footnotes)
+  midad annotations <book> <page>               List highlights, notes and harakat with their ids
 
 Writing (labelled as written by the agent)
-  hamish highlight add <book> <page> <span> [--color yellow|green|pink|blue]
-  hamish highlight remove <id>
-  hamish note add <book> <page> <span> --body <text>
-  hamish note update <id> --body <text>
-  hamish note delete <id>
-  hamish harakat set <book> <page> --line <n> --word <n> --letter <n> --marks <names>
-  hamish harakat remove <book> <page> --line <n> --word <n> --letter <n>
-  hamish harakat clear <book> <page> <span>      Remove every added mark inside the span
+  midad highlight add <book> <page> <span> [--color yellow|green|pink|blue]
+  midad highlight remove <id>
+  midad note add <book> <page> <span> --body <text>
+  midad note update <id> --body <text>
+  midad note delete <id>
+  midad harakat set <book> <page> --line <n> --word <n> --letter <n> --marks <names>
+  midad harakat remove <book> <page> --line <n> --word <n> --letter <n>
+  midad harakat clear <book> <page> <span>      Remove every added mark inside the span
 
 <book> is a book id, the start of one, or part of its title. <page> is the page's
 position in the book (1 = first page), as shown in the reader's pager.
@@ -151,7 +151,7 @@ export const runCli = async ({
     if (exact) return exact;
     const matches = books.filter((b) => b.bookId.startsWith(query) || b.title.includes(query) || b.edition?.includes(query));
     if (matches.length === 1 && matches[0]) return matches[0];
-    if (matches.length === 0) throw new Error(`No book matches "${query}". Run \`hamish books\` to see them.`);
+    if (matches.length === 0) throw new Error(`No book matches "${query}". Run \`midad books\` to see them.`);
     throw new Error(`"${query}" matches ${matches.length} books: ${matches.map((b) => `${b.title} (${b.bookId})`).join(", ")}.`);
   };
 

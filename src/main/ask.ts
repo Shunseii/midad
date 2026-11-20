@@ -7,7 +7,7 @@ import { claudeArgs, type StreamEvent, streamEvent, SYSTEM_PROMPT } from "../sha
 
 /**
  * Runs Ask AI questions through the local Claude Code CLI. Claude runs in its
- * own empty folder with a `hamish` command on its PATH that opens this library.
+ * own empty folder with a `midad` command on its PATH that opens this library.
  */
 export const createAsk = ({
   cliPath,
@@ -22,7 +22,7 @@ export const createAsk = ({
 }) => {
   const binDir = join(workDir, "bin");
   mkdirSync(binDir, { recursive: true });
-  const link = join(binDir, "hamish");
+  const link = join(binDir, "midad");
   rmSync(link, { force: true });
   symlinkSync(cliPath, link);
 
@@ -31,7 +31,7 @@ export const createAsk = ({
   return {
     ask({ requestId, prompt, sessionId }: { requestId: string; prompt: string; sessionId: string | null }): Promise<{ sessionId: string; text: string }> {
       if (!existsSync(cliPath)) {
-        return Promise.reject(new Error(`The hamish CLI isn't built yet (${cliPath}). Run \`pnpm build:cli\`.`));
+        return Promise.reject(new Error(`The midad CLI isn't built yet (${cliPath}). Run \`pnpm build:cli\`.`));
       }
       return new Promise((resolve, reject) => {
         const child = spawn("claude", claudeArgs({ prompt, systemPrompt: SYSTEM_PROMPT, sessionId }), {
@@ -39,7 +39,7 @@ export const createAsk = ({
           env: {
             ...process.env,
             PATH: [binDir, join(homedir(), ".local", "bin"), process.env.PATH].filter(Boolean).join(delimiter),
-            HAMISH_DB: dbPath,
+            MIDAD_DB: dbPath,
           },
           stdio: ["ignore", "pipe", "pipe"],
         });

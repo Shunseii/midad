@@ -1,6 +1,6 @@
 /**
  * Parses one corpus page (the markdown the arabic-digitization OCR produces)
- * into what Hamish shows: the running header, the matn, and the ḥāshiya.
+ * into what Midad shows: the running header, the matn, and the ḥāshiya.
  *
  * Interlinear glosses (`<ruby>base<rt>gloss</rt></ruby>`) keep only the base.
  * Highlights, notes, harakat and AI citations all address this cleaned text,

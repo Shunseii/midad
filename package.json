@@ -1,5 +1,5 @@
 {
-  "name": "hamish",
+  "name": "midad",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "start": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "build:cli": "vite build -c vite.cli.config.ts && chmod +x out/cli/hamish.mjs"
+    "build:cli": "vite build -c vite.cli.config.ts && chmod +x out/cli/midad.mjs"
   },
   "devDependencies": {
     "@base-ui/react": "^1.9.0",
@@ -47,7 +47,7 @@
     ]
   },
   "bin": {
-    "hamish": "out/cli/hamish.mjs"
+    "midad": "out/cli/midad.mjs"
   },
   "dependencies": {
     "cn": "^0.5.2",

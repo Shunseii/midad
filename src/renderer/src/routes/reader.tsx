@@ -17,7 +17,7 @@ import { rememberCopy } from "../lib/copied";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
-import { hamish, keys, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/hamish";
+import { midad, keys, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/midad";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -676,7 +676,7 @@ export const ReaderRoute = () => {
 
   useEffect(() => {
     if (book.data && position >= 1 && position <= total) {
-      void hamish["library.setProgress"]({ bookId, position });
+      void midad["library.setProgress"]({ bookId, position });
     }
   }, [book.data, bookId, position, total]);
 
@@ -813,7 +813,7 @@ export const ReaderRoute = () => {
           onClearSelection={() => setAskSelection(null)}
           onCite={citeLines}
           onSaveNote={(turn, body) => {
-            void hamish["notes.add"]({ bookId, position: turn.position, span: turn.selection.span, body }).then(() =>
+            void midad["notes.add"]({ bookId, position: turn.position, span: turn.selection.span, body }).then(() =>
               client.invalidateQueries({ queryKey: keys.annotations(bookId, turn.position) }),
             );
           }}

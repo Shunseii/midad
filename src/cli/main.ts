@@ -4,10 +4,10 @@ import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { runCli } from "./run";
 
-/** Where the Hamish app keeps its library (Electron's userData folder for an app named "hamish"). */
+/** Where the Midad app keeps its library (Electron's userData folder for an app named "midad"). */
 const libraryPath = (): string => {
-  if (process.env.HAMISH_DB) return process.env.HAMISH_DB;
-  if (process.env.HAMISH_USER_DATA) return join(process.env.HAMISH_USER_DATA, "hamish.db");
+  if (process.env.MIDAD_DB) return process.env.MIDAD_DB;
+  if (process.env.MIDAD_USER_DATA) return join(process.env.MIDAD_USER_DATA, "midad.db");
   const home = homedir();
   const base =
     process.platform === "darwin"
@@ -15,12 +15,12 @@ const libraryPath = (): string => {
       : process.platform === "win32"
         ? (process.env.APPDATA ?? join(home, "AppData", "Roaming"))
         : (process.env.XDG_CONFIG_HOME ?? join(home, ".config"));
-  return join(base, "hamish", "hamish.db");
+  return join(base, "midad", "midad.db");
 };
 
 const path = libraryPath();
 if (!existsSync(path)) {
-  process.stderr.write(`There is no Hamish library at ${path}. Open Hamish and import a book first, or set HAMISH_DB.\n`);
+  process.stderr.write(`There is no Midad library at ${path}. Open Midad and import a book first, or set MIDAD_DB.\n`);
   process.exit(1);
 }
 const db = new DatabaseSync(path);

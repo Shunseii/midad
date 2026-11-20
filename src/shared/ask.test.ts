@@ -146,10 +146,10 @@ describe("streamEvent", () => {
 });
 
 describe("claudeArgs", () => {
-  it("streams, skips the user's own settings and only allows the hamish CLI", () => {
+  it("streams, skips the user's own settings and only allows the midad CLI", () => {
     const args = claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: null });
     expect(args).toEqual(expect.arrayContaining(["-p", "q", "--output-format", "stream-json", "--include-partial-messages", "--setting-sources", "project"]));
-    expect(args[args.indexOf("--allowedTools") + 1]).toBe("Bash(hamish:*)");
+    expect(args[args.indexOf("--allowedTools") + 1]).toBe("Bash(midad:*)");
     expect(args).not.toContain("--resume");
   });
 

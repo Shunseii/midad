@@ -1,7 +1,7 @@
 import { Library, Settings } from "lucide-react";
 import type { ReactNode } from "react";
 import { NavLink, Outlet } from "react-router";
-import { useLibrary, useSettings } from "../lib/hamish";
+import { useLibrary, useSettings } from "../lib/midad";
 import { Badge, cx } from "./ui";
 
 const NavItem = ({ to, icon, label, count }: { to: string; icon: ReactNode; label: string; count?: number }) => (
@@ -31,8 +31,8 @@ export const AppShell = () => {
     <div className="flex h-full">
       <aside className="flex w-62 shrink-0 flex-col gap-1 border-r border-line bg-surface-2 px-4 py-6 [view-transition-name:app-nav]">
         <div className="mb-5 flex items-baseline gap-2 px-2.5">
-          <span className="ar text-ar-body font-bold text-accent">هامش</span>
-          <span className="text-heading font-semibold">Hamish</span>
+          <span className="ar text-ar-body font-bold text-accent">مداد</span>
+          <span className="text-heading font-semibold">Midad</span>
         </div>
         <NavItem to="/" icon={<Library className="size-4.5" />} label="Library" count={library.data?.length} />
         <div className="flex-1" />

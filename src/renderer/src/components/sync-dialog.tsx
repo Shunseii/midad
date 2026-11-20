@@ -2,7 +2,7 @@ import { Download, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import type { LibraryBook } from "../../../shared/library";
 import { plural } from "../lib/format";
-import { useSyncBook, useSyncPreview } from "../lib/hamish";
+import { useSyncBook, useSyncPreview } from "../lib/midad";
 import { Button, Dialog, Skeleton } from "./ui";
 
 export const SyncDialog = ({

@@ -1726,9 +1726,9 @@
       "type": "text"
     },
     "2DuBwt9v": {
-      "content": "Hamish",
+      "content": "Midad",
       "index": "a001",
-      "name": "Hamish",
+      "name": "Midad",
       "parentId": "EfFk9Jrb",
       "style": {
         "color": "{color.ink}",
@@ -4454,9 +4454,9 @@
       "type": "frame"
     },
     "6nlHXELx": {
-      "content": "Hamish",
+      "content": "Midad",
       "index": "a001",
-      "name": "Hamish",
+      "name": "Midad",
       "parentId": "AOxsuQiQ",
       "style": {
         "color": "{color.ink}",
@@ -5852,9 +5852,9 @@
       "type": "text"
     },
     "8kaleGFW": {
-      "content": "Hamish",
+      "content": "Midad",
       "index": "a001",
-      "name": "Hamish",
+      "name": "Midad",
       "parentId": "G9i5FBQy",
       "style": {
         "color": "{color.ink}",
@@ -7235,9 +7235,9 @@
       "type": "frame"
     },
     "BAEl8NfF": {
-      "content": "هامش",
+      "content": "مداد",
       "index": "a000",
-      "name": "هامش",
+      "name": "مداد",
       "parentId": "hQUEqd4q",
       "style": {
         "color": "{color.accent}",
@@ -8209,9 +8209,9 @@
       "type": "instance"
     },
     "CBXA40ru": {
-      "content": "Hamish",
+      "content": "Midad",
       "index": "a001",
-      "name": "Hamish",
+      "name": "Midad",
       "parentId": "Ir8DkrR9",
       "style": {
         "color": "{color.ink}",
@@ -12809,9 +12809,9 @@
       "type": "text"
     },
     "IbBJNyPc": {
-      "content": "هامش",
+      "content": "مداد",
       "index": "a000",
-      "name": "هامش",
+      "name": "مداد",
       "parentId": "Ir8DkrR9",
       "style": {
         "color": "{color.accent}",
@@ -19163,9 +19163,9 @@
       "type": "text"
     },
     "TQlHCe2D": {
-      "content": "هامش",
+      "content": "مداد",
       "index": "a000",
-      "name": "هامش",
+      "name": "مداد",
       "parentId": "Q4OObqa7",
       "style": {
         "color": "{color.accent}",
@@ -19715,9 +19715,9 @@
       "type": "instance"
     },
     "UCE6tiDa": {
-      "content": "Hamish",
+      "content": "Midad",
       "index": "a001",
-      "name": "Hamish",
+      "name": "Midad",
       "parentId": "hQUEqd4q",
       "style": {
         "color": "{color.ink}",
@@ -20314,9 +20314,9 @@
       "type": "frame"
     },
     "VIVoshWc": {
-      "content": "هامش",
+      "content": "مداد",
       "index": "a000",
-      "name": "هامش",
+      "name": "مداد",
       "parentId": "G9i5FBQy",
       "style": {
         "color": "{color.accent}",
@@ -21848,9 +21848,9 @@
       "type": "frame"
     },
     "Y27up2wM": {
-      "content": "Where Hamish reads your corpus from, and how it connects to Claude",
+      "content": "Where Midad reads your corpus from, and how it connects to Claude",
       "index": "a001",
-      "name": "Where Hamish reads your corpus from, and",
+      "name": "Where Midad reads your corpus from, and",
       "parentId": "pVD4qssa",
       "style": {
         "color": "{color.ink-2}",
@@ -22222,7 +22222,7 @@
         "helper": "",
         "label": "Vault folder",
         "state": "filled",
-        "value": "~/Documents/Obsidian Vault/Hamish",
+        "value": "~/Documents/Obsidian Vault/Midad",
         "withHelper": "no",
         "withIcon": "yes"
       },
@@ -22408,9 +22408,9 @@
       "type": "instance"
     },
     "ZHALPFDO": {
-      "content": "هامش",
+      "content": "مداد",
       "index": "a000",
-      "name": "هامش",
+      "name": "مداد",
       "parentId": "AOxsuQiQ",
       "style": {
         "color": "{color.accent}",
@@ -28014,9 +28014,9 @@
       "type": "text"
     },
     "iCAmgX4k": {
-      "content": "Where Hamish reads your corpus from, and how it connects to Claude",
+      "content": "Where Midad reads your corpus from, and how it connects to Claude",
       "index": "a001",
-      "name": "Where Hamish reads your corpus from, and",
+      "name": "Where Midad reads your corpus from, and",
       "parentId": "EHlvOXiK",
       "style": {
         "color": "{color.ink-2}",
@@ -30231,9 +30231,9 @@
       "type": "text"
     },
     "lvsfCmLH": {
-      "content": "هامش",
+      "content": "مداد",
       "index": "a000",
-      "name": "هامش",
+      "name": "مداد",
       "parentId": "tLvU6Exs",
       "style": {
         "color": "{color.accent}",
@@ -30518,7 +30518,7 @@
       },
       "parentId": "4cpXpW5F",
       "props": {
-        "body": "Hamish couldn't reach Claude Code on this machine. Start a session and your question will be sent. It's kept.",
+        "body": "Midad couldn't reach Claude Code on this machine. Start a session and your question will be sent. It's kept.",
         "title": "No local Claude session",
         "tone": "danger"
       },
@@ -32185,9 +32185,9 @@
       "type": "instance"
     },
     "pAgsR7z1": {
-      "content": "Hamish",
+      "content": "Midad",
       "index": "a001",
-      "name": "Hamish",
+      "name": "Midad",
       "parentId": "Q4OObqa7",
       "style": {
         "color": "{color.ink}",
@@ -32388,7 +32388,7 @@
         "helper": "",
         "label": "Vault folder",
         "state": "filled",
-        "value": "~/Documents/Obsidian Vault/Hamish",
+        "value": "~/Documents/Obsidian Vault/Midad",
         "withHelper": "no",
         "withIcon": "yes"
       },
@@ -36353,9 +36353,9 @@
       "type": "text"
     },
     "w3vrFDXa": {
-      "content": "هامش",
+      "content": "مداد",
       "index": "a000",
-      "name": "هامش",
+      "name": "مداد",
       "parentId": "EfFk9Jrb",
       "style": {
         "color": "{color.accent}",
@@ -37398,9 +37398,9 @@
       "type": "text"
     },
     "xeE6G4fi": {
-      "content": "Hamish",
+      "content": "Midad",
       "index": "a001",
-      "name": "Hamish",
+      "name": "Midad",
       "parentId": "tLvU6Exs",
       "style": {
         "color": "{color.ink}",

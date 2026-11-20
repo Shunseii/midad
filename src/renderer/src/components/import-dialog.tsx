@@ -2,7 +2,7 @@ import { Download, Search } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { plural } from "../lib/format";
-import { useCorpusBooks, useImportBook, useLibrary } from "../lib/hamish";
+import { useCorpusBooks, useImportBook, useLibrary } from "../lib/midad";
 import { Badge, Button, Dialog, Skeleton, TextField, cx } from "./ui";
 
 export const ImportDialog = ({
@@ -42,7 +42,7 @@ export const ImportDialog = ({
   return (
     <Dialog
       title="Import from corpus"
-      description="Pulls a book's transcribed pages into Hamish. You read from this copy; sync it later to get new pages."
+      description="Pulls a book's transcribed pages into Midad. You read from this copy; sync it later to get new pages."
       onClose={onClose}
       initialFocus={filterField}
     >

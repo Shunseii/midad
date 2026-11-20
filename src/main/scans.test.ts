@@ -15,7 +15,7 @@ const fetchScan = async ({ bookId, fileId }: { bookId: string; fileId: string })
 };
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), "hamish-scans-"));
+  dir = mkdtempSync(join(tmpdir(), "midad-scans-"));
   fetched = [];
   fail = null;
 });

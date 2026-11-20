@@ -6,7 +6,7 @@ import { ImportDialog } from "../components/import-dialog";
 import { SyncDialog } from "../components/sync-dialog";
 import { Badge, Button, IconButton, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
 import { plural, timeAgo } from "../lib/format";
-import { useLibrary, useSettings } from "../lib/hamish";
+import { useLibrary, useSettings } from "../lib/midad";
 
 type Shelf = "all" | "reading" | "finished";
 
@@ -124,7 +124,7 @@ export const LibraryRoute = () => {
 
       {library.isSuccess && books.length === 0 && (
         <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-line px-6 py-16 text-center">
-          <span className="ar text-ar-display text-ink-3">هامش</span>
+          <span className="ar text-ar-display text-ink-3">مداد</span>
           <p className="max-w-sm text-sm text-ink-2">Your library is empty. Import a book from the corpus to start reading.</p>
           <Button icon={Download} onClick={() => setImporting(true)} disabled={!configured}>
             Import from corpus

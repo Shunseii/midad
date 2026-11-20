@@ -12,7 +12,7 @@ import { type Footnote, type MatnBlock, parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
 
 /**
- * Hamish's local library: imported books and their parsed pages. This is the
+ * Midad's local library: imported books and their parsed pages. This is the
  * source of truth for reading, agent tools and Ask AI. Only importBook,
  * previewSync and syncBook talk to the corpus.
  */

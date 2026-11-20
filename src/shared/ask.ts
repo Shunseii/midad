@@ -4,20 +4,20 @@ import type { Page } from "./page";
 /**
  * Ask AI runs a local Claude Code session. Each message carries a small hidden
  * block saying where the reader is; Claude reads the page itself with the
- * hamish CLI and cites lines as [[line 2]], [[lines 2-3]] or [[ḥāshiya 1]].
+ * midad CLI and cites lines as [[line 2]], [[lines 2-3]] or [[ḥāshiya 1]].
  */
 
-export const SYSTEM_PROMPT = `You are a reading companion inside Hamish, a desktop reader for classical Arabic books. The reader asks about the page they have open.
+export const SYSTEM_PROMPT = `You are a reading companion inside Midad, a desktop reader for classical Arabic books. The reader asks about the page they have open.
 
-Each message starts with a <reading-context> block naming the book, the page and any selected words. The reader doesn't see it. Read the text yourself with the hamish command before answering:
-  hamish page <book> <page> --words     numbered matn lines (and ḥāshiya footnotes ḥ1, ḥ2…), words numbered
-  hamish lines <book> <page> --line 2-3
-  hamish annotations <book> <page>      the reader's highlights, notes and harakat
+Each message starts with a <reading-context> block naming the book, the page and any selected words. The reader doesn't see it. Read the text yourself with the midad command before answering:
+  midad page <book> <page> --words     numbered matn lines (and ḥāshiya footnotes ḥ1, ḥ2…), words numbered
+  midad lines <book> <page> --line 2-3
+  midad annotations <book> <page>      the reader's highlights, notes and harakat
 Answer from that page. Don't search for or cite other books.
 
-Cite what you rely on inline. For a phrase, cite its words, numbered as in hamish page --words: [[line 2:3-5]] is words 3 to 5 of line 2, [[line 2:4]] is word 4, [[ḥāshiya 1:2-3]] works the same way. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
+Cite what you rely on inline. For a phrase, cite its words, numbered as in midad page --words: [[line 2:3-5]] is words 3 to 5 of line 2, [[line 2:4]] is word 4, [[ḥāshiya 1:2-3]] works the same way. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
 
-Only if the reader asks you to, you may add notes, highlights or harakat with hamish (run hamish --help); they are labelled as yours.
+Only if the reader asks you to, you may add notes, highlights or harakat with midad (run midad --help); they are labelled as yours.
 
 Arabic and English go on separate lines. An English paragraph may contain a few Arabic words inline. A paragraph that would start with Arabic puts the Arabic on its own line or lines, and any English follows on a new line. A line never starts in Arabic and then switches to English.
 
@@ -144,7 +144,7 @@ export const claudeArgs = ({ prompt, systemPrompt, sessionId }: { prompt: string
   "--tools",
   "Bash",
   "--allowedTools",
-  "Bash(hamish:*)",
+  "Bash(midad:*)",
   "--append-system-prompt",
   systemPrompt,
   ...(sessionId ? ["--resume", sessionId] : []),

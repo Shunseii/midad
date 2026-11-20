@@ -1,7 +1,7 @@
 import { Plug } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge, Button, TextField } from "../components/ui";
-import { hamish, useSaveSettings, useSettings } from "../lib/hamish";
+import { midad, useSaveSettings, useSettings } from "../lib/midad";
 
 type TestState = { kind: "idle" } | { kind: "testing" } | { kind: "ok" } | { kind: "error"; message: string };
 
@@ -18,7 +18,7 @@ export const SettingsRoute = () => {
 
   const runTest = async () => {
     setTest({ kind: "testing" });
-    const result = await hamish["settings.test"]({ endpoint, key: key || undefined });
+    const result = await midad["settings.test"]({ endpoint, key: key || undefined });
     setTest(result.ok ? { kind: "ok" } : { kind: "error", message: result.message });
   };
 
@@ -37,7 +37,7 @@ export const SettingsRoute = () => {
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-12 py-10">
       <header className="flex flex-col gap-1">
         <h1 className="font-display text-display font-semibold">Settings</h1>
-        <p className="text-sm text-ink-2">Where Hamish imports books from.</p>
+        <p className="text-sm text-ink-2">Where Midad imports books from.</p>
       </header>
 
       <section className="flex max-w-xl flex-col gap-4 rounded-2xl border border-line bg-surface p-6">

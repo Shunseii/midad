@@ -1,7 +1,7 @@
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
-// Hamish toasts are an inverted pill (ink on paper flipped) centred above the bottom edge.
+// Midad toasts are an inverted pill (ink on paper flipped) centred above the bottom edge.
 const Toaster = ({ ...props }: ToasterProps) => (
   <Sonner
     theme="system"

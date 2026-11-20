@@ -7,7 +7,7 @@ export const ScanPane = ({ bookId, fileId, onClose }: { bookId: string; fileId: 
   const [loaded, setLoaded] = useState<{ fileId: string; ok: boolean } | null>(null);
   const [zoomed, setZoomed] = useState(false);
   const state = loaded?.fileId === fileId ? (loaded.ok ? "ready" : "error") : "loading";
-  const src = `hamish-scan://scan/${encodeURIComponent(bookId)}/${encodeURIComponent(fileId)}`;
+  const src = `midad-scan://scan/${encodeURIComponent(bookId)}/${encodeURIComponent(fileId)}`;
 
   return (
     <section aria-label="Page scan" className="flex min-w-0 flex-1 flex-col border-l border-line bg-surface-2">
@@ -21,7 +21,7 @@ export const ScanPane = ({ bookId, fileId, onClose }: { bookId: string; fileId: 
         {state === "loading" && <Skeleton className="aspect-[2/3] w-full" />}
         {state === "error" && (
           <p className="py-12 text-center text-sm text-ink-3">
-            Couldn't load this scan. The first time you view a page's scan, Hamish needs the corpus connection.
+            Couldn't load this scan. The first time you view a page's scan, Midad needs the corpus connection.
           </p>
         )}
         <img

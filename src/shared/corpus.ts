@@ -1,5 +1,5 @@
-// The subset of the arabic-digitization API types Hamish uses. Copied from
-// packages/shared in that repo rather than linked, since Hamish is a separate
+// The subset of the arabic-digitization API types Midad uses. Copied from
+// packages/shared in that repo rather than linked, since Midad is a separate
 // repo; keep field names identical so responses parse without mapping.
 
 export type FileState =
