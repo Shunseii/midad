@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { X } from "lucide-react";
-import { type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, useEffect, useId, useRef } from "react";
+import { type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type Ref, type RefObject, useEffect, useId, useRef } from "react";
 import { toast } from "sonner";
 import { Badge as BadgeBase } from "@/components/ui/badge";
 import { Button as ButtonBase } from "@/components/ui/button";
@@ -118,6 +118,7 @@ export const TextField = ({
   helper?: string;
   error?: string | null;
   icon?: LucideIcon;
+  ref?: Ref<HTMLInputElement>;
 }) => {
   const id = useId();
   const messageId = `${id}-message`;
@@ -201,18 +202,20 @@ export const Dialog = ({
   onClose,
   children,
   footer,
+  initialFocus,
 }: {
   title: string;
   description?: string;
   onClose: () => void;
   children: ReactNode;
   footer?: ReactNode;
+  initialFocus?: RefObject<HTMLElement | null>;
 }) => {
   const popup = useRef<HTMLDivElement>(null);
   return (
     <DialogRoot open onOpenChange={(open) => !open && onClose()}>
       {/* The dialog opens without a trigger, so focus the panel rather than ringing its close button. */}
-      <DialogContent ref={popup} initialFocus={popup} showCloseButton={false}>
+      <DialogContent ref={popup} initialFocus={initialFocus ?? popup} showCloseButton={false}>
         <DialogHeader>
           <div className="flex flex-1 flex-col gap-0.5">
             <DialogTitle>{title}</DialogTitle>

@@ -1,9 +1,9 @@
 import { Download, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
 import { plural } from "../lib/format";
 import { useCorpusBooks, useImportBook, useLibrary } from "../lib/hamish";
-import { Badge, Button, Dialog, Skeleton, TextField } from "./ui";
+import { Badge, Button, Dialog, Skeleton, TextField, cx } from "./ui";
 
 export const ImportDialog = ({
   onClose,
@@ -17,6 +17,7 @@ export const ImportDialog = ({
   const importBook = useImportBook();
   const [filter, setFilter] = useState("");
   const [importingId, setImportingId] = useState<string | null>(null);
+  const filterField = useRef<HTMLInputElement>(null);
 
   const imported = useMemo(() => new Set(library.data?.map((b) => b.bookId)), [library.data]);
   const books = useMemo(() => {
@@ -43,9 +44,10 @@ export const ImportDialog = ({
       title="Import from corpus"
       description="Pulls a book's transcribed pages into Hamish. You read from this copy; sync it later to get new pages."
       onClose={onClose}
+      initialFocus={filterField}
     >
       <div className="flex flex-col gap-4">
-        <TextField icon={Search} placeholder="Filter by title or author" value={filter} onChange={(e) => setFilter(e.target.value)} />
+        <TextField ref={filterField} icon={Search} placeholder="Filter by title or author" value={filter} onChange={(e) => setFilter(e.target.value)} />
         {importBook.error && <p className="text-sm text-danger">{importBook.error.message}</p>}
 
         {corpusBooks.isPending && (
@@ -80,29 +82,33 @@ export const ImportDialog = ({
 
         <ul className="flex flex-col divide-y divide-line">
           {books.map((b) => (
-            <li key={b.id} className="flex items-center gap-4 py-3">
+            <li key={b.id} className={cx("flex items-center gap-4 py-3", b.pagesReady === 0 && "opacity-60")}>
               <div className="flex min-w-0 flex-1 flex-col items-end text-right">
                 <span className="ar truncate text-ar-body font-bold">{b.title}</span>
                 <span className="ar truncate text-ar-small text-ink-2">
                   {[b.author, b.workTitle].filter(Boolean).join(" · ") || " "}
                 </span>
                 <span className="text-xs text-ink-3">
-                  {b.pagesReady} of {plural({ count: b.pagesTotal, one: "page", many: "pages" })} transcribed
+                  {b.pagesReady === 0
+                    ? "Not transcribed yet"
+                    : `${b.pagesReady.toLocaleString("en")} of ${plural({ count: b.pagesTotal, one: "page", many: "pages" })} transcribed`}
                 </span>
               </div>
+              <div className="flex w-28 shrink-0 justify-end">
               {imported.has(b.id) ? (
                 <Badge tone="accent">In library</Badge>
-              ) : (
+              ) : b.pagesReady === 0 ? null : (
                 <Button
                   size="sm"
                   variant="secondary"
                   icon={Download}
-                  disabled={b.pagesReady === 0 || importingId !== null}
+                  disabled={importingId !== null}
                   onClick={() => runImport(b.id)}
                 >
                   {importingId === b.id ? "Importing…" : "Import"}
                 </Button>
               )}
+              </div>
             </li>
           ))}
         </ul>
