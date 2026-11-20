@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { createHashRouter, RouterProvider } from "react-router";
 import { AppShell } from "./components/app-shell";
+import { ThemeSync } from "./lib/appearance";
 import { LibraryRoute } from "./routes/library";
 import { ReaderRoute } from "./routes/reader";
 import { SettingsRoute } from "./routes/settings";
@@ -34,6 +35,7 @@ if (!root) throw new Error("#root is missing from index.html");
 createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
+      <ThemeSync />
       <TooltipProvider delay={400}>
       <RouterProvider router={router} />
       <Toaster />

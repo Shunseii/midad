@@ -13,6 +13,9 @@ import type {
 
 export type { CorpusBookListing };
 
+/** "system" follows the operating system's light or dark setting. */
+export type Theme = "system" | "light" | "dark";
+
 export interface PublicSettings {
   endpoint: string;
   hasKey: boolean;
@@ -48,6 +51,7 @@ export interface MidadApi {
   /** Streams StreamEvents for requestId while it runs; resolves with the whole answer. */
   "ai.ask": (input: AskInput) => Promise<{ sessionId: string; text: string }>;
   "ai.cancel": (input: { requestId: string }) => Promise<void>;
+  "app.setTheme": (input: { theme: Theme }) => Promise<void>;
 }
 
 export interface AskInput {
@@ -90,6 +94,7 @@ export const CHANNELS = [
   "marker.clear",
   "ai.ask",
   "ai.cancel",
+  "app.setTheme",
 ] as const satisfies readonly Channel[];
 
 /** Pushed from the main process to the renderer. */

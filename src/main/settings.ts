@@ -1,16 +1,18 @@
 import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { safeStorage } from "electron";
-import type { PublicSettings } from "../shared/ipc";
+import type { PublicSettings, Theme } from "../shared/ipc";
 
 interface StoredSettings {
   endpoint: string;
   /** base64; encrypted with the OS keychain when `encrypted` is true. */
   key: string | null;
   encrypted: boolean;
+  /** Kept here so the window opens in the right colour before the page loads. */
+  theme: Theme;
 }
 
-const EMPTY: StoredSettings = { endpoint: "", key: null, encrypted: false };
+const EMPTY: StoredSettings = { endpoint: "", key: null, encrypted: false, theme: "system" };
 
 export const createSettings = ({ dir }: { dir: string }) => {
   const file = join(dir, "settings.json");
@@ -54,6 +56,10 @@ export const createSettings = ({ dir }: { dir: string }) => {
       write(next);
       return toPublic(next);
     },
+
+    theme: (): Theme => read().theme,
+
+    saveTheme: (theme: Theme) => write({ ...read(), theme }),
 
     /** The stored endpoint and key, or null when the corpus isn't configured yet. */
     credentials: (): { endpoint: string; key: string } | null => {

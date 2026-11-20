@@ -1,9 +1,9 @@
 import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import { app, BrowserWindow, ipcMain, protocol, shell } from "electron";
+import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
 import { readingContext } from "../shared/ask";
-import { ASK_EVENT, type MidadApi, LIBRARY_CHANGED } from "../shared/ipc";
+import { ASK_EVENT, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
@@ -114,6 +114,10 @@ const handlers: MidadApi = {
     return ask.ask({ requestId, prompt: `${context}\n\n${question}`, sessionId });
   },
   "ai.cancel": async (input) => ask.cancel(input),
+  "app.setTheme": async ({ theme }) => {
+    settings.saveTheme(theme);
+    applyTheme(theme);
+  },
 };
 
 // data_version changes only when another connection (the midad CLI) commits.
@@ -135,8 +139,19 @@ for (const [channel, handler] of Object.entries(handlers)) {
   ipcMain.handle(channel, (_event, arg) => (handler as (a: unknown) => unknown)(arg));
 }
 
+/** The page background from src/styles/tokens.css, so the window never flashes white before the page paints. */
+const windowBackground = () => (nativeTheme.shouldUseDarkColors ? "#13120F" : "#F6F3EC");
+
+const applyTheme = (theme: Theme) => {
+  nativeTheme.themeSource = theme;
+  for (const win of BrowserWindow.getAllWindows()) win.setBackgroundColor(windowBackground());
+};
+
 const createWindow = () => {
+  nativeTheme.themeSource = settings.theme();
   const win = new BrowserWindow({
+    show: false,
+    backgroundColor: windowBackground(),
     width: 1440,
     height: 900,
     minWidth: 960,
@@ -151,6 +166,8 @@ const createWindow = () => {
       nodeIntegration: false,
     },
   });
+
+  win.once("ready-to-show", () => win.show());
 
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (url.startsWith("http")) void shell.openExternal(url);
@@ -173,6 +190,9 @@ void app.whenReady().then(() => {
     } catch (err) {
       return new Response(err instanceof Error ? err.message : String(err), { status: 502 });
     }
+  });
+  nativeTheme.on("updated", () => {
+    for (const win of BrowserWindow.getAllWindows()) win.setBackgroundColor(windowBackground());
   });
   createWindow();
   app.on("activate", () => {
