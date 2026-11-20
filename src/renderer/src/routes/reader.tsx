@@ -207,6 +207,20 @@ const SMALLEST = 0.875;
 const LARGEST = 2;
 /** Wheel distance per text size step; one mouse notch is usually 100. */
 const WHEEL_STEP = 100;
+const ZOOM_SHOWN_MS = 1200;
+
+/** The text size, shown for a moment under the top bar after a shortcut changes it. */
+const ZoomLevel = ({ scale, shown }: { scale: number; shown: boolean }) => (
+  <div
+    role="status"
+    data-state={shown ? "open" : "closed"}
+    className="pointer-events-none fixed top-18 right-4 z-30 flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 text-sm shadow-md transition-[opacity,translate] duration-150 ease-out data-[state=closed]:-translate-y-1 data-[state=closed]:opacity-0 motion-reduce:transition-none"
+  >
+    <Type aria-hidden className="size-4 text-ink-3" />
+    <span className="text-ink-2">Text size</span>
+    <span className="font-medium tabular-nums">{Math.round(scale * 100)}%</span>
+  </div>
+);
 
 const stepScale = ({ scale, by }: { scale: number; by: 1 | -1 }) => {
   const at = TEXT_SCALES.findIndex((s) => s >= scale);
@@ -659,14 +673,24 @@ export const ReaderRoute = () => {
 
   const latestScale = useRef(textScale);
   latestScale.current = textScale;
-  const zoomBy = (by: 1 | -1) => setTextScale(stepScale({ scale: latestScale.current, by }));
+  const [zoomShown, setZoomShown] = useState(false);
+  const zoomTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(zoomTimer.current), []);
+  /** Sets the text size from a shortcut and briefly shows the new size. */
+  const zoomTo = (scale: number) => {
+    setTextScale(scale);
+    setZoomShown(true);
+    clearTimeout(zoomTimer.current);
+    zoomTimer.current = setTimeout(() => setZoomShown(false), ZOOM_SHOWN_MS);
+  };
+  const zoomBy = (by: 1 | -1) => zoomTo(stepScale({ scale: latestScale.current, by }));
 
   /** Ctrl with =, - or 0 sizes the page's text instead of zooming the whole window. */
   const zoomKeys = (e: KeyboardEvent) => {
     if (!(e.ctrlKey || e.metaKey) || e.altKey) return false;
     if (e.code === "Equal" || e.code === "NumpadAdd") zoomBy(1);
     else if (e.code === "Minus" || e.code === "NumpadSubtract") zoomBy(-1);
-    else if (e.code === "Digit0" || e.code === "Numpad0") setTextScale(1);
+    else if (e.code === "Digit0" || e.code === "Numpad0") zoomTo(1);
     else return false;
     e.preventDefault();
     return true;
@@ -791,6 +815,7 @@ export const ReaderRoute = () => {
 
   return (
     <div className="flex h-full flex-col">
+      <ZoomLevel scale={textScale} shown={zoomShown} />
       {/* z-20: the view-transition name makes the header its own stacking layer, and its display menu must sit above the page. */}
       <header className="relative z-20 flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4 [view-transition-name:reader-header]">
         <Link to="/" viewTransition aria-label="Back to Library">

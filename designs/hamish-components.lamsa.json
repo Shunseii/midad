@@ -7333,6 +7333,64 @@
       },
       "parentId": "CfM9SIRh",
       "index": "a000VVVVVVVVVVV"
+    },
+    "roHkeXtS": {
+      "type": "frame",
+      "name": "Text size indicator",
+      "x": 280,
+      "y": 6092,
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": 8,
+        "box-shadow": "{shadow.md}",
+        "display": "inline-flex",
+        "gap": 8,
+        "padding": "6px 12px",
+        "font-size": 14
+      },
+      "css": "transition: opacity 150ms ease-out, translate 150ms ease-out;\n@starting-style { opacity: 0; translate: 0 -4px; }\n&[data-state=\"closed\"] { opacity: 0; translate: 0 -4px; }"
+    },
+    "2VEnzVjm": {
+      "type": "icon",
+      "parentId": "roHkeXtS",
+      "index": "a0",
+      "name": "Icon type",
+      "set": "lucide",
+      "icon": "type",
+      "style": {
+        "color": "{color.ink-3}",
+        "height": 16,
+        "width": 16,
+        "flex-shrink": 0
+      }
+    },
+    "SbZGQNFQ": {
+      "type": "text",
+      "parentId": "roHkeXtS",
+      "index": "a1",
+      "name": "Label",
+      "content": "Text size",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 14
+      }
+    },
+    "ZU5KjXWp": {
+      "type": "text",
+      "parentId": "roHkeXtS",
+      "index": "a2",
+      "name": "Value",
+      "content": "125%",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "font-variant-numeric": "tabular-nums"
+      }
     }
   },
   "version": 1
