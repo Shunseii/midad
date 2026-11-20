@@ -1,4 +1,4 @@
-import { Sparkles, Trash2, X } from "lucide-react";
+import { Highlighter, NotebookPen, Sparkles, Trash2, X } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Highlight, Note, PageAnnotations, Span } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
@@ -116,7 +116,7 @@ export const AnnotationsPanel = ({
       <div className="flex flex-col gap-4 overflow-y-auto p-5">
         <h2 className="flex items-center gap-2 text-heading font-semibold">
           {tab === "highlights" ? "Highlights on this page" : "Notes on this page"}
-          {annotations && <Badge>{items.length}</Badge>}
+          {items.length > 0 && <Badge>{items.length}</Badge>}
         </h2>
         {tab === "highlights" &&
           annotations?.highlights.map((h) => (
@@ -139,11 +139,23 @@ export const AnnotationsPanel = ({
               </p>
             </Card>
           ))}
-        <p className="text-xs text-ink-3">
-          {tab === "highlights"
-            ? "Select text and pick a colour to highlight it."
-            : "Notes belong to this page. Hover a dotted word to edit its note in place."}
-        </p>
+        {annotations && items.length === 0 ? (
+          <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
+            <span className="mb-1 flex size-10 items-center justify-center rounded-full bg-surface-2 text-ink-3">
+              {tab === "highlights" ? <Highlighter aria-hidden className="size-5" /> : <NotebookPen aria-hidden className="size-5" />}
+            </span>
+            <p className="text-sm font-medium text-ink-2">{tab === "highlights" ? "Nothing highlighted yet" : "No notes yet"}</p>
+            <p className="max-w-60 text-xs text-ink-3">
+              {tab === "highlights" ? "Select text, then pick a colour." : "Select text and choose Note. Notes stay with the page they're on."}
+            </p>
+          </div>
+        ) : (
+          <p className="text-xs text-ink-3">
+            {tab === "highlights"
+              ? "Select text and pick a colour to highlight it."
+              : "Notes belong to this page. Hover a dotted word to edit its note in place."}
+          </p>
+        )}
       </div>
       )}
     </aside>
