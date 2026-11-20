@@ -279,7 +279,6 @@ export const ReaderRoute = () => {
   const fromUrl = Number(search.get("p"));
   // Opening a book returns to its last-read marker; without one, to the last page viewed.
   const position = fromUrl >= 1 ? fromUrl : (marker.data?.position ?? book.data?.progress?.position ?? 1);
-  const printedNumber = book.data?.pages.find((p) => p.position === position)?.number ?? null;
   const page = usePage({ bookId, position });
   const annotations = useAnnotations({ bookId, position });
   const actions = useAnnotationActions({ bookId, position });
@@ -752,11 +751,8 @@ export const ReaderRoute = () => {
         </div>
         <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1">
           <IconButton icon={ChevronLeft} label="Next page" onClick={() => go(position + 1)} disabled={position >= total} />
-          <span className="flex min-w-28 items-baseline justify-center gap-2" title={`Page ${position} of ${total}`}>
-            {printedNumber !== null && <span className="ar text-ar-small font-bold">{arabicNumber(printedNumber)}</span>}
-            <span className={cx("tabular-nums", printedNumber === null ? "text-sm font-medium" : "text-xs text-ink-3")}>
-              {position} of {total || "–"}
-            </span>
+          <span className="min-w-20 text-center text-sm font-medium tabular-nums">
+            {position} of {total || "–"}
           </span>
           <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
         </div>
