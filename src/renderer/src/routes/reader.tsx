@@ -70,6 +70,26 @@ interface NoteState {
 const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
 
 /** Scrolls a span into view and briefly tints its words, for jumping from the panel (and later, AI citations). */
+const REVEAL_TINT: Keyframe[] = [
+  { backgroundColor: "var(--color-accent-soft)" },
+  { backgroundColor: "var(--color-accent-soft)", offset: 0.6 },
+  { backgroundColor: "transparent" },
+];
+
+/**
+ * Tints words for a moment, along with the spaces between neighbouring words
+ * so the tint reads as one band. Each word sits in a wrapper; a space is the
+ * wrapper's next sibling.
+ */
+const tintWords = (words: HTMLElement[]) => {
+  words.forEach((el, i) => {
+    const gap = el.parentElement?.nextElementSibling;
+    const nextWrapper = words[i + 1]?.parentElement;
+    const tinted = gap && nextWrapper && gap.nextElementSibling === nextWrapper ? [el, gap] : [el];
+    for (const target of tinted) target.animate(REVEAL_TINT, { duration: 3000, easing: "ease-out" });
+  });
+};
+
 const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) => {
   if (!root) return;
   const words = [...root.querySelectorAll<HTMLElement>(`[data-part="${span.part}"][data-w]`)].filter((el) => {
@@ -80,16 +100,7 @@ const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) =>
     return afterStart && beforeEnd;
   });
   words[0]?.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
-  for (const el of words) {
-    el.animate(
-      [
-        { backgroundColor: "var(--color-accent-soft)" },
-        { backgroundColor: "var(--color-accent-soft)", offset: 0.6 },
-        { backgroundColor: "transparent" },
-      ],
-      { duration: 3000, easing: "ease-out" },
-    );
-  }
+  tintWords(words);
 };
 
 interface LineRange {
@@ -138,16 +149,7 @@ const revealRow = ({ root, part, line, word }: { root: HTMLElement | null; part:
     return row !== null && w >= row.word && (!next || w < next.word);
   });
   onRow[0]?.scrollIntoView({ block: "center" });
-  for (const el of onRow) {
-    el.animate(
-      [
-        { backgroundColor: "var(--color-accent-soft)" },
-        { backgroundColor: "var(--color-accent-soft)", offset: 0.6 },
-        { backgroundColor: "transparent" },
-      ],
-      { duration: 3000, easing: "ease-out" },
-    );
-  }
+  tintWords(onRow);
 };
 
 /** How much of a line must show before it counts as on screen. */
