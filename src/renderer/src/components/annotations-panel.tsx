@@ -2,7 +2,7 @@ import { Highlighter, NotebookPen, Sparkles, Trash2, X } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Highlight, Note, PageAnnotations, Span } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
-import { MARK_BAND } from "./page-view";
+import { MARK_BG } from "./page-view";
 import { Badge, IconButton, Segmented, cx } from "./ui";
 
 export type PanelTab = "highlights" | "notes" | "ask";
@@ -123,7 +123,7 @@ export const AnnotationsPanel = ({
             <Card key={h.id} onClick={() => onGoTo(h.span)}>
               <CardMeta item={h} deleteLabel="Remove highlight" onDelete={() => onRemoveHighlight(h.id)} />
               <p className="ar border-r-2 border-line pr-3 text-right text-ar-body">
-                <span className={cx("box-decoration-clone", MARK_BAND[h.color])}>{h.quote}</span>
+                <span className={cx("box-decoration-clone", MARK_BG[h.color])}>{h.quote}</span>
               </p>
             </Card>
           ))}

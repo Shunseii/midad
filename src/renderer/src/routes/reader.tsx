@@ -159,6 +159,25 @@ const linesOnScreen = (root: HTMLElement): number[] => {
   });
 };
 
+/**
+ * The block behind the contents entries on screen. It slides between entries
+ * as the reader moves through the book instead of jumping.
+ */
+const useActiveIndicator = (active: number[]) => {
+  const list = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState<{ top: number; height: number; animate: boolean } | null>(null);
+  const first = active.length ? Math.min(...active) : -1;
+  const last = active.length ? Math.max(...active) : -1;
+  useLayoutEffect(() => {
+    const items = list.current?.querySelectorAll<HTMLElement>("[data-entry]");
+    const top = items?.[first];
+    const bottom = items?.[last];
+    if (!top || !bottom) return setBox(null);
+    setBox((prev) => ({ top: top.offsetTop, height: bottom.offsetTop + bottom.offsetHeight - top.offsetTop, animate: prev !== null }));
+  }, [first, last]);
+  return { list, box };
+};
+
 const ContentsRail = ({
   entries,
   active,
@@ -172,27 +191,41 @@ const ContentsRail = ({
   onGo: (position: number) => void;
 }) => {
   const markerIndex = markerAt === null ? -1 : entryIndexFor(entries, markerAt);
+  const { list, box } = useActiveIndicator(active);
   return (
     <nav aria-label="Contents" className="flex w-62 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-line bg-surface-2 px-4 py-6">
       <h2 className="mb-2 px-2.5 text-overline font-semibold uppercase tracking-widest text-ink-3">Contents</h2>
       {entries.length === 0 && <p className="px-2.5 text-xs text-ink-3">This book has no chapter headings.</p>}
-      {entries.map((e, i) => (
-        <button
-          key={`${e.position}-${i}`}
-          type="button"
-          aria-current={active.includes(i) ? "location" : undefined}
-          onClick={() => onGo(e.position)}
-          className={cx(
-            "flex items-center gap-2 rounded-lg px-2.5 py-1 text-left transition-colors",
-            active.includes(i) ? "bg-accent-soft text-accent" : "text-ink-2 hover:bg-surface hover:text-ink",
-            e.level > 2 && "pl-5",
-          )}
-        >
-          <span className="ar text-ar-small text-ink-3">{arabicNumber(e.number ?? e.position)}</span>
-          {i === markerIndex && <Bookmark aria-label="Last read" className="size-3.5 text-accent" />}
-          <span className="ar flex-1 text-right text-ar-small">{e.text}</span>
-        </button>
-      ))}
+      <div ref={list} className="relative flex flex-col gap-0.5">
+        {box && (
+          <span
+            aria-hidden
+            style={{ translate: `0 ${box.top}px`, height: box.height }}
+            className={cx(
+              "pointer-events-none absolute inset-x-0 top-0 rounded-lg bg-accent-soft",
+              box.animate && "transition-[translate,height] duration-slide ease-move motion-reduce:transition-none",
+            )}
+          />
+        )}
+        {entries.map((e, i) => (
+          <button
+            key={`${e.position}-${i}`}
+            type="button"
+            data-entry
+            aria-current={active.includes(i) ? "location" : undefined}
+            onClick={() => onGo(e.position)}
+            className={cx(
+              "relative flex items-center gap-2 rounded-lg px-2.5 py-1 text-left transition-colors",
+              active.includes(i) ? "text-accent" : "text-ink-2 hover:bg-surface hover:text-ink",
+              e.level > 2 && "pl-5",
+            )}
+          >
+            <span className="ar text-ar-small text-ink-3">{arabicNumber(e.number ?? e.position)}</span>
+            {i === markerIndex && <Bookmark aria-label="Last read" className="size-3.5 text-accent" />}
+            <span className="ar flex-1 text-right text-ar-small">{e.text}</span>
+          </button>
+        ))}
+      </div>
     </nav>
   );
 };
@@ -251,6 +284,14 @@ export const ReaderRoute = () => {
   const setSideWidth = asking ? setAskWidth : setPanelWidth;
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
   const [removal, setRemoval] = useState<{ id: number; message: string } | null>(null);
+  // A highlight just made is drawn in like a marker; this clears once that has played.
+  const [freshHighlight, setFreshHighlight] = useState<string | null>(null);
+  const freshTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const drawIn = (id: string) => {
+    setFreshHighlight(id);
+    clearTimeout(freshTimer.current);
+    freshTimer.current = setTimeout(() => setFreshHighlight(null), 1000);
+  };
   // Kept after closing so the toolbar can animate out with its content.
   const lastToolbar = useRef<Toolbar | null>(null);
   if (toolbar) lastToolbar.current = toolbar;
@@ -845,6 +886,7 @@ export const ReaderRoute = () => {
               bookTitle={book.data?.title ?? ""}
               chapter={chapterTitle}
               width={pageWidth}
+              freshHighlight={freshHighlight}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
               display={{ showHarakat, showMine, lineNumbers, textScale, target }}
               marker={marker.data?.position === position ? marker.data : null}
@@ -880,7 +922,7 @@ export const ReaderRoute = () => {
               mode={shown.mode}
               onDismiss={() => setToolbar(null)}
               onHighlight={(color) => {
-                if (shown.mode === "selection") void edits().addHighlight({ span: shown.span, color });
+                if (shown.mode === "selection") void edits().addHighlight({ span: shown.span, color }).then(drawIn);
                 finishToolbar();
               }}
               onRemoveHighlight={() => {

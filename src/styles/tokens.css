@@ -38,6 +38,10 @@
   --transition-duration-pop-exit: 100ms;
   --transition-duration-panel: 240ms;
   --transition-duration-panel-exit: 180ms;
+  /* Signature moves: the contents indicator, the last-read marker and the highlight sweep. */
+  --transition-duration-slide: 280ms;
+  --transition-duration-glide: 400ms;
+  --transition-duration-sweep: 420ms;
 }
 
 :root {

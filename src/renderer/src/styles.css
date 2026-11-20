@@ -114,8 +114,43 @@ body {
  * them stay clear. Each colour class sets the band's colour.
  */
 .mark-band {
-  background-image: linear-gradient(to top, var(--mark) 0 0.55em, transparent 0.55em);
-  box-decoration-break: clone;
+  position: relative;
+  isolation: isolate;
+}
+.mark-band::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: -1;
+  height: 0.55em;
+  background: var(--mark);
+  pointer-events: none;
+}
+
+/*
+ * A new highlight is drawn like a marker, right to left: each word's band
+ * grows from its right edge in turn (--sweep-delay and --sweep-duration are
+ * set per word). Reduced motion fades the band in instead.
+ */
+.mark-sweep::before {
+  transform-origin: right;
+  animation: mark-sweep var(--sweep-duration) linear var(--sweep-delay) both;
+}
+@keyframes mark-sweep {
+  from {
+    transform: scaleX(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mark-sweep::before {
+    animation: mark-fade var(--transition-duration-pop) ease both;
+  }
+}
+@keyframes mark-fade {
+  from {
+    opacity: 0;
+  }
 }
 .mark-yellow {
   --mark: var(--color-mark-1);

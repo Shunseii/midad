@@ -18,6 +18,7 @@ import type { StoredPage } from "../../../shared/library";
 import type { PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
 import { footnotesByMarker, splitFootnoteRef } from "../lib/footnotes";
+import { type Sweep, sweepOrder } from "../lib/sweep";
 import { cx } from "./ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -81,11 +82,18 @@ export interface Display {
   target: LetterRef | null;
 }
 
+const SWEEP_MS = 420;
+
+/** The style that times one word's (or the gap after it's) part of the sweep. */
+const sweepStyle = ({ sweep, at }: { sweep: Sweep; at: number }): CSSProperties =>
+  ({ "--sweep-delay": `${(SWEEP_MS * at) / sweep.count}ms`, "--sweep-duration": `${SWEEP_MS / sweep.count}ms` }) as CSSProperties;
+
 interface LineProps {
   part: Part;
   line: number;
   text: string;
   annotations: PageAnnotations;
+  sweep: Sweep | null;
   display: Display;
   onWordHover: (target: WordTarget, note: Note | null) => void;
   onWordClick: (target: WordTarget, highlight: Highlight | null) => void;
@@ -151,7 +159,8 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
   return nodes;
 };
 
-const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick }: LineProps) => {
+const Line = ({ part, line, text, annotations, sweep, display, onWordHover, onWordClick }: LineProps) => {
+  const sweepAt = (h: Highlight | null, ref: WordRef) => (sweep && h?.id === sweep.id ? sweep.order.get(`${part}:${ref.line}:${ref.word}`) : undefined);
   const tokens = tokenize(text);
   const wordAt = (i: number) => {
     const t = tokens[i];
@@ -165,8 +174,9 @@ const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick
       const shared =
         before && after ? highlightAt(annotations.highlights, part, before) : null;
       const joins = shared && after && spanContains({ span: shared.span, part, ref: after });
+      const at = joins && before ? sweepAt(shared, before) : undefined;
       return (
-        <span key={i} className={cx(joins && MARK_BAND[shared.color])}>
+        <span key={i} className={cx(joins && MARK_BAND[shared.color], at !== undefined && "mark-sweep")} style={at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.5 }) : undefined}>
           {token.text}
         </span>
       );
@@ -186,6 +196,7 @@ const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick
         .map((h) => [h.letter, h.marks]),
     );
     const { target: t } = display;
+    const at = sweepAt(highlight, ref);
     const targetLetter = t && t.part === part && t.line === line && t.word === token.word ? t.letter : null;
     return (
       <span key={i}>
@@ -196,8 +207,10 @@ const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick
           onMouseEnter={(e) => onWordHover(target(e), note)}
           onMouseLeave={(e) => note && onWordHover(target(e), null)}
           onClick={(e) => onWordClick(target(e), highlight)}
+          style={at !== undefined && sweep ? sweepStyle({ sweep, at }) : undefined}
           className={cx(
             highlight && MARK_BAND[highlight.color],
+            at !== undefined && "mark-sweep",
             highlight && "cursor-pointer",
             note && "underline decoration-accent decoration-dotted decoration-2 underline-offset-8",
           )}
@@ -249,27 +262,61 @@ const LineNumber = ({ line }: { line: number }) => (
   </span>
 );
 
+/** Where the last-read mark was last drawn, so a mark moved on the same page can glide from there. */
+let lastMark: { page: number; top: number } | null = null;
+const MarkPage = createContext(0);
+
+const GLIDE_EASING = "cubic-bezier(0.645, 0.045, 0.355, 1)";
+
+/** Glides the mark from where it was on this page (400ms ease-move); with reduced motion it fades in instead. */
+const useGlide = (row: ScreenRow) => {
+  const page = useContext(MarkPage);
+  const refs = useRef<(HTMLElement | null)[]>([]);
+  useLayoutEffect(() => {
+    const els = refs.current.filter((el): el is HTMLElement => el !== null && el.offsetParent !== null);
+    // Measured from the line, which never moves, so a glide still running doesn't skew it.
+    const line = els[0]?.parentElement;
+    if (!line) return;
+    const top = line.getBoundingClientRect().top + row.top;
+    const from = lastMark?.page === page ? lastMark.top : null;
+    lastMark = { page, top };
+    if (from === null || Math.abs(from - top) < 1) return;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    for (const el of els) {
+      if (reduce) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, easing: "ease" });
+      else el.animate([{ translate: `0 ${from - top}px` }, { translate: "0 0" }], { duration: 400, easing: GLIDE_EASING });
+    }
+  }, [page, row.top]);
+  return (i: number) => (el: HTMLElement | null) => {
+    refs.current[i] = el;
+  };
+};
+
 /** The last-read mark in a line's margin: a bar and a bookmark, or on narrow layouts a bar beside the row. */
-const LastReadMark = ({ row, onClear }: { row: ScreenRow; onClear: () => void }) => (
-  <>
-    <button
-      type="button"
-      onClick={onClear}
-      onMouseDown={(e) => e.stopPropagation()}
-      aria-label="Clear the last-read marker"
-      style={rowStyle(row)}
-      className="absolute left-full ml-6 hidden select-none items-start gap-3 font-sans @3xl:flex"
-    >
-      <span className="w-0.5 self-stretch rounded-full bg-accent" />
-      <span className="flex flex-col items-center gap-1 text-accent">
-        <Bookmark aria-hidden className="size-5 fill-current" />
-        <span className="whitespace-nowrap text-overline font-semibold uppercase tracking-widest">Last read</span>
-      </span>
-    </button>
-    {/* Without room for the margin, the marked row gets a bar beside it. */}
-    <span aria-hidden style={rowStyle(row)} className="absolute -right-3 w-0.5 rounded-full bg-accent @3xl:hidden" />
-  </>
-);
+const LastReadMark = ({ row, onClear }: { row: ScreenRow; onClear: () => void }) => {
+  const glide = useGlide(row);
+  return (
+    <>
+      <button
+        ref={glide(0)}
+        type="button"
+        onClick={onClear}
+        onMouseDown={(e) => e.stopPropagation()}
+        aria-label="Clear the last-read marker"
+        style={rowStyle(row)}
+        className="absolute left-full ml-6 hidden select-none items-start gap-3 font-sans @3xl:flex"
+      >
+        <span className="w-0.5 self-stretch rounded-full bg-accent" />
+        <span className="flex flex-col items-center gap-1 text-accent">
+          <Bookmark aria-hidden className="size-5 fill-current" />
+          <span className="whitespace-nowrap text-overline font-semibold uppercase tracking-widest">Last read</span>
+        </span>
+      </button>
+      {/* Without room for the margin, the marked row gets a bar beside it. */}
+      <span ref={glide(1)} aria-hidden style={rowStyle(row)} className="absolute -right-3 w-0.5 rounded-full bg-accent @3xl:hidden" />
+    </>
+  );
+};
 
 /** A line of text with its margin: the last-read marker on one screen row, or on hover a button beside the row. */
 const MarkableLine = ({
@@ -371,6 +418,7 @@ export const PageView = ({
   chapter,
   width,
   annotations,
+  freshHighlight,
   display,
   marker,
   onMark,
@@ -384,6 +432,8 @@ export const PageView = ({
   chapter: string | null;
   width: PageWidth;
   annotations: PageAnnotations;
+  /** The highlight just made, if any, to draw in. */
+  freshHighlight: string | null;
   display: Display;
   /** The word on this page holding the last-read marker, if any. */
   marker: { part: Part; line: number; word: number } | null;
@@ -393,7 +443,9 @@ export const PageView = ({
   onWordClick: LineProps["onWordClick"];
 }) => {
   const { page } = stored;
-  const lineProps = { annotations, display, onWordHover, onWordClick };
+  const fresh = freshHighlight ? annotations.highlights.find((h) => h.id === freshHighlight) : undefined;
+  const sweep = fresh ? sweepOrder({ page, highlight: fresh }) : null;
+  const lineProps = { annotations, sweep, display, onWordHover, onWordClick };
   const t = (s: string) => (display.showHarakat ? s : stripHarakat(s));
   const markable = (part: Part, line: number) => ({
     part,
@@ -406,6 +458,7 @@ export const PageView = ({
   const footnotes = footnotesByMarker(page.hashiya.map((f) => ({ marker: f.marker, text: t(f.text) })));
   const folio = arabicNumber(stored.number ?? stored.position);
   return (
+    <MarkPage value={stored.position}>
     <Footnotes value={footnotes}>
       <article
         style={{ "--text-scale": display.textScale } as CSSProperties}
@@ -453,6 +506,7 @@ export const PageView = ({
         </footer>
       </article>
     </Footnotes>
+    </MarkPage>
   );
 };
 
