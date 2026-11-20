@@ -2,9 +2,10 @@ import { BookOpen, Download, RefreshCw, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import type { LibraryBook } from "../../../shared/library";
+import { BookCover, markOpeningCover } from "../components/book-cover";
 import { ImportDialog } from "../components/import-dialog";
 import { SyncDialog } from "../components/sync-dialog";
-import { Badge, Button, IconButton, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
+import { Button, IconButton, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
 import { plural, timeAgo } from "../lib/format";
 import { useLibrary, useSettings } from "../lib/midad";
 
@@ -15,18 +16,22 @@ const isFinished = (b: LibraryBook) => b.progress !== null && b.progress.positio
 const BookCard = ({ book, onSync }: { book: LibraryBook; onSync: () => void }) => {
   const position = book.progress?.position ?? 0;
   return (
-    <div className="group relative flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5 transition-[border-color] duration-150 ease-out hover:border-ink-3">
-      <div className="flex items-center gap-2">
-        <Badge>{plural({ count: book.pageCount, one: "page", many: "pages" })}</Badge>
-        <div className="flex-1" />
-        <IconButton icon={RefreshCw} label="Sync with corpus" onClick={onSync} className="relative z-10 opacity-0 group-hover:opacity-100 focus-visible:opacity-100" />
-      </div>
-      <Link to={`/read/${book.bookId}`} viewTransition className="flex flex-col items-end gap-0.5 text-right after:absolute after:inset-0 after:content-['']">
-        <span className="ar text-ar-body font-bold">{book.title}</span>
-        <span className="ar text-ar-small text-ink-2">{[book.author, book.edition].filter(Boolean).join(" · ") || " "}</span>
+    <div data-book className="group relative flex flex-col gap-3">
+      <Link
+        to={`/read/${book.bookId}`}
+        viewTransition
+        aria-label={book.title}
+        onClick={(e) => markOpeningCover(e.currentTarget)}
+        className="rounded-md transition-[translate,box-shadow] duration-pop ease-out group-hover:-translate-y-0.5 group-hover:shadow-float active:scale-99 motion-reduce:group-hover:translate-y-0"
+      >
+        <BookCover title={book.title} author={[book.author, book.edition].filter(Boolean).join(" · ") || null} size="sm" />
       </Link>
+      <IconButton icon={RefreshCw} label="Sync with corpus" onClick={onSync} className="absolute top-3 right-3 bg-surface opacity-0 group-hover:opacity-100 focus-visible:opacity-100" />
       <Progress value={book.pageCount ? position / book.pageCount : 0} />
-      <span className="text-xs text-ink-3">{position ? `Page ${position} of ${book.pageCount}` : "Not started"}</span>
+      <span className="flex justify-between text-xs text-ink-3">
+        <span>{position ? `Page ${position} of ${book.pageCount}` : "Not started"}</span>
+        <span>{plural({ count: book.pageCount, one: "page", many: "pages" })}</span>
+      </span>
     </div>
   );
 };
@@ -34,21 +39,36 @@ const BookCard = ({ book, onSync }: { book: LibraryBook; onSync: () => void }) =
 const ContinueCard = ({ book }: { book: LibraryBook }) => {
   const navigate = useNavigate();
   const position = book.progress?.position ?? 1;
+  const open = (from: Element) => {
+    markOpeningCover(from);
+    void navigate(`/read/${book.bookId}`, { viewTransition: true });
+  };
+  const author = [book.author, book.edition].filter(Boolean).join(" · ");
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-6">
-      <div className="flex flex-col items-end gap-1 text-right">
-        <span className="ar text-ar-display font-bold">{book.title}</span>
-        <span className="ar text-ar-small text-ink-2">{[book.author, book.edition].filter(Boolean).join(" · ") || " "}</span>
-      </div>
-      <Progress value={position / Math.max(1, book.pageCount)} />
-      <div className="flex items-center gap-4">
-        <Button icon={BookOpen} onClick={() => void navigate(`/read/${book.bookId}`, { viewTransition: true })}>
-          Resume reading
-        </Button>
-        <span className="text-sm text-ink-2">
-          Page {position} of {book.pageCount}
-          {book.progress && ` · last read ${timeAgo(book.progress.updatedAt)}`}
-        </span>
+    <div data-book className="flex items-center gap-8 rounded-2xl border border-line bg-surface p-6">
+      <button
+        type="button"
+        aria-label={`Open ${book.title}`}
+        onClick={(e) => open(e.currentTarget)}
+        className="rounded-md transition-[translate,box-shadow] duration-pop ease-out hover:-translate-y-0.5 hover:shadow-float active:scale-99 motion-reduce:hover:translate-y-0"
+      >
+        <BookCover title={book.title} author={author || null} size="md" />
+      </button>
+      <div className="flex min-w-0 flex-1 flex-col gap-3">
+        <div className="flex flex-col items-end gap-1 text-right">
+          <span className="ar text-ar-display font-bold">{book.title}</span>
+          {author && <span className="ar text-ar-small text-ink-2">{author}</span>}
+        </div>
+        <Progress value={position / Math.max(1, book.pageCount)} />
+        <div className="flex items-center gap-4">
+          <Button icon={BookOpen} onClick={(e) => open(e.currentTarget)}>
+            Resume reading
+          </Button>
+          <span className="text-sm text-ink-2">
+            Page {position} of {book.pageCount}
+            {book.progress && ` · last read ${timeAgo(book.progress.updatedAt)}`}
+          </span>
+        </div>
       </div>
     </div>
   );

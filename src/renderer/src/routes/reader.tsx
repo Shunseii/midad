@@ -403,6 +403,12 @@ export const ReaderRoute = () => {
   }, []);
 
   useEffect(dismiss, [position, dismiss]);
+  // The library names its cover and marks the opening; once the transition has played, page turns use their own name again.
+  useEffect(() => {
+    const timer = setTimeout(() => delete document.documentElement.dataset.opening, 700);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Leaving the reader is a screen change, not a page turn.
   useEffect(
     () => () => {
@@ -922,7 +928,7 @@ export const ReaderRoute = () => {
           }}
         >
           {/* The wide right padding leaves room for the last-read marker in the margin. */}
-          <div className="px-6 py-10 [view-transition-name:reader-page] @3xl:pl-12 @3xl:pr-40">
+          <div data-page-area className="px-6 py-10 [view-transition-name:reader-page] @3xl:pl-12 @3xl:pr-40">
           {page.isPending && (
             <div className="mx-auto flex w-full max-w-160 flex-col gap-4">
               <Skeleton className="h-4 w-full" />

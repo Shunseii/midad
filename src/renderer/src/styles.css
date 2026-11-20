@@ -73,7 +73,7 @@
   --text-ar-small: 1rem;
   --text-ar-small--line-height: 1.75rem;
   --font-mono: ui-monospace, "JetBrains Mono", monospace;
-  --grid-template-columns-shelf: repeat(auto-fill, minmax(16rem, 1fr));
+  --grid-template-columns-shelf: repeat(auto-fill, minmax(11rem, 1fr));
 }
 
 /* The reader's text size scales the page's Arabic type, and nothing outside the page. */
@@ -222,6 +222,32 @@ body {
   animation: page-in-from-right 200ms var(--ease-out) 40ms both;
 }
 
+/*
+ * Opening a book from the library: the cover grows into the page column
+ * (420ms ease-sheet) while everything else crossfades. The old cover fades
+ * quickly and the page shows through over the last part of the move, so the
+ * cover never looks stretched.
+ */
+:root[data-opening] [data-page-area] {
+  view-transition-name: book-cover;
+}
+::view-transition-group(book-cover) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ease-sheet);
+}
+::view-transition-old(book-cover) {
+  animation: page-out 160ms ease-out both;
+}
+::view-transition-new(book-cover) {
+  animation: cover-content-in 420ms ease both;
+}
+@keyframes cover-content-in {
+  0%,
+  30% {
+    opacity: 0;
+  }
+}
+
 /* The page counter changes in place rather than crossfading two numbers. */
 ::view-transition-group(page-counter) {
   animation: none;
@@ -284,5 +310,8 @@ body {
   }
   :root[data-turn]::view-transition-new(reader-page) {
     animation-name: page-fade-in;
+  }
+  ::view-transition-new(book-cover) {
+    animation: page-fade-in 200ms ease both;
   }
 }
