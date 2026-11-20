@@ -15,11 +15,11 @@ const isFinished = (b: LibraryBook) => b.progress !== null && b.progress.positio
 const BookCard = ({ book, onSync }: { book: LibraryBook; onSync: () => void }) => {
   const position = book.progress?.position ?? 0;
   return (
-    <div className="group relative flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5 transition-shadow hover:shadow-md">
+    <div className="group relative flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5 transition-[border-color] duration-150 ease-out hover:border-ink-3">
       <div className="flex items-center gap-2">
         <Badge>{plural({ count: book.pageCount, one: "page", many: "pages" })}</Badge>
         <div className="flex-1" />
-        <IconButton icon={RefreshCw} label="Sync with corpus" onClick={onSync} className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100" />
+        <IconButton icon={RefreshCw} label="Sync with corpus" onClick={onSync} className="relative z-10 opacity-0 group-hover:opacity-100 focus-visible:opacity-100" />
       </div>
       <Link to={`/read/${book.bookId}`} viewTransition className="flex flex-col items-end gap-0.5 text-right after:absolute after:inset-0 after:content-['']">
         <span className="ar text-ar-body font-bold">{book.title}</span>
