@@ -113,7 +113,7 @@ export const LibraryRoute = () => {
       )}
 
       {library.isPending && (
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-shelf gap-6">
           {[0, 1, 2].map((i) => (
             <Skeleton key={i} className="h-44 rounded-2xl" />
           ))}
@@ -145,7 +145,7 @@ export const LibraryRoute = () => {
           {shown.length === 0 ? (
             <p className="py-6 text-sm text-ink-3">No books on this shelf.</p>
           ) : (
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-shelf gap-6">
               {shown.map((b) => (
                 <BookCard key={b.bookId} book={b} onSync={() => setSyncing(b)} />
               ))}

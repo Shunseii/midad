@@ -73,6 +73,7 @@
   --text-ar-small: 1rem;
   --text-ar-small--line-height: 1.75rem;
   --font-mono: ui-monospace, "JetBrains Mono", monospace;
+  --grid-template-columns-shelf: repeat(auto-fill, minmax(16rem, 1fr));
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
