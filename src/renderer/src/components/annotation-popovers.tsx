@@ -65,7 +65,7 @@ export const SelectionToolbar = ({
               aria-label={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
               title={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
               onClick={() => onHighlight(color)}
-              className={cx("mx-0.5 size-5 rounded-full ring-1 ring-line transition-transform hover:scale-110", MARK_BG[color])}
+              className={cx("mx-0.5 size-5 rounded-full ring-1 ring-line ring-offset-surface-3 transition-[box-shadow] duration-pop ease-out hover:ring-2 hover:ring-ink-3 hover:ring-offset-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2", MARK_BG[color])}
             />
           ))
         ) : (

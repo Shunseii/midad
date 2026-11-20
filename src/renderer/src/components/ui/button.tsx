@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 
 // Hover and press tint whatever background a variant has by laying a translucent ink wash over it.
 const pressable =
-  "transition-[box-shadow,background-color,color] duration-150 hover:shadow-[inset_0_0_0_100px_color-mix(in_oklab,var(--color-ink)_6%,transparent)] active:shadow-[inset_0_0_0_100px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]"
+  "transition-[box-shadow,background-color,color,scale] duration-press ease-out active:scale-97 hover:shadow-[inset_0_0_0_100px_color-mix(in_oklab,var(--color-ink)_6%,transparent)] active:shadow-[inset_0_0_0_100px_color-mix(in_oklab,var(--color-ink)_12%,transparent)]"
 
 const buttonVariants = cva(
   [

@@ -18,7 +18,7 @@ function Progress({
     >
       {children}
       <ProgressTrack>
-        <ProgressIndicator />
+        <ProgressIndicator style={{ width: "100%", transform: `scaleX(${(value ?? 0) / 100})` }} />
       </ProgressTrack>
     </ProgressPrimitive.Root>
   )
@@ -44,7 +44,7 @@ function ProgressIndicator({
   return (
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
-      className={cn("h-full rounded-full bg-primary transition-[width] duration-300", className)}
+      className={cn("h-full origin-left rounded-full bg-primary transition-transform duration-panel ease-out", className)}
       {...props}
     />
   )
