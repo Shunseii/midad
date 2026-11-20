@@ -12,7 +12,7 @@ const COLOR_NAMES: Record<HighlightColor, string> = { yellow: "Yellow", green: "
 const toAnchor = (rect: DOMRect) => ({ getBoundingClientRect: () => rect });
 
 /** Shared by the note layer and the selection toolbar: no chrome of its own, grows from the anchor, and takes no focus. */
-const FLOATING_LAYER = "w-auto gap-0 rounded-none bg-transparent p-0 shadow-none ring-0 duration-150 data-closed:pointer-events-none motion-reduce:animate-none";
+const FLOATING_LAYER = "w-auto gap-0 rounded-none bg-transparent p-0 shadow-none ring-0 duration-pop data-closed:duration-pop-exit data-closed:pointer-events-none";
 
 export const SelectionToolbar = ({
   open,

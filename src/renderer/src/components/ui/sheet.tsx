@@ -26,7 +26,7 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
     <SheetPrimitive.Backdrop
       data-slot="sheet-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-scrim transition-opacity duration-240 ease-out data-ending-style:opacity-0 data-ending-style:duration-180 data-starting-style:opacity-0 motion-reduce:transition-none",
+        "fixed inset-0 z-50 bg-scrim transition-opacity duration-panel ease-out data-ending-style:opacity-0 data-ending-style:duration-panel-exit data-starting-style:opacity-0",
         className
       )}
       {...props}
@@ -51,7 +51,7 @@ function SheetContent({
         data-slot="sheet-content"
         data-side={side}
         className={cn(
-          "fixed z-50 flex bg-popover text-popover-foreground shadow-float outline-hidden transition-transform duration-240 ease-out data-ending-style:duration-180 motion-reduce:transition-none",
+          "fixed z-50 flex bg-popover text-popover-foreground shadow-float outline-hidden transition-transform duration-panel ease-sheet data-ending-style:duration-panel-exit motion-reduce:transition-opacity motion-reduce:data-ending-style:opacity-0 motion-reduce:data-starting-style:opacity-0",
           "data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:data-ending-style:-translate-x-full data-[side=left]:data-starting-style:-translate-x-full",
           "data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:data-ending-style:translate-x-full data-[side=right]:data-starting-style:translate-x-full",
           "data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:data-ending-style:-translate-y-full data-[side=top]:data-starting-style:-translate-y-full",
