@@ -12,7 +12,7 @@ import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annota
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
 import { ScanPane } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
-import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
+import { IconButton, Kbd, Skeleton, Switch, Toast, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
@@ -355,6 +355,7 @@ export const ReaderRoute = () => {
   const sideWidth = asking ? (askWidth ?? Math.max(ASK_WIDTH, panelWidth + ASK_EXTRA)) : panelWidth;
   const setSideWidth = asking ? setAskWidth : setPanelWidth;
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
+  const [removal, setRemoval] = useState<{ id: number; message: string } | null>(null);
   // Kept after closing so the toolbar can animate out with its content.
   const lastToolbar = useRef<Toolbar | null>(null);
   if (toolbar) lastToolbar.current = toolbar;
@@ -432,6 +433,7 @@ export const ReaderRoute = () => {
     setToolbar(null);
     setNoteEditor(null);
     setTarget(null);
+    setRemoval(null);
   }, []);
 
   useEffect(dismiss, [position, dismiss]);
@@ -625,9 +627,13 @@ export const ReaderRoute = () => {
 
   const typeMark = (ref: LetterRef, typed: string) => editMarks(ref, mergeMarks({ existing: mineAt(ref), typed }));
 
+  const announceRemoval = (message: string) => setRemoval({ id: Date.now(), message });
+
   const removeHighlight = (id: string) => {
     const h = annotations.data?.highlights.find((x) => x.id === id);
-    if (h) void edits().removeHighlight({ id, span: h.span, color: h.color });
+    if (!h) return;
+    void edits().removeHighlight({ id, span: h.span, color: h.color });
+    announceRemoval("Highlight removed");
   };
 
   const noteWrites = {
@@ -640,11 +646,14 @@ export const ReaderRoute = () => {
     },
     remove: async (id: string) => {
       const n = annotations.data?.notes.find((x) => x.id === id);
-      if (n) await edits().deleteNote({ id, span: n.span, body: n.body });
+      if (!n) return;
+      await edits().deleteNote({ id, span: n.span, body: n.body });
+      announceRemoval("Note deleted");
     },
   };
 
   const step = (direction: "undo" | "redo") => {
+    setRemoval(null);
     void edits()
       [direction]()
       .then((change) => {
@@ -816,6 +825,17 @@ export const ReaderRoute = () => {
   return (
     <div className="flex h-full flex-col">
       <ZoomLevel scale={textScale} shown={zoomShown} />
+      {removal && (
+        <Toast key={removal.id} onDone={() => setRemoval(null)}>
+          <span className="flex items-center gap-3">
+            {removal.message}
+            <button type="button" onClick={() => step("undo")} className="-my-1 rounded-md px-2 py-1 font-semibold hover:bg-bg/15">
+              Undo
+            </button>
+            <span className="text-xs opacity-60">Ctrl+Z</span>
+          </span>
+        </Toast>
+      )}
       {/* z-20: the view-transition name makes the header its own stacking layer, and its display menu must sit above the page. */}
       <header className="relative z-20 flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4 [view-transition-name:reader-header]">
         <Link to="/" viewTransition aria-label="Back to Library">
@@ -972,6 +992,7 @@ export const ReaderRoute = () => {
                 if (touched.length === 0) return undefined;
                 return () => {
                   void edits().clearHighlights(touched.map((h) => ({ id: h.id, span: h.span, color: h.color })));
+                  announceRemoval(touched.length === 1 ? "Highlight removed" : `${touched.length} highlights removed`);
                   finishToolbar();
                 };
               })()}
@@ -979,6 +1000,7 @@ export const ReaderRoute = () => {
                 shown.mode === "selection" && annotations.data?.harakat.some((h) => !h.stale && spanContains({ span: shown.span, part: h.part, ref: h }))
                   ? () => {
                       void edits().clearMarks(shown.span);
+                      announceRemoval("Your harakat cleared");
                       finishToolbar();
                     }
                   : undefined
