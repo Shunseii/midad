@@ -323,14 +323,14 @@ export const AskPanel = ({
       )}
       <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-5">
         {activeSelection && (
-          <div className="flex flex-col gap-1 rounded-xl border-r-2 border-accent bg-surface-2 px-4 py-3">
+          <div className="flex flex-col gap-2 rounded-xl bg-surface-2 px-4 py-3">
             <div className="flex items-center gap-1.5 text-xs text-ink-3">
               <TextQuote aria-hidden className="size-3.5" />
               Selected on page {arabicNumber(pageNumber)}
               <span className="flex-1" />
               <IconButton icon={X} label="Clear selection" onClick={onClearSelection} />
             </div>
-            <p className="ar text-right text-ar-body">{activeSelection.text}</p>
+            <p className="ar border-r-2 border-accent pr-3 text-right text-ar-body">{activeSelection.text}</p>
           </div>
         )}
 
