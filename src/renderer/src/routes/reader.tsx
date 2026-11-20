@@ -20,7 +20,8 @@ import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
 import { midad, keys, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker } from "../lib/midad";
 import { usePref } from "../lib/prefs";
-import { usePageWidth } from "../lib/appearance";
+import { useFocusMode, usePageWidth } from "../lib/appearance";
+import { useFocusChrome } from "../lib/use-focus-chrome";
 import { neighbourPages } from "../lib/neighbours";
 
 interface TocEntry {
@@ -252,6 +253,26 @@ const moveTarget = ({ page, target, delta }: { page: StoredPage["page"]; target:
   for (let next = step(target); next; next = step(next)) if (takesHarakat({ page, ref: next })) return next;
   return target;
 };
+
+/**
+ * What focus mode leaves of the chrome: a thin line along the top that shows
+ * how far through the book the reader is (filling right to left), and a dot
+ * per contents entry where the rail was. Both fade in as the bars step aside.
+ */
+const FocusTrace = ({ shown, progress, dots }: { shown: boolean; progress: number; dots: boolean[] }) => (
+  <div aria-hidden data-state={shown ? "shown" : "hidden"} className="group/trace pointer-events-none absolute inset-0 z-30">
+    <div className="absolute inset-x-0 top-0 h-0.5 bg-line opacity-0 transition-opacity duration-panel ease-sheet group-data-[state=shown]/trace:opacity-100">
+      <div style={{ transform: `scaleX(${progress})` }} className="h-full origin-right bg-accent" />
+    </div>
+    {dots.length > 0 && (
+      <div className="absolute top-24 left-3 flex flex-col gap-3 opacity-0 transition-opacity duration-panel ease-sheet group-data-[state=shown]/trace:opacity-100">
+        {dots.map((on, i) => (
+          <span key={i} className={cx("size-1.5 rounded-full", on ? "bg-accent" : "bg-line")} />
+        ))}
+      </div>
+    )}
+  </div>
+);
 
 export const ReaderRoute = () => {
   const { bookId = "" } = useParams();
@@ -730,6 +751,21 @@ export const ReaderRoute = () => {
     );
   }
 
+  // Focus mode: the top bar and contents step aside while reading, unless something needs them.
+  const [focusMode] = useFocusMode();
+  const [selecting, setSelecting] = useState(false);
+  useEffect(() => {
+    const onChange = () => setSelecting(!(window.getSelection()?.isCollapsed ?? true));
+    document.addEventListener("selectionchange", onChange);
+    return () => document.removeEventListener("selectionchange", onChange);
+  }, []);
+  const [overChrome, setOverChrome] = useState(false);
+  const chromeHover = { onMouseEnter: () => setOverChrome(true), onMouseLeave: () => setOverChrome(false) };
+  const focused = useFocusChrome({
+    enabled: focusMode,
+    held: menuOpen || toolbar !== null || noteEditor !== null || selecting || overChrome || (!wide && (contentsOpen || panelOpen)),
+  });
+
   const sidePanel = (
     <AnnotationsPanel
       tab={panelTab}
@@ -768,8 +804,15 @@ export const ReaderRoute = () => {
   );
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col">
       <ZoomLevel scale={textScale} shown={zoomShown} />
+      {focusMode && (
+        <FocusTrace
+          shown={focused}
+          progress={total ? position / total : 0}
+          dots={wide && contentsOpen ? toc.map((_, i) => activeEntries.includes(i)) : []}
+        />
+      )}
       {removal && (
         <Toast key={removal.id} onDone={() => setRemoval(null)}>
           <span className="flex items-center gap-3">
@@ -782,7 +825,11 @@ export const ReaderRoute = () => {
         </Toast>
       )}
       {/* z-20: the view-transition name makes the header its own stacking layer, and its display menu must sit above the page. */}
-      <header className="relative z-20 flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4 [view-transition-name:reader-header]">
+      <header
+        {...chromeHover}
+        data-focus={focused ? "hidden" : undefined}
+        className="relative z-20 flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4 transition-[translate,opacity] duration-panel ease-sheet [view-transition-name:reader-header] data-[focus=hidden]:pointer-events-none data-[focus=hidden]:-translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
+      >
         <Link to="/" viewTransition aria-label="Back to Library">
           <IconButton icon={ArrowLeft} label="Back to Library" tabIndex={-1} />
         </Link>
@@ -835,7 +882,13 @@ export const ReaderRoute = () => {
       <div className="flex min-h-0 flex-1">
         {wide ? (
           <InlinePanel side="left" open={contentsOpen} width={CONTENTS_WIDTH}>
-            <ContentsRail entries={toc} active={activeEntries} markerAt={marker.data?.position ?? null} onGo={go} />
+            <div
+              {...chromeHover}
+              data-focus={focused ? "hidden" : undefined}
+              className="flex transition-[translate,opacity] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:-translate-x-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
+            >
+              <ContentsRail entries={toc} active={activeEntries} markerAt={marker.data?.position ?? null} onGo={go} />
+            </div>
           </InlinePanel>
         ) : (
           <SideSheet side="left" title="Contents" open={contentsOpen} onOpenChange={setContentsOpen}>
@@ -904,7 +957,9 @@ export const ReaderRoute = () => {
         </div>
         {wide ? (
           <InlinePanel side="right" open={panelOpen} width={sideWidth}>
-            {sidePanel}
+            <div {...chromeHover} className="flex">
+              {sidePanel}
+            </div>
           </InlinePanel>
         ) : (
           <SideSheet side="right" title={panelTab === "ask" ? "Ask AI" : "Highlights and notes"} open={panelOpen} onOpenChange={setPanelOpen}>
