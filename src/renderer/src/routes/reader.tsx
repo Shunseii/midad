@@ -82,8 +82,12 @@ const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) =>
   words[0]?.scrollIntoView({ block: "center", behavior: "smooth" });
   for (const el of words) {
     el.animate(
-      [{ boxShadow: "inset 0 -0.6em 0 var(--color-accent-soft)" }, { boxShadow: "inset 0 -0.6em 0 transparent" }],
-      { duration: 1600, easing: "ease-out" },
+      [
+        { backgroundColor: "var(--color-accent-soft)" },
+        { backgroundColor: "var(--color-accent-soft)", offset: 0.6 },
+        { backgroundColor: "transparent" },
+      ],
+      { duration: 3000, easing: "ease-out" },
     );
   }
 };
