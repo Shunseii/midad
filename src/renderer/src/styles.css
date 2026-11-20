@@ -74,15 +74,6 @@
   --text-ar-small--line-height: 1.75rem;
   --font-mono: ui-monospace, "JetBrains Mono", monospace;
   --grid-template-columns-shelf: repeat(auto-fill, minmax(16rem, 1fr));
-  /* Motion: ease-out for entering and leaving, ease-sheet for panels, ease-move for things moving on screen. */
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
-  --ease-move: cubic-bezier(0.645, 0.045, 0.355, 1);
-  --transition-duration-press: 120ms;
-  --transition-duration-pop: 160ms;
-  --transition-duration-pop-exit: 100ms;
-  --transition-duration-panel: 240ms;
-  --transition-duration-panel-exit: 180ms;
 }
 
 /* The reader's text size scales the page's Arabic type, and nothing outside the page. */

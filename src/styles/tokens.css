@@ -28,6 +28,16 @@
   --font-body: "Inter Variable", "Inter", sans-serif;
   --font-sans: var(--font-body);
   --font-ar: "Noto Naskh Arabic", serif;
+
+  /* Motion: ease-out for entering and leaving, ease-sheet for panels, ease-move for things moving on screen. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-move: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --transition-duration-press: 120ms;
+  --transition-duration-pop: 160ms;
+  --transition-duration-pop-exit: 100ms;
+  --transition-duration-panel: 240ms;
+  --transition-duration-panel-exit: 180ms;
 }
 
 :root {
