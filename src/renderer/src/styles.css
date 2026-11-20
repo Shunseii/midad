@@ -168,45 +168,56 @@ body {
 }
 
 ::view-transition-group(reader-page) {
-  animation-duration: 220ms;
+  animation-duration: 200ms;
   animation-timing-function: var(--ease-out);
 }
 
-:root[data-turn="forward"]::view-transition-old(reader-page) {
-  animation: page-out-right 220ms var(--ease-out) both;
+/*
+ * Turning a page: the old page only fades, quickly, so the two never sit on
+ * top of each other; the new one follows a beat later, sliding in from the
+ * side the reader is heading (the next page comes from the left).
+ */
+::view-transition-old(reader-page) {
+  animation: page-out 90ms ease-out both;
 }
 :root[data-turn="forward"]::view-transition-new(reader-page) {
-  animation: page-in-from-left 220ms var(--ease-out) both;
-}
-:root[data-turn="back"]::view-transition-old(reader-page) {
-  animation: page-out-left 220ms var(--ease-out) both;
+  animation: page-in-from-left 200ms var(--ease-out) 40ms both;
 }
 :root[data-turn="back"]::view-transition-new(reader-page) {
-  animation: page-in-from-right 220ms var(--ease-out) both;
+  animation: page-in-from-right 200ms var(--ease-out) 40ms both;
 }
 
-@keyframes page-out-right {
-  to {
-    opacity: 0;
-    translate: 2rem 0;
-  }
+/* The page counter changes in place rather than crossfading two numbers. */
+::view-transition-group(page-counter) {
+  animation: none;
 }
-@keyframes page-out-left {
+::view-transition-old(page-counter) {
+  display: none;
+}
+::view-transition-new(page-counter) {
+  animation: none;
+}
+
+@keyframes page-out {
   to {
     opacity: 0;
-    translate: -2rem 0;
   }
 }
 @keyframes page-in-from-left {
   from {
     opacity: 0;
-    translate: -2rem 0;
+    translate: -1.5rem 0;
   }
 }
 @keyframes page-in-from-right {
   from {
     opacity: 0;
-    translate: 2rem 0;
+    translate: 1.5rem 0;
+  }
+}
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
   }
 }
 
@@ -233,9 +244,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
+  ::view-transition-group(*) {
     animation: none !important;
+  }
+  :root[data-turn]::view-transition-new(reader-page) {
+    animation-name: page-fade-in;
   }
 }

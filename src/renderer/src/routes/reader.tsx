@@ -21,6 +21,7 @@ import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
 import { midad, keys, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker } from "../lib/midad";
 import { usePref } from "../lib/prefs";
 import { usePageWidth } from "../lib/appearance";
+import { neighbourPages } from "../lib/neighbours";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -284,6 +285,13 @@ export const ReaderRoute = () => {
   const annotations = useAnnotations({ bookId, position });
   const actions = useAnnotationActions({ bookId, position });
   const toc = useMemo(() => (book.data ? tableOfContents(book.data) : []), [book.data]);
+  // Load the pages either side ahead of time, so a page turn's snapshot never catches a loading page.
+  useEffect(() => {
+    for (const p of neighbourPages({ position, total: book.data?.pageCount ?? 0 })) {
+      void client.prefetchQuery({ queryKey: keys.page(bookId, p), queryFn: () => midad["library.page"]({ bookId, position: p }) });
+      void client.prefetchQuery({ queryKey: keys.annotations(bookId, p), queryFn: () => midad["annotations.list"]({ bookId, position: p }) });
+    }
+  }, [client, bookId, position, book.data?.pageCount]);
   const chapterTitle = toc[entryIndexFor(toc, position)]?.text ?? null;
   const [pageWidth] = usePageWidth();
   const [onScreen, setOnScreen] = useState<{ position: number; lines: number[] }>({ position, lines: [] });
@@ -754,7 +762,7 @@ export const ReaderRoute = () => {
         </div>
         <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1">
           <IconButton icon={ChevronLeft} label="Next page" onClick={() => go(position + 1)} disabled={position >= total} />
-          <span className="min-w-20 text-center text-sm font-medium tabular-nums">
+          <span className="min-w-20 text-center text-sm font-medium tabular-nums [view-transition-name:page-counter]">
             {position} of {total || "–"}
           </span>
           <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
