@@ -1,6 +1,6 @@
 {
   "$schema": "https://lamsa.dev/schema/v1.json",
-  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%,\n  60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 180ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 220ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n:active-view-transition-type(forward)::view-transition-old(reader-page) {\n  animation-name: page-out-right;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-from-left;\n}\n\n:active-view-transition-type(back)::view-transition-old(reader-page) {\n  animation-name: page-out-left;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-from-right;\n}\n\n@keyframes page-out-right {\n  to {\n    opacity: 0;\n    translate: 2rem 0;\n  }\n}\n\n@keyframes page-out-left {\n  to {\n    opacity: 0;\n    translate: -2rem 0;\n  }\n}\n\n@keyframes page-in-from-left {\n  from {\n    opacity: 0;\n    translate: -2rem 0;\n  }\n}\n\n@keyframes page-in-from-right {\n  from {\n    opacity: 0;\n    translate: 2rem 0;\n  }\n}\n",
+  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%,\n  60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 180ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 220ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n:active-view-transition-type(forward)::view-transition-old(reader-page) {\n  animation-name: page-out-right;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-from-left;\n}\n\n:active-view-transition-type(back)::view-transition-old(reader-page) {\n  animation-name: page-out-left;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-from-right;\n}\n\n@keyframes page-out-right {\n  to {\n    opacity: 0;\n    translate: 2rem 0;\n  }\n}\n\n@keyframes page-out-left {\n  to {\n    opacity: 0;\n    translate: -2rem 0;\n  }\n}\n\n@keyframes page-in-from-left {\n  from {\n    opacity: 0;\n    translate: -2rem 0;\n  }\n}\n\n@keyframes page-in-from-right {\n  from {\n    opacity: 0;\n    translate: 2rem 0;\n  }\n}\n\n@media (prefers-reduced-motion: reduce) {\n  ::view-transition-group(*),\n  ::view-transition-old(*),\n  ::view-transition-new(*) {\n    animation: none !important;\n  }\n}\n",
   "nodes": {
     "YfP2SLAF": {
       "componentId": "RV1DOgzp",
@@ -1482,10 +1482,9 @@
       "name": "Display menu",
       "parentId": "3OipRKir",
       "style": {
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": 12,
-        "box-shadow": "{shadow.lg}",
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
         "direction": "ltr",
         "display": "flex",
         "flex-direction": "column",
@@ -2411,13 +2410,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "3ATQS6ml": {
       "index": "a006",
@@ -3799,7 +3799,7 @@
         "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 12,
@@ -4208,10 +4208,9 @@
       "name": "Note popover",
       "parentId": "baRqbR43",
       "style": {
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": 12,
-        "box-shadow": "{shadow.lg}",
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
         "direction": "ltr",
         "display": "flex",
         "flex-direction": "column",
@@ -4226,7 +4225,8 @@
         "z-index": 5,
         "top": "calc(100% + 8px)"
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: top center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 -8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}"
     },
     "6KagQ7MX": {
       "index": "a002",
@@ -6669,13 +6669,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "AEugSK8R": {
       "componentId": "RV1DOgzp",
@@ -6976,13 +6977,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "AffnS7AP": {
       "index": "a001",
@@ -8271,7 +8273,7 @@
         "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 12,
@@ -9968,13 +9970,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "EvGsRVEo": {
       "content": "Selected on page 3",
@@ -10091,7 +10094,7 @@
         "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 12,
@@ -11906,10 +11909,10 @@
       "parentId": "83GprDoh",
       "style": {
         "color": "{color.ink}",
-        "font-family": "{font.display}",
-        "font-size": 24,
+        "font-family": "{font.body}",
+        "font-size": 17,
         "font-weight": 600,
-        "line-height": "32px"
+        "line-height": "24px"
       },
       "type": "text"
     },
@@ -12094,14 +12097,15 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "opacity": 0.5,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "HZtjreow": {
       "index": "a001",
@@ -12991,10 +12995,9 @@
       "parentId": "yd1fiFK6",
       "style": {
         "align-items": "center",
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": 12,
-        "box-shadow": "{shadow.lg}",
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
         "display": "flex",
         "gap": 4,
         "padding": 6,
@@ -13003,7 +13006,8 @@
         "top": 98,
         "z-index": 2
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: bottom center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}"
     },
     "IpmtJFpT": {
       "content": "Last highlight",
@@ -15028,13 +15032,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "M1hR7qOe": {
       "content": "Here بالوضع most likely means by intent (القصد) ",
@@ -16236,13 +16241,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "Nsny01Xx": {
       "content": "3 / 24",
@@ -17098,10 +17104,9 @@
       "name": "Display menu",
       "parentId": "liVZLqKX",
       "style": {
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": 12,
-        "box-shadow": "{shadow.lg}",
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
         "direction": "ltr",
         "display": "flex",
         "flex-direction": "column",
@@ -17233,13 +17238,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "Pr3RqzTX": {
       "index": "a000",
@@ -18688,7 +18694,7 @@
       "style": {
         "display": "grid",
         "gap": 20,
-        "grid-template-columns": "repeat(3, 1fr)"
+        "grid-template-columns": "repeat(auto-fill, minmax(16rem, 1fr))"
       },
       "type": "frame"
     },
@@ -18906,7 +18912,7 @@
         "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 12,
@@ -22544,7 +22550,7 @@
       "style": {
         "display": "grid",
         "gap": 20,
-        "grid-template-columns": "repeat(3, 1fr)"
+        "grid-template-columns": "repeat(auto-fill, minmax(16rem, 1fr))"
       },
       "type": "frame"
     },
@@ -23238,14 +23244,15 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "opacity": 0.5,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "adTo7Znt": {
       "content": "6 highlights",
@@ -23772,7 +23779,7 @@
       "style": {
         "display": "grid",
         "gap": 20,
-        "grid-template-columns": "repeat(3, 1fr)"
+        "grid-template-columns": "repeat(auto-fill, minmax(16rem, 1fr))"
       },
       "type": "frame"
     },
@@ -24267,7 +24274,7 @@
         "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 12,
@@ -27785,10 +27792,9 @@
       "parentId": "aTnqsNVQ",
       "style": {
         "align-items": "center",
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": 12,
-        "box-shadow": "{shadow.lg}",
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
         "display": "flex",
         "gap": 4,
         "padding": 6,
@@ -27797,7 +27803,8 @@
         "top": 98,
         "z-index": 2
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: bottom center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}"
     },
     "hsJxqQN6": {
       "content": "، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
@@ -29044,13 +29051,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "kDC8h8S7": {
       "content": "بابُ الكلامِ",
@@ -31068,7 +31076,7 @@
       "style": {
         "display": "grid",
         "gap": 20,
-        "grid-template-columns": "repeat(3, 1fr)"
+        "grid-template-columns": "repeat(auto-fill, minmax(16rem, 1fr))"
       },
       "type": "frame"
     },
@@ -33775,13 +33783,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "rneRZGaw": {
       "componentId": "uJd03iQq",
@@ -36529,7 +36538,7 @@
         "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 12,
@@ -37290,10 +37299,9 @@
       "name": "Note popover",
       "parentId": "bqzShDfd",
       "style": {
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": 12,
-        "box-shadow": "{shadow.lg}",
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
         "direction": "ltr",
         "display": "flex",
         "flex-direction": "column",
@@ -37308,7 +37316,8 @@
         "width": 432,
         "z-index": 5
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: top center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 -8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}"
     },
     "xTivXUXM": {
       "index": "a001",
@@ -37692,13 +37701,14 @@
       "style": {
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
-        "border-radius": 14,
+        "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column",
         "gap": 10,
         "padding": 20
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition: border-color 150ms {ease.out};\n\n&:hover {\n  border-color: {color.ink-3};\n}"
     },
     "yGmEyFGh": {
       "mode": "light",
@@ -45149,7 +45159,7 @@
     "zEcCJa4W": {
       "type": "frame",
       "name": "Note peek",
-      "css": "cursor: pointer;\ntransition: border-color 150ms;\n\n&:hover {\n  border-color: {color.accent};\n}",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: top center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 -8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}\n\ncursor: pointer;\n\n&:hover {\n  box-shadow: var(--elevation-float), 0 0 0 1px {color.accent};\n}",
       "style": {
         "position": "absolute",
         "top": "calc(100% + 8px)",
@@ -45160,10 +45170,9 @@
         "flex-direction": "column",
         "gap": 6,
         "padding": "10px 12px",
-        "border-radius": 8,
-        "border": "1px solid {color.line}",
-        "background": "{color.surface}",
-        "box-shadow": "{shadow.md}",
+        "border-radius": "{radius.xl}",
+        "background": "{color.surface-3}",
+        "box-shadow": "var(--elevation-float)",
         "direction": "ltr",
         "text-align": "left",
         "white-space": "normal",
@@ -46755,10 +46764,9 @@
       "parentId": "Ub9DHd2t",
       "style": {
         "align-items": "center",
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": 12,
-        "box-shadow": "{shadow.lg}",
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
         "display": "flex",
         "gap": 4,
         "padding": 6,
@@ -46767,7 +46775,8 @@
         "top": 98,
         "z-index": 2
       },
-      "type": "frame"
+      "type": "frame",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: bottom center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}"
     },
     "6xKItIxK": {
       "index": "a004",
@@ -52133,10 +52142,10 @@
       "parentId": "qc4plsPC",
       "style": {
         "color": "{color.ink}",
-        "font-family": "{font.display}",
-        "font-size": 24,
+        "font-family": "{font.body}",
+        "font-size": 17,
         "font-weight": 600,
-        "line-height": "32px"
+        "line-height": "24px"
       },
       "type": "text"
     },
@@ -54888,7 +54897,7 @@
     "AqJFjCnA": {
       "type": "frame",
       "name": "Contents sheet",
-      "css": "transition: translate 240ms ease-out;\n\n@starting-style {\n  translate: -100% 0;\n}\n\n&[data-state=\"closed\"] {\n  translate: -100% 0;\n  transition-duration: 180ms;\n}",
+      "css": "transition:\n  translate {transition.duration-panel} {ease.sheet},\n  opacity {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  translate: -100% 0;\n}\n\n&[data-state=\"closed\"] {\n  translate: -100% 0;\n  transition-duration: {transition.duration-panel-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    translate: none;\n    opacity: 0;\n  }\n}",
       "style": {
         "position": "absolute",
         "top": 0,
@@ -54896,7 +54905,7 @@
         "left": 0,
         "display": "flex",
         "max-width": "90%",
-        "box-shadow": "{shadow.lg}",
+        "box-shadow": "var(--elevation-float)",
         "z-index": 50
       },
       "parentId": "52MKRFiF",
@@ -56461,7 +56470,7 @@
     "i8s1OzHV": {
       "type": "frame",
       "name": "Side sheet",
-      "css": "transition: translate 240ms ease-out;\n\n@starting-style {\n  translate: 100% 0;\n}\n\n&[data-state=\"closed\"] {\n  translate: 100% 0;\n  transition-duration: 180ms;\n}",
+      "css": "transition:\n  translate {transition.duration-panel} {ease.sheet},\n  opacity {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  translate: 100% 0;\n}\n\n&[data-state=\"closed\"] {\n  translate: 100% 0;\n  transition-duration: {transition.duration-panel-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    translate: none;\n    opacity: 0;\n  }\n}",
       "style": {
         "position": "absolute",
         "top": 0,
@@ -56469,7 +56478,7 @@
         "right": 0,
         "display": "flex",
         "max-width": "90%",
-        "box-shadow": "{shadow.lg}",
+        "box-shadow": "var(--elevation-float)",
         "z-index": 50
       },
       "parentId": "BMF1zllh",
@@ -57932,7 +57941,7 @@
     "rrVZmaPT": {
       "type": "frame",
       "name": "Side sheet",
-      "css": "transition: translate 240ms ease-out;\n\n@starting-style {\n  translate: 100% 0;\n}\n\n&[data-state=\"closed\"] {\n  translate: 100% 0;\n  transition-duration: 180ms;\n}",
+      "css": "transition:\n  translate {transition.duration-panel} {ease.sheet},\n  opacity {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  translate: 100% 0;\n}\n\n&[data-state=\"closed\"] {\n  translate: 100% 0;\n  transition-duration: {transition.duration-panel-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    translate: none;\n    opacity: 0;\n  }\n}",
       "style": {
         "position": "absolute",
         "top": 0,
@@ -57940,7 +57949,7 @@
         "right": 0,
         "display": "flex",
         "max-width": "90%",
-        "box-shadow": "{shadow.lg}",
+        "box-shadow": "var(--elevation-float)",
         "z-index": 50
       },
       "parentId": "L0APUO58",
