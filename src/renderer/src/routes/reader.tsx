@@ -11,7 +11,7 @@ import { useMediaQuery } from "../lib/media";
 import { NoteEditor, NoteLayer, NotePeek, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
-import { ScanPane } from "../components/scan-pane";
+import { ScanPane, ScanSlot } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Skeleton, Toast, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
@@ -898,7 +898,9 @@ export const ReaderRoute = () => {
           )}
           </div>
         </div>
-        {showScan && page.data && <ScanPane bookId={bookId} fileId={page.data.fileId} onClose={() => setShowScan(false)} />}
+        <ScanSlot open={showScan && !!page.data}>
+          {page.data && <ScanPane bookId={bookId} fileId={page.data.fileId} onClose={() => setShowScan(false)} />}
+        </ScanSlot>
         </div>
         {wide ? (
           <InlinePanel side="right" open={panelOpen} width={sideWidth}>
