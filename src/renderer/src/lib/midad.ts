@@ -153,21 +153,3 @@ try {
 } catch {
   // Storage can be unavailable; there is nothing to carry over then.
 }
-
-/** Reader display preferences are per-viewer conveniences, kept in localStorage. */
-export const readPref = <T>({ key, fallback }: { key: string; fallback: T }): T => {
-  try {
-    const raw = localStorage.getItem(`midad.${key}`);
-    return raw === null ? fallback : (JSON.parse(raw) as T);
-  } catch {
-    return fallback;
-  }
-};
-
-export const writePref = ({ key, value }: { key: string; value: unknown }) => {
-  try {
-    localStorage.setItem(`midad.${key}`, JSON.stringify(value));
-  } catch {
-    // Storage can be unavailable; preferences then last for the session only.
-  }
-};

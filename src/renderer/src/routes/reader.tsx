@@ -17,7 +17,8 @@ import { rememberCopy } from "../lib/copied";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
-import { midad, keys, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/midad";
+import { midad, keys, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker } from "../lib/midad";
+import { usePref } from "../lib/prefs";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -44,18 +45,6 @@ const PANEL_WIDTH = 400;
 /** Ask AI opens wider than highlights and notes, until the reader sizes it themselves. */
 const ASK_WIDTH = 560;
 const ASK_EXTRA = 120;
-
-const usePref = <T,>({ key, fallback }: { key: string; fallback: T }) => {
-  const [value, setValue] = useState<T>(() => readPref({ key, fallback }));
-  const update = useCallback(
-    (next: T) => {
-      setValue(next);
-      writePref({ key, value: next });
-    },
-    [key],
-  );
-  return [value, update] as const;
-};
 
 type Toolbar =
   | { mode: "selection"; span: Span; rect: DOMRect; text: string }
