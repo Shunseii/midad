@@ -466,7 +466,7 @@ export const PageView = ({
       >
         <header className="mb-6 flex items-baseline justify-between gap-6 border-b border-line pb-3 text-ink-3" dir="rtl">
           <span className="ar truncate text-ar-small">{t(bookTitle)}</span>
-          <span className="ar truncate text-ar-small">{t(chapter ?? page.header ?? "")}</span>
+          <span className="ar truncate text-ar-small">{chapter && t(chapter)}</span>
         </header>
         {page.matn.length === 0 && <p className="py-12 text-center text-sm text-ink-3">This page has no main text.</p>}
         {page.matn.map((b) =>
