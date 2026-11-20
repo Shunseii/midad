@@ -1,5 +1,9 @@
 import { Minus, Plus, Type } from "lucide-react";
-import { IconButton, Kbd, Switch, cx } from "./ui";
+import type { ReactNode } from "react";
+import type { Theme } from "../../../shared/ipc";
+import { type PageWidth, useFocusMode, usePageWidth, useTheme } from "../lib/appearance";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { IconButton, Kbd, Segmented, Switch, cx } from "./ui";
 
 /** The text sizes the reader steps through, as multiples of the normal size. */
 export const TEXT_SCALES = [0.875, 1, 1.125, 1.25, 1.5, 1.75, 2];
@@ -28,28 +32,60 @@ export const stepScale = ({ scale, by }: { scale: number; by: 1 | -1 }) => {
   return TEXT_SCALES[index] ?? 1;
 };
 
-export const TextSize = ({ scale, onScale }: { scale: number; onScale: (v: number) => void }) => (
-  <div className="flex items-center gap-3">
-    <div className="flex flex-1 flex-col gap-0.5">
-      <span className="text-sm font-medium">Text size</span>
-      <span className="text-xs text-ink-3">The page's Arabic text</span>
+const Row = ({
+  title,
+  hint,
+  shortcut,
+  stacked = false,
+  children,
+}: {
+  title: string;
+  hint: ReactNode;
+  shortcut?: string;
+  /** Puts the control on its own line under the title, for wider controls. */
+  stacked?: boolean;
+  children: ReactNode;
+}) => (
+  <div className={cx("flex gap-3", stacked ? "flex-col items-start gap-2" : "items-center")}>
+    <div className="flex flex-1 flex-col gap-0.5 self-stretch">
+      <span className="flex items-center gap-2 text-sm font-medium">
+        {title}
+        {shortcut && <Kbd>{shortcut}</Kbd>}
+      </span>
+      <span className="text-xs text-ink-3">{hint}</span>
     </div>
+    {children}
+  </div>
+);
+
+const Section = ({ title, children }: { title: string; children: ReactNode }) => (
+  <section className="flex flex-col gap-3.5">
+    <h3 className="text-overline font-semibold uppercase tracking-widest text-ink-3">{title}</h3>
+    {children}
+  </section>
+);
+
+const TextSize = ({ scale, onScale }: { scale: number; onScale: (v: number) => void }) => (
+  <Row title="Text size" hint="The page's Arabic text" shortcut="Ctrl ±">
     <div className="flex items-center gap-1">
       <IconButton icon={Minus} label="Smaller text (Ctrl+−)" disabled={scale <= SMALLEST} onClick={() => onScale(stepScale({ scale, by: -1 }))} />
       <button
         type="button"
         title="Reset to normal size (Ctrl+0)"
         onClick={() => onScale(1)}
-        className="w-12 rounded-md py-1 text-center text-sm tabular-nums text-ink-2 hover:bg-ink/6"
+        className="w-12 rounded-md py-1 text-center text-sm tabular-nums text-ink-2 transition-colors duration-press hover:bg-ink/6"
       >
         {Math.round(scale * 100)}%
       </button>
       <IconButton icon={Plus} label="Larger text (Ctrl+=)" disabled={scale >= LARGEST} onClick={() => onScale(stepScale({ scale, by: 1 }))} />
     </div>
-  </div>
+  </Row>
 );
 
+/** The reader's display settings, opening from the Aa button in the top bar. */
 export const DisplayMenu = ({
+  open,
+  onOpenChange,
   textScale,
   onTextScale,
   lineNumbers,
@@ -59,6 +95,8 @@ export const DisplayMenu = ({
   showMine,
   onShowMine,
 }: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   textScale: number;
   onTextScale: (v: number) => void;
   lineNumbers: boolean;
@@ -67,37 +105,55 @@ export const DisplayMenu = ({
   onShowHarakat: (v: boolean) => void;
   showMine: boolean;
   onShowMine: (v: boolean) => void;
-}) => (
-  <div className="absolute right-0 top-11 z-40 flex w-80 flex-col gap-3.5 rounded-xl bg-surface-3 p-4 shadow-float">
-    <span className="text-sm font-medium">Text display</span>
-    <TextSize scale={textScale} onScale={onTextScale} />
-    <div className="flex items-center gap-3">
-      <div className="flex flex-1 flex-col gap-0.5">
-        <span className="text-sm font-medium">Harakat</span>
-        <span className="text-xs text-ink-3">The corpus's marks and yours</span>
-      </div>
-      <Kbd>H</Kbd>
-      <Switch label="Show harakat" checked={showHarakat} onChange={onShowHarakat} />
-    </div>
-    <div className={cx("ml-1 flex items-center gap-3 border-l-2 border-line pl-3", !showHarakat && "opacity-45")}>
-      <div className="flex flex-1 flex-col gap-0.5">
-        <span className="text-sm font-medium">My harakat</span>
-        <span className="text-xs text-ink-3">
-          Marks you added, in <span className="text-ink-added">red</span>
-        </span>
-      </div>
-      <Switch label="Show my harakat" checked={showMine} onChange={onShowMine} disabled={!showHarakat} />
-    </div>
-    <div className="flex items-center gap-3">
-      <div className="flex flex-1 flex-col gap-0.5">
-        <span className="text-sm font-medium">Line numbers</span>
-        <span className="text-xs text-ink-3">The numbers notes and Ask AI use</span>
-      </div>
-      <Switch label="Show line numbers" checked={lineNumbers} onChange={onLineNumbers} />
-    </div>
-    <div className="h-px bg-line" />
-    <p className="text-xs text-ink-3">
-      Click a letter and type a haraka with the Arabic keyboard layout. Your marks are stored separately; the corpus text is never changed.
-    </p>
-  </div>
-);
+}) => {
+  const [theme, setTheme] = useTheme();
+  const [pageWidth, setPageWidth] = usePageWidth();
+  const [focusMode, setFocusMode] = useFocusMode();
+  return (
+    <Popover open={open} onOpenChange={onOpenChange}>
+      <PopoverTrigger render={<IconButton icon={Type} label="Text display" selected={open} />} />
+      <PopoverContent side="bottom" align="end" sideOffset={8} className="w-84 gap-5 p-4">
+        <Section title="Appearance">
+          <Row title="Theme" hint="Follow the system or choose one" stacked>
+            <Segmented label="Theme" value={theme} onChange={setTheme} options={THEMES} />
+          </Row>
+          <Row title="Page width" hint={pageWidth === "narrow" ? "Justified, a shorter line" : "Longer lines, ragged edge"} stacked>
+            <Segmented label="Page width" value={pageWidth} onChange={setPageWidth} options={PAGE_WIDTHS} />
+          </Row>
+          <Row title="Focus mode" hint="Hide the bars while you read">
+            <Switch label="Focus mode" checked={focusMode} onChange={setFocusMode} />
+          </Row>
+        </Section>
+        <div className="h-px bg-line" />
+        <Section title="Text">
+          <TextSize scale={textScale} onScale={onTextScale} />
+          <Row title="Harakat" hint="The corpus's marks and yours" shortcut="H">
+            <Switch label="Show harakat" checked={showHarakat} onChange={onShowHarakat} />
+          </Row>
+          <div className={cx("ml-1 border-l-2 border-line pl-3", !showHarakat && "opacity-45")}>
+            <Row title="My harakat" hint={<>Marks you added, in <span className="text-ink-added">red</span></>}>
+              <Switch label="Show my harakat" checked={showMine} onChange={onShowMine} disabled={!showHarakat} />
+            </Row>
+          </div>
+          <Row title="Line numbers" hint="The numbers notes and Ask AI use">
+            <Switch label="Show line numbers" checked={lineNumbers} onChange={onLineNumbers} />
+          </Row>
+        </Section>
+        <p className="text-xs text-ink-3">
+          Click a letter and type a haraka with the Arabic keyboard layout. Your marks are stored separately; the corpus text is never changed.
+        </p>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+const THEMES: { value: Theme; label: string }[] = [
+  { value: "system", label: "System" },
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+];
+
+const PAGE_WIDTHS: { value: PageWidth; label: string }[] = [
+  { value: "narrow", label: "Narrow" },
+  { value: "wide", label: "Wide" },
+];

@@ -1,4 +1,4 @@
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles, Type } from "lucide-react";
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
@@ -757,12 +757,7 @@ export const ReaderRoute = () => {
           <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
         </div>
         <div className="flex-1" />
-        <div className="relative">
-          <IconButton icon={Type} label="Text display" selected={menuOpen} onClick={() => setMenuOpen(!menuOpen)} />
-          {menuOpen && (
-            <DisplayMenu textScale={textScale} onTextScale={setTextScale} lineNumbers={lineNumbers} onLineNumbers={setLineNumbers} showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
-          )}
-        </div>
+        <DisplayMenu open={menuOpen} onOpenChange={setMenuOpen} textScale={textScale} onTextScale={setTextScale} lineNumbers={lineNumbers} onLineNumbers={setLineNumbers} showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
         <IconButton icon={FileImage} label={showScan ? "Hide scan (S)" : "Show scan (S)"} selected={showScan} onClick={() => setShowScan(!showScan)} />
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton
