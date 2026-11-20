@@ -51,7 +51,7 @@ function SheetContent({
         data-slot="sheet-content"
         data-side={side}
         className={cn(
-          "fixed z-50 flex bg-popover text-popover-foreground shadow-lg outline-none transition-transform duration-240 ease-out data-ending-style:duration-180 motion-reduce:transition-none",
+          "fixed z-50 flex bg-popover text-popover-foreground shadow-lg outline-hidden transition-transform duration-240 ease-out data-ending-style:duration-180 motion-reduce:transition-none",
           "data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:data-ending-style:-translate-x-full data-[side=left]:data-starting-style:-translate-x-full",
           "data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:data-ending-style:translate-x-full data-[side=right]:data-starting-style:translate-x-full",
           "data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:data-ending-style:-translate-y-full data-[side=top]:data-starting-style:-translate-y-full",

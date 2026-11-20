@@ -405,7 +405,7 @@ export const AskPanel = ({
             rows={2}
             dir="auto"
             placeholder={activeSelection ? "Ask about this passage…" : "Ask about this page…"}
-            className="resize-none bg-transparent text-body outline-none placeholder:text-ink-3 [unicode-bidi:plaintext]"
+            className="resize-none bg-transparent text-body outline-hidden placeholder:text-ink-3 [unicode-bidi:plaintext]"
           />
           <div className="flex items-center gap-2">
             <span className="flex-1" />

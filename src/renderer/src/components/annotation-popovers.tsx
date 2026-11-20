@@ -249,7 +249,7 @@ export const NoteEditor = ({
         onChange={(e) => change(e.target.value)}
         placeholder="Write a note…"
         rows={3}
-        className="resize-none rounded-lg border border-line bg-bg px-3 py-2 text-body outline-none focus:border-accent [unicode-bidi:plaintext]"
+        className="resize-none rounded-lg border border-line bg-bg px-3 py-2 text-body outline-hidden focus:border-accent [unicode-bidi:plaintext]"
       />
       <div className="flex items-center gap-2 text-xs text-ink-3">
         {!body.trim() && id.current ? (
