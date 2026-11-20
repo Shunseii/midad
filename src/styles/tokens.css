@@ -29,8 +29,13 @@
   --font-ar: "Noto Naskh Arabic", serif;
 }
 
+:root {
+  color-scheme: light;
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --color-bg: #13120F;
     --color-surface: #1C1A16;
     --color-surface-2: #27241E;
@@ -58,6 +63,7 @@
 
 :root[data-theme="dark"],
 .dark {
+  color-scheme: dark;
   --color-bg: #13120F;
   --color-surface: #1C1A16;
   --color-surface-2: #27241E;
