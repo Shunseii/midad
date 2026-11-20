@@ -14,6 +14,7 @@ import { ScanPane } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Kbd, Skeleton, Switch, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
+import { entryIndexFor, visibleEntries } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
 import { hamish, keys, readPref, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker, writePref } from "../lib/hamish";
@@ -145,21 +146,31 @@ const revealRow = ({ root, part, line, word }: { root: HTMLElement | null; part:
   }
 };
 
-/** The contents entry a page falls under. */
-const entryIndexFor = (entries: TocEntry[], position: number) => entries.reduce((found, e, i) => (e.position <= position ? i : found), -1);
+/** How much of a line must show before it counts as on screen. */
+const SEEN_PX = 24;
+
+/** The matn lines at least partly on screen in the page's scroll area. */
+const linesOnScreen = (root: HTMLElement): number[] => {
+  const view = root.getBoundingClientRect();
+  return [...root.querySelectorAll<HTMLElement>('[data-line-block^="matn-"]')].flatMap((el) => {
+    const r = el.getBoundingClientRect();
+    const seen = Math.min(r.bottom, view.bottom) - Math.max(r.top, view.top);
+    return seen >= Math.min(SEEN_PX, r.height) ? [Number(el.dataset.lineBlock?.slice("matn-".length))] : [];
+  });
+};
 
 const ContentsRail = ({
   entries,
-  current,
+  active,
   markerAt,
   onGo,
 }: {
   entries: TocEntry[];
-  current: number;
+  /** The entries whose text is on screen. */
+  active: number[];
   markerAt: number | null;
   onGo: (position: number) => void;
 }) => {
-  const activeIndex = entryIndexFor(entries, current);
   const markerIndex = markerAt === null ? -1 : entryIndexFor(entries, markerAt);
   return (
     <nav aria-label="Contents" className="flex w-62 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-line bg-surface-2 px-4 py-6">
@@ -169,10 +180,11 @@ const ContentsRail = ({
         <button
           key={`${e.position}-${i}`}
           type="button"
+          aria-current={active.includes(i) ? "location" : undefined}
           onClick={() => onGo(e.position)}
           className={cx(
             "flex items-center gap-2 rounded-lg px-2.5 py-1 text-left transition-colors",
-            i === activeIndex ? "bg-accent-soft text-accent" : "text-ink-2 hover:bg-surface hover:text-ink",
+            active.includes(i) ? "bg-accent-soft text-accent" : "text-ink-2 hover:bg-surface hover:text-ink",
             e.level > 2 && "pl-5",
           )}
         >
@@ -357,6 +369,34 @@ export const ReaderRoute = () => {
   const annotations = useAnnotations({ bookId, position });
   const actions = useAnnotationActions({ bookId, position });
   const toc = useMemo(() => (book.data ? tableOfContents(book.data) : []), [book.data]);
+  const [onScreen, setOnScreen] = useState<{ position: number; lines: number[] }>({ position, lines: [] });
+  const measureFrame = useRef(0);
+  const measureOnScreen = useCallback(() => {
+    cancelAnimationFrame(measureFrame.current);
+    measureFrame.current = requestAnimationFrame(() => {
+      const root = pageRoot.current;
+      if (!root) return;
+      setOnScreen({ position, lines: linesOnScreen(root) });
+    });
+  }, [position]);
+  useLayoutEffect(() => {
+    measureOnScreen();
+    const root = pageRoot.current;
+    if (!root) return;
+    const resized = new ResizeObserver(measureOnScreen);
+    resized.observe(root);
+    return () => resized.disconnect();
+  }, [measureOnScreen, page.data, textScale, showHarakat]);
+  const activeEntries = useMemo(
+    () =>
+      visibleEntries({
+        entries: toc,
+        position,
+        headingLines: page.data?.position === position ? page.data.page.matn.flatMap((b) => (b.kind === "heading" ? [b.line] : [])) : [],
+        visibleLines: onScreen.position === position ? onScreen.lines : [],
+      }),
+    [toc, position, page.data, onScreen],
+  );
 
   const go = useCallback(
     (next: number) => {
@@ -771,13 +811,13 @@ export const ReaderRoute = () => {
       <div className="flex min-h-0 flex-1">
         {wide ? (
           <InlinePanel side="left" open={contentsOpen}>
-            <ContentsRail entries={toc} current={position} markerAt={marker.data?.position ?? null} onGo={go} />
+            <ContentsRail entries={toc} active={activeEntries} markerAt={marker.data?.position ?? null} onGo={go} />
           </InlinePanel>
         ) : (
           <SideSheet side="left" title="Contents" open={contentsOpen} onOpenChange={setContentsOpen}>
             <ContentsRail
               entries={toc}
-              current={position}
+              active={activeEntries}
               markerAt={marker.data?.position ?? null}
               onGo={(at) => {
                 setContentsOpen(false);
@@ -799,7 +839,10 @@ export const ReaderRoute = () => {
             if (picked) rememberCopy({ text: window.getSelection()?.toString() ?? "", span: picked.span, position });
           }}
           onMouseLeave={() => noteEditor && scheduleNoteClose()}
-          onScroll={() => toolbar && setToolbar(null)}
+          onScroll={() => {
+            measureOnScreen();
+            if (toolbar) setToolbar(null);
+          }}
         >
           {/* The wide right padding leaves room for the last-read marker in the margin. */}
           <div className="px-6 py-10 [view-transition-name:reader-page] @3xl:pl-12 @3xl:pr-40">
