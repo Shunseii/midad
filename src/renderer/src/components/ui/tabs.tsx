@@ -25,7 +25,7 @@ const tabsListVariants = cva(
   {
     variants: {
       variant: {
-        default: "gap-0.5 bg-surface-2 p-0.75",
+        default: "gap-0.5 bg-bg p-0.75 ring-1 ring-line ring-inset",
         line: "gap-1 bg-transparent",
       },
     },
@@ -56,7 +56,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
       data-slot="tabs-trigger"
       className={cn(
         "relative inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.25 text-sm font-medium whitespace-nowrap text-ink-2 transition-colors outline-hidden group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-ink focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        "group-data-[variant=default]/tabs-list:data-active:bg-surface group-data-[variant=default]/tabs-list:data-active:text-ink group-data-[variant=default]/tabs-list:data-active:shadow-xs",
+        "group-data-[variant=default]/tabs-list:data-active:bg-surface group-data-[variant=default]/tabs-list:data-active:text-ink group-data-[variant=default]/tabs-list:data-active:shadow-xs group-data-[variant=default]/tabs-list:data-active:ring-1 group-data-[variant=default]/tabs-list:data-active:ring-line",
         "group-data-[variant=line]/tabs-list:data-active:text-ink",
         "after:absolute after:bg-ink after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:-bottom-1.25 group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
         className
