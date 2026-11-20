@@ -214,7 +214,7 @@ const ZoomLevel = ({ scale, shown }: { scale: number; shown: boolean }) => (
   <div
     role="status"
     data-state={shown ? "open" : "closed"}
-    className="pointer-events-none fixed top-18 right-4 z-30 flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 text-sm shadow-md transition-[opacity,translate] duration-150 ease-out data-[state=closed]:-translate-y-1 data-[state=closed]:opacity-0 motion-reduce:transition-none"
+    className="pointer-events-none fixed top-18 right-4 z-30 flex items-center gap-2 rounded-xl bg-surface-3 px-3 py-1.5 text-sm shadow-float transition-[opacity,translate] duration-150 ease-out data-[state=closed]:-translate-y-1 data-[state=closed]:opacity-0 motion-reduce:transition-none"
   >
     <Type aria-hidden className="size-4 text-ink-3" />
     <span className="text-ink-2">Text size</span>
@@ -268,7 +268,7 @@ const DisplayMenu = ({
   showMine: boolean;
   onShowMine: (v: boolean) => void;
 }) => (
-  <div className="absolute right-0 top-11 z-40 flex w-80 flex-col gap-3.5 rounded-xl border border-line bg-surface p-4 shadow-lg">
+  <div className="absolute right-0 top-11 z-40 flex w-80 flex-col gap-3.5 rounded-xl bg-surface-3 p-4 shadow-float">
     <span className="text-sm font-medium">Text display</span>
     <TextSize scale={textScale} onScale={onTextScale} />
     <div className="flex items-center gap-3">

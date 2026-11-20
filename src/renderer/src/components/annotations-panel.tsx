@@ -39,7 +39,7 @@ const Card = ({ children, onClick }: { children: ReactNode; onClick: () => void 
     tabIndex={0}
     onClick={onClick}
     onKeyDown={(e) => e.key === "Enter" && onClick()}
-    className="flex cursor-pointer flex-col gap-3 rounded-xl border border-line bg-surface p-4 transition-colors hover:border-ink-3"
+    className="flex cursor-pointer flex-col gap-3 rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-ink-3"
   >
     {children}
   </div>

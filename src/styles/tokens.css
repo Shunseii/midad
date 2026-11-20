@@ -4,6 +4,7 @@
   --color-bg: #F6F3EC;
   --color-surface: #FFFDF8;
   --color-surface-2: #EFEADF;
+  --color-surface-3: #FFFDF8;
   --color-scrim: #1A181466;
   --color-ink: #1A1814;
   --color-ink-2: #55503F;
@@ -31,14 +32,17 @@
 
 :root {
   color-scheme: light;
+  --elevation-float: 0 0 0 1px var(--color-line), 0 8px 24px -6px rgb(26 24 20 / 0.16), 0 2px 6px rgb(26 24 20 / 0.06);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
+    --elevation-float: 0 0 0 1px var(--color-line), 0 12px 32px -8px rgb(0 0 0 / 0.6), 0 2px 8px rgb(0 0 0 / 0.35);
     --color-bg: #13120F;
     --color-surface: #1C1A16;
     --color-surface-2: #27241E;
+    --color-surface-3: #24211C;
     --color-scrim: #000000A6;
     --color-ink: #EFEADF;
     --color-ink-2: #BBB3A1;
@@ -64,9 +68,11 @@
 :root[data-theme="dark"],
 .dark {
   color-scheme: dark;
+  --elevation-float: 0 0 0 1px var(--color-line), 0 12px 32px -8px rgb(0 0 0 / 0.6), 0 2px 8px rgb(0 0 0 / 0.35);
   --color-bg: #13120F;
   --color-surface: #1C1A16;
   --color-surface-2: #27241E;
+  --color-surface-3: #24211C;
   --color-scrim: #000000A6;
   --color-ink: #EFEADF;
   --color-ink-2: #BBB3A1;

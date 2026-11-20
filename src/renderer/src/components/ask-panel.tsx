@@ -161,7 +161,7 @@ const CiteChip = ({
       sideOffset={6}
       // Keeps the surface look of the reader's other floating layers; the dark arrow doesn't fit it.
       arrow={false}
-      className="block w-max max-w-80 rounded-lg border border-line bg-surface px-3 py-2 text-ink shadow-md"
+      className="block w-max max-w-80 rounded-xl bg-surface-3 px-3 py-2 text-ink shadow-float"
     >
       <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
         {text}

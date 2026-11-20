@@ -55,7 +55,7 @@ export const SelectionToolbar = ({
         role="toolbar"
         aria-label="Annotate"
         onMouseDown={(e) => e.preventDefault()}
-        className={cn(FLOATING_LAYER, "flex-row items-center gap-1 rounded-xl border border-line bg-surface p-1.5 shadow-lg")}
+        className={cn(FLOATING_LAYER, "flex-row items-center gap-1 rounded-xl bg-surface-3 p-1.5 shadow-float")}
       >
         {mode === "selection" ? (
           HIGHLIGHT_COLORS.map((color) => (
@@ -155,7 +155,7 @@ export const NotePeek = ({ note, lineLabel, onEdit }: { note: Note; lineLabel: s
     type="button"
     aria-label={`Edit note on ${lineLabel}`}
     onClick={onEdit}
-    className="group flex w-64 flex-col gap-1.5 rounded-lg border border-line bg-surface px-3 py-2.5 text-left shadow-md hover:border-accent"
+    className="group flex w-64 flex-col gap-1.5 rounded-xl bg-surface-3 px-3 py-2.5 text-left shadow-float hover:ring-1 hover:ring-accent"
   >
     <span dir="auto" className="line-clamp-3 text-sm leading-snug text-ink [unicode-bidi:plaintext]">
       {note.body}
@@ -234,7 +234,7 @@ export const NoteEditor = ({
   };
 
   return (
-    <div role="dialog" aria-label="Note" className="flex w-108 max-w-[calc(100vw-2rem)] flex-col gap-2.5 rounded-xl border border-line bg-surface p-3 shadow-lg">
+    <div role="dialog" aria-label="Note" className="flex w-108 max-w-[calc(100vw-2rem)] flex-col gap-2.5 rounded-xl bg-surface-3 p-3 shadow-float">
       <div className="flex items-center gap-2 text-xs text-ink-3">
         <NotebookPen className="size-3.5" />
         <span className="flex-1">

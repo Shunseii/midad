@@ -16,7 +16,7 @@
   --color-foreground: var(--color-ink);
   --color-card: var(--color-surface);
   --color-card-foreground: var(--color-ink);
-  --color-popover: var(--color-surface);
+  --color-popover: var(--color-surface-3);
   --color-popover-foreground: var(--color-ink);
   --color-primary: var(--color-accent);
   --color-primary-foreground: var(--color-on-accent);
@@ -86,6 +86,13 @@
   --text-ar-body--line-height: calc(2.25rem * var(--text-scale, 1));
   --text-ar-small: calc(1rem * var(--text-scale, 1));
   --text-ar-small--line-height: calc(1.75rem * var(--text-scale, 1));
+}
+
+/* Menus, popovers and dialogs float above the page; the ring stands in for a border. */
+@utility shadow-float {
+  --tw-shadow: var(--elevation-float);
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 html,
