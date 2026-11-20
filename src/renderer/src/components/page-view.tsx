@@ -365,7 +365,7 @@ export const PageView = ({
             key={b.line}
             as="h2"
             {...markable("matn", b.line)}
-            className={cx("ar my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-body")}
+            className={cx("ar my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-reading")}
           >
             {display.lineNumbers && <LineNumber line={b.line} />}
             <Line part="matn" line={b.line} text={b.text} {...lineProps} />
