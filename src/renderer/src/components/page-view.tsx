@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { type CSSProperties, type ReactNode, type MouseEvent as ReactMouseEvent, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, createContext, type ReactNode, type MouseEvent as ReactMouseEvent, useContext, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -15,14 +15,52 @@ import {
 import { stripHarakat } from "../../../shared/arabic";
 import { displayMarks, inContext, isMark, lettersOf } from "../../../shared/harakat";
 import type { StoredPage } from "../../../shared/library";
+import type { PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
+import { footnotesByMarker, splitFootnoteRef } from "../lib/footnotes";
 import { cx } from "./ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const MARK_BG: Record<HighlightColor, string> = {
   yellow: "bg-mark-1",
   green: "bg-mark-2",
   pink: "bg-mark-3",
   blue: "bg-mark-4",
+};
+
+/** Highlighted text: a band of the colour behind the lower part of the letters (see .mark-band). */
+export const MARK_BAND: Record<HighlightColor, string> = {
+  yellow: "mark-band mark-yellow",
+  green: "mark-band mark-green",
+  pink: "mark-band mark-pink",
+  blue: "mark-band mark-blue",
+};
+
+/** The page's footnotes by marker, for the superscript references in the text to peek at. */
+const Footnotes = createContext<Map<string, string>>(new Map());
+
+/** A footnote reference such as (١), set as a superscript that shows the footnote on hover. */
+const FootnoteRef = ({ marker }: { marker: string }) => {
+  const footnote = useContext(Footnotes).get(marker);
+  const sup = <sup className="mx-px cursor-default align-super text-[0.6em] font-bold text-accent transition-colors duration-press hover:text-ink">{marker}</sup>;
+  if (!footnote) return sup;
+  return (
+    <Tooltip>
+      <TooltipTrigger render={sup} />
+      <TooltipContent side="bottom" sideOffset={6} arrow={false} className="block w-max max-w-96 rounded-xl bg-surface-3 px-3.5 py-2.5 text-ink shadow-float">
+        <span dir="rtl" className="ar block text-right text-ar-small text-ink-2">
+          ({marker}) {footnote}
+        </span>
+      </TooltipContent>
+    </Tooltip>
+  );
+};
+
+/** Plain word text with any footnote reference in it raised as a superscript. */
+const withFootnoteRefs = (text: string): ReactNode => {
+  const ref = splitFootnoteRef(text);
+  if (!ref) return text;
+  return [ref.before, <FootnoteRef key="ref" marker={ref.marker} />, withFootnoteRefs(ref.after)];
 };
 
 export interface WordTarget {
@@ -75,7 +113,7 @@ const TARGET_TICK = "pointer-events-none absolute inset-x-px bottom-1 h-0.5 sele
 const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: Map<number, string>; display: Display; targetLetter: number | null }) => {
   const { showHarakat, showMine } = display;
   const showingMine = showHarakat && showMine && mine.size > 0;
-  if (!showingMine && targetLetter === null) return showHarakat ? text : stripHarakat(text);
+  if (!showingMine && targetLetter === null) return withFootnoteRefs(showHarakat ? text : stripHarakat(text));
 
   const nodes: ReactNode[] = [];
   let run = "";
@@ -128,7 +166,7 @@ const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick
         before && after ? highlightAt(annotations.highlights, part, before) : null;
       const joins = shared && after && spanContains({ span: shared.span, part, ref: after });
       return (
-        <span key={i} className={cx(joins && MARK_BG[shared.color])}>
+        <span key={i} className={cx(joins && MARK_BAND[shared.color])}>
           {token.text}
         </span>
       );
@@ -159,7 +197,7 @@ const Line = ({ part, line, text, annotations, display, onWordHover, onWordClick
           onMouseLeave={(e) => note && onWordHover(target(e), null)}
           onClick={(e) => onWordClick(target(e), highlight)}
           className={cx(
-            highlight && MARK_BG[highlight.color],
+            highlight && MARK_BAND[highlight.color],
             highlight && "cursor-pointer",
             note && "underline decoration-accent decoration-dotted decoration-2 underline-offset-8",
           )}
@@ -318,8 +356,20 @@ const MarkableLine = ({
   );
 };
 
+/** A heading that opens a chapter, set off with space and a small ornament above it. */
+const ChapterOrnament = () => (
+  <span aria-hidden className="mx-auto mt-8 mb-1 flex w-36 items-center gap-3 first:mt-2">
+    <span className="h-px flex-1 bg-line" />
+    <span className="size-2 rotate-45 border border-accent" />
+    <span className="h-px flex-1 bg-line" />
+  </span>
+);
+
 export const PageView = ({
   stored,
+  bookTitle,
+  chapter,
+  width,
   annotations,
   display,
   marker,
@@ -329,6 +379,10 @@ export const PageView = ({
   onWordClick,
 }: {
   stored: StoredPage;
+  bookTitle: string;
+  /** The chapter this page falls in, for the running header. */
+  chapter: string | null;
+  width: PageWidth;
   annotations: PageAnnotations;
   display: Display;
   /** The word on this page holding the last-read marker, if any. */
@@ -349,46 +403,56 @@ export const PageView = ({
     onMark: (word: number) => onMark({ part, line, word }),
     onClearMark,
   });
+  const footnotes = footnotesByMarker(page.hashiya.map((f) => ({ marker: f.marker, text: t(f.text) })));
+  const folio = arabicNumber(stored.number ?? stored.position);
   return (
-    <article
-      style={{ "--text-scale": display.textScale } as CSSProperties}
-      className="reader-text mx-auto flex w-full max-w-160 flex-col pb-24"
-    >
-      <div className="mb-4 flex items-baseline justify-between border-b border-line pb-4 text-ink-3" dir="rtl">
-        <span className="ar text-ar-small">{t(page.header ?? "")}</span>
-        <span className="ar text-ar-small">{arabicNumber(stored.number ?? stored.position)}</span>
-      </div>
-      {page.matn.length === 0 && <p className="py-12 text-center text-sm text-ink-3">This page has no main text.</p>}
-      {page.matn.map((b) =>
-        b.kind === "heading" ? (
-          <MarkableLine
-            key={b.line}
-            as="h2"
-            {...markable("matn", b.line)}
-            className={cx("ar my-3 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-reading")}
-          >
-            {display.lineNumbers && <LineNumber line={b.line} />}
-            <Line part="matn" line={b.line} text={b.text} {...lineProps} />
-          </MarkableLine>
-        ) : (
-          <MarkableLine key={b.line} as="p" {...markable("matn", b.line)} className="ar whitespace-pre-line rounded-lg text-right text-ar-reading">
-            {display.lineNumbers && <LineNumber line={b.line} />}
-            <Line part="matn" line={b.line} text={b.text} {...lineProps} />
-          </MarkableLine>
-        ),
-      )}
-      {page.hashiya.length > 0 && (
-        <section className="mt-8 flex flex-col gap-2 border-t border-line pt-4" dir="rtl">
-          <h3 className="ar text-ar-small font-bold text-ink-3">الحاشية</h3>
-          {page.hashiya.map((f, i) => (
-            <MarkableLine key={`${f.marker ?? "u"}-${i}`} as="p" {...markable("hashiya", i + 1)} className="ar text-right text-ar-small text-ink-2">
-              {f.marker && `(${f.marker}) `}
-              <Line part="hashiya" line={i + 1} text={f.text} {...lineProps} />
+    <Footnotes value={footnotes}>
+      <article
+        style={{ "--text-scale": display.textScale } as CSSProperties}
+        className={cx("reader-text mx-auto flex w-full flex-col pb-24", width === "wide" ? "page-wide max-w-190" : "page-narrow max-w-160")}
+      >
+        <header className="mb-6 flex items-baseline justify-between gap-6 border-b border-line pb-3 text-ink-3" dir="rtl">
+          <span className="ar truncate text-ar-small">{t(bookTitle)}</span>
+          <span className="ar truncate text-ar-small">{t(chapter ?? page.header ?? "")}</span>
+        </header>
+        {page.matn.length === 0 && <p className="py-12 text-center text-sm text-ink-3">This page has no main text.</p>}
+        {page.matn.map((b) =>
+          b.kind === "heading" ? (
+            <div key={b.line} className="flex flex-col">
+              {b.level <= 2 && <ChapterOrnament />}
+              <MarkableLine
+                as="h2"
+                {...markable("matn", b.line)}
+                className={cx("ar mt-2 mb-4 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-reading")}
+              >
+                {display.lineNumbers && <LineNumber line={b.line} />}
+                <Line part="matn" line={b.line} text={b.text} {...lineProps} />
+              </MarkableLine>
+            </div>
+          ) : (
+            <MarkableLine key={b.line} as="p" {...markable("matn", b.line)} className="page-line ar whitespace-pre-line rounded-lg text-ar-reading">
+              {display.lineNumbers && <LineNumber line={b.line} />}
+              <Line part="matn" line={b.line} text={b.text} {...lineProps} />
             </MarkableLine>
-          ))}
-        </section>
-      )}
-    </article>
+          ),
+        )}
+        {page.hashiya.length > 0 && (
+          <section className="mt-10 flex flex-col gap-2" dir="rtl">
+            <h3 className="sr-only">الحاشية</h3>
+            <span aria-hidden className="mb-2 h-px w-1/3 bg-ink-3/40" />
+            {page.hashiya.map((f, i) => (
+              <MarkableLine key={`${f.marker ?? "u"}-${i}`} as="p" {...markable("hashiya", i + 1)} className="ar text-justify text-ar-small text-ink-2 [text-align-last:start]">
+                {f.marker && `(${f.marker}) `}
+                <Line part="hashiya" line={i + 1} text={f.text} {...lineProps} />
+              </MarkableLine>
+            ))}
+          </section>
+        )}
+        <footer className="ar mt-10 text-center text-ar-body text-ink-2" aria-label={`Page ${folio}`}>
+          {folio}
+        </footer>
+      </article>
+    </Footnotes>
   );
 };
 

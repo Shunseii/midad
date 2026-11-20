@@ -20,6 +20,7 @@ import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
 import { midad, keys, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker } from "../lib/midad";
 import { usePref } from "../lib/prefs";
+import { usePageWidth } from "../lib/appearance";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -283,6 +284,8 @@ export const ReaderRoute = () => {
   const annotations = useAnnotations({ bookId, position });
   const actions = useAnnotationActions({ bookId, position });
   const toc = useMemo(() => (book.data ? tableOfContents(book.data) : []), [book.data]);
+  const chapterTitle = toc[entryIndexFor(toc, position)]?.text ?? null;
+  const [pageWidth] = usePageWidth();
   const [onScreen, setOnScreen] = useState<{ position: number; lines: number[] }>({ position, lines: [] });
   const measureFrame = useRef(0);
   const measureOnScreen = useCallback(() => {
@@ -831,6 +834,9 @@ export const ReaderRoute = () => {
           {page.data && (
             <PageView
               stored={page.data}
+              bookTitle={book.data?.title ?? ""}
+              chapter={chapterTitle}
+              width={pageWidth}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
               display={{ showHarakat, showMine, lineNumbers, textScale, target }}
               marker={marker.data?.position === position ? marker.data : null}

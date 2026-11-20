@@ -109,6 +109,47 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/*
+ * Highlights are a band behind the lower part of the letters, so harakat above
+ * them stay clear. Each colour class sets the band's colour.
+ */
+.mark-band {
+  background-image: linear-gradient(to top, var(--mark) 0 0.55em, transparent 0.55em);
+  box-decoration-break: clone;
+}
+.mark-yellow {
+  --mark: var(--color-mark-1);
+}
+.mark-green {
+  --mark: var(--color-mark-2);
+}
+.mark-pink {
+  --mark: var(--color-mark-3);
+}
+.mark-blue {
+  --mark: var(--color-mark-4);
+}
+
+/*
+ * Page width. Narrow justifies each source line; both hang a line's wrapped
+ * rows in from the right so each numbered line still reads as one unit.
+ */
+.page-narrow .page-line {
+  text-align: justify;
+  text-align-last: start;
+  padding-inline-start: 1.5em;
+  text-indent: -1.5em;
+}
+.page-wide .page-line {
+  text-align: start;
+  padding-inline-start: 1.25em;
+  text-indent: -1.25em;
+}
+/* Only the line's own rows hang; the margin controls inside it don't. */
+.page-line * {
+  text-indent: 0;
+}
+
 /* Arabic runs set their own direction per line so mixed text lays out correctly. */
 .ar {
   font-family: var(--font-ar);
