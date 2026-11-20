@@ -178,6 +178,28 @@ body {
   }
 }
 
+/*
+ * Reduced motion keeps fades and colour changes but drops movement: tw-animate's
+ * zoom and slide amounts go to nothing, presses don't shrink, and loops stop.
+ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    --tw-enter-scale: 1;
+    --tw-exit-scale: 1;
+    --tw-enter-translate-x: 0;
+    --tw-enter-translate-y: 0;
+    --tw-exit-translate-x: 0;
+    --tw-exit-translate-y: 0;
+    --tw-enter-rotate: 0;
+    --tw-exit-rotate: 0;
+    scale: none;
+  }
+
+  .animate-pulse {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),

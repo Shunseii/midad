@@ -79,7 +79,7 @@ const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) =>
     const beforeEnd = line < span.end.line || (line === span.end.line && word <= span.end.word);
     return afterStart && beforeEnd;
   });
-  words[0]?.scrollIntoView({ block: "center", behavior: "smooth" });
+  words[0]?.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
   for (const el of words) {
     el.animate(
       [
