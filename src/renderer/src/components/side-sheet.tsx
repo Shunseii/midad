@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { cx } from "./ui";
 import { Sheet, SheetContent, SheetTitle } from "./ui/sheet";
 
@@ -39,18 +39,42 @@ export const SideSheet = ({
 
 /**
  * A side panel beside the text in wide windows. It stays mounted and opens by
- * growing its column from nothing, so the page eases aside instead of jumping.
+ * growing its width from nothing while the panel rides its inner edge in
+ * from the window edge as one piece, and the page eases aside. The width only
+ * animates when the panel opens or closes, so resizing by drag stays direct.
  */
-export const InlinePanel = ({ side, open, children }: { side: "left" | "right"; open: boolean; children: ReactNode }) => (
-  <div
-    inert={!open}
-    className={cx(
-      "grid shrink-0 overflow-hidden transition-[grid-template-columns] duration-panel ease-sheet motion-reduce:transition-none",
-      // Named so a page turn leaves the panel where it is.
-      side === "left" ? "[view-transition-name:contents-panel]" : "[view-transition-name:side-panel]",
-      open ? "grid-cols-[1fr]" : "grid-cols-[0fr]",
-    )}
-  >
-    <div className={cx("flex min-h-0 min-w-0", side === "right" && "justify-end")}>{children}</div>
-  </div>
-);
+export const InlinePanel = ({
+  side,
+  open,
+  width,
+  children,
+}: {
+  side: "left" | "right";
+  open: boolean;
+  width: number;
+  children: ReactNode;
+}) => {
+  const [shownOpen, setShownOpen] = useState(open);
+  const [moving, setMoving] = useState(false);
+  if (shownOpen !== open) {
+    setShownOpen(open);
+    setMoving(true);
+  }
+  return (
+    <div
+      inert={!open}
+      style={{ width: open ? width : 0 }}
+      onTransitionEnd={(e) => e.target === e.currentTarget && setMoving(false)}
+      className={cx(
+        "relative h-full shrink-0 overflow-hidden",
+        moving && "transition-[width] duration-panel ease-sheet motion-reduce:transition-none",
+        // Named so a page turn leaves the panel where it is.
+        side === "left" ? "[view-transition-name:contents-panel]" : "[view-transition-name:side-panel]",
+      )}
+    >
+      <div style={{ width }} className={cx("absolute inset-y-0 flex", side === "right" ? "left-0" : "right-0")}>
+        {children}
+      </div>
+    </div>
+  );
+};

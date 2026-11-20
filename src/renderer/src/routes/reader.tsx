@@ -38,6 +38,8 @@ const tableOfContents = (book: BookDetail): TocEntry[] => {
     .map((p) => ({ text: p.header ?? "", level: 2, position: p.position, number: p.number }));
 };
 
+/** Matches the contents rail's w-62. */
+const CONTENTS_WIDTH = 248;
 const PANEL_WIDTH = 400;
 /** Ask AI opens wider than highlights and notes, until the reader sizes it themselves. */
 const ASK_WIDTH = 560;
@@ -896,7 +898,7 @@ export const ReaderRoute = () => {
 
       <div className="flex min-h-0 flex-1">
         {wide ? (
-          <InlinePanel side="left" open={contentsOpen}>
+          <InlinePanel side="left" open={contentsOpen} width={CONTENTS_WIDTH}>
             <ContentsRail entries={toc} active={activeEntries} markerAt={marker.data?.position ?? null} onGo={go} />
           </InlinePanel>
         ) : (
@@ -959,7 +961,7 @@ export const ReaderRoute = () => {
         {showScan && page.data && <ScanPane bookId={bookId} fileId={page.data.fileId} onClose={() => setShowScan(false)} />}
         </div>
         {wide ? (
-          <InlinePanel side="right" open={panelOpen}>
+          <InlinePanel side="right" open={panelOpen} width={sideWidth}>
             {sidePanel}
           </InlinePanel>
         ) : (
