@@ -475,17 +475,6 @@
       },
       "type": "frame"
     },
-    "0FR2zFkt": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "bWCkzpxM",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
-      },
-      "type": "instance"
-    },
     "0IChTFhA": {
       "content": "1",
       "index": "a000",
@@ -508,7 +497,8 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -536,7 +526,8 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -1625,15 +1616,12 @@
     },
     "1zDrATf9": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "EabXcvml",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
     },
@@ -2657,17 +2645,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "3WnRoleV": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "1zDrATf9",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
     },
     "3ZUfIxHH": {
       "content": "9",
@@ -4226,17 +4203,6 @@
       },
       "type": "frame"
     },
-    "6IohiV1X": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "rMEq4wCE",
-      "props": {
-        "label": "Ask AI",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "6Iqh7Dtq": {
       "index": "z0",
       "name": "Note popover",
@@ -4445,7 +4411,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 48px"
+        "padding": "40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -5263,17 +5230,6 @@
       },
       "type": "frame"
     },
-    "7rBk0ATy": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "1zDrATf9",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "7t3QbmDy": {
       "icon": "message-square-text",
       "index": "a000015",
@@ -5549,15 +5505,12 @@
     },
     "8HOKSS6R": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "M8jf4U8I",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
     },
@@ -6350,7 +6303,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 48px"
+        "padding": "40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -7086,17 +7040,6 @@
         "size": "sm",
         "variant": "ghost",
         "withIcon": "yes"
-      },
-      "type": "instance"
-    },
-    "AlzgHrRS": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "1zDrATf9",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
       },
       "type": "instance"
     },
@@ -9019,7 +8962,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420
+        "width": 540
       },
       "type": "frame"
     },
@@ -12513,17 +12456,6 @@
       },
       "type": "frame"
     },
-    "I7J4cFfg": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "8HOKSS6R",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "I9jLVq3e": {
       "index": "a005",
       "name": "Passage",
@@ -13312,7 +13244,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420
+        "width": 540
       },
       "type": "frame"
     },
@@ -13879,15 +13811,12 @@
     },
     "K0AyerB5": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "j9aA2LqN",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
     },
@@ -14419,17 +14348,6 @@
       },
       "type": "instance"
     },
-    "KwjjkKdY": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "K0AyerB5",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "KxkE1BYA": {
       "content": "المفيدُ بالوضعِ",
       "index": "a001",
@@ -14549,17 +14467,6 @@
       "parentId": "T2ys3f8N",
       "props": {
         "shape": "line"
-      },
-      "type": "instance"
-    },
-    "L3No6fU6": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "Q7f2gG6N",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
       },
       "type": "instance"
     },
@@ -15687,17 +15594,6 @@
       },
       "type": "text"
     },
-    "Mr7y4rN3": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "bWCkzpxM",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "Mtj79SYJ": {
       "index": "a006",
       "name": "TOC · بابُ مرفوعاتِ الأسماءِ",
@@ -16390,17 +16286,6 @@
         "text-align": "right"
       },
       "type": "frame"
-    },
-    "Nx0ipUW5": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "Q7f2gG6N",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
     },
     "Nxo9KGmx": {
       "index": "a001",
@@ -17508,15 +17393,12 @@
     },
     "Q7f2gG6N": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "eTvSWQhe",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
     },
@@ -17855,7 +17737,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420
+        "width": 540
       },
       "type": "frame"
     },
@@ -18383,17 +18265,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "RwZVxdSA": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "K0AyerB5",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
     },
     "RxrZ7yPt": {
       "index": "a001",
@@ -21480,17 +21351,6 @@
       },
       "type": "instance"
     },
-    "XAEGcxS4": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "bbvsJYP4",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
-      },
-      "type": "instance"
-    },
     "XAk0p5Ig": {
       "content": "Line 5 · today",
       "index": "a001",
@@ -24071,15 +23931,12 @@
     },
     "bWCkzpxM": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "vuQOu0BY",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
     },
@@ -24142,15 +23999,12 @@
     },
     "bbvsJYP4": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "I60ErK2M",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
     },
@@ -26529,7 +26383,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420
+        "width": 540
       },
       "type": "frame"
     },
@@ -27108,7 +26962,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 48px"
+        "padding": "40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -27674,7 +27529,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 48px"
+        "padding": "40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -28288,17 +28144,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "iQ6TxEjA": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "Q7f2gG6N",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
     },
     "iQb9dcS5": {
       "componentId": "ua9C67i7",
@@ -29187,7 +29032,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 48px"
+        "padding": "40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -30207,17 +30053,6 @@
       },
       "type": "text"
     },
-    "llFUNkkf": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "8HOKSS6R",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "llK3KtPy": {
       "index": "a001",
       "name": "Page area",
@@ -30563,7 +30398,8 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -30812,17 +30648,6 @@
       },
       "type": "frame"
     },
-    "mjVCRQRP": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "vAKJDJmB",
-      "props": {
-        "label": "Ask AI",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "mnVq12Ku": {
       "index": "a001",
       "name": "Spacer",
@@ -30864,17 +30689,6 @@
       },
       "type": "frame",
       "css": "view-transition-name: app-nav;"
-    },
-    "muBKpMfV": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "bbvsJYP4",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
     },
     "mus2AyaU": {
       "index": "a002",
@@ -31439,7 +31253,8 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -33413,17 +33228,6 @@
       },
       "type": "frame"
     },
-    "qpdqu95d": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "bWCkzpxM",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "qqoFbtRX": {
       "content": "Marks you added, in red",
       "index": "a000",
@@ -33896,17 +33700,6 @@
         "width": 14
       },
       "type": "icon"
-    },
-    "rbH6XYp1": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "K0AyerB5",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
-      },
-      "type": "instance"
     },
     "rcVFHiDP": {
       "componentId": "KLaQXYk7",
@@ -34572,17 +34365,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "sfDStb0S": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "bbvsJYP4",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
     },
     "sfKbRFb9": {
       "icon": "bookmark",
@@ -35388,7 +35170,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420
+        "width": 540
       },
       "type": "frame"
     },
@@ -36378,7 +36160,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 48px"
+        "padding": "40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -37408,20 +37191,10 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
-    },
-    "xLRUx5YY": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "8HOKSS6R",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
-      },
-      "type": "instance"
     },
     "xN6Caoww": {
       "content": ".",
@@ -38294,7 +38067,8 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -38605,7 +38379,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420
+        "width": 540
       },
       "type": "frame"
     },
@@ -48662,7 +48436,8 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -49385,7 +49160,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 48px"
+        "padding": "40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -50153,7 +49929,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420
+        "width": 540
       },
       "type": "frame"
     },
@@ -50172,50 +49948,14 @@
     },
     "uANv83i7": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "BMv2tF1I",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
-    },
-    "NBmQY0TI": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "uANv83i7",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
-    },
-    "2TdsH5ee": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "uANv83i7",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
-    },
-    "VVrGZy9o": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "uANv83i7",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
-      },
-      "type": "instance"
     },
     "hkfKwpmx": {
       "index": "a001",
@@ -50711,7 +50451,8 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -51434,7 +51175,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 48px"
+        "padding": "40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -52202,7 +51944,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420
+        "width": 540
       },
       "type": "frame"
     },
@@ -52221,50 +51963,14 @@
     },
     "OlJSXzuY": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "0maC1Exv",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
-    },
-    "pEMiwvzj": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "OlJSXzuY",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
-    },
-    "Yl5DDsW3": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "OlJSXzuY",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
-    },
-    "60jy3y31": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "OlJSXzuY",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
-      },
-      "type": "instance"
     },
     "wzVVkgp7": {
       "index": "a001",
@@ -55212,7 +54918,8 @@
         "display": "flex",
         "flex": 1,
         "flex-direction": "column",
-        "height": "100%"
+        "height": "100%",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -55477,7 +55184,8 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 160px 40px 48px"
+        "padding": "40px 160px 40px 48px",
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -56245,7 +55953,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
-        "width": 420,
+        "width": 540,
         "height": "100%"
       },
       "type": "frame"
@@ -56265,50 +55973,14 @@
     },
     "rfarGlyS": {
       "index": "a000",
-      "name": "Segmented control",
+      "name": "Title",
       "parentId": "fEXxXJUc",
       "style": {
         "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 8,
         "display": "flex",
-        "gap": 2,
-        "padding": 3
+        "gap": 8
       },
       "type": "frame"
-    },
-    "4hBVQj6x": {
-      "componentId": "46QiZLNZ",
-      "index": "a00",
-      "name": "Segment",
-      "parentId": "rfarGlyS",
-      "props": {
-        "label": "Highlights",
-        "state": "default"
-      },
-      "type": "instance"
-    },
-    "wijUDsMZ": {
-      "componentId": "46QiZLNZ",
-      "index": "a01",
-      "name": "Segment",
-      "parentId": "rfarGlyS",
-      "props": {
-        "label": "Notes",
-        "state": "default"
-      },
-      "type": "instance"
-    },
-    "ZDJN45Sh": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "rfarGlyS",
-      "props": {
-        "label": "Ask AI",
-        "state": "selected"
-      },
-      "type": "instance"
     },
     "DmCzojZe": {
       "index": "a001",
@@ -57904,17 +57576,6 @@
       },
       "type": "instance"
     },
-    "orNbE0zD": {
-      "componentId": "46QiZLNZ",
-      "index": "a02",
-      "name": "Segment",
-      "parentId": "IEC4nJuK",
-      "props": {
-        "label": "Ask AI",
-        "state": "default"
-      },
-      "type": "instance"
-    },
     "4EK5dYXW": {
       "index": "a001",
       "name": "Spacer",
@@ -58290,6 +57951,249 @@
         "line-height": "40px",
         "width": 200
       }
+    },
+    "1U7xqnjL": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "1zDrATf9",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "MHJWjgLA": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "1zDrATf9",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
+    "wJ0gwiR1": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "8HOKSS6R",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "1VZJ38NN": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "8HOKSS6R",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
+    "s1276r3j": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "K0AyerB5",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "i75o7hNL": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "K0AyerB5",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
+    "gH2z9N5E": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "bWCkzpxM",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "pJnE5wmA": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "bWCkzpxM",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
+    "T2Vx5gXr": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "Q7f2gG6N",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "idGkKuJI": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "Q7f2gG6N",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
+    "5ulymqNK": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "bbvsJYP4",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "KDByXDmD": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "bbvsJYP4",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
+    "A3oz5EGQ": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "uANv83i7",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "G3RePH7C": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "uANv83i7",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
+    "TaPVulLD": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "OlJSXzuY",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "Cfppyhfk": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "OlJSXzuY",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
+    "iZztAxUX": {
+      "icon": "sparkles",
+      "index": "a00",
+      "name": "Icon sparkles",
+      "parentId": "rfarGlyS",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
+    "SkY8Ol5m": {
+      "content": "Ask AI",
+      "index": "a01",
+      "name": "Ask AI",
+      "parentId": "rfarGlyS",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 600
+      },
+      "type": "text"
     }
   },
   "version": 1

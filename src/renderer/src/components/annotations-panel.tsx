@@ -1,4 +1,4 @@
-import { Trash2, X } from "lucide-react";
+import { Sparkles, Trash2, X } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Highlight, Note, PageAnnotations, Span } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
@@ -73,7 +73,7 @@ export const AnnotationsPanel = ({
 }) => {
   const items = tab === "highlights" ? (annotations?.highlights ?? []) : (annotations?.notes ?? []);
   return (
-    <aside aria-label="Annotations" style={{ width }} className="relative flex min-h-0 shrink-0 flex-col border-l border-line bg-surface">
+    <aside aria-label={tab === "ask" ? "Ask AI" : "Annotations"} style={{ width }} className="relative flex min-h-0 shrink-0 flex-col border-l border-line bg-surface">
       <div
         role="separator"
         aria-orientation="vertical"
@@ -92,16 +92,21 @@ export const AnnotationsPanel = ({
         className="absolute inset-y-0 -left-1 z-10 w-2 cursor-col-resize transition-colors hover:bg-accent-soft active:bg-accent-soft"
       />
       <div className="flex h-15 shrink-0 items-center gap-2 border-b border-line px-4">
-        <Segmented
-          label="Annotations"
-          value={tab}
-          onChange={onTab}
-          options={[
-            { value: "highlights", label: "Highlights" },
-            { value: "notes", label: "Notes" },
-            { value: "ask", label: "Ask AI" },
-          ]}
-        />
+        {tab === "ask" ? (
+          <h2 className="flex items-center gap-2 text-sm font-semibold">
+            <Sparkles className="size-4 text-accent" /> Ask AI
+          </h2>
+        ) : (
+          <Segmented
+            label="Annotations"
+            value={tab}
+            onChange={onTab}
+            options={[
+              { value: "highlights", label: "Highlights" },
+              { value: "notes", label: "Notes" },
+            ]}
+          />
+        )}
         <span className="flex-1" />
         <IconButton icon={X} label="Close panel" onClick={onClose} />
       </div>

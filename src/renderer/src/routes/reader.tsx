@@ -38,6 +38,9 @@ const tableOfContents = (book: BookDetail): TocEntry[] => {
 };
 
 const PANEL_WIDTH = 400;
+/** Ask AI opens wider than highlights and notes, until the reader sizes it themselves. */
+const ASK_WIDTH = 560;
+const ASK_EXTRA = 120;
 
 const usePref = <T,>({ key, fallback }: { key: string; fallback: T }) => {
   const [value, setValue] = useState<T>(() => readPref({ key, fallback }));
@@ -314,6 +317,11 @@ export const ReaderRoute = () => {
   const setPanelOpen = wide ? setPanelPref : setPanelSheet;
   const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: PANEL_WIDTH });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
+  const [annotationsTab, setAnnotationsTab] = usePref<Exclude<PanelTab, "ask">>({ key: "reader.annotationsTab", fallback: "highlights" });
+  const [askWidth, setAskWidth] = usePref<number | null>({ key: "reader.askWidth", fallback: null });
+  const asking = panelTab === "ask";
+  const sideWidth = asking ? (askWidth ?? Math.max(ASK_WIDTH, panelWidth + ASK_EXTRA)) : panelWidth;
+  const setSideWidth = asking ? setAskWidth : setPanelWidth;
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
   // Kept after closing so the toolbar can animate out with its content.
   const lastToolbar = useRef<Toolbar | null>(null);
@@ -668,7 +676,10 @@ export const ReaderRoute = () => {
   const sidePanel = (
     <AnnotationsPanel
       tab={panelTab}
-      onTab={setPanelTab}
+      onTab={(tab) => {
+        setPanelTab(tab);
+        if (tab !== "ask") setAnnotationsTab(tab);
+      }}
       annotations={annotations.data}
       onClose={() => setPanelOpen(false)}
       onGoTo={(span) => {
@@ -677,9 +688,9 @@ export const ReaderRoute = () => {
       }}
       onRemoveHighlight={removeHighlight}
       onDeleteNote={(id) => void noteWrites.remove(id)}
-      width={panelWidth}
-      onResize={(w) => setPanelWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
-      onResetSize={() => setPanelWidth(PANEL_WIDTH)}
+      width={sideWidth}
+      onResize={(w) => setSideWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
+      onResetSize={() => (asking ? setAskWidth(null) : setPanelWidth(PANEL_WIDTH))}
       askPanel={
         <AskPanel
           bookId={bookId}
@@ -744,7 +755,7 @@ export const ReaderRoute = () => {
           onClick={() => {
             if (panelOpen && panelTab !== "ask") setPanelOpen(false);
             else {
-              if (panelTab === "ask") setPanelTab("highlights");
+              if (panelTab === "ask") setPanelTab(annotationsTab);
               setPanelOpen(true);
             }
           }}
