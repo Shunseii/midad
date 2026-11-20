@@ -231,7 +231,7 @@ const TOAST_DURATION_MS = 4000;
 
 const ToastBody = ({ children }: { children: ReactNode }) => (
   <div className="flex w-full justify-center">
-    <div role="status" className="rounded-lg bg-ink px-3.5 py-2.5 text-sm text-bg shadow-lg">
+    <div role="status" className="rounded-xl bg-ink px-3.5 py-2.5 text-sm text-bg shadow-float">
       {children}
     </div>
   </div>
@@ -248,18 +248,21 @@ export const Toast = ({ children, onDone }: { children: ReactNode; onDone: () =>
     const finish = () => {
       if (mounted) onDoneRef.current();
     };
-    const id = toast.custom(() => <ToastBody>{children}</ToastBody>, {
-      duration: TOAST_DURATION_MS,
-      unstyled: true,
-      className: "w-full",
-      onAutoClose: finish,
-      onDismiss: finish,
+    // Created a tick later so StrictMode's mount-unmount-mount doesn't leave a second toast animating out.
+    const timer = setTimeout(() => {
+      toastId.current = toast.custom(() => <ToastBody>{children}</ToastBody>, {
+        duration: TOAST_DURATION_MS,
+        unstyled: true,
+        className: "w-full",
+        onAutoClose: finish,
+        onDismiss: finish,
+      });
     });
-    toastId.current = id;
     return () => {
       mounted = false;
+      clearTimeout(timer);
+      if (toastId.current !== null) toast.dismiss(toastId.current);
       toastId.current = null;
-      toast.dismiss(id);
     };
     // Content changes are pushed into the live toast by the effect below.
   }, []);
