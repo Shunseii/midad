@@ -337,7 +337,7 @@ export const AskPanel = ({
         {turns.length === 0 && (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <h2 className="font-display text-title font-semibold">{activeSelection ? "Ask about this passage" : "Ask about this page"}</h2>
+              <h2 className="text-heading font-semibold">{activeSelection ? "Ask about this passage" : "Ask about this page"}</h2>
               <p className="text-sm text-ink-3">Claude answers from this page and links to the lines it uses.</p>
             </div>
             <div className="flex flex-col items-start gap-2">
