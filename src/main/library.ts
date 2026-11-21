@@ -9,7 +9,7 @@ import type {
   SyncPreview,
   SyncResult,
 } from "../shared/library";
-import { type Gloss, type GlossCorrection, type GlossKey, type Page, parsePage, withGlossCorrections } from "../shared/page";
+import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
 
 /**
@@ -55,47 +55,6 @@ CREATE TABLE IF NOT EXISTS progress (
   anchor TEXT
 );
 `;
-
-/**
- * The reader's corrections of which words a gloss explains. Keyed by the page's corpus
- * file and where the book places the gloss, so a sync that rewrites the page keeps them.
- */
-const GLOSS_CORRECTIONS = `
-CREATE TABLE IF NOT EXISTS gloss_corrections (
-  book_id TEXT NOT NULL,
-  file_id TEXT NOT NULL,
-  part TEXT NOT NULL,
-  line INTEGER NOT NULL,
-  book_from INTEGER NOT NULL,
-  book_to INTEGER NOT NULL,
-  text TEXT NOT NULL,
-  word_from INTEGER NOT NULL,
-  word_to INTEGER NOT NULL,
-  updated_at INTEGER NOT NULL,
-  PRIMARY KEY (book_id, file_id, part, line, book_from, book_to, text),
-  FOREIGN KEY (book_id, file_id) REFERENCES pages (book_id, file_id) ON DELETE CASCADE
-);
-`;
-
-interface GlossCorrectionRow {
-  part: Gloss["part"];
-  line: number;
-  book_from: number;
-  book_to: number;
-  text: string;
-  word_from: number;
-  word_to: number;
-}
-
-const toCorrection = (r: GlossCorrectionRow): GlossCorrection => ({
-  part: r.part,
-  line: r.line,
-  book: { from: r.book_from, to: r.book_to },
-  text: r.text,
-  from: r.word_from,
-  to: r.word_to,
-});
-
 
 const addProgressAnchor = (db: DatabaseSync) => {
   const columns = db.prepare("PRAGMA table_info(progress)").all() as { name: string }[];
@@ -201,7 +160,6 @@ export const createLibrary = ({
 }) => {
   db.exec("PRAGMA foreign_keys = ON;");
   db.exec(SCHEMA);
-  db.exec(GLOSS_CORRECTIONS);
   migrateProgressToFileId(db);
   addProgressAnchor(db);
 
@@ -246,35 +204,6 @@ export const createLibrary = ({
     const setPosition = db.prepare("UPDATE pages SET position = ? WHERE book_id = ? AND file_id = ?");
     ordered.forEach((p, i) => setPosition.run(i + 1, bookId, p.fileId));
   };
-
-  const corrections = ({ bookId, fileId }: { bookId: string; fileId: string }): GlossCorrection[] =>
-    (
-      db
-        .prepare("SELECT part, line, book_from, book_to, text, word_from, word_to FROM gloss_corrections WHERE book_id = ? AND file_id = ?")
-        .all(bookId, fileId) as unknown as GlossCorrectionRow[]
-    ).map(toCorrection);
-
-  const readPage = ({ bookId, fileId, source }: { bookId: string; fileId: string; source: string }): Page =>
-    withGlossCorrections({ page: parsePage(source), corrections: corrections({ bookId, fileId }) });
-
-  /** The page row and the book's own gloss a key names; throws when either is missing. */
-  const glossAt = ({ bookId, position, key }: { bookId: string; position: number; key: GlossKey }) => {
-    const row = db.prepare("SELECT file_id, source FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
-      | Pick<PageRow, "file_id" | "source">
-      | undefined;
-    if (!row) throw new Error(`Book ${bookId} has no page ${position} in the library.`);
-    const page = parsePage(row.source);
-    const gloss = page.glosses.find(
-      (g) => g.part === key.part && g.line === key.line && g.text === key.text && g.from === key.book.from && g.to === key.book.to,
-    );
-    if (!gloss) throw new Error(`Page ${position} has no gloss "${key.text}" on ${key.part} line ${key.line}.`);
-    return { fileId: row.file_id, page };
-  };
-
-  const deleteCorrection = ({ bookId, fileId, key }: { bookId: string; fileId: string; key: GlossKey }) =>
-    db
-      .prepare("DELETE FROM gloss_corrections WHERE book_id = ? AND file_id = ? AND part = ? AND line = ? AND book_from = ? AND book_to = ? AND text = ?")
-      .run(bookId, fileId, key.part, key.line, key.book.from, key.book.to, key.text);
 
   const localPages = (bookId: string) =>
     db.prepare("SELECT file_id, position, source FROM pages WHERE book_id = ?").all(bookId) as unknown as Pick<
@@ -423,33 +352,8 @@ export const createLibrary = ({
         position: row.position,
         number: row.number,
         fileId: row.file_id,
-        page: readPage({ bookId, fileId: row.file_id, source: row.source }),
+        page: parsePage(row.source),
       };
-    },
-
-    /** Moves a gloss to other words of its line. Moving it back to the book's own words removes the correction. */
-    async correctGloss({ bookId, position, key, from, to }: { bookId: string; position: number; key: GlossKey; from: number; to: number }): Promise<void> {
-      const { fileId, page } = glossAt({ bookId, position, key });
-      const text = key.part === "matn" ? page.matn.find((b) => b.line === key.line)?.text : page.hashiya[key.line - 1]?.text;
-      const words = (text ?? "").split(/\s+/).filter(Boolean).length;
-      if (!Number.isInteger(from) || !Number.isInteger(to) || from < 1 || to < from || to > words) {
-        throw new Error(`A gloss on ${key.part} line ${key.line} covers words 1–${words}, not ${from}–${to}.`);
-      }
-      if (from === key.book.from && to === key.book.to) {
-        deleteCorrection({ bookId, fileId, key });
-        return;
-      }
-      db.prepare(
-        `INSERT INTO gloss_corrections (book_id, file_id, part, line, book_from, book_to, text, word_from, word_to, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-         ON CONFLICT (book_id, file_id, part, line, book_from, book_to, text)
-         DO UPDATE SET word_from = excluded.word_from, word_to = excluded.word_to, updated_at = excluded.updated_at`,
-      ).run(bookId, fileId, key.part, key.line, key.book.from, key.book.to, key.text, from, to, now());
-    },
-
-    /** Puts a gloss back on the words the book gives it. */
-    async resetGloss({ bookId, position, key }: { bookId: string; position: number; key: GlossKey }): Promise<void> {
-      deleteCorrection({ bookId, fileId: glossAt({ bookId, position, key }).fileId, key });
     },
 
     /** The page's first line of main text, for the scrubber's preview; null when the page has none. */

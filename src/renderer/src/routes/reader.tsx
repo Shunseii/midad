@@ -17,8 +17,6 @@ import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } 
 import { findOnPage } from "../../../shared/find";
 import { citeSpan } from "../../../shared/ask";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
-import type { GlossActions } from "../components/glosses";
-import { glossKey } from "../../../shared/page";
 import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rectWithGlosses, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Segmented, Skeleton, Toast, ToastAction, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
@@ -599,20 +597,6 @@ export const ReaderRoute = () => {
   const sameNotes = (a: NoteState | null, b: NoteState) =>
     a?.mode === b.mode && a.note?.id === b.note?.id && (a.row ?? []).map((n) => n.id).join() === (b.row ?? []).map((n) => n.id).join();
 
-  /** Saves the words a gloss explains (every gloss merged into it), then reads the page again. */
-  const glossActions: GlossActions = {
-    correct: ({ run, from, to }) => {
-      void Promise.all(run.glosses.map((g) => midad["glosses.correct"]({ bookId, position, key: glossKey(g), from, to })))
-        .catch((err: unknown) => console.error(err))
-        .finally(() => void client.invalidateQueries({ queryKey: keys.page(bookId, position) }));
-    },
-    reset: ({ run }) => {
-      void Promise.all(run.glosses.filter((g) => g.book).map((g) => midad["glosses.reset"]({ bookId, position, key: glossKey(g) })))
-        .catch((err: unknown) => console.error(err))
-        .finally(() => void client.invalidateQueries({ queryKey: keys.page(bookId, position) }));
-    },
-  };
-
   const noteMarkHandlers = {
     /** Hovering a margin mark only tints its notes' words; clicking opens them. */
     onHover: (target: NoteMarkTarget | null) => setMarkTint(target ? target.notes.map((n) => n.id) : []),
@@ -681,7 +665,7 @@ export const ReaderRoute = () => {
     setMenuOpen(false);
     dismiss();
     if (e.button === 0 && pageRoot.current) markDragging(pageRoot.current);
-    const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss-label], [data-gloss-handle], [data-gloss-adjust-bar], [role=link], button, a, input, textarea");
+    const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss-label], [role=link], button, a, input, textarea");
     if (e.button === 0 && e.detail === 1 && offText) return startDragSelection(e);
     const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
     const root = pageRoot.current;
@@ -1347,7 +1331,6 @@ export const ReaderRoute = () => {
               tinted={tinted}
               dimNoteMarks={focusOn}
               noteMarkHandlers={noteMarkHandlers}
-              glossActions={glossActions}
               marker={marker.data?.position === position ? marker.data : null}
               onMark={markRow}
               onClearMark={() => void edits().setMarker({ before: markerAt(), after: null })}

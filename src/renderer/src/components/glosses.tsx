@@ -1,14 +1,11 @@
-import { RotateCcw, TextCursorInput } from "lucide-react";
-import { type CSSProperties, type RefObject, useLayoutEffect, useState } from "react";
+import { type CSSProperties, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Part } from "../../../shared/annotations";
 import { stripHarakat } from "../../../shared/arabic";
 import type { Gloss } from "../../../shared/page";
 import type { GlossMode } from "../lib/appearance";
 import { attachment, type GlossBox, type Interval, layoutRow, type RowInput } from "../lib/gloss-layout";
-import { shortcutKeys } from "../lib/keymap";
-import { useKeybindings } from "../lib/use-keybindings";
 import { cx } from "./ui";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 /** Glosses on the same words, merged so those words carry one label. Glosses that only overlap keep their own. */
 export interface GlossRun {
@@ -235,16 +232,15 @@ export const GlossStrut = ({ room }: { room: { up: number; down: number } | unde
   />
 );
 
-export interface GlossActions {
-  correct: (input: { run: GlossRun; from: number; to: number }) => void;
-  reset: (input: { run: GlossRun }) => void;
-}
-
 const stop = (e: { stopPropagation: () => void }) => e.stopPropagation();
 
+/** How long the Copied confirmation stays on a gloss. */
+const COPIED_MS = 1200;
+
 /**
- * A gloss printed small under (or over) its words. Hovering it tints its words; hovering
- * the words inks it. Clicking it offers to adjust which words it explains.
+ * A gloss printed small under its words. It's never part of the text: it can't be selected,
+ * highlighted or copied with the words. Hovering it tints its words; hovering the words inks
+ * it. Clicking it, or Enter or Space while it has focus, copies its text.
  */
 export const GlossLabel = ({
   run,
@@ -254,25 +250,30 @@ export const GlossLabel = ({
   labelSize,
   active,
   onHover,
-  onAdjust,
-  onReset,
 }: {
   run: GlossRun;
   text: string;
   mode: GlossMode;
   placement: LabelPlacement | undefined;
   labelSize: number;
-  /** Its words or the label itself are hovered, or its words are being adjusted. */
+  /** Its words or the label itself are hovered. */
   active: boolean;
   onHover: (hovered: boolean) => void;
-  onAdjust: () => void;
-  onReset: () => void;
 }) => {
-  const [menu, setMenu] = useState(false);
-  const corrected = run.glosses.some((g) => g.book);
+  const [copied, setCopied] = useState(false);
+  const [tip, setTip] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
   const floating = mode === "hover";
   if (!floating && !placement) return null;
-  if (floating && !active && !menu) return null;
+  if (floating && !active && !copied) return null;
+  const copy = () => {
+    void navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      clearTimeout(timer.current);
+      timer.current = setTimeout(() => setCopied(false), COPIED_MS);
+    });
+  };
   const style: CSSProperties = floating
     ? { top: "calc(100% + 0.15em)", right: 0 }
     : {
@@ -283,142 +284,45 @@ export const GlossLabel = ({
         ...(placement!.slot === "below" ? { top: placement!.offset } : { bottom: placement!.offset }),
       };
   return (
-    <Popover open={menu} onOpenChange={setMenu}>
-      <PopoverTrigger
-        nativeButton={false}
-        aria-label={`Gloss: ${text}`}
-        onMouseDown={stop}
-        onMouseUp={stop}
-        onClick={stop}
-        onMouseEnter={() => onHover(true)}
-        onMouseLeave={() => onHover(false)}
+    <Tooltip open={tip || copied} onOpenChange={setTip}>
+      <TooltipTrigger
         render={
           <span
             data-overlay
             data-gloss-label={run.id}
             data-gloss-words={`${run.from}-${run.to}`}
+            role="button"
+            tabIndex={0}
             dir="rtl"
+            aria-label={`Gloss: ${text}. Click to copy`}
             style={style}
+            onMouseDown={stop}
+            onMouseUp={stop}
+            onClick={(e) => {
+              stop(e);
+              copy();
+            }}
+            onKeyDown={(e) => {
+              if (e.key !== "Enter" && e.key !== " ") return;
+              e.preventDefault();
+              e.stopPropagation();
+              copy();
+            }}
+            onMouseEnter={() => onHover(true)}
+            onMouseLeave={() => onHover(false)}
             className={cx(
               "gloss-label",
               floating ? "gloss-label-floating" : placement!.lines > 1 ? "whitespace-normal text-balance" : "whitespace-nowrap",
-              (active || menu) && "gloss-label-active",
+              (active || copied) && "gloss-label-active",
             )}
           />
         }
       >
         {text}
-      </PopoverTrigger>
-      <PopoverContent side="bottom" sideOffset={6} onMouseDown={stop} onMouseUp={stop} onClick={stop} className="w-max min-w-44 gap-0.5 p-1">
-        <button
-          type="button"
-          onClick={() => {
-            setMenu(false);
-            onAdjust();
-          }}
-          className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-sm text-ink transition-colors duration-press hover:bg-ink/5 focus-visible:outline-2 focus-visible:outline-accent"
-        >
-          <TextCursorInput aria-hidden className="size-4 text-ink-3" />
-          Adjust words
-        </button>
-        {corrected && (
-          <button
-            type="button"
-            onClick={() => {
-              setMenu(false);
-              onReset();
-            }}
-            className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-sm text-ink transition-colors duration-press hover:bg-ink/5 focus-visible:outline-2 focus-visible:outline-accent"
-          >
-            <RotateCcw aria-hidden className="size-4 text-ink-3" />
-            Reset to the book's words
-          </button>
-        )}
-      </PopoverContent>
-    </Popover>
-  );
-};
-
-export interface AdjustState {
-  run: string;
-  from: number;
-  to: number;
-}
-
-/** The word under a point on this line, if any. */
-const wordAt = ({ x, y, part, line }: { x: number; y: number; part: Part; line: number }): number | null => {
-  for (const el of document.elementsFromPoint(x, y)) {
-    const word = el.closest<HTMLElement>("[data-w]");
-    if (word && word.dataset.part === part && Number(word.dataset.line) === line) return Number(word.dataset.w);
-  }
-  return null;
-};
-
-/**
- * One end of the words a gloss is being moved to: a bar with a knob, dragged across the
- * line's words. The start end sits at the first word's leading edge, the end at the last's.
- */
-export const AdjustHandle = ({
-  edge,
-  part,
-  line,
-  adjust,
-  onChange,
-}: {
-  edge: "start" | "end";
-  part: Part;
-  line: number;
-  adjust: AdjustState;
-  onChange: (next: AdjustState) => void;
-}) => (
-  <span
-    data-overlay
-    data-gloss-handle={edge}
-    role="slider"
-    aria-label={edge === "start" ? "First word of the gloss" : "Last word of the gloss"}
-    aria-valuenow={edge === "start" ? adjust.from : adjust.to}
-    onMouseDown={stop}
-    onMouseUp={stop}
-    onClick={stop}
-    onPointerDown={(e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      e.currentTarget.setPointerCapture(e.pointerId);
-    }}
-    onPointerMove={(e) => {
-      if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-      const word = wordAt({ x: e.clientX, y: e.clientY, part, line });
-      if (word === null) return;
-      const other = edge === "start" ? adjust.to : adjust.from;
-      const from = Math.min(word, other);
-      const to = Math.max(word, other);
-      if (from !== adjust.from || to !== adjust.to) onChange({ ...adjust, from, to });
-    }}
-    onPointerUp={(e) => e.currentTarget.releasePointerCapture(e.pointerId)}
-    className={cx("gloss-handle", edge === "start" ? "gloss-handle-start" : "gloss-handle-end")}
-  />
-);
-
-/** Save and cancel for adjusting a gloss's words, with Enter and Esc from the keymap. */
-export const AdjustBar = ({ onSave, onCancel }: { onSave: () => void; onCancel: () => void }) => {
-  useKeybindings({ scope: "popover", handlers: { "gloss.saveWords": () => onSave(), "gloss.cancelWords": () => onCancel() } });
-  return (
-    <span
-      data-overlay
-      data-gloss-adjust-bar
-      dir="ltr"
-      onMouseDown={stop}
-      onMouseUp={stop}
-      onClick={stop}
-      className="gloss-adjust-bar absolute top-[calc(100%+0.3em)] left-0 z-20 flex select-none items-center gap-1 whitespace-nowrap rounded-lg bg-surface-3 p-1 font-sans text-xs text-ink-2 shadow-float"
-    >
-      <span className="px-1.5">Drag the ends to the gloss's words</span>
-      <button type="button" onClick={onCancel} className="rounded-md px-2 py-1 transition-colors duration-press hover:bg-ink/5 hover:text-ink">
-        Cancel <span className="text-ink-3">{shortcutKeys("gloss.cancelWords")}</span>
-      </button>
-      <button type="button" onClick={onSave} className="rounded-md bg-accent px-2 py-1 text-on-accent transition-opacity duration-press hover:opacity-90">
-        Save <span className="opacity-70">{shortcutKeys("gloss.saveWords")}</span>
-      </button>
-    </span>
+      </TooltipTrigger>
+      <TooltipContent side="top" sideOffset={4}>
+        {copied ? "Copied" : "Click to copy"}
+      </TooltipContent>
+    </Tooltip>
   );
 };

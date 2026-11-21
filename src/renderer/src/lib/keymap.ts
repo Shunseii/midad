@@ -68,9 +68,6 @@ export const COMMANDS = {
   "field.cancel": { keys: "Escape", label: "Cancel", allowWhileTyping: true },
   "note.save": { keys: "Mod+Enter", label: "Save note", allowWhileTyping: true },
 
-  "gloss.saveWords": { keys: "Enter", label: "Save the gloss's words" },
-  "gloss.cancelWords": { keys: "Escape", label: "Stop adjusting the gloss's words" },
-
   "settings.back": { keys: "Alt+ArrowLeft", label: "Back to the book", allowWhileTyping: true },
   "settings.close": { keys: "Escape", label: "Back to the book" },
 } satisfies Record<string, Command>;

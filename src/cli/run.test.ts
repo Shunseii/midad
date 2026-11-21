@@ -81,18 +81,6 @@ describe("reading", () => {
     expect((await run("lines", "b1", "1", "--line", "2")).stdout).toContain("(gloss: من كلمتين فأكثر)");
   });
 
-  it("prints a gloss on the words the reader moved it to", async () => {
-    await createLibrary({ db, corpus }).correctGloss({
-      bookId: "b1",
-      position: 1,
-      key: { part: "matn", line: 2, text: "من كلمتين فأكثر", book: { from: 4, to: 4 } },
-      from: 3,
-      to: 4,
-    });
-    expect((await run("lines", "b1", "1", "--line", "2")).stdout).toMatch(/gloss on words 3-4: اللفظ المركب \(gloss: من كلمتين فأكثر\)/);
-    expect((await run("page", "b1", "1")).stdout).toContain("gloss on words 3-4");
-  });
-
   it("prints only the lines asked for", async () => {
     const { stdout } = await run("lines", "b1", "1", "--line", "3");
     expect(stdout).toContain("بالوضع");

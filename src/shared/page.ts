@@ -29,50 +29,7 @@ export interface Gloss {
   from: number;
   to: number;
   text: string;
-  /** Where the book itself places the gloss, when the reader has moved it to other words. */
-  book?: { from: number; to: number };
 }
-
-/** What names a gloss on a page: its line, its text, and where the book places it. */
-export interface GlossKey {
-  part: Gloss["part"];
-  line: number;
-  text: string;
-  book: { from: number; to: number };
-}
-
-/** The key of a gloss as shown, corrected or not. */
-export const glossKey = (g: Gloss): GlossKey => ({ part: g.part, line: g.line, text: g.text, book: g.book ?? { from: g.from, to: g.to } });
-
-/** The reader's correction of which words a gloss explains, keyed by where the book places it. */
-export interface GlossCorrection {
-  part: Gloss["part"];
-  line: number;
-  book: { from: number; to: number };
-  text: string;
-  from: number;
-  to: number;
-}
-
-const wordCount = (text: string) => text.split(/\s+/).filter(Boolean).length;
-
-/**
- * The page with the reader's corrections applied. A correction whose gloss the book no
- * longer has (a sync changed the page) or whose words run past the line is left out.
- */
-export const withGlossCorrections = ({ page, corrections }: { page: Page; corrections: GlossCorrection[] }): Page => {
-  if (corrections.length === 0) return page;
-  const lineWords = (g: Gloss) => {
-    const text = g.part === "matn" ? page.matn.find((b) => b.line === g.line)?.text : page.hashiya[g.line - 1]?.text;
-    return text === undefined ? 0 : wordCount(text);
-  };
-  const glosses = page.glosses.map((g) => {
-    const c = corrections.find((c) => c.part === g.part && c.line === g.line && c.text === g.text && c.book.from === g.from && c.book.to === g.to);
-    if (!c || c.from < 1 || c.to < c.from || c.to > lineWords(g)) return g;
-    return { ...g, from: c.from, to: c.to, book: { from: g.from, to: g.to } };
-  });
-  return { ...page, glosses };
-};
 
 export interface Page {
   header: string | null;

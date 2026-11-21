@@ -21,7 +21,7 @@ import { arabicNumber } from "../lib/format";
 import { FOOTNOTE_REF, footnotesByMarker, splitFootnoteRef, toArabicIndic } from "../lib/footnotes";
 import { scrollToMiddle, tintWords } from "../lib/reveal";
 import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
-import { AdjustBar, type AdjustState, AdjustHandle, type GlossActions, GlossLabel, type GlossRun, GlossStrut, glossRuns, runText, useGlossLayout } from "./glosses";
+import { GlossLabel, type GlossRun, GlossStrut, glossRuns, runText, useGlossLayout } from "./glosses";
 import { cx, IconButton } from "./ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -131,10 +131,17 @@ const FootnoteRef = ({ marker }: { marker: string }) => {
   );
 };
 
+/** Whether a selection covers some of an element, not just touching its start or end. */
+const coversPart = ({ range, el }: { range: Range; el: Element }) =>
+  range.intersectsNode(el) && range.comparePoint(el, el.childNodes.length) !== -1 && range.comparePoint(el, 0) !== 1 &&
+  !(range.endContainer !== range.startContainer && el.contains(range.endContainer) && range.endOffset === 0) &&
+  !(el.contains(range.startContainer) && range.startOffset === (range.startContainer.textContent ?? "").length);
+
 /**
- * The browser paints a selection only behind text at the text's own size, which leaves holes
- * at the small inline-block footnote refs. Their full-height boxes (data-sel-box) take the
- * selection colour instead while the selection covers them.
+ * The page paints its own selection: the browser's would fill the whole line box, and rows
+ * that carry glosses are taller, so it would cover the glosses under the words. Words and the
+ * spaces between them take the selection colour at the text's own height instead, and the
+ * small inline-block footnote refs (data-sel-box) take it over their full-height boxes.
  */
 const useSelectionBoxes = (root: RefObject<HTMLElement | null>) => {
   useEffect(() => {
@@ -143,8 +150,8 @@ const useSelectionBoxes = (root: RefObject<HTMLElement | null>) => {
       if (!el) return;
       const selection = window.getSelection();
       const range = selection && !selection.isCollapsed && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
-      for (const box of el.querySelectorAll<HTMLElement>("[data-sel-box]")) {
-        box.toggleAttribute("data-in-selection", !!range && range.intersectsNode(box));
+      for (const box of el.querySelectorAll<HTMLElement>("[data-sel-box], [data-w], [data-space]")) {
+        box.toggleAttribute("data-in-selection", !!range && coversPart({ range, el: box }));
       }
     };
     document.addEventListener("selectionchange", update);
@@ -207,7 +214,6 @@ interface LineProps {
   dimNoteIcons: boolean;
   /** Changes when the text may have reflowed, so the glosses are laid out again. */
   layoutKey: string;
-  glossActions: GlossActions;
   onWordHover: (target: WordTarget, note: Note | null) => void;
   onWordClick: (target: WordTarget, highlight: Highlight | null) => void;
 }
@@ -291,7 +297,7 @@ const NoteCorner = ({ edge, active, dim }: { edge: "start" | "end"; active: bool
   />
 );
 
-const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, dimNoteIcons, layoutKey, glossActions, onWordHover, onWordClick }: LineProps) => {
+const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, dimNoteIcons, layoutKey, onWordHover, onWordClick }: LineProps) => {
   const sweepAt = (h: Highlight | null, ref: WordRef) => (sweep && h?.id === sweep.id ? sweep.order.get(`${part}:${ref.line}:${ref.word}`) : undefined);
   const tokens = tokenize(text);
   const wordAt = (i: number) => {
@@ -302,17 +308,14 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
   const mode = display.glosses;
   const runs = mode === "hidden" ? [] : glossRuns({ glosses, part, line });
   const probe = useRef<HTMLSpanElement>(null);
-  const cornersKey = display.noteIcons === "corners" ? annotations.notes.map((n) => `${n.id}:${n.span.start.line}:${n.span.start.word}:${n.span.end.line}:${n.span.end.word}`).join(",") : "";
+  const cornersKey = display.noteIcons !== "margin" ? annotations.notes.map((n) => `${n.id}:${n.span.start.line}:${n.span.start.word}:${n.span.end.line}:${n.span.end.word}`).join(",") : "";
   const glossLayout = useGlossLayout({ probe, part, line, runs, enabled: mode === "under", layoutKey: `${layoutKey}|${cornersKey}` });
   const [hover, setHover] = useState<{ run: string; on: "words" | "label" } | null>(null);
-  const [adjust, setAdjust] = useState<AdjustState | null>(null);
   /** The shortest run over a word: the gloss most about that word. */
   const runOf = (word: number) =>
     runs.filter((r) => r.from <= word && word <= r.to).reduce<GlossRun | null>((best, r) => (!best || r.to - r.from < best.to - best.from ? r : best), null);
-  const adjusting = adjust ? (runs.find((r) => r.id === adjust.run) ?? null) : null;
-  // The words tinted violet: those being adjusted, or those of the gloss under the pointer.
-  const hoveredRun = hover?.on === "label" ? (runs.find((r) => r.id === hover.run) ?? null) : null;
-  const tintSpan = adjust ?? hoveredRun;
+  // The words tinted violet: those of the gloss under the pointer.
+  const tintSpan = hover?.on === "label" ? (runs.find((r) => r.id === hover.run) ?? null) : null;
   const inTint = (word: number) => tintSpan !== null && tintSpan.from <= word && word <= tintSpan.to;
   const glossClasses = (word: number, joinsTo?: number) => {
     if (!inTint(word) || (joinsTo !== undefined && !inTint(joinsTo))) return null;
@@ -324,15 +327,10 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     setHover((h) => (entering ? { run: run.id, on: "words" } : h?.run === run.id && h.on === "words" ? null : h));
   };
   const tintOf = (ref: WordRef) => tintedAt({ notes: annotations.notes, tinted, part, ref });
-  const corners = display.noteIcons === "corners";
+  const corners = display.noteIcons !== "margin";
   const startsHere = (word: number) => (corners ? annotations.notes.filter((n) => n.span.part === part && n.span.start.line === line && n.span.start.word === word) : []);
   const endsHere = (word: number) => (corners ? annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line && n.span.end.word === word) : []);
   const anchoredAt = (word: number) => runs.filter((r) => (glossLayout.labels[r.id]?.anchor ?? r.to) === word);
-
-  const saveAdjust = () => {
-    if (adjust && adjusting) glossActions.correct({ run: adjusting, from: adjust.from, to: adjust.to });
-    setAdjust(null);
-  };
 
   const nodes = tokens.map((token, i) => {
     if (token.kind === "space") {
@@ -347,6 +345,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
       return (
         <span
           key={i}
+          data-space
           className={cx(joins && MARK_BAND[shared.color], at !== undefined && "mark-sweep", "note-span", tintJoins && "note-tint", before && after && glossClasses(before.word, after.word))} style={at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.5 }) : undefined}>
           {token.text}
         </span>
@@ -373,7 +372,6 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const at = sweepAt(highlight, ref);
     const targetLetter = t && t.part === part && t.line === line && t.word === token.word ? t.letter : null;
     const anchored = anchoredAt(token.word);
-    const lastOfAdjust = adjust?.to === token.word;
     return (
       <span key={i} className="relative whitespace-nowrap">
         <span
@@ -412,18 +410,10 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
             mode={mode}
             placement={glossLayout.labels[run.id]}
             labelSize={glossLayout.labelSize}
-            active={hover?.run === run.id || adjust?.run === run.id}
+            active={hover?.run === run.id}
             onHover={(hovered) => setHover((h) => (hovered ? { run: run.id, on: "label" } : h?.run === run.id ? null : h))}
-            onAdjust={() => {
-              setHover(null);
-              setAdjust({ run: run.id, from: run.from, to: run.to });
-            }}
-            onReset={() => glossActions.reset({ run })}
           />
         ))}
-        {adjust && adjust.from === token.word && <AdjustHandle edge="start" part={part} line={line} adjust={adjust} onChange={setAdjust} />}
-        {adjust && adjust.to === token.word && <AdjustHandle edge="end" part={part} line={line} adjust={adjust} onChange={setAdjust} />}
-        {adjust && lastOfAdjust && <AdjustBar onSave={saveAdjust} onCancel={() => setAdjust(null)} />}
       </span>
     );
   });
@@ -762,7 +752,6 @@ export const PageView = ({
   tinted,
   dimNoteMarks,
   noteMarkHandlers,
-  glossActions,
   ribbon,
 }: {
   stored: StoredPage;
@@ -785,8 +774,6 @@ export const PageView = ({
   /** Focus mode keeps the note marks faint until hovered. */
   dimNoteMarks: boolean;
   noteMarkHandlers: NoteMarkHandlers;
-  /** Saves or resets the reader's choice of which words a gloss explains. */
-  glossActions: GlossActions;
   /** The bookmark ribbon, hung from the page's top corner. */
   ribbon?: ReactNode;
 }) => {
@@ -796,7 +783,7 @@ export const PageView = ({
   const fresh = freshHighlight ? annotations.highlights.find((h) => h.id === freshHighlight) : undefined;
   const sweep = fresh ? sweepOrder({ page, highlight: fresh }) : null;
   const layoutKey = `${display.showHarakat}-${display.showMine}-${display.textScale}-${display.glosses}-${display.hashiyaMarkers}-${display.noteIcons}-${width}`;
-  const lineProps = { glosses: page.glosses, annotations, sweep, display, tinted, dimNoteIcons: dimNoteMarks, layoutKey, glossActions, onWordHover, onWordClick };
+  const lineProps = { glosses: page.glosses, annotations, sweep, display, tinted, dimNoteIcons: dimNoteMarks, layoutKey, onWordHover, onWordClick };
   const t = (s: string) => (display.showHarakat ? s : stripHarakat(s));
   const markable = (part: Part, line: number) => ({
     part,

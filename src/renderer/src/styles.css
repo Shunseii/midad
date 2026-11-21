@@ -197,7 +197,7 @@ body {
 }
 
 /*
- * While a gloss is hovered (or its words are being adjusted) its words and the spaces
+ * While a gloss is hovered its words and the spaces
  * between them take one soft violet band at the height of a "Behind text" highlight:
  * square joins, rounded only at the two ends. It lies under an "Under text" band; over a
  * "Behind text" band, which would hide it, it is a wash.
@@ -242,7 +242,8 @@ body {
 
 /*
  * An interlinear gloss, printed small under (or over) its words in a muted ink, as the book
- * prints it. Hovering its words inks it. gloss-layout.ts places it; it never moves a word.
+ * prints it. Hovering its words inks it; clicking copies it. It's never part of the text, so
+ * it can't be selected. gloss-layout.ts places it; it never moves a word.
  */
 .gloss-label {
   position: absolute;
@@ -291,51 +292,6 @@ body {
   .gloss-label-floating {
     animation: gloss-tint-in var(--transition-duration-pop) var(--ease-out);
   }
-}
-
-/* The two ends of the words a gloss is being moved to: a bar with a knob, dragged sideways. */
-.gloss-handle {
-  position: absolute;
-  top: 0.1em;
-  bottom: 0.05em;
-  z-index: 25;
-  width: 2px;
-  background: var(--color-accent);
-  border-radius: 1px;
-  cursor: ew-resize;
-  touch-action: none;
-  user-select: none;
-}
-.gloss-handle::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  width: 10px;
-  height: 10px;
-  translate: -50% 0;
-  border-radius: 9999px;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 2px var(--color-bg);
-}
-.gloss-handle::after {
-  content: "";
-  position: absolute;
-  inset: -0.2em -0.4em;
-}
-.gloss-handle-start {
-  right: -2px;
-}
-.gloss-handle-start::before {
-  top: -6px;
-}
-.gloss-handle-end {
-  left: -2px;
-}
-.gloss-handle-end::before {
-  bottom: -6px;
-}
-.gloss-adjust-bar {
-  animation: gloss-card-in var(--transition-duration-pop) var(--ease-out);
 }
 
 /*
@@ -467,8 +423,22 @@ body {
  * and the ref's own small selection box is dropped so it doesn't double up.
  */
 [data-sel-box]::selection,
-[data-sel-box] *::selection {
+[data-sel-box] *::selection,
+[data-w]::selection,
+[data-w] *::selection,
+[data-space]::selection {
   background-color: transparent;
+}
+/* The page's own selection, at the text's height (see useSelectionBoxes): never over the glosses under it. */
+[data-w][data-in-selection],
+[data-space][data-in-selection] {
+  background-color: color-mix(in oklab, var(--color-accent) 28%, transparent);
+  border-radius: 0;
+}
+/* A footnote ref inside a selected word already sits on the word's colour. */
+[data-w][data-in-selection] [data-sel-box][data-in-selection] {
+  background-color: transparent;
+  box-shadow: none;
 }
 [data-sel-box][data-in-selection] {
   --selection: color-mix(in oklab, var(--color-accent) 28%, transparent);
