@@ -333,6 +333,9 @@ export const ReaderRoute = () => {
   const [textScale, setTextScale] = usePref({ key: "reader.textScale", fallback: 1 });
   const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
+  useEffect(() => {
+    if (!showHarakat || !showMine) setTarget(null);
+  }, [showHarakat, showMine]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [panelPref, setPanelPref] = usePref({ key: "reader.panelOpen", fallback: false });
   const [panelSheet, setPanelSheet] = useState(false);
@@ -580,7 +583,8 @@ export const ReaderRoute = () => {
     if (!window.getSelection()?.isCollapsed) return;
     if (word.letter !== null) {
       const ref = { part: word.part, line: word.ref.line, word: word.ref.word, letter: word.letter };
-      const takes = page.data && takesHarakat({ page: page.data.page, ref });
+      // Marks the reader can't see can't be edited: with harakat (or their own) hidden, a click picks no letter.
+      const takes = showHarakat && showMine && page.data && takesHarakat({ page: page.data.page, ref });
       // Words aren't focusable, so a text field (the Ask AI composer) would keep the keys meant for the letter.
       if (takes && document.activeElement instanceof HTMLElement && (document.activeElement.isContentEditable || document.activeElement.matches("input, textarea"))) {
         document.activeElement.blur();
