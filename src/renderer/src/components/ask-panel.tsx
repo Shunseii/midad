@@ -146,13 +146,15 @@ const quoteCitation = (span: Span): Omit<Cite, "kind"> => ({
 });
 
 /**
- * A citation or quote: a small label that shows the exact words on hover and
- * jumps to them on click. The words show in a portalled tooltip so the
- * panel's scrolling doesn't clip them.
+ * A citation or quote: a small pill that shows the exact words on hover and
+ * jumps to them on click. A citation's pill reads its line label; a quote's
+ * pill reads the quoted words themselves. The words show in a portalled
+ * tooltip so the panel's scrolling doesn't clip them.
  */
 const CiteChip = ({
   label,
   text,
+  quoted = false,
   onClick,
   onRemove,
   onBubble = false,
@@ -160,6 +162,8 @@ const CiteChip = ({
 }: {
   label: string;
   text: string | null;
+  /** The pill shows `text` (cut short) instead of `label`; the tooltip names the label above the full text. */
+  quoted?: boolean;
   /** The citation's words aren't on the page: shown muted, with `text` saying so, and it goes nowhere. */
   missing?: boolean;
   onClick?: () => void;
@@ -172,7 +176,7 @@ const CiteChip = ({
       // The label is English: keep its icon first inside right-to-left text too.
       render={<span dir="ltr" />}
       className={cx(
-        "mx-0.5 inline-flex translate-y-px items-center gap-1 rounded-md align-baseline font-sans text-xs text-accent",
+        "mx-0.5 inline-flex max-w-full translate-y-px items-center gap-1 rounded-md align-baseline font-sans text-xs text-accent [unicode-bidi:isolate]",
         // In a sent question the chips flow with its words, centred on the line.
         onBubble ? "translate-y-0 bg-surface align-middle" : "bg-accent-soft",
         missing && "bg-ink/6 text-ink-3",
@@ -182,13 +186,20 @@ const CiteChip = ({
         type="button"
         disabled={!onClick}
         onClick={onClick}
-        className={cx("inline-flex items-center gap-1 rounded-md py-0.5 pl-1.5", onRemove ? "pr-0.5" : "pr-1.5", onClick && "hover:underline")}
+        aria-label={quoted ? `${label}: ${text}` : undefined}
+        className={cx("inline-flex min-w-0 items-center gap-1 rounded-md py-0.5 pl-1.5", onRemove ? "pr-0.5" : "pr-1.5", onClick && "hover:underline")}
       >
-        <QuoteIcon aria-hidden className="size-3" />
-        {label}
+        <QuoteIcon aria-hidden className="size-3 shrink-0" />
+        {quoted ? (
+          <span dir="rtl" className="ar max-w-56 truncate text-ar-small leading-6">
+            {text}
+          </span>
+        ) : (
+          label
+        )}
       </button>
       {onRemove && (
-        <button type="button" aria-label={`Remove ${label}`} onClick={onRemove} className="rounded-sm py-0.5 pr-1 hover:text-ink">
+        <button type="button" aria-label={quoted ? "Remove quote" : `Remove ${label}`} onClick={onRemove} className="rounded-sm py-0.5 pr-1 hover:text-ink">
           <X aria-hidden className="size-3" />
         </button>
       )}
@@ -199,6 +210,7 @@ const CiteChip = ({
       arrow={false}
       className="block w-max max-w-80 rounded-xl bg-surface-3 px-3 py-2 text-ink shadow-float"
     >
+      {quoted && <span className="mb-1 block text-xs text-ink-3">{label}</span>}
       {missing ? (
         <span className="block text-xs text-ink-2">{text}</span>
       ) : (
@@ -256,6 +268,7 @@ const QuoteChip = ({ quote, onCite, onRemove, onBubble }: { quote: Quote; onCite
     <CiteChip
       label={quoteLabel(quote)}
       text={quote.text}
+      quoted
       onBubble={onBubble}
       onClick={span ? () => onCite({ ...quoteCitation(span), position: quote.position }) : undefined}
       onRemove={onRemove}

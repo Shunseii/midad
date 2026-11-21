@@ -13077,7 +13077,8 @@
       "name": "Chip",
       "parentId": "SRgjUp0T",
       "props": {
-        "label": "line 3",
+        "content": "quote",
+        "label": "وأقسامُه ثلاثةٌ",
         "withRemove": "yes"
       },
       "type": "instance"
@@ -47885,7 +47886,8 @@
       "name": "Chip",
       "parentId": "SRgjUp0T",
       "props": {
-        "label": "Pasted",
+        "content": "quote",
+        "label": "الاسمُ ما دلَّ على معنًى في نفسِه غيرِ مقترنٍ بأحدِ الأزمنةِ الثلاثة",
         "withRemove": "yes"
       },
       "type": "instance"
@@ -69726,6 +69728,26 @@
         "gap": 2
       },
       "type": "frame"
+    },
+    "nq1iFc2S": {
+      "content": "Quote pills show the quoted words themselves in the Arabic font, cut short with an ellipsis past 224px; the tooltip names the line (or \"Pasted\") above the full text. The pill is bidi-isolated so an English question around it keeps its order, stays atomic (Backspace removes it whole) and looks the same in sent questions.",
+      "index": "z001",
+      "name": "Spec note",
+      "parentId": "lF9FmmXt",
+      "style": {
+        "background": "{color.surface-2}",
+        "border-radius": "{radius.lg}",
+        "bottom": 20,
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "left": 24,
+        "line-height": "18px",
+        "padding": "8px 12px",
+        "position": "absolute",
+        "width": 420
+      },
+      "type": "text"
     },
     "nqAfthGq": {
       "css": "transition: scale {transition.duration-pop-exit} {ease.out};\n\n*:hover > * > &, [data-dragging] > * > & {\n  scale: 1.15;\n  transition-duration: {transition.duration-pop};\n}",
