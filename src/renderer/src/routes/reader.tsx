@@ -580,7 +580,12 @@ export const ReaderRoute = () => {
     if (!window.getSelection()?.isCollapsed) return;
     if (word.letter !== null) {
       const ref = { part: word.part, line: word.ref.line, word: word.ref.word, letter: word.letter };
-      setTarget(page.data && takesHarakat({ page: page.data.page, ref }) ? ref : null);
+      const takes = page.data && takesHarakat({ page: page.data.page, ref });
+      // Words aren't focusable, so a text field (the Ask AI composer) would keep the keys meant for the letter.
+      if (takes && document.activeElement instanceof HTMLElement && (document.activeElement.isContentEditable || document.activeElement.matches("input, textarea"))) {
+        document.activeElement.blur();
+      }
+      setTarget(takes ? ref : null);
     }
     if (!highlight) return;
     setNoteEditor(null);
