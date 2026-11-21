@@ -18,7 +18,7 @@ import type { StoredPage } from "../../../shared/library";
 import type { PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
 import { footnotesByMarker, splitFootnoteRef } from "../lib/footnotes";
-import { type Sweep, sweepOrder } from "../lib/sweep";
+import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
 import { cx } from "./ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -82,11 +82,11 @@ export interface Display {
   target: LetterRef | null;
 }
 
-const SWEEP_MS = 420;
-
 /** The style that times one word's (or the gap after it's) part of the sweep. */
-const sweepStyle = ({ sweep, at }: { sweep: Sweep; at: number }): CSSProperties =>
-  ({ "--sweep-delay": `${(SWEEP_MS * at) / sweep.count}ms`, "--sweep-duration": `${SWEEP_MS / sweep.count}ms` }) as CSSProperties;
+const sweepStyle = ({ sweep, at }: { sweep: Sweep; at: number }): CSSProperties => {
+  const { delay, duration } = sweepTiming({ count: sweep.count, at });
+  return { "--sweep-delay": `${delay}ms`, "--sweep-duration": `${duration}ms` } as CSSProperties;
+};
 
 interface LineProps {
   part: Part;

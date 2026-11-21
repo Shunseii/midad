@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Highlight, Span } from "../../../shared/annotations";
 import type { Page } from "../../../shared/page";
-import { sweepOrder } from "./sweep";
+import { SWEEP_MAX_MS, sweepDuration, sweepOrder, sweepTiming } from "./sweep";
 
 const page: Page = {
   header: null,
@@ -52,5 +52,33 @@ describe("sweepOrder", () => {
     const sweep = sweepOrder({ page, highlight: highlight({ part: "matn", start: { line: 9, word: 1 }, end: { line: 9, word: 2 } }) });
     expect(sweep.order.size).toBe(0);
     expect(sweep.count).toBe(1);
+  });
+});
+
+describe("sweepTiming", () => {
+  it("lasts longer for longer highlights, up to a cap", () => {
+    expect(sweepDuration(1)).toBeLessThan(sweepDuration(4));
+    expect(sweepDuration(4)).toBeLessThan(SWEEP_MAX_MS);
+    expect(sweepDuration(40)).toBe(SWEEP_MAX_MS);
+    expect(SWEEP_MAX_MS).toBeLessThanOrEqual(240);
+  });
+
+  it("eases out: early words draw faster than late ones, and the last ends on time", () => {
+    const count = 5;
+    const first = sweepTiming({ count, at: 0 });
+    const last = sweepTiming({ count, at: count - 1 });
+    expect(first.delay).toBe(0);
+    expect(first.duration).toBeLessThan(last.duration);
+    expect(last.delay + last.duration).toBeCloseTo(sweepDuration(count));
+  });
+
+  it("times the gap after a word across the seam with the next word", () => {
+    const count = 3;
+    const gap = sweepTiming({ count, at: 0.5 });
+    const word = sweepTiming({ count, at: 0 });
+    const next = sweepTiming({ count, at: 1 });
+    expect(gap.delay).toBeGreaterThan(word.delay);
+    expect(gap.delay).toBeLessThan(next.delay);
+    expect(gap.delay + gap.duration).toBeLessThanOrEqual(sweepDuration(count) + 1e-9);
   });
 });

@@ -41,7 +41,7 @@
   /* Signature moves: the contents indicator, the last-read marker and the highlight sweep. */
   --transition-duration-slide: 280ms;
   --transition-duration-glide: 400ms;
-  --transition-duration-sweep: 420ms;
+  --transition-duration-sweep: 220ms;
 }
 
 :root {

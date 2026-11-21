@@ -57411,7 +57411,7 @@
       "parentId": "no2CRi8T",
       "index": "a2",
       "content": "أواخرِ الكلمِ لاختلافِ العواملِ",
-      "css": "animation-name: marker-sweep;\nanimation-duration: 420ms;\nanimation-timing-function: {ease.out};\nanimation-delay: 120ms;\nanimation-fill-mode: forwards;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: marker-fade;\n  animation-duration: 200ms;\n  background-size: 100% 100%;\n}"
+      "css": "animation-name: marker-sweep;\nanimation-duration: 180ms;\nanimation-timing-function: {ease.out};\nanimation-delay: 120ms;\nanimation-fill-mode: forwards;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: marker-fade;\n  animation-duration: 200ms;\n  background-size: 100% 100%;\n}"
     },
     "WybQTKjt": {
       "type": "text",
@@ -57726,7 +57726,7 @@
       },
       "parentId": "hy2CSDsU",
       "index": "a2",
-      "content": "Highlight: the colour sweeps right to left across the words like a marker (background-size 0 to 100% from the right, 420ms ease-out). Contents indicator slides between entries (280ms ease-move). Last-read marker glides to its new line (400ms ease-move). Reduced motion: all three fade in place."
+      "content": "Highlight: the colour sweeps right to left across the words like a marker (background-size 0 to 100% from the right, ease-out; 80ms plus 25ms a word, capped at 220ms, so these four words take 180ms). Contents indicator slides between entries (280ms ease-move). Last-read marker glides to its new line (400ms ease-move). Reduced motion: all three fade in place."
     },
     "5iLNcnk0": {
       "type": "frame",

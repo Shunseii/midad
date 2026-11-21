@@ -22,3 +22,24 @@ export const sweepOrder = ({ page, highlight }: { page: StoredPage["page"]; high
   }
   return { id: highlight.id, order, count: Math.max(order.size, 1) };
 };
+
+/** The sweep's length grows with the highlight but never drags: a word or two is quick, a long passage caps out. */
+const SWEEP_BASE_MS = 80;
+const SWEEP_PER_WORD_MS = 25;
+export const SWEEP_MAX_MS = 220;
+
+export const sweepDuration = (count: number) => Math.min(SWEEP_BASE_MS + SWEEP_PER_WORD_MS * count, SWEEP_MAX_MS);
+
+/** When the sweep reaches a point `progress` (0 to 1) of the way along: ease-out quad, inverted. */
+const timeAt = (progress: number) => 1 - Math.sqrt(1 - Math.min(Math.max(progress, 0), 1));
+
+/**
+ * When one word (or, at a half position, the gap after a word) draws in, so the
+ * whole sweep eases out: quick off the mark, settling on the last words.
+ */
+export const sweepTiming = ({ count, at }: { count: number; at: number }) => {
+  const total = sweepDuration(count);
+  const start = total * timeAt(at / count);
+  const end = total * timeAt((at + 1) / count);
+  return { delay: start, duration: end - start };
+};
