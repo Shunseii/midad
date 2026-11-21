@@ -182,9 +182,9 @@ body {
 .note-tint {
   background-color: var(--color-accent-soft);
 }
-/* Where a tinted word meets its gloss ring or a tinted space, the corners there stay square. */
+/* Where a tinted word meets a tinted space, the corners there stay square. */
 .note-tint:has(+ .note-tint),
-.note-tint:last-child:is(:has(+ .note-tint) > *),
+:has(+ .note-tint) > .note-tint[data-w],
 .note-tint:has(+ * > .note-tint:first-child) {
   border-start-end-radius: 0;
   border-end-end-radius: 0;
