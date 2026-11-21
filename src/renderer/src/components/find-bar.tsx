@@ -3,6 +3,8 @@ import { type KeyboardEvent, type RefObject, useEffect, useLayoutEffect, useRef 
 import type { Span, WordRef } from "../../../shared/annotations";
 import type { FindOptions } from "../../../shared/find";
 import { arabicNumber } from "../lib/format";
+import { shortcutLabel } from "../lib/keymap";
+import { handleKeys } from "../lib/use-keybindings";
 import { Button, IconButton, cx } from "./ui";
 
 export interface FindState {
@@ -102,22 +104,16 @@ export const FindBar = ({
     input.current?.select();
   }, [state.open, focusKey]);
 
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onStep(e.shiftKey ? -1 : 1);
-    } else if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      onStep(e.key === "ArrowDown" ? 1 : -1);
-    } else if (e.key === "Escape") {
-      e.preventDefault();
-      e.stopPropagation();
-      onClose();
-    } else if ((e.ctrlKey || e.metaKey) && e.code === "KeyF") {
-      e.preventDefault();
-      input.current?.select();
-    }
-  };
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) =>
+    handleKeys({
+      event: e,
+      handlers: {
+        "find.next": () => onStep(1),
+        "find.previous": () => onStep(-1),
+        "find.close": onClose,
+        "find.selectQuery": () => input.current?.select(),
+      },
+    });
 
   const hasQuery = state.query.trim() !== "";
   const { options } = state;
@@ -147,9 +143,9 @@ export const FindBar = ({
       <OptionToggle label="Harakat" title="Match harakat exactly" on={options.matchHarakat} onToggle={() => onChange({ options: { ...options, matchHarakat: !options.matchHarakat }, active: 0 })} />
       <OptionToggle label="Whole word" title="Match whole words (و ف ب ل ك ال can still come before)" on={options.wholeWord} onToggle={() => onChange({ options: { ...options, wholeWord: !options.wholeWord }, active: 0 })} />
       <span className="mx-1 h-5 w-px bg-line" />
-      <IconButton icon={ChevronUp} label="Previous match (Shift+Enter)" disabled={count === 0} onClick={() => onStep(-1)} />
-      <IconButton icon={ChevronDown} label="Next match (Enter)" disabled={count === 0} onClick={() => onStep(1)} />
-      <IconButton icon={X} label="Close (Esc)" onClick={onClose} />
+      <IconButton icon={ChevronUp} label={shortcutLabel("find.previous")} disabled={count === 0} onClick={() => onStep(-1)} />
+      <IconButton icon={ChevronDown} label={shortcutLabel("find.next")} disabled={count === 0} onClick={() => onStep(1)} />
+      <IconButton icon={X} label={shortcutLabel("find.close")} onClick={onClose} />
     </div>
   );
 };

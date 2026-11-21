@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { type ReactNode, useRef } from "react";
 import type { Theme } from "../../../shared/ipc";
 import { type PageWidth, useFocusMode, usePageWidth, useTheme } from "../lib/appearance";
+import { shortcutKeys, shortcutLabel, shortcutParts } from "../lib/keymap";
 import { usePref } from "../lib/prefs";
 import type { BookReturn, SettingsState } from "../routes/settings";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -62,13 +63,13 @@ const Row = ({
 );
 
 const TextSize = ({ scale, onScale }: { scale: number; onScale: (v: number) => void }) => (
-  <Row title="Text size" hint="The page's Arabic text" shortcut="Ctrl ±">
+  <Row title="Text size" hint="The page's Arabic text" shortcut={`${shortcutParts("text.bigger").slice(0, -1).join("+")} ±`}>
     <div className="flex items-center gap-1">
-      <IconButton icon={Minus} label="Smaller text (Ctrl+−)" disabled={scale <= SMALLEST} onClick={() => onScale(stepScale({ scale, by: -1 }))} />
-      <Button variant="ghost" size="sm" tooltip="Reset to normal size (Ctrl+0)" onClick={() => onScale(1)} className="w-12 tabular-nums">
+      <IconButton icon={Minus} label={shortcutLabel("text.smaller")} disabled={scale <= SMALLEST} onClick={() => onScale(stepScale({ scale, by: -1 }))} />
+      <Button variant="ghost" size="sm" tooltip={shortcutLabel("text.reset")} onClick={() => onScale(1)} className="w-12 tabular-nums">
         {Math.round(scale * 100)}%
       </Button>
-      <IconButton icon={Plus} label="Larger text (Ctrl+=)" disabled={scale >= LARGEST} onClick={() => onScale(stepScale({ scale, by: 1 }))} />
+      <IconButton icon={Plus} label={shortcutLabel("text.bigger")} disabled={scale >= LARGEST} onClick={() => onScale(stepScale({ scale, by: 1 }))} />
     </div>
   </Row>
 );
@@ -103,7 +104,7 @@ export const DisplayMenu = ({
       <PopoverContent ref={popup} initialFocus={popup} side="bottom" align="end" sideOffset={8} className="w-80 gap-4 p-0 pt-4 [view-transition-name:display-menu]">
         <div className="flex flex-col gap-4 px-4">
           <TextSize scale={textScale} onScale={onTextScale} />
-          <Row title="Harakat" hint="The corpus's marks and yours" shortcut="H">
+          <Row title="Harakat" hint="The corpus's marks and yours" shortcut={shortcutKeys("harakat.toggle")}>
             <Switch label="Show harakat" checked={showHarakat} onChange={setShowHarakat} />
           </Row>
           <Row title="Gloss markers" hint="Rings after words with an interlinear gloss">
@@ -118,7 +119,7 @@ export const DisplayMenu = ({
           <Row title="Page width" hint={pageWidth === "narrow" ? "Justified, a shorter line" : "Longer lines, ragged edge"} stacked>
             <Segmented label="Page width" value={pageWidth} onChange={setPageWidth} options={PAGE_WIDTHS} />
           </Row>
-          <Row title="Focus mode" hint={focusMode.kind === "locked" ? "Locked: hidden until Esc or F" : "Hide the bars while you read"} shortcut="F">
+          <Row title="Focus mode" hint={focusMode.kind === "locked" ? `Locked: hidden until ${shortcutKeys("focus.leave")} or ${shortcutKeys("focus.toggle")}` : "Hide the bars while you read"} shortcut={shortcutKeys("focus.toggle")}>
             <Switch label="Focus mode" checked={focusMode.choice !== "off"} onChange={focusMode.toggle} />
           </Row>
         </div>

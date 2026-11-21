@@ -1,14 +1,16 @@
 import { ArrowLeft, Check, Minus, Plug, Plus } from "lucide-react";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import type { Theme } from "../../../shared/ipc";
 import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
 import { type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
 import type { FocusChoice } from "../lib/focus";
+import { ariaKeyShortcuts } from "../lib/keymap";
 import { ON_LAUNCH_PREF, type OnLaunch } from "../lib/launch";
 import { midad, useSaveSettings, useSettings } from "../lib/midad";
 import { usePref } from "../lib/prefs";
+import { useKeybindings } from "../lib/use-keybindings";
 import type { ReaderState } from "./reader";
 
 type TestState = { kind: "idle" } | { kind: "testing" } | { kind: "ok" } | { kind: "error"; message: string };
@@ -250,38 +252,33 @@ const Corpus = () => {
   );
 };
 
-/** Lands on the section a link asked for, with keyboard focus on its heading. */
-const typingIn = (target: EventTarget | null) =>
-  target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || (target instanceof HTMLElement && target.isContentEditable);
-
 /** Back to the book Settings was opened from, at the same page and scroll. Alt+Left, or Esc outside a field, does the same. */
 const BackToBook = ({ from }: { from: BookReturn }) => {
   const navigate = useNavigate();
   const back = () =>
     void navigate(`/read/${from.bookId}?p=${from.position}`, { replace: true, state: { scrollTop: from.scrollTop } satisfies ReaderState, viewTransition: true });
-  const backRef = useRef(back);
-  backRef.current = back;
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const altLeft = e.altKey && !e.ctrlKey && !e.metaKey && e.key === "ArrowLeft";
-      const escape = e.key === "Escape" && !e.altKey && !e.ctrlKey && !e.metaKey && !typingIn(e.target) && !document.querySelector("[data-slot=popover-content], [role=dialog]");
-      if (!altLeft && !escape) return;
-      e.preventDefault();
-      backRef.current();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  useKeybindings({
+    scope: "route",
+    handlers: {
+      "settings.back": back,
+      // An open popover or dialog takes Esc first.
+      "settings.close": () => {
+        if (document.querySelector("[data-slot=popover-content], [role=dialog]")) return false;
+        back();
+      },
+    },
+  });
 
   return (
-    <Button variant="ghost" icon={ArrowLeft} onClick={back} aria-keyshortcuts="Alt+ArrowLeft Escape" className="-ml-3.5 w-fit max-w-full">
+    <Button variant="ghost" icon={ArrowLeft} onClick={back} aria-keyshortcuts={ariaKeyShortcuts(["settings.back", "settings.close"])} className="-ml-3.5 w-fit max-w-full">
       <span className="shrink-0">Back to</span>
       <span className="ar truncate font-medium">{from.title}</span>
     </Button>
   );
 };
 
+/** Lands on the section a link asked for, with keyboard focus on its heading. */
 const useLandOnSection = () => {
   const { state } = useLocation();
   const section = (state as SettingsState | null)?.section;

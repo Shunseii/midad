@@ -195,6 +195,9 @@ export const comboParts = (combo: string | Combo, { mac = IS_MAC }: { mac?: bool
 export const formatCombo = (combo: string | Combo, options: { mac?: boolean } = {}): string =>
   comboParts(combo, options).join(options.mac ?? IS_MAC ? "" : "+");
 
+/** The keys of a command's main combo, one entry per key: ["Ctrl", "D"]. */
+export const shortcutParts = (id: CommandId, options: { mac?: boolean } = {}): string[] => comboParts(keysOf(id)[0] ?? "", options);
+
 /** The keys of a command's main combo: "Ctrl+D". */
 export const shortcutKeys = (id: CommandId, options: { mac?: boolean } = {}): string => formatCombo(keysOf(id)[0] ?? "", options);
 

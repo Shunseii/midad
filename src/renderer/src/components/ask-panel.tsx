@@ -9,6 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { copiedPassage } from "../lib/copied";
 import { arabicNumber, timeAgo } from "../lib/format";
 import { keys, midad, usePage } from "../lib/midad";
+import { handleKeys } from "../lib/use-keybindings";
 import { Button, IconButton, Toast, ToastAction, cx } from "./ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -414,14 +415,18 @@ const CiteChip = ({
         dir="auto"
         maxLength={80}
         onFocus={(e) => e.currentTarget.select()}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e.currentTarget.blur();
-          if (e.key === "Escape") {
-            e.stopPropagation();
-            cancelled.current = true;
-            e.currentTarget.blur();
-          }
-        }}
+        onKeyDown={(e) =>
+          handleKeys({
+            event: e,
+            handlers: {
+              "field.commit": () => e.currentTarget.blur(),
+              "field.cancel": () => {
+                cancelled.current = true;
+                e.currentTarget.blur();
+              },
+            },
+          })
+        }
         onBlur={(e) => onDone(cancelled.current ? null : e.currentTarget.value)}
         className="-mx-1.5 rounded-md border border-ink-3 bg-surface px-1.5 text-sm outline-hidden [unicode-bidi:plaintext]"
       />

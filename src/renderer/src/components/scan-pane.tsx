@@ -1,6 +1,8 @@
 import { Maximize, X } from "lucide-react";
 import { type KeyboardEvent, type PointerEvent, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { shortcutLabel } from "../lib/keymap";
 import { canPan, clampView, FIT, type ScanBox, type ScanView, wheelScale, zoomAt } from "../lib/scan-view";
+import { handleKeys } from "../lib/use-keybindings";
 import { IconButton, Skeleton, cx } from "./ui";
 
 /** The image's margin inside the pane at fit. */
@@ -86,15 +88,17 @@ export const ScanPane = ({ bookId, fileId, onClose }: { bookId: string; fileId: 
 
   const reset = () => change({ next: FIT, ease: true });
 
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === "Escape" || e.key === "0") {
-      if (atFit && e.key === "Escape") return;
-      e.preventDefault();
-      e.stopPropagation();
-      reset();
-    }
-  };
+  // Esc on a scan already at fit is left for the page: closing things, leaving focus mode.
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) =>
+    handleKeys({
+      event: e,
+      handlers: {
+        "scan.fit": () => {
+          if (atFit && e.key === "Escape") return false;
+          reset();
+        },
+      },
+    });
 
   return (
     <section aria-label="Page scan" className="flex min-w-0 flex-1 flex-col border-l border-line bg-surface-2">
@@ -104,7 +108,7 @@ export const ScanPane = ({ bookId, fileId, onClose }: { bookId: string; fileId: 
         <span aria-live="polite" className={cx("min-w-12 text-right text-xs tabular-nums text-ink-3 transition-opacity duration-pop ease-out", atFit && "opacity-0")}>
           {Math.round(shown.scale * 100)}%
         </span>
-        <IconButton icon={Maximize} label="Fit to width (0)" disabled={atFit} onClick={reset} />
+        <IconButton icon={Maximize} label={shortcutLabel("scan.fit")} disabled={atFit} onClick={reset} />
         <IconButton icon={X} label="Hide scan" onClick={onClose} />
       </div>
       <div

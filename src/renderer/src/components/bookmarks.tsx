@@ -5,7 +5,9 @@ import { stripHarakat } from "../../../shared/arabic";
 import type { Bookmark, PageSummary } from "../../../shared/library";
 import { bookmarkFolio, openingLines } from "../lib/bookmarks";
 import { timeAgo } from "../lib/format";
+import { shortcutKeys, shortcutParts } from "../lib/keymap";
 import { usePagePreview } from "../lib/midad";
+import { handleKeys } from "../lib/use-keybindings";
 import { Button, cx, IconButton, Kbd } from "./ui";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -32,13 +34,8 @@ const NameInput = ({
     if (save) onSave(value);
     else onCancel();
   };
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") finish(true);
-    else if (e.key === "Escape") {
-      e.stopPropagation();
-      finish(false);
-    }
-  };
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) =>
+    handleKeys({ event: e, handlers: { "field.commit": () => finish(true), "field.cancel": () => finish(false) } });
   return (
     <Input
       autoFocus
@@ -219,8 +216,9 @@ export const BookmarkList = ({
           <span className="text-xs text-ink-3">Bookmark a page to come back to it later.</span>
         </span>
         <span className="flex gap-1 text-xs text-ink-3">
-          <Kbd>Ctrl</Kbd>
-          <Kbd>D</Kbd>
+          {shortcutParts("bookmark.toggle").map((key) => (
+            <Kbd key={key}>{key}</Kbd>
+          ))}
         </span>
       </div>
     );
@@ -251,7 +249,7 @@ export const BookmarkList = ({
           />
         ))}
       </div>
-      <p className="mt-auto px-2.5 pt-4 text-xs text-ink-3">Ctrl+D bookmarks the page you're on.</p>
+      <p className="mt-auto px-2.5 pt-4 text-xs text-ink-3">{shortcutKeys("bookmark.toggle")} bookmarks the page you're on.</p>
       <BookmarkPreview bookId={bookId} target={previewed} folio={folio} showHarakat={showHarakat} />
     </>
   );
@@ -318,7 +316,7 @@ export const BookmarkRibbon = ({
             placeholder="Name"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && save()}
+            onKeyDown={(e) => handleKeys({ event: e, handlers: { "field.commit": save } })}
             className="ar text-right text-ar-small"
           />
           <p className="text-xs text-ink-3">Optional.</p>

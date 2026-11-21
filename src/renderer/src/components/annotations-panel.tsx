@@ -3,6 +3,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { Highlight, Note, PageAnnotations, Span } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
 import { noteEditOutcome } from "../lib/note-edit";
+import { handleKeys } from "../lib/use-keybindings";
 import { switchListInTransition } from "../lib/view-transition";
 import { MARK_BG } from "./page-view";
 import { Badge, IconButton, Segmented, cx } from "./ui";
@@ -120,13 +121,7 @@ const NoteBody = ({
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => {
         e.stopPropagation();
-        if (e.key === "Escape") {
-          e.preventDefault();
-          finish(false);
-        } else if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-          e.preventDefault();
-          finish(true);
-        }
+        handleKeys({ event: e, handlers: { "field.cancel": () => finish(false), "note.save": () => finish(true) } });
       }}
       onBlur={() => finish(true)}
       className={cx("min-h-20 resize-none text-body", enter)}

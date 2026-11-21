@@ -6,6 +6,7 @@ import type { Bookmark as SavedBookmark, PageSummary } from "../../../shared/lib
 import { entryIndexFor } from "../lib/contents";
 import { arabicNumber, plural } from "../lib/format";
 import { keys, midad, useFirstLine, usePagePreview } from "../lib/midad";
+import { handleKeys, useKeybindings } from "../lib/use-keybindings";
 import { DOT_GAP, markCluster, nextMarkPage, pageAtFraction, stickyMarkPage, pageFraction, previewFirstLine, thinMarks, TICK_GAP, topLevelChapters } from "../lib/scrubber";
 import { MARK_BG } from "./page-view";
 import { cx, Skeleton } from "./ui";
@@ -156,19 +157,17 @@ export const PageScrubber = ({
   };
 
   // Esc during a drag puts the thumb back; nothing else should see that key.
-  useEffect(() => {
-    if (!drag) return;
-    const onKey = (e: globalThis.KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      e.preventDefault();
-      e.stopPropagation();
-      dragging.current = false;
-      setDrag(null);
-      setSettle({ page: position });
-    };
-    window.addEventListener("keydown", onKey, { capture: true });
-    return () => window.removeEventListener("keydown", onKey, { capture: true });
-  }, [drag, position]);
+  useKeybindings({
+    scope: "popover",
+    enabled: drag !== null,
+    handlers: {
+      "scrubber.cancelDrag": () => {
+        dragging.current = false;
+        setDrag(null);
+        setSettle({ page: position });
+      },
+    },
+  });
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     const at = pointerAt(e.clientX);
@@ -206,26 +205,29 @@ export const PageScrubber = ({
     onGo(page);
   };
 
+  // Shift+arrow steps from mark to mark; right to left, so the next one is to the left.
+  const stepMark = (direction: 1 | -1) => {
+    const to = nextMarkPage({ pages: allMarkedPages, from: position, direction });
+    if (to === null) return;
+    setKeyMark(to);
+    onGo(to);
+  };
+  const goTo = (page: number) => onGo(Math.min(Math.max(page, 1), total));
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    // Shift+arrow steps from mark to mark; right to left, so the next one is to the left.
-    if (e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
-      e.preventDefault();
-      e.stopPropagation();
-      const to = nextMarkPage({ pages: allMarkedPages, from: position, direction: e.key === "ArrowLeft" ? 1 : -1 });
-      if (to !== null) {
-        setKeyMark(to);
-        onGo(to);
-      }
-      return;
-    }
+    if (handleKeys({ event: e, handlers: { "scrubber.nextMark": () => stepMark(1), "scrubber.previousMark": () => stepMark(-1) } })) return;
     setKeyMark(null);
     // Right to left: the next page is to the left, as with page turns.
-    const steps: Record<string, number> = { ArrowLeft: 1, ArrowUp: 1, ArrowRight: -1, ArrowDown: -1, PageDown: 10, PageUp: -10 };
-    const to = e.key === "Home" ? 1 : e.key === "End" ? total : steps[e.key] !== undefined ? position + (steps[e.key] ?? 0) : null;
-    if (to === null || e.altKey || e.ctrlKey || e.metaKey) return;
-    e.preventDefault();
-    e.stopPropagation();
-    onGo(Math.min(Math.max(to, 1), total));
+    handleKeys({
+      event: e,
+      handlers: {
+        "scrubber.next": () => goTo(position + 1),
+        "scrubber.previous": () => goTo(position - 1),
+        "scrubber.forward": () => goTo(position + 10),
+        "scrubber.back": () => goTo(position - 10),
+        "scrubber.first": () => goTo(1),
+        "scrubber.last": () => goTo(total),
+      },
+    });
   };
 
   const thumbFraction = drag ? drag.fraction : pageFraction({ position: settle?.page ?? position, total });

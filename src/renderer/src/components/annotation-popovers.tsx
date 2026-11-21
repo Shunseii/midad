@@ -3,6 +3,7 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { HIGHLIGHT_COLORS, type HighlightColor, type Note } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
+import { shortcutKeys } from "../lib/keymap";
 import { MARK_BG } from "./page-view";
 import { HighlighterOff } from "./icons";
 import { Popover, PopoverArrow, PopoverContent } from "./ui/popover";
@@ -272,7 +273,7 @@ export const NoteEditor = ({
           <SaveStatus state={save} />
         )}
         <span className="flex-1" />
-        <Kbd>Esc</Kbd> to close
+        <Kbd>{shortcutKeys("reader.dismiss")}</Kbd> to close
       </div>
     </div>
   );

@@ -32,6 +32,7 @@ import { useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../
 import { useFocusChrome } from "../lib/use-focus-chrome";
 import { switchListInTransition } from "../lib/view-transition";
 import { useKeybindings } from "../lib/use-keybindings";
+import { shortcutKeys, shortcutLabel, withShortcut } from "../lib/keymap";
 import { neighbourPages } from "../lib/neighbours";
 import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop, wordSelector } from "../lib/zoom-anchor";
 
@@ -1165,7 +1166,7 @@ export const ReaderRoute = () => {
           <span className="flex items-center gap-3">
             {removal.message}
             <ToastAction onClick={() => step("undo")}>Undo</ToastAction>
-            <span className="text-xs opacity-60">Ctrl+Z</span>
+            <span className="text-xs opacity-60">{shortcutKeys("edit.undo")}</span>
           </span>
         </Toast>
       )}
@@ -1180,7 +1181,7 @@ export const ReaderRoute = () => {
         </Link>
         <IconButton
           icon={contentsOpen ? PanelLeftClose : PanelLeftOpen}
-          label={contentsOpen ? "Hide contents (Ctrl+[)" : "Show contents (Ctrl+[)"}
+          label={withShortcut({ label: contentsOpen ? "Hide contents" : "Show contents", command: "contents.toggle" })}
           onClick={() => setContentsOpen(!contentsOpen)}
         />
         <div className="flex min-w-0 flex-col">
@@ -1203,14 +1204,14 @@ export const ReaderRoute = () => {
         <div className="flex-1" />
         <IconButton
           icon={Bookmark}
-          label={pageBookmark ? "Remove bookmark (Ctrl+D)" : "Bookmark page (Ctrl+D)"}
+          label={withShortcut({ label: pageBookmark ? "Remove bookmark" : "Bookmark page", command: "bookmark.toggle" })}
           selected={pageBookmark !== null}
           onClick={toggleBookmark}
           className={cx("[&_svg]:transition-[fill,scale] [&_svg]:duration-pop [&_svg]:ease-out motion-reduce:[&_svg]:transition-none", pageBookmark && "[&_svg]:fill-current")}
         />
         <IconButton
           icon={Search}
-          label={find.open ? "Close find" : "Find on page (Ctrl+F)"}
+          label={find.open ? "Close find" : shortcutLabel("find.open")}
           selected={find.open}
           onClick={() => (find.open ? closeFind() : openFind())}
         />
@@ -1221,11 +1222,11 @@ export const ReaderRoute = () => {
           onTextScale={(scale) => resize({ scale, pointer: null })}
           bookReturn={() => (book.data ? { bookId, title: book.data.title, position, scrollTop: pageRoot.current?.scrollTop ?? 0 } : undefined)}
         />
-        <IconButton icon={FileImage} label={showScan ? "Hide scan (S)" : "Show scan (S)"} selected={showScan} onClick={() => setShowScan(!showScan)} />
+        <IconButton icon={FileImage} label={withShortcut({ label: showScan ? "Hide scan" : "Show scan", command: "scan.toggle" })} selected={showScan} onClick={() => setShowScan(!showScan)} />
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton
           icon={NotebookPen}
-          label={panelOpen && panelTab !== "ask" ? "Hide highlights and notes (Ctrl+])" : "Show highlights and notes (Ctrl+])"}
+          label={withShortcut({ label: panelOpen && panelTab !== "ask" ? "Hide highlights and notes" : "Show highlights and notes", command: "panel.toggle" })}
           selected={panelOpen && panelTab !== "ask"}
           onClick={() => {
             if (panelOpen && panelTab !== "ask") setPanelOpen(false);
