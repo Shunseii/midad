@@ -792,7 +792,7 @@ export const PageView = ({
     layoutKey,
     onMark: (word: number) => onMark({ part, line, word }),
     onClearMark,
-    notes: annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line),
+    notes: display.noteIcons === "corners" ? [] : annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line),
     numbered: part === "matn" && display.lineNumbers,
     noteMarks: { dim: dimNoteMarks, tinted, handlers: noteMarkHandlers },
   });

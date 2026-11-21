@@ -2,7 +2,7 @@ import { ArrowRight, Minus, Plus, Settings2, Type } from "lucide-react";
 import { useNavigate } from "react-router";
 import { type ReactNode, useRef } from "react";
 import type { Theme } from "../../../shared/ipc";
-import { GLOSS_HINTS, GLOSS_MODES, type PageWidth, useFocusMode, useGlossMode, usePageWidth, useTheme } from "../lib/appearance";
+import { GLOSS_HINTS, GLOSS_MODES, NOTE_MARK_HINTS, NOTE_MARKS, type PageWidth, useFocusMode, useGlossMode, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
 import { shortcutKeys, shortcutLabel, shortcutParts } from "../lib/keymap";
 import { usePref } from "../lib/prefs";
 import type { BookReturn, SettingsState } from "../routes/settings";
@@ -94,6 +94,7 @@ export const DisplayMenu = ({
   const focusMode = useFocusMode();
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [glosses, setGlosses] = useGlossMode();
+  const [noteMarks, setNoteMarks] = useNoteIcons();
   const [hashiyaMarkers, setHashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
   const navigate = useNavigate();
   // Opening focuses the menu itself: on the first control, Text size's tooltip would open and take the first Esc.
@@ -109,6 +110,9 @@ export const DisplayMenu = ({
           </Row>
           <Row title="Glosses" hint={GLOSS_HINTS[glosses]} stacked>
             <Segmented label="Glosses" value={glosses} onChange={setGlosses} options={GLOSS_MODES} />
+          </Row>
+          <Row title="Note marks" hint={NOTE_MARK_HINTS[noteMarks]} stacked>
+            <Segmented label="Note marks" value={noteMarks} onChange={setNoteMarks} options={NOTE_MARKS} />
           </Row>
           <Row title="Hashiya markers" hint="Footnote numbers in the text">
             <Switch label="Show hashiya markers" checked={hashiyaMarkers} onChange={setHashiyaMarkers} />

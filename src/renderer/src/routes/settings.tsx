@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import type { Theme } from "../../../shared/ipc";
 import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
-import { GLOSS_HINTS, GLOSS_MODES, type GlossMode, type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useGlossMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
+import { GLOSS_HINTS, GLOSS_MODES, NOTE_MARK_HINTS, NOTE_MARKS, type GlossMode, type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useGlossMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
 import type { FocusChoice } from "../lib/focus";
 import { ariaKeyShortcuts } from "../lib/keymap";
 import { ON_LAUNCH_PREF, type OnLaunch } from "../lib/launch";
@@ -56,10 +56,6 @@ const HIGHLIGHT_STYLES: { value: HighlightStyle; label: string }[] = [
   { value: "behind", label: "Behind text" },
 ];
 
-const NOTE_ICONS: { value: NoteIcons; label: string }[] = [
-  { value: "corners", label: "Corners" },
-  { value: "margin", label: "Margin" },
-];
 
 const FOCUS_CHOICES: { value: FocusChoice; label: string }[] = [
   { value: "off", label: "Off" },
@@ -159,8 +155,8 @@ const Reading = () => {
       <Row title="Hashiya markers" hint="Footnote numbers in the main text; the hashiya below stays">
         <Switch label="Show hashiya markers" checked={hashiyaMarkers} onChange={setHashiyaMarkers} />
       </Row>
-      <Row title="Note marks" hint={noteIcons === "corners" ? "Corners at the ends of each note's words, and a mark in the margin" : "Only a mark in the margin beside each line with notes"}>
-        <Segmented<NoteIcons> label="Note icons" value={noteIcons} onChange={setNoteIcons} options={NOTE_ICONS} />
+      <Row title="Note marks" hint={NOTE_MARK_HINTS[noteIcons]}>
+        <Segmented<NoteIcons> label="Note marks" value={noteIcons} onChange={setNoteIcons} options={NOTE_MARKS} />
       </Row>
     </Section>
   );

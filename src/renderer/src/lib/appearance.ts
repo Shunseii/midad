@@ -30,6 +30,18 @@ export const GLOSS_HINTS: Record<GlossMode, string> = {
   hidden: "Interlinear glosses aren't shown",
 };
 
+export const NOTE_MARKS: { value: NoteIcons; label: string }[] = [
+  { value: "corners", label: "Corners" },
+  { value: "margin", label: "Margin" },
+  { value: "both", label: "Both" },
+];
+
+export const NOTE_MARK_HINTS: Record<NoteIcons, string> = {
+  corners: "Small corners at the ends of each note's words",
+  margin: "One mark per line in the margin, with a count",
+  both: "Corners on the words and a mark in the margin",
+};
+
 const GLOSS_FALLBACK = glossModeFrom({ stored: null, legacyMarkers: readPref<unknown>({ key: "reader.glossMarkers", fallback: true }) });
 export const useGlossMode = () => {
   const [stored, set] = usePref<unknown>({ key: "reader.glosses", fallback: GLOSS_FALLBACK });

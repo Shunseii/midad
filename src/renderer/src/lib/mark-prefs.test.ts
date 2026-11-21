@@ -2,10 +2,11 @@ import { describe, expect, it } from "vitest";
 import { glossModeFrom, noteIconsFrom } from "./mark-prefs";
 
 describe("noteIconsFrom", () => {
-  it("turns the old icon on the words into corners and keeps the margin", () => {
+  it("turns the old icon on the words into corners and keeps the other choices", () => {
     expect(noteIconsFrom("words")).toBe("corners");
     expect(noteIconsFrom("corners")).toBe("corners");
     expect(noteIconsFrom("margin")).toBe("margin");
+    expect(noteIconsFrom("both")).toBe("both");
     expect(noteIconsFrom(undefined)).toBe("corners");
   });
 });
