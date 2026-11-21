@@ -98,16 +98,32 @@ const color = (value: string | undefined): HighlightColor => {
 
 const numberWords = (text: string) => wordsOf(text).map((w, i) => `${i + 1}:${w}`).join(" ");
 
+/** Each interlinear gloss on a line, under it: its words, then the gloss. Word numbers stay those of the line. */
+const glossLines = ({ stored, part, line, text }: { stored: StoredPage; part: Part; line: number; text: string }): string[] =>
+  stored.page.glosses
+    .filter((g) => g.part === part && g.line === line)
+    .map((g) => {
+      const base = wordsOf(text).slice(g.from - 1, g.to).join(" ");
+      const where = g.from === g.to ? `word ${g.from}` : `words ${g.from}-${g.to}`;
+      return `\tgloss on ${where}: ${base} (gloss: ${g.text.replace(/\n/g, " / ")})`;
+    });
+
 const formatPage = ({ stored, words, lines, hashiya }: { stored: StoredPage; words: boolean; lines?: [number, number]; hashiya?: boolean }) => {
   const show = (text: string) => (words ? numberWords(text) : text);
   const inRange = (n: number) => !lines || (n >= lines[0] && n <= lines[1]);
   const out: string[] = [];
   if (!lines) out.push(`Page ${stored.position}${stored.number === null ? "" : ` (printed ${stored.number})`}${stored.page.header ? ` · ${stored.page.header}` : ""}`, "");
-  if (!hashiya) for (const b of stored.page.matn) if (inRange(b.line)) out.push(`${b.line}\t${b.kind === "heading" ? "# " : ""}${show(b.text)}`);
+  if (!hashiya) {
+    for (const b of stored.page.matn) {
+      if (!inRange(b.line)) continue;
+      out.push(`${b.line}\t${b.kind === "heading" ? "# " : ""}${show(b.text)}`, ...glossLines({ stored, part: "matn", line: b.line, text: b.text }));
+    }
+  }
   if (!lines || hashiya) {
     if (!lines && stored.page.hashiya.length > 0) out.push("", "الحاشية");
     stored.page.hashiya.forEach((f, i) => {
-      if (inRange(i + 1)) out.push(`ḥ${i + 1}\t${f.marker ? `(${f.marker}) ` : ""}${show(f.text)}`);
+      if (!inRange(i + 1)) return;
+      out.push(`ḥ${i + 1}\t${f.marker ? `(${f.marker}) ` : ""}${show(f.text)}`, ...glossLines({ stored, part: "hashiya", line: i + 1, text: f.text }));
     });
   }
   return `${out.join("\n")}\n`;

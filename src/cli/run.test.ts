@@ -6,14 +6,14 @@ import type { CorpusSource } from "../main/corpus";
 import { createLibrary } from "../main/library";
 import { runCli } from "./run";
 
-// Page 1: matn line 1 is a heading, line 2 has five words, line 3 has three;
-// one footnote with four words.
+// Page 1: matn line 1 is a heading, line 2 has five words (word 4 carries an
+// interlinear gloss), line 3 has three; one footnote with four words.
 const PAGE_1 = [
   "باب الكلام",
   "",
   "---",
   "## باب الكلام",
-  "الكلام هو اللفظ المركب المفيد",
+  "الكلام هو اللفظ <ruby>المركب<rt>من كلمتين فأكثر</rt></ruby> المفيد",
   "بالوضع وأقسامه ثلاثة",
   "---",
   "### الحاشية",
@@ -72,6 +72,13 @@ describe("reading", () => {
   it("numbers the words when asked", async () => {
     const { stdout } = await run("page", "b1", "1", "--words");
     expect(stdout).toMatch(/^3\s+1:بالوضع 2:وأقسامه 3:ثلاثة$/m);
+  });
+
+  it("prints each interlinear gloss under its line without any tags, keeping the line's word numbers", async () => {
+    const { stdout } = await run("page", "b1", "1", "--words");
+    expect(stdout).toMatch(/^2\s+1:الكلام 2:هو 3:اللفظ 4:المركب 5:المفيد\n\s+gloss on word 4: المركب \(gloss: من كلمتين فأكثر\)$/m);
+    expect(stdout).not.toMatch(/<|rt>|ruby/);
+    expect((await run("lines", "b1", "1", "--line", "2")).stdout).toContain("(gloss: من كلمتين فأكثر)");
   });
 
   it("prints only the lines asked for", async () => {

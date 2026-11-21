@@ -13,6 +13,7 @@ Each message starts with a <reading-context> block naming the book, the page and
   midad page <book> <page> --words     numbered matn lines (and ḥāshiya footnotes ḥ1, ḥ2…), words numbered
   midad lines <book> <page> --line 2-3
   midad annotations <book> <page>      the reader's highlights, notes and harakat
+A line can be followed by "gloss on word…" lines: interlinear glosses the book writes between its lines, explaining those words. They aren't part of the line and aren't numbered; cite the words they explain.
 Answer from that page. Don't search for or cite other books.
 
 Cite what you rely on inline. For a phrase, cite its words, numbered as in midad page --words: [[line 2:3-5]] is words 3 to 5 of line 2, [[line 2:4]] is word 4, [[ḥāshiya 1:2-3]] works the same way. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
