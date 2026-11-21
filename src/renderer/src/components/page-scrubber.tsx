@@ -33,7 +33,8 @@ const SETTLE_MS = 120;
 
 const inPercent = (fraction: number) => `${fraction * 100}%`;
 
-const pageCount = (n: number) => n.toLocaleString("en");
+/** The page's printed number, or failing that (front matter and the like) its position in the scans. */
+const pageLabel = ({ page, number }: { page: number; number: number | null }) => ({ text: `ص ${arabicNumber(number ?? page)}`, printed: number !== null });
 
 /**
  * The whole book as a line under the page, page 1 at the right like the book
@@ -165,6 +166,7 @@ export const PageScrubber = ({
 
   const thumbFraction = drag ? drag.fraction : pageFraction({ position: settle?.page ?? position, total });
   const previewPage = drag?.page ?? hover?.page ?? null;
+  const numberOf = (page: number) => pages[page - 1]?.number ?? null;
   const chapterOf = (page: number) => entries[entryIndexFor(entries, page)]?.text ?? null;
   const at = (page: number) => inPercent(pageFraction({ position: page, total }));
 
@@ -173,8 +175,7 @@ export const PageScrubber = ({
       <PagePreview
         bookId={bookId}
         page={previewPage}
-        total={total}
-        folio={previewPage === null ? null : (pages[previewPage - 1]?.number ?? previewPage)}
+        number={previewPage === null ? null : (pages[previewPage - 1]?.number ?? null)}
         chapter={previewPage === null ? null : chapterOf(previewPage)}
         x={Math.min(Math.max(hover?.x ?? 0, PREVIEW_HALF_WIDTH), Math.max(width - PREVIEW_HALF_WIDTH, PREVIEW_HALF_WIDTH))}
       />
@@ -188,7 +189,7 @@ export const PageScrubber = ({
         aria-valuemin={1}
         aria-valuemax={total}
         aria-valuenow={position}
-        aria-valuetext={[`Page ${position} of ${pageCount(total)}`, chapterOf(position)].filter(Boolean).join(", ")}
+        aria-valuetext={[numberOf(position) === null ? `Position ${position} of ${total}` : `Page ${numberOf(position)}`, chapterOf(position)].filter(Boolean).join(", ")}
         data-dragging={drag ? "" : undefined}
         data-settling={settle ? "" : undefined}
         onPointerDown={onPointerDown}
@@ -245,21 +246,20 @@ export const PageScrubber = ({
 const PagePreview = ({
   bookId,
   page,
-  total,
-  folio,
+  number,
   chapter,
   x,
 }: {
   bookId: string;
   page: number | null;
-  total: number;
-  folio: number | null;
+  /** The printed page number, when the page has one. */
+  number: number | null;
   chapter: string | null;
   x: number;
 }) => {
   // Keep the last page shown so the card can fade out with its content.
-  const last = useRef<{ page: number; folio: number | null; chapter: string | null } | null>(null);
-  if (page !== null) last.current = { page, folio, chapter };
+  const last = useRef<{ page: number; number: number | null; chapter: string | null } | null>(null);
+  if (page !== null) last.current = { page, number, chapter };
   const shown = last.current;
   const [settled, setSettled] = useState<number | null>(null);
   useEffect(() => {
@@ -277,12 +277,14 @@ const PagePreview = ({
     >
       {shown && (
         <>
-          <div dir="rtl" className="flex items-baseline justify-between">
-            <span className="ar text-ar-display font-bold leading-8 text-ink">{arabicNumber(shown.folio ?? shown.page)}</span>
-            <span dir="ltr" className="text-xs tabular-nums text-ink-3">
-              {pageCount(shown.page)} of {pageCount(total)}
-            </span>
-          </div>
+          {(() => {
+            const label = pageLabel(shown);
+            return (
+              <span dir="rtl" className={cx("ar text-right text-ar-display font-bold leading-8", label.printed ? "text-ink" : "text-ink-3")}>
+                {label.text}
+              </span>
+            );
+          })()}
           {shown.chapter && <span dir="rtl" className="ar truncate text-right text-ar-small text-accent">{shown.chapter}</span>}
           <div dir="rtl" className="ar h-7 truncate text-ar-small leading-7 text-ink-2">
             {line.data !== undefined ? line.data : <Skeleton className="mt-2 h-3 w-40 opacity-60" />}
