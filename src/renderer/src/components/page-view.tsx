@@ -70,6 +70,12 @@ const FootnoteRef = ({ marker }: { marker: string }) => {
  * at the small inline-block footnote refs and at the gloss rings. Their full-height boxes
  * (data-sel-box) take the selection colour instead while the selection covers them.
  */
+/** Whether a selection runs to the end of the glossed word a ring box follows, so the ring goes with it. */
+const endsWordBefore = ({ range, box }: { range: Range; box: HTMLElement }) => {
+  const word = box.previousElementSibling;
+  return word instanceof HTMLElement && word.dataset.w !== undefined && range.intersectsNode(word) && range.comparePoint(word, word.childNodes.length) === 0;
+};
+
 const useSelectionBoxes = (root: RefObject<HTMLElement | null>) => {
   useEffect(() => {
     const update = () => {
@@ -78,7 +84,7 @@ const useSelectionBoxes = (root: RefObject<HTMLElement | null>) => {
       const selection = window.getSelection();
       const range = selection && !selection.isCollapsed && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
       for (const box of el.querySelectorAll<HTMLElement>("[data-sel-box]")) {
-        box.toggleAttribute("data-in-selection", !!range && range.intersectsNode(box));
+        box.toggleAttribute("data-in-selection", !!range && (range.intersectsNode(box) || endsWordBefore({ range, box })));
       }
     };
     document.addEventListener("selectionchange", update);
@@ -116,14 +122,15 @@ const stopPageHandlers = (e: { stopPropagation: () => void }) => e.stopPropagati
  * The marker after an interlinear gloss's base: a small drawn ring. The base words stay
  * undecorated, so notes and highlights keep the text to themselves; only the ring opens the
  * gloss (hover, click or Enter), above the line where an interlinear gloss is written.
- * The ring is an inline-block inside an inline box, so a highlight runs on under it level.
+ * The ring is an inline-block inside an inline box that takes its word's highlight, sweep and
+ * note tint, so they run on under it level.
  */
-const GlossMarker = ({ texts, showHarakat, band }: { texts: string[]; showHarakat: boolean; band: { className: string; style?: CSSProperties } | null }) => {
+const GlossMarker = ({ texts, showHarakat, band }: { texts: string[]; showHarakat: boolean; band: { className: string; style?: CSSProperties } }) => {
   const id = useId();
   const [open, setOpen] = useState(false);
   const shown = texts.map((t) => (showHarakat ? t : stripHarakat(t))).join("\n");
   return (
-    <span data-sel-box className={band?.className} style={band?.style}>
+    <span data-sel-box className={band.className} style={band.style}>
       <Popover
         open={open}
         onOpenChange={(next, details) => {
@@ -346,14 +353,10 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
               key="gloss"
               texts={r.texts}
               showHarakat={display.showHarakat}
-              band={
-                highlight
-                  ? {
-                      className: cx(MARK_BAND[highlight.color], at !== undefined && "mark-sweep"),
-                      style: at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.25 }) : undefined,
-                    }
-                  : null
-              }
+              band={{
+                className: cx(highlight && MARK_BAND[highlight.color], at !== undefined && "mark-sweep", note && "note-span", tint && "note-tint"),
+                style: at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.25 }) : undefined,
+              }}
             />
           ))}
       </span>

@@ -110,14 +110,16 @@ const REVEAL_TINT: Keyframe[] = [
 
 /**
  * Tints words for a moment, along with the spaces between neighbouring words
- * so the tint reads as one band. Each word sits in a wrapper; a space is the
- * wrapper's next sibling.
+ * so the tint reads as one band. Each word sits in a wrapper with any gloss ring
+ * after it; a space is the wrapper's next sibling.
  */
 const tintWords = (words: HTMLElement[]) => {
   words.forEach((el, i) => {
-    const gap = el.parentElement?.nextElementSibling;
+    const wrapper = el.parentElement;
+    const glossRings = wrapper ? [...wrapper.children].filter((c): c is HTMLElement => c !== el && c instanceof HTMLElement) : [];
+    const gap = wrapper?.nextElementSibling;
     const nextWrapper = words[i + 1]?.parentElement;
-    const tinted = gap && nextWrapper && gap.nextElementSibling === nextWrapper ? [el, gap] : [el];
+    const tinted = [el, ...glossRings, ...(gap && nextWrapper && gap.nextElementSibling === nextWrapper ? [gap] : [])];
     for (const target of tinted) target.animate(REVEAL_TINT, { duration: 3000, easing: "ease-out" });
   });
 };

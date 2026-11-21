@@ -176,6 +176,19 @@ body {
   background-color: transparent;
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent-soft) 90%, transparent);
 }
+/* Where a tinted word meets its gloss ring or a tinted space, the corners there stay square. */
+.note-tint:has(+ .note-tint),
+.note-tint:last-child:is(:has(+ .note-tint) > *),
+.note-tint:has(+ * > .note-tint:first-child) {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.note-tint + .note-tint,
+:has(> .note-tint) + .note-tint,
+.note-tint + * > .note-tint:first-child {
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+}
 
 .mark-yellow {
   --mark: var(--color-mark-1);
@@ -307,7 +320,7 @@ body {
   background-color: var(--selection);
   box-shadow:
     0 -0.135em 0 var(--selection),
-    0 0.2em 0 var(--selection);
+    0 0.135em 0 var(--selection);
 }
 
 /* Only the line's own rows hang; the margin controls inside it don't. */
