@@ -142,6 +142,7 @@ const quoteCitation = (span: Span): Omit<Cite, "kind"> => ({
   from: span.start.line,
   to: span.end.line,
   words: span.start.line === span.end.line ? { from: span.start.word, to: span.end.word } : null,
+  phrase: null,
 });
 
 /**
@@ -155,9 +156,12 @@ const CiteChip = ({
   onClick,
   onRemove,
   onBubble = false,
+  missing = false,
 }: {
   label: string;
   text: string | null;
+  /** The citation's words aren't on the page: shown muted, with `text` saying so, and it goes nowhere. */
+  missing?: boolean;
   onClick?: () => void;
   onRemove?: () => void;
   /** Inside a sent question, which already has the accent tint. */
@@ -171,6 +175,7 @@ const CiteChip = ({
         "mx-0.5 inline-flex translate-y-px items-center gap-1 rounded-md align-baseline font-sans text-xs text-accent",
         // In a sent question the chips flow with its words, centred on the line.
         onBubble ? "translate-y-0 bg-surface align-middle" : "bg-accent-soft",
+        missing && "bg-ink/6 text-ink-3",
       )}
     >
       <button
@@ -194,9 +199,13 @@ const CiteChip = ({
       arrow={false}
       className="block w-max max-w-80 rounded-xl bg-surface-3 px-3 py-2 text-ink shadow-float"
     >
-      <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
-        {text}
-      </span>
+      {missing ? (
+        <span className="block text-xs text-ink-2">{text}</span>
+      ) : (
+        <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
+          {text}
+        </span>
+      )}
     </TooltipContent>
   </Tooltip>
 );
@@ -206,7 +215,9 @@ const AnswerCite = ({ bookId, cite, position, onCite }: { bookId: string; cite: 
   const page = usePage({ bookId, position });
   const span = page.data ? citeSpan({ cite, page: page.data.page }) : null;
   const { kind: _, ...where } = cite;
-  return <CiteChip label={citeLabel(cite)} text={span && page.data ? quoteSpan({ page: page.data.page, span }) : null} onClick={() => onCite({ ...where, position })} />;
+  const label = citeLabel(cite);
+  if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} missing />;
+  return <CiteChip label={label} text={span && page.data ? quoteSpan({ page: page.data.page, span }) : null} onClick={() => onCite({ ...where, position })} />;
 };
 
 /** An answer, one element per line so each line takes its own direction. Citations become chips. */

@@ -8949,13 +8949,23 @@
             "default": "default",
             "options": [
               "default",
-              "hover"
+              "hover",
+              "missing"
             ],
             "overrides": {
               "hover": {
                 "zoSQRonB": {
                   "style": {
                     "text-decoration": "underline"
+                  }
+                }
+              },
+              "missing": {
+                "wTNsBmCc": {
+                  "style": {
+                    "background": "color-mix(in oklab, {color.ink} 6%, transparent)",
+                    "color": "{color.ink-3}",
+                    "cursor": "default"
                   }
                 }
               }

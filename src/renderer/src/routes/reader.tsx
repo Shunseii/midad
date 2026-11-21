@@ -15,6 +15,7 @@ import { type AskSelection, AskPanel, useAskConversation } from "../components/a
 import { PageScrubber } from "../components/page-scrubber";
 import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } from "../components/find-bar";
 import { findOnPage } from "../../../shared/find";
+import { citeSpan } from "../../../shared/ask";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Skeleton, Toast, cx } from "../components/ui";
@@ -145,12 +146,13 @@ interface LineRange {
   to: number;
 }
 
-/** An Ask AI citation or pasted quote: whole lines, or with `words`, part of one line. */
-type Citation = LineRange & { words: { from: number; to: number } | null };
+/** An Ask AI citation or pasted quote: whole lines, or with `phrase` or `words`, part of them. */
+type Citation = LineRange & { words: { from: number; to: number } | null; phrase: string | null };
 
-const revealCitation = ({ root, cite }: { root: HTMLElement | null; cite: Citation }) => {
-  if (!cite.words) return revealLines({ root, ...cite });
-  revealSpan({ root, span: { part: cite.part, start: { line: cite.from, word: cite.words.from }, end: { line: cite.from, word: cite.words.to } } });
+const revealCitation = ({ root, cite, page }: { root: HTMLElement | null; cite: Citation; page: StoredPage["page"] | undefined }) => {
+  const span = page ? citeSpan({ cite, page }) : null;
+  if (span) revealSpan({ root, span });
+  else if (!cite.phrase && !cite.words) revealLines({ root, ...cite });
 };
 
 /** Scrolls to some lines and tints their words for a moment, the same band a cited phrase gets. */
@@ -518,7 +520,7 @@ export const ReaderRoute = () => {
     const reveal = pendingReveal.current;
     if (reveal && page.data?.position === reveal.position) {
       pendingReveal.current = null;
-      requestAnimationFrame(() => revealCitation({ root: pageRoot.current, cite: reveal }));
+      requestAnimationFrame(() => revealCitation({ root: pageRoot.current, cite: reveal, page: page.data?.page }));
     }
     const scrollTop = pendingScroll.current;
     if (scrollTop !== null && page.data?.position === position) {
@@ -535,7 +537,7 @@ export const ReaderRoute = () => {
   const citeLines = ({ position: at, ...cite }: Citation & { position: number }) => {
     // A sheet covers the page, so step out of the way to show where the citation points.
     if (!wide) setPanelOpen(false);
-    if (at === position) revealCitation({ root: pageRoot.current, cite });
+    if (at === position) revealCitation({ root: pageRoot.current, cite, page: page.data?.page });
     else {
       pendingReveal.current = { position: at, ...cite };
       go(at);
