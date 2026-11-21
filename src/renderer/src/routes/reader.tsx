@@ -22,7 +22,7 @@ import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
 import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookMarks, useMarker, usePage, useSetMarker } from "../lib/midad";
 import { usePref } from "../lib/prefs";
-import { useFocusMode, useHighlightStyle, usePageWidth } from "../lib/appearance";
+import { useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
 import { focusKeyAction } from "../lib/focus";
 import { neighbourPages } from "../lib/neighbours";
@@ -329,6 +329,7 @@ export const ReaderRoute = () => {
   const [lineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
   const [glossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
   const [hashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
+  const [noteIcons] = useNoteIcons();
   const [textScale, setTextScale] = usePref({ key: "reader.textScale", fallback: 1 });
   const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
@@ -1186,7 +1187,7 @@ export const ReaderRoute = () => {
               highlightStyle={highlightStyle}
               freshHighlight={freshHighlight}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
-              display={{ showHarakat, showMine, lineNumbers, textScale, target, glossMarkers, hashiyaMarkers }}
+              display={{ showHarakat, showMine, lineNumbers, textScale, target, glossMarkers, hashiyaMarkers, noteIcons }}
               tinted={tinted}
               dimNoteMarks={focusOn}
               noteMarkHandlers={noteMarkHandlers}

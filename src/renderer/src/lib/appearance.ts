@@ -7,10 +7,13 @@ import { readPref, usePref } from "./prefs";
 export type PageWidth = "narrow" | "wide";
 /** Under: a band below the letters, clear of the harakat above. Behind: a fill over the word's full height. */
 export type HighlightStyle = "under" | "behind";
+/** Words: an icon at the start of each note. Margin: one mark per row, with a count. */
+export type NoteIcons = "words" | "margin";
 
 export const useTheme = () => usePref<Theme>({ key: "appearance.theme", fallback: "system" });
 export const usePageWidth = () => usePref<PageWidth>({ key: "reader.pageWidth", fallback: "narrow" });
 export const useHighlightStyle = () => usePref<HighlightStyle>({ key: "reader.highlightStyle", fallback: "under" });
+export const useNoteIcons = () => usePref<NoteIcons>({ key: "reader.noteIcons", fallback: "words" });
 
 const FOCUS_FALLBACK = focusChoiceFromLegacy(readPref<unknown>({ key: "reader.focusMode", fallback: false }));
 

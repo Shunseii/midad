@@ -16,7 +16,7 @@ import { stripHarakat } from "../../../shared/arabic";
 import { displayMarks, inContext, isMark, lettersOf } from "../../../shared/harakat";
 import type { StoredPage } from "../../../shared/library";
 import type { Gloss } from "../../../shared/page";
-import type { HighlightStyle, PageWidth } from "../lib/appearance";
+import type { HighlightStyle, NoteIcons, PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
 import { footnotesByMarker, splitFootnoteRef } from "../lib/footnotes";
 import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
@@ -192,6 +192,7 @@ export interface Display {
   glossMarkers: boolean;
   /** The superscript footnote references in the text. */
   hashiyaMarkers: boolean;
+  noteIcons: NoteIcons;
 }
 
 /** The style that times one word's (or the gap after it's) part of the sweep. */
@@ -331,7 +332,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const highlight = highlightAt(annotations.highlights, part, ref);
     const note = noteAt(annotations.notes, part, ref);
     const tint = tintOf(ref).length > 0;
-    const startingHere = annotations.notes.filter((n) => n.span.part === part && n.span.start.line === line && n.span.start.word === token.word);
+    const startingHere = display.noteIcons !== "words" ? [] : annotations.notes.filter((n) => n.span.part === part && n.span.start.line === line && n.span.start.word === token.word);
     const target = (e: ReactMouseEvent<HTMLElement>): WordTarget => ({
       part,
       ref,
@@ -735,7 +736,7 @@ export const PageView = ({
     layoutKey: `${display.showHarakat}-${display.showMine}-${display.textScale}-${display.glossMarkers}-${display.hashiyaMarkers}`,
     onMark: (word: number) => onMark({ part, line, word }),
     onClearMark,
-    notes: annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line),
+    notes: display.noteIcons === "margin" ? annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line) : [],
     numbered: part === "matn" && display.lineNumbers,
     noteMarks: { dim: dimNoteMarks, tinted, handlers: noteMarkHandlers },
   });

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import type { Theme } from "../../../shared/ipc";
 import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
-import { type HighlightStyle, type PageWidth, useFocusMode, useHighlightStyle, usePageWidth, useTheme } from "../lib/appearance";
+import { type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
 import type { FocusChoice } from "../lib/focus";
 import { midad, useSaveSettings, useSettings } from "../lib/midad";
 import { usePref } from "../lib/prefs";
@@ -51,6 +51,11 @@ const Row = ({ title, hint, children }: { title: string; hint: string; children:
 const HIGHLIGHT_STYLES: { value: HighlightStyle; label: string }[] = [
   { value: "under", label: "Under text" },
   { value: "behind", label: "Behind text" },
+];
+
+const NOTE_ICONS: { value: NoteIcons; label: string }[] = [
+  { value: "words", label: "On the words" },
+  { value: "margin", label: "In the margin" },
 ];
 
 const FOCUS_CHOICES: { value: FocusChoice; label: string }[] = [
@@ -112,6 +117,7 @@ const Reading = () => {
   const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
   const [glossMarkers, setGlossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
   const [hashiyaMarkers, setHashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
+  const [noteIcons, setNoteIcons] = useNoteIcons();
   return (
     <Section title="Reading" description="The page's text. Text size and harakat are also in the reader's Display menu.">
       <Row title="Text size" hint="The page's Arabic text">
@@ -135,6 +141,9 @@ const Reading = () => {
       </Row>
       <Row title="Hashiya markers" hint="Footnote numbers in the main text; the hashiya below stays">
         <Switch label="Show hashiya markers" checked={hashiyaMarkers} onChange={setHashiyaMarkers} />
+      </Row>
+      <Row title="Note icons" hint="Show a note icon next to each note, or one per line in the margin">
+        <Segmented<NoteIcons> label="Note icons" value={noteIcons} onChange={setNoteIcons} options={NOTE_ICONS} />
       </Row>
     </Section>
   );
