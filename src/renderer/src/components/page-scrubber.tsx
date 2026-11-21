@@ -238,8 +238,8 @@ export const PageScrubber = ({
                 aria-hidden
                 data-page-label
                 className={cx(
-                  "ar absolute right-0 translate-x-1/2 text-sm leading-none whitespace-nowrap transition-opacity duration-pop ease-out group-hover/scrub:opacity-0 group-hover/scrub:duration-pop-exit group-data-dragging/scrub:opacity-0",
-                  markerAt === position ? "-top-8" : "-top-5",
+                  "ar absolute -top-5 right-0 translate-x-1/2 text-sm leading-none whitespace-nowrap transition-[opacity,translate] duration-pop ease-out motion-reduce:transition-opacity group-hover/scrub:opacity-0 group-hover/scrub:duration-pop-exit group-data-dragging/scrub:opacity-0",
+                  markerAt === position && "-translate-y-3",
                   label.printed ? "text-ink-2" : "text-ink-3",
                 )}
               >
