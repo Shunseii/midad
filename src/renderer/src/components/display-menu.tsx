@@ -100,7 +100,7 @@ export const DisplayMenu = ({
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger render={<IconButton icon={Settings2} label="Display" selected={open} />} />
-      <PopoverContent ref={popup} initialFocus={popup} side="bottom" align="end" sideOffset={8} className="w-80 gap-4 p-0 pt-4">
+      <PopoverContent ref={popup} initialFocus={popup} side="bottom" align="end" sideOffset={8} className="w-80 gap-4 p-0 pt-4 [view-transition-name:display-menu]">
         <div className="flex flex-col gap-4 px-4">
           <TextSize scale={textScale} onScale={onTextScale} />
           <Row title="Harakat" hint="The corpus's marks and yours" shortcut="H">

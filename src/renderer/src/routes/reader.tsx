@@ -1,5 +1,6 @@
 import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { flushSync } from "react-dom";
 import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
@@ -76,6 +77,20 @@ interface ZoomAnchor {
   offset: number;
   at: number;
 }
+
+/** How far the page's column, with its line numbers and margin marks, sits in from each side of the page area. */
+const columnInsets = (area: HTMLElement) => {
+  const box = area.getBoundingClientRect();
+  let left = Infinity;
+  let right = -Infinity;
+  for (const el of [area.querySelector(".reader-text"), ...area.querySelectorAll(".reader-text *")]) {
+    const r = el?.getBoundingClientRect();
+    if (!r || r.width === 0) continue;
+    left = Math.min(left, r.left);
+    right = Math.max(right, r.right);
+  }
+  return left > right ? { left: 0, right: 0 } : { left: Math.max(left - box.left, 0), right: Math.max(box.right - right, 0) };
+};
 
 const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
 
@@ -371,7 +386,9 @@ export const ReaderRoute = () => {
     }
   }, [client, bookId, position, book.data?.pageCount]);
   const chapterTitle = toc[entryIndexFor(toc, position)]?.text ?? null;
-  const [pageWidth] = usePageWidth();
+  const [chosenWidth] = usePageWidth();
+  // Lags the choice by one view transition, so the reflow can play from the old column to the new one.
+  const [pageWidth, setPageWidth] = useState(chosenWidth);
   const [highlightStyle] = useHighlightStyle();
   const [onScreen, setOnScreen] = useState<{ position: number; lines: number[] }>({ position, lines: [] });
   const measureFrame = useRef(0);
@@ -714,9 +731,7 @@ export const ReaderRoute = () => {
     return zoomAnchor.current;
   };
 
-  useLayoutEffect(() => {
-    const anchor = pendingAnchor.current;
-    pendingAnchor.current = null;
+  const holdAnchor = (anchor: ZoomAnchor | null) => {
     const root = pageRoot.current;
     const word = anchor && root?.querySelector(anchor.selector);
     if (!anchor || !root || !word) return;
@@ -727,7 +742,45 @@ export const ReaderRoute = () => {
       offset: anchor.offset,
       maxScrollTop: root.scrollHeight - root.clientHeight,
     });
+  };
+
+  useLayoutEffect(() => {
+    holdAnchor(pendingAnchor.current);
+    pendingAnchor.current = null;
   }, [textScale]);
+
+  /**
+   * Narrow and Wide reflow the text, so the change plays as a view transition:
+   * the column's edges ease from the old width to the new one while the old
+   * lines fade into the new. The first whole word at the top stays put.
+   */
+  useEffect(() => {
+    if (chosenWidth === pageWidth) return;
+    const area = pageRoot.current?.querySelector<HTMLElement>("[data-page-area]");
+    const anchor = pickAnchor(null);
+    const apply = () => {
+      flushSync(() => setPageWidth(chosenWidth));
+      holdAnchor(anchor);
+    };
+    if (!area || !document.startViewTransition) {
+      apply();
+      return;
+    }
+    const root = document.documentElement;
+    const from = columnInsets(area);
+    const fromTop = area.getBoundingClientRect().top;
+    root.dataset.reflow = "";
+    const transition = document.startViewTransition(() => {
+      apply();
+      const to = columnInsets(area);
+      const vars = { "--reflow-from-left": from.left, "--reflow-from-right": from.right, "--reflow-to-left": to.left, "--reflow-to-right": to.right, "--reflow-shift": fromTop - area.getBoundingClientRect().top };
+      for (const [name, px] of Object.entries(vars)) root.style.setProperty(name, `${px}px`);
+    });
+    void transition.finished.finally(() => {
+      delete root.dataset.reflow;
+      for (const name of ["--reflow-from-left", "--reflow-from-right", "--reflow-to-left", "--reflow-to-right", "--reflow-shift"]) root.style.removeProperty(name);
+    });
+  }, [chosenWidth, pageWidth]);
 
   /** Changes the text size, keeping the reader's place on the page. */
   const resize = ({ scale, pointer }: { scale: number; pointer: Point | null }) => {

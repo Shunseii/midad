@@ -283,6 +283,40 @@ body {
   }
 }
 
+/*
+ * Changing the page width (data-reflow, see reader.tsx). The page's group is
+ * clipped to the column, whose edges ease from the old width to the new one
+ * (240ms ease-sheet), while the old lines fade out quickly and the reflowed
+ * ones fade in, so the text never visibly rewraps. The old snapshot keeps the
+ * place it had, since the reflow scrolls the page to hold the reader's word.
+ */
+:root[data-reflow]::view-transition-group(reader-page) {
+  animation: reflow-column 240ms var(--ease-sheet) both;
+}
+:root[data-reflow]::view-transition-old(reader-page) {
+  translate: 0 var(--reflow-shift, 0px);
+  animation: page-out 120ms var(--ease-out) both;
+}
+:root[data-reflow]::view-transition-new(reader-page) {
+  animation: page-fade-in 200ms var(--ease-out) 40ms both;
+}
+/* The Display menu, where the width is picked, stays put above the reflowing page. */
+:root[data-reflow]::view-transition-group(display-menu),
+:root[data-reflow]::view-transition-new(display-menu) {
+  animation: none;
+}
+:root[data-reflow]::view-transition-old(display-menu) {
+  display: none;
+}
+@keyframes reflow-column {
+  from {
+    clip-path: inset(-100vh var(--reflow-from-right) -100vh var(--reflow-from-left));
+  }
+  to {
+    clip-path: inset(-100vh var(--reflow-to-right) -100vh var(--reflow-to-left));
+  }
+}
+
 /* The scrubber row stays put and covers the sliding page, whose snapshot isn't clipped by the scroller. */
 ::view-transition-group(page-scrubber) {
   animation: none;
