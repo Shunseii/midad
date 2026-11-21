@@ -49,7 +49,7 @@ const SUPERSCRIPT = /\$\^\{?([^$}]*)\}?\$/g;
 const HEADING = /^(#{1,6})\s+(.+)$/;
 const DIVIDER = "---";
 const HASHIYA_TITLE = "الحاشية";
-const FOOTNOTE_MARKER = /(?:^|\s)\(([٠-٩0-9]+)\)\s*/g;
+const FOOTNOTE_MARKER = /(?:^|\s)\(([٠-٩۰-۹0-9]+)\)\s*/g;
 
 /** One line with each gloss's base wrapped in anchors, and the glosses in the same order. */
 interface Anchored {
@@ -209,13 +209,22 @@ const isHashiyaTitle = (line: string): boolean => {
   return heading !== null && heading[2]?.trim() === HASHIYA_TITLE;
 };
 
+const MAX_HEADER_LINES = 3;
+const MAX_HEADER_LINE = 80;
+
 const splitHeader = (lines: string[]): { header: string | null; body: string[] } => {
   const dividerAt = lines.findIndex((l) => l.trim() === DIVIDER);
   if (dividerAt === -1) return { header: null, body: lines };
   const before = lines.slice(0, dividerAt).filter((l) => l.trim().length > 0);
-  const isRunningHeader = before.length === 1 && !isHashiyaTitle(before[0] ?? "");
+  // The OCR sometimes splits the running header (title, chapter, page number) over a few short lines.
+  // When the divider leads straight into the hashiya, the lines above it are the matn, not a header.
+  const hashiyaFollows = isHashiyaTitle(lines.slice(dividerAt + 1).find((l) => l.trim().length > 0) ?? "");
+  const isRunningHeader =
+    before.length >= 1 &&
+    (before.length === 1 || (before.length <= MAX_HEADER_LINES && !hashiyaFollows)) &&
+    before.every((l) => l.trim().length <= MAX_HEADER_LINE && !isHashiyaTitle(l));
   if (!isRunningHeader) return { header: null, body: lines };
-  return { header: plain(before[0] ?? ""), body: lines.slice(dividerAt + 1) };
+  return { header: before.map((l) => plain(l)).join(" "), body: lines.slice(dividerAt + 1) };
 };
 
 const parseFootnotes = (text: string): Footnote[] => {

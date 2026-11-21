@@ -215,3 +215,16 @@ describe("parsePage glosses on a line of their own", () => {
     expect(page.glosses).toEqual([{ part: "matn", line: 2, from: 1, to: 1, text: "ذلك القول" }]);
   });
 });
+
+describe("parsePage running header", () => {
+  it("takes a header the OCR split over a few short lines", () => {
+    const page = parsePage("كتاب الطهارة\n۱۱۷\n\n---\n\nوالأصابع(۱)، وتثليث الغسل");
+    expect(page.header).toBe("كتاب الطهارة ۱۱۷");
+    expect(page.matn.map((b) => b.text).join("\n")).not.toContain("كتاب الطهارة");
+  });
+
+  it("keeps long lines before the divider as matn", () => {
+    const long = "هذا سطر طويل من المتن ".repeat(5);
+    expect(parsePage(`${long}\n\n---\n\nبعده`).header).toBeNull();
+  });
+});

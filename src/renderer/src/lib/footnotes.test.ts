@@ -42,3 +42,10 @@ describe("splitFootnoteRef", () => {
     expect(splitFootnoteRef("بلا")).toBeNull();
   });
 });
+
+describe("Persian digits", () => {
+  it("raises a reference written in Persian digits and matches its Arabic-Indic footnote", () => {
+    expect(splitFootnoteRef("الأصابع(۱)،")).toEqual({ before: "الأصابع", marker: "١", after: "،" });
+    expect(footnotesByMarker([{ marker: "۲", text: "حاشية" }]).get("٢")).toBe("حاشية");
+  });
+});
