@@ -211,6 +211,8 @@ interface LineProps {
   display: Display;
   /** Notes whose words are tinted, while their peek or margin mark is hovered. */
   tinted: ReadonlySet<string>;
+  /** Focus mode fades the note icons on the words, like the margin marks. */
+  dimNoteIcons: boolean;
   onWordHover: (target: WordTarget, note: Note | null) => void;
   onWordClick: (target: WordTarget, highlight: Highlight | null) => void;
 }
@@ -279,7 +281,24 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
   return nodes;
 };
 
-const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, onWordHover, onWordClick }: LineProps) => {
+/**
+ * A small note icon raised past the end of a note's last word, like a superscript. It is an
+ * overlay: it takes no room, so line breaks and justification stay as they were, and it is
+ * left out of hit tests, selection and copying.
+ */
+const NoteIcon = ({ active, dim }: { active: boolean; dim: boolean }) => (
+  <MessageSquareText
+    data-overlay
+    aria-hidden
+    className={cx(
+      "pointer-events-none absolute left-0 top-0 size-2.5 -translate-x-3/4 -translate-y-1/4 select-none transition-[color,opacity] duration-press ease-out",
+      active ? "text-accent" : "text-accent/55",
+      dim && !active && "opacity-30",
+    )}
+  />
+);
+
+const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, dimNoteIcons, onWordHover, onWordClick }: LineProps) => {
   const sweepAt = (h: Highlight | null, ref: WordRef) => (sweep && h?.id === sweep.id ? sweep.order.get(`${part}:${ref.line}:${ref.word}`) : undefined);
   const tokens = tokenize(text);
   const wordAt = (i: number) => {
@@ -312,6 +331,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const highlight = highlightAt(annotations.highlights, part, ref);
     const note = noteAt(annotations.notes, part, ref);
     const tint = tintOf(ref).length > 0;
+    const endingHere = annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line && n.span.end.word === token.word);
     const target = (e: ReactMouseEvent<HTMLElement>): WordTarget => ({
       part,
       ref,
@@ -327,7 +347,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const at = sweepAt(highlight, ref);
     const targetLetter = t && t.part === part && t.line === line && t.word === token.word ? t.letter : null;
     return (
-      <span key={i}>
+      <span key={i} className={endingHere.length > 0 ? "relative" : undefined}>
         <span
           data-part={part}
           data-line={line}
@@ -340,7 +360,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
             highlight && MARK_BAND[highlight.color],
             at !== undefined && "mark-sweep",
             highlight && "cursor-pointer",
-            note && "note-span note-ink",
+            note && "note-span",
             tint && "note-tint",
           )}
         >
@@ -359,6 +379,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
               }}
             />
           ))}
+        {endingHere.length > 0 && <NoteIcon active={endingHere.some((n) => tinted.has(n.id))} dim={dimNoteIcons} />}
       </span>
     );
   });
@@ -705,7 +726,7 @@ export const PageView = ({
   useSelectionBoxes(articleRef);
   const fresh = freshHighlight ? annotations.highlights.find((h) => h.id === freshHighlight) : undefined;
   const sweep = fresh ? sweepOrder({ page, highlight: fresh }) : null;
-  const lineProps = { glosses: page.glosses, annotations, sweep, display, tinted, onWordHover, onWordClick };
+  const lineProps = { glosses: page.glosses, annotations, sweep, display, tinted, dimNoteIcons: dimNoteMarks, onWordHover, onWordClick };
   const t = (s: string) => (display.showHarakat ? s : stripHarakat(s));
   const markable = (part: Part, line: number) => ({
     part,

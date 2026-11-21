@@ -1154,7 +1154,7 @@
     },
     "0m93E36I": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "8zs7I39p",
@@ -1176,6 +1176,23 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "0mQZJuGB": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "JKyKtZsN",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "0maC1Exv": {
       "index": "a000",
@@ -2125,6 +2142,20 @@
       "style": {
         "display": "inline",
         "position": "relative"
+      },
+      "type": "frame"
+    },
+    "1XOlxoYR": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "K2gBrdIA",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -3143,6 +3174,20 @@
       },
       "type": "text"
     },
+    "2TN1EzNE": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "mWlUOW7O",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "2TOJRXAy": {
       "content": "وأقسامه ثلاثة: ",
       "index": "a000",
@@ -3679,6 +3724,23 @@
       },
       "type": "text"
     },
+    "2sUDw39g": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "g888kCxv",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "2sUL1CfC": {
       "componentId": "RV1DOgzp",
       "index": "a008",
@@ -3747,6 +3809,20 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "2vugc77Q": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "bLMofNY2",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "2wiU00Nq": {
       "icon": "message-square-text",
@@ -4371,7 +4447,7 @@
     },
     "3Q8bvxTZ": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "41kiwxJU",
@@ -4774,6 +4850,23 @@
       },
       "type": "frame"
     },
+    "3kijDHHf": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "l0sMio2Z",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "3klbXX9R": {
       "componentId": "RV1DOgzp",
       "index": "a006",
@@ -4942,6 +5035,23 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "3u1ymmKS": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "NVVhptGj",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "3vKqRKqA": {
       "content": "6",
@@ -5758,9 +5868,23 @@
       },
       "type": "frame"
     },
+    "4TNBuKwE": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "l5xujw5E",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "4TRTMtrK": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "8xcyuu9g",
@@ -6786,6 +6910,23 @@
       },
       "type": "frame"
     },
+    "59JqF5HA": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "Yt1byJKD",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "5A3eV3ne": {
       "icon": "chevron-right",
       "index": "a2",
@@ -6885,6 +7026,23 @@
       },
       "type": "text"
     },
+    "5DCZLxIu": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "4TNBuKwE",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "5E3Vmys3": {
       "index": "Za000",
       "name": "Line number",
@@ -6974,6 +7132,20 @@
         "withIcon": "yes"
       },
       "type": "instance"
+    },
+    "5ISVA17z": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "SRsYb2Rn",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "5J5b16dq": {
       "content": "3",
@@ -7268,6 +7440,20 @@
         "gap": 12,
         "height": 60,
         "padding": "0 16px"
+      },
+      "type": "frame"
+    },
+    "5SmIuPZv": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "2ibZPyEK",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -7871,7 +8057,7 @@
     },
     "5tF6IMvM": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "iedYtuEO",
@@ -8417,6 +8603,23 @@
       },
       "type": "frame"
     },
+    "6Nl8qXgA": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "h3BnZE9x",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "6NrLxTLh": {
       "content": "(٢) أي: تغييرُ أحوالِ أواخرِ الكلمِ من رفعٍ إلى نصبٍ أو جرٍّ أو جزمٍ.",
       "index": "a2",
@@ -8489,7 +8692,7 @@
     },
     "6T0QIwJi": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "ZdmoUKYJ",
@@ -8604,6 +8807,23 @@
         "width": 28
       },
       "type": "frame"
+    },
+    "6YCiPARZ": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "wJ47b4EO",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "6YksWy7W": {
       "content": "ابن آجُرّوم",
@@ -9017,7 +9237,7 @@
     },
     "6v5cPrjY": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "HAbOOaIj",
@@ -9377,6 +9597,23 @@
       },
       "type": "frame"
     },
+    "79XPIF9N": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "SleMQiLH",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "7AeGa2KQ": {
       "index": "a3",
       "name": "Book · الأربعون النووية",
@@ -9615,7 +9852,7 @@
     },
     "7LX0jP2M": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "fXWk4Ole",
@@ -10490,6 +10727,23 @@
         "padding": "0 4px"
       },
       "type": "frame"
+    },
+    "7zBt7eoE": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "U4cL2KM0",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "800nHorV": {
       "index": "a003",
@@ -11575,7 +11829,7 @@
     },
     "8otvPhrW": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "Iuly64RZ",
@@ -11778,9 +12032,26 @@
       },
       "type": "instance"
     },
+    "8wuLmNmP": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "dDeUQqpP",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "8xTbkLgE": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "JVQhvxmC",
@@ -12454,6 +12725,23 @@
       },
       "type": "frame"
     },
+    "9QcTAVrK": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "Lyc28vae",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "9RQct48f": {
       "content": "14",
       "index": "a000",
@@ -12870,6 +13158,23 @@
         "gap": 16
       },
       "type": "frame"
+    },
+    "9lQxvLtI": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "fzbk6UXq",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "9lysLFG3": {
       "index": "a001",
@@ -13710,7 +14015,7 @@
     },
     "ATMZGPHb": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "ndR3I96O",
@@ -15752,7 +16057,7 @@
     },
     "BjuR7OHl": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "Chsaxbb7",
@@ -15810,6 +16115,23 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "Bm9Rr5xI": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "UfugZPq3",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "BmF7zbDF": {
       "content": "بابُ الإعرابِ",
@@ -17203,6 +17525,20 @@
       },
       "type": "instance"
     },
+    "CeEaq4Ti": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "rCoEEZT1",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "CeL0tj6c": {
       "index": "a004",
       "name": "Spacer",
@@ -17855,6 +18191,20 @@
       },
       "type": "frame"
     },
+    "D6vLrAfJ": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "fnTZ5PBF",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "D7CiyOzq": {
       "content": "3 of 24",
       "index": "a001",
@@ -18108,6 +18458,23 @@
       },
       "type": "instance"
     },
+    "DMFNyFGK": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "I02sJYeD",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "DN26pgKh": {
       "index": "a000",
       "name": "Running header",
@@ -18308,7 +18675,7 @@
     },
     "DWNrSgb1": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "7mv2M796",
@@ -18739,7 +19106,7 @@
     },
     "DssmBQGN": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "IgYfAjXQ",
@@ -19183,7 +19550,7 @@
     },
     "EHUsPpz7": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00",
       "name": "Note anchor · اسمٌ",
       "parentId": "1X7ah7rQ",
@@ -19229,6 +19596,23 @@
       },
       "type": "frame"
     },
+    "EKkE5F8f": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "afndNhsn",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "ELGjGkoe": {
       "index": "a1",
       "name": "Section · Appearance",
@@ -19253,6 +19637,20 @@
         "gap": 12,
         "margin": "0 16px 16px",
         "padding": 12
+      },
+      "type": "frame"
+    },
+    "EM1ceJOI": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "qguk4Ri2",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -19831,7 +20229,7 @@
     },
     "EuTWBB9O": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "gtLyKyxH",
@@ -19977,6 +20375,20 @@
       "parentId": "HcY8SooC",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "F2ETvCYx": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "zb4e3Pma",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -20308,6 +20720,20 @@
         "flex-direction": "column",
         "gap": 10,
         "width": 168
+      },
+      "type": "frame"
+    },
+    "FGPTwdV8": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "fXWk4Ole",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -20975,6 +21401,23 @@
       },
       "type": "text"
     },
+    "Fkf6RtVD": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "F2ETvCYx",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "FmKCBjv9": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
       "index": "a1",
@@ -21049,7 +21492,7 @@
     },
     "FqHhr1Qa": {
       "content": "اسم",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "kkP06Xaa",
@@ -21763,6 +22206,23 @@
       },
       "type": "text"
     },
+    "GJB5IBrH": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "fndnco2n",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "GJa3YBFP": {
       "index": "a001",
       "name": "Spacer",
@@ -22370,7 +22830,7 @@
     },
     "Gjzlz62Z": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "L31bCsQ3",
@@ -23054,7 +23514,7 @@
     },
     "HCA1Kp6E": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "6cBgrAhI",
@@ -23911,6 +24371,20 @@
       },
       "type": "frame"
     },
+    "HnfFmFdm": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "eet67zgU",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "HnsoexHW": {
       "index": "a007",
       "name": "TOC · بابُ الفاعلِ",
@@ -23978,6 +24452,20 @@
         "top": 11,
         "translate": "50% 0",
         "width": 1
+      },
+      "type": "frame"
+    },
+    "Hq3JfEoG": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "qAsPk0Rk",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -24130,6 +24618,20 @@
       },
       "type": "text"
     },
+    "I02sJYeD": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "Iuly64RZ",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "I0FTEBPJ": {
       "index": "a004",
       "name": "Passage",
@@ -24265,7 +24767,7 @@
     },
     "I4L8kciL": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "mWlUOW7O",
@@ -24343,7 +24845,7 @@
     },
     "I9dHXsJW": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00",
       "name": "Note anchor · اسمٌ",
       "parentId": "n8zxxOdn",
@@ -24724,6 +25226,20 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "IQ7CtVTn": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "psKoyYkt",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -25547,7 +26063,7 @@
     },
     "J04hXPn8": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "SRsYb2Rn",
@@ -25940,7 +26456,7 @@
     },
     "JFOeJpsl": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "V3sx8M2R",
@@ -26100,6 +26616,20 @@
         "width": "100%"
       },
       "type": "instance"
+    },
+    "JKyKtZsN": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "AbkY4zjr",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "JLXy2UJl": {
       "icon": "message-square-text",
@@ -27498,7 +28028,7 @@
     },
     "KLQHCoJo": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "NCZsyIkB",
@@ -27740,6 +28270,20 @@
       },
       "type": "text"
     },
+    "KWyeMQP4": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "KnE0pA4a",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "KXKZ3amV": {
       "index": "Za000",
       "name": "Line number",
@@ -27826,6 +28370,40 @@
         "padding": "4px 10px"
       },
       "type": "frame"
+    },
+    "KegclGbC": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "WMByP3q4",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
+    "KewicY3y": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "qBsNwiPY",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "KfAPGmaM": {
       "index": "a005",
@@ -28909,7 +29487,7 @@
     },
     "LUoAWGdZ": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "K2gBrdIA",
@@ -29374,6 +29952,23 @@
       },
       "type": "frame"
     },
+    "LoTfMhXp": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "mwvZh2yq",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "Lq2izgpZ": {
       "content": "ابن هشام الأنصاري",
       "index": "a001",
@@ -29466,6 +30061,20 @@
         "align-items": "center",
         "display": "flex",
         "gap": 6
+      },
+      "type": "frame"
+    },
+    "Lyc28vae": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "IXhEwtdT",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -29717,7 +30326,7 @@
     },
     "MDlIfUWV": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "IXhEwtdT",
@@ -30132,7 +30741,7 @@
     },
     "MWNiUFMs": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "qguk4Ri2",
@@ -30423,6 +31032,23 @@
         "font-size": 14
       },
       "type": "text"
+    },
+    "Mi4xsEHk": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "VIqF1vQh",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "MiPHP42e": {
       "content": "14",
@@ -31083,7 +31709,7 @@
     },
     "N8ewj4Dr": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "zb4e3Pma",
@@ -31282,6 +31908,23 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "NIlpak50": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "5ISVA17z",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "NIwErCcZ": {
       "index": "a002",
@@ -31569,6 +32212,20 @@
       },
       "type": "instance"
     },
+    "NVVhptGj": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "Chsaxbb7",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "NVniKdCZ": {
       "content": "بابُ الفاعلِ",
       "index": "a002",
@@ -31595,6 +32252,20 @@
         "tone": "mark-3"
       },
       "type": "instance"
+    },
+    "NWt3qSb7": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "lKG0H5Ko",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "NX53iCD9": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -31850,7 +32521,7 @@
     },
     "Nj5ebz2y": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "qAsPk0Rk",
@@ -32584,7 +33255,7 @@
     },
     "ONJYdFSk": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "8sohL1p9",
@@ -32781,6 +33452,20 @@
       "parentId": "7N4M7ule",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "OWxfWkZX": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "kiVOjGD5",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -34689,6 +35374,20 @@
       },
       "type": "text"
     },
+    "PpdjOkXl": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "gtLyKyxH",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "Pr3RqzTX": {
       "index": "a000",
       "name": "Reader",
@@ -34862,6 +35561,23 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "Q17oFfYy": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "cOS87WRD",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "Q2RqUXZF": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
@@ -35265,6 +35981,23 @@
       },
       "type": "instance"
     },
+    "QJVQMqAh": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "YuzDhRjM",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "QKAeWFJj": {
       "index": "a001",
       "name": "Spacer",
@@ -35353,6 +36086,20 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "QM4ZaZPq": {
+      "index": "a00V",
+      "name": "Note icon",
+      "parentId": "baRqbR43",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "QMxHvr1M": {
       "index": "a1",
@@ -35455,6 +36202,23 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "QQr3cOPm": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "Zh7DyoV2",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "QSumB2Jb": {
       "css": "transition:\n  opacity {transition.duration-panel} {ease.out},\n  translate {transition.duration-panel} {ease.out};\n\n@starting-style {\n  opacity: 0;\n  translate: 0 6px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
@@ -36633,6 +37397,23 @@
       },
       "type": "frame"
     },
+    "RTU1h5Hz": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "YmrnXwgR",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "RTjC82ga": {
       "index": "Za000",
       "name": "Line number",
@@ -37295,7 +38076,7 @@
     },
     "RyMgPhih": {
       "content": "وحرفٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00002V",
       "name": "Note anchor · وحرفٌ",
       "parentId": "Y4F53FeC",
@@ -38308,6 +39089,20 @@
       },
       "type": "text"
     },
+    "SleMQiLH": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "ZdmoUKYJ",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "Sljo4PFo": {
       "content": "والفعلُ يُعرَفُ: بق",
       "index": "a000",
@@ -38509,6 +39304,20 @@
       },
       "type": "frame"
     },
+    "SuUDfoKc": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "41kiwxJU",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "SugyeOMY": {
       "content": "، ",
       "index": "a00004",
@@ -38633,6 +39442,23 @@
         "top": 0
       },
       "type": "text"
+    },
+    "T0ljz7lY": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "FGPTwdV8",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "T17GsxDp": {
       "content": "بابُ مرفوعاتِ الأسماءِ",
@@ -39043,6 +39869,20 @@
         "gap": 16,
         "position": "relative",
         "width": 640
+      },
+      "type": "frame"
+    },
+    "TGNn0fxA": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "11fjDaYY",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -39942,7 +40782,7 @@
     },
     "Toaos5Hs": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "KnE0pA4a",
@@ -40408,6 +41248,20 @@
       "parentId": "AUg1cvBq",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "U4cL2KM0": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "7mv2M796",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -41139,6 +41993,20 @@
       },
       "type": "text"
     },
+    "UfugZPq3": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "ndR3I96O",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "UhN7CpYm": {
       "css": "view-transition-name: reader-page;",
       "index": "a000",
@@ -41548,7 +42416,7 @@
     },
     "V174hNGD": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "lPT1DMV9",
@@ -42057,6 +42925,20 @@
         "position": "absolute",
         "top": 0,
         "width": 2
+      },
+      "type": "frame"
+    },
+    "VIqF1vQh": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "QONb6PUe",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -42703,6 +43585,23 @@
       },
       "type": "text"
     },
+    "VsrEpgpk": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "lfBhpktO",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "Vt9apWG7": {
       "index": "a000V",
       "name": "Heading line",
@@ -43081,7 +43980,7 @@
     },
     "WBL5GXMH": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "psKoyYkt",
@@ -43266,6 +44165,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "WMByP3q4": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "lPT1DMV9",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "WMF5Kdom": {
       "index": "a00",
@@ -43645,7 +44558,7 @@
     },
     "Wd6rf2QI": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "2ibZPyEK",
@@ -44206,7 +45119,7 @@
     },
     "X02pirNZ": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "2x2RztL0",
@@ -45399,6 +46312,23 @@
       },
       "type": "instance"
     },
+    "XvitltTH": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "bgUNPP3S",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "XwRK56a4": {
       "content": "(١) المرادُ بالوضعِ: القصدُ، فلا يُسمّى كلامًا ما صدرَ من النائمِ والساهي ونحوِهما.",
       "index": "a001",
@@ -45543,7 +46473,7 @@
     },
     "Y0SsZShO": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "JwUFPKLx",
@@ -45556,6 +46486,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "Y1NRTISN": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "6cBgrAhI",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "Y1ra7A7f": {
       "index": "a0",
@@ -46416,6 +47360,20 @@
       },
       "type": "instance"
     },
+    "YmrnXwgR": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "NCZsyIkB",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "Yn24VxcX": {
       "content": "والفعلُ يُعرَفُ: بقد، والسينِ، وسوف، وتاءِ التأنيثِ الساكنةِ.",
       "index": "a1",
@@ -46531,6 +47489,20 @@
       },
       "type": "text"
     },
+    "Yt1byJKD": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "kkP06Xaa",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "Yuba6MRd": {
       "componentId": "RV1DOgzp",
       "index": "a008",
@@ -46546,6 +47518,20 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "YuzDhRjM": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "2x2RztL0",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "Yv9Bhyt6": {
       "index": "a001",
@@ -46848,7 +47834,7 @@
     },
     "ZBQe0l0Y": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "rCoEEZT1",
@@ -47246,6 +48232,23 @@
       },
       "type": "instance"
     },
+    "ZUtUccAL": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "g7tQGXPO",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "ZV7NfW2y": {
       "index": "a002",
       "name": "Works",
@@ -47514,6 +48517,23 @@
       },
       "type": "text"
     },
+    "ZgjRgvkA": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "naa0EH77",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "ZgzBbPNo": {
       "icon": "message-square-text",
       "index": "a0",
@@ -47527,6 +48547,20 @@
         "width": 14
       },
       "type": "icon"
+    },
+    "Zh7DyoV2": {
+      "index": "a000V",
+      "name": "Note icon",
+      "parentId": "1X7ah7rQ",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "Zh7FCkvV": {
       "componentId": "uJd03iQq",
@@ -47851,6 +48885,20 @@
       },
       "type": "frame"
     },
+    "ZvCZiLo3": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "QcebiPlg",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "ZvYE8rrb": {
       "componentId": "ua9C67i7",
       "index": "a000",
@@ -47963,6 +49011,23 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "a2ks4Mot": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "fUDARyt9",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "a2me5fkY": {
       "content": "Continue reading",
@@ -48346,6 +49411,23 @@
       },
       "type": "instance"
     },
+    "aMWfB547": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "KWyeMQP4",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "aNFVV3vr": {
       "index": "Za000",
       "name": "Line number",
@@ -48697,6 +49779,23 @@
       },
       "type": "frame"
     },
+    "afGxnG7q": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "pbuHw3p1",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "afeU2C4T": {
       "componentId": "RV1DOgzp",
       "index": "a008",
@@ -48712,6 +49811,20 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "afndNhsn": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "IPWB16J0",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "aifIUB3p": {
       "index": "a0",
@@ -48812,7 +49925,7 @@
     },
     "an0C0s0Q": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "kiVOjGD5",
@@ -48996,6 +50109,23 @@
         "min-width": 0
       },
       "type": "frame"
+    },
+    "auIbj1Ne": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "wqXwK9Hl",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "axcElGqN": {
       "index": "a4",
@@ -49285,6 +50415,23 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "b6DAfcD4": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "Y1NRTISN",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "b6LQN2zh": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
@@ -49585,6 +50732,23 @@
         "padding": "40px 48px"
       },
       "type": "frame"
+    },
+    "bGL5YMao": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "oilBEENG",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "bGrSaZBN": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -50098,6 +51262,20 @@
       },
       "type": "text"
     },
+    "bgUNPP3S": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "itr3NHSj",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "bgek8HF0": {
       "content": "بابُ الكلامِ",
       "index": "a1",
@@ -50435,6 +51613,20 @@
         "width": 14
       },
       "type": "icon"
+    },
+    "bvSoeHV5": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "V3sx8M2R",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "bwkQdADd": {
       "componentId": "v8FmfBf5",
@@ -51010,7 +52202,7 @@
     },
     "cL4LMQzX": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "KG19DvrD",
@@ -51115,6 +52307,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "cOS87WRD": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "KG19DvrD",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "cS1fSUSO": {
       "index": "Za000",
@@ -52016,6 +53222,20 @@
       },
       "type": "text"
     },
+    "dDeUQqpP": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "wR2JPfxW",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "dEy6LH7E": {
       "index": "a0",
       "name": "Text",
@@ -52633,6 +53853,23 @@
       },
       "type": "text"
     },
+    "dZSDToRw": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "xhTYfhi9",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "da99l57X": {
       "content": "ْ",
       "index": "a00003",
@@ -53021,6 +54258,23 @@
       },
       "type": "frame"
     },
+    "duXePiEI": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "ZvCZiLo3",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "duqdXre0": {
       "content": "3",
       "index": "a000",
@@ -53035,6 +54289,23 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "dvgxVv6z": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "isL9IyZD",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "dvwvPfUU": {
       "index": "a001",
@@ -53128,7 +54399,7 @@
     },
     "e2TTZZZH": {
       "content": "يصلح",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "AbkY4zjr",
@@ -53471,6 +54742,23 @@
         "margin-bottom": 14
       },
       "type": "frame"
+    },
+    "eE2cGxxc": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "fRh7YgWV",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "eEBiQRbS": {
       "index": "a1",
@@ -53938,7 +55226,7 @@
     },
     "ebxrBiXF": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "Fo510vFU",
@@ -54401,6 +55689,23 @@
       },
       "type": "icon"
     },
+    "erbd1uas": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "NWt3qSb7",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "esW0wWG7": {
       "index": "a1",
       "name": "Section · Appearance",
@@ -54461,7 +55766,7 @@
     },
     "evcnp5mD": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "3ATQS6ml",
@@ -54650,7 +55955,7 @@
     },
     "f1IsIpK3": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "WSWVqmob",
@@ -55245,6 +56550,20 @@
       },
       "type": "frame"
     },
+    "fRh7YgWV": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "twrtWW85",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "fSia9hDy": {
       "content": "12",
       "index": "a000",
@@ -55303,6 +56622,20 @@
         "position": "absolute",
         "top": 0,
         "width": 28
+      },
+      "type": "frame"
+    },
+    "fUDARyt9": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "8xcyuu9g",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -55693,6 +57026,23 @@
       },
       "type": "instance"
     },
+    "fn2AE3sO": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "EM1ceJOI",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "fnS6vZzv": {
       "css": "cursor: pointer;\n\n&:focus-visible {\n  outline: 2px solid {color.accent};\n  outline-offset: 4px;\n}",
       "index": "a1",
@@ -55718,6 +57068,20 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "fndnco2n": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "yTdiosuZ",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -55781,6 +57145,23 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "fphpA11y": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "TGNn0fxA",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "fqK2S7pX": {
       "index": "a4",
@@ -55932,7 +57313,7 @@
     },
     "fvCTdgJa": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "QcebiPlg",
@@ -56063,6 +57444,20 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "fzbk6UXq": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "Fo510vFU",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -56228,6 +57623,34 @@
         "gap": 2,
         "padding": "24px 16px",
         "width": 248
+      },
+      "type": "frame"
+    },
+    "g7tQGXPO": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "TdCuKU0w",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
+    "g888kCxv": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "JwUFPKLx",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -56615,7 +58038,7 @@
     },
     "gPOtiRMr": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "QONb6PUe",
@@ -56843,6 +58266,23 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "gZB5g8nh": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "PpdjOkXl",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "gb5jESAB": {
       "index": "a004",
@@ -57321,6 +58761,20 @@
       },
       "type": "frame"
     },
+    "h3BnZE9x": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "3ATQS6ml",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "h3K0du8T": {
       "content": "Reading",
       "index": "a0",
@@ -57468,7 +58922,7 @@
     },
     "h7KyxUW5": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "hbqOd7kz",
@@ -59066,7 +60520,7 @@
     },
     "iF8NztPH": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "itr3NHSj",
@@ -59938,6 +61392,20 @@
       },
       "type": "text"
     },
+    "isL9IyZD": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "8zs7I39p",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "iszL5qDO": {
       "content": "، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
       "index": "a00002",
@@ -60379,7 +61847,7 @@
     },
     "jIdt6NXD": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "fnTZ5PBF",
@@ -61440,6 +62908,23 @@
       },
       "type": "text"
     },
+    "kDmnKVI9": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "SuUDfoKc",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "kEfNYlRD": {
       "content": "والفعلُ يُعرَفُ: بق",
       "index": "a000",
@@ -62014,6 +63499,23 @@
         "padding": "0 16px"
       },
       "type": "frame"
+    },
+    "kdCuzWPA": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "IQ7CtVTn",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "kdRpxSPV": {
       "index": "a001",
@@ -62602,6 +64104,20 @@
         "top": 11,
         "translate": "50% 0",
         "width": 1
+      },
+      "type": "frame"
+    },
+    "l0sMio2Z": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "HAbOOaIj",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -63464,6 +64980,20 @@
         "right": "18.64%",
         "translate": "50% 0",
         "width": 5
+      },
+      "type": "frame"
+    },
+    "lfBhpktO": {
+      "index": "a000V",
+      "name": "Note icon",
+      "parentId": "n8zxxOdn",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -65153,6 +66683,20 @@
       },
       "type": "frame"
     },
+    "mwvZh2yq": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "VpdBqoVw",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "mx7uicnJ": {
       "content": "2",
       "index": "a000",
@@ -65201,7 +66745,7 @@
     },
     "mxiCWXRo": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "wR2JPfxW",
@@ -65561,7 +67105,7 @@
     },
     "nCMICOVi": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "11fjDaYY",
@@ -65637,7 +67181,7 @@
     },
     "nGh6WCZo": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "4Mo6KE2W",
@@ -66086,6 +67630,20 @@
         "position": "absolute",
         "top": 0,
         "width": 28
+      },
+      "type": "frame"
+    },
+    "naa0EH77": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "iedYtuEO",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -66940,7 +68498,7 @@
     },
     "oDHMTRPO": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "IPWB16J0",
@@ -67199,7 +68757,7 @@
     },
     "oMcoaqw3": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "eUKlxw2W",
@@ -67719,6 +69277,20 @@
         "flex": 1,
         "flex-direction": "column",
         "gap": 2
+      },
+      "type": "frame"
+    },
+    "oilBEENG": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "imveUFJk",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -68677,6 +70249,23 @@
       },
       "type": "instance"
     },
+    "pQZAA2eZ": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "bvSoeHV5",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "pRHgzqPv": {
       "componentId": "RV1DOgzp",
       "index": "a009",
@@ -68887,6 +70476,37 @@
       },
       "type": "text"
     },
+    "pbuHw3p1": {
+      "index": "a00002V0V",
+      "name": "Note icon",
+      "parentId": "Y4F53FeC",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
+    "pcGGT993": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "5SmIuPZv",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "pcvAvmKO": {
       "css": "transform-origin: right center;\ntransition: transform {transition.duration-slide} {ease.move};\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
@@ -68903,6 +70523,23 @@
         "width": "100%"
       },
       "type": "frame"
+    },
+    "pddsTeiH": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "Hq3JfEoG",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "peCZ2Li3": {
       "index": "a8",
@@ -69388,6 +71025,23 @@
       },
       "type": "frame"
     },
+    "q0JbGV8i": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "CeEaq4Ti",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "q0fjzLcz": {
       "content": "۞",
       "index": "a1",
@@ -69700,6 +71354,20 @@
       },
       "type": "frame"
     },
+    "qBsNwiPY": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "JVQhvxmC",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "qD78DYUi": {
       "index": "a4",
       "name": "Shelf",
@@ -69739,6 +71407,20 @@
         "text-align": "center"
       },
       "type": "text"
+    },
+    "qHKGkWAh": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "L31bCsQ3",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "qIBleGPX": {
       "index": "a005",
@@ -70367,7 +72049,7 @@
     },
     "qgnRODON": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "eet67zgU",
@@ -71299,6 +72981,23 @@
       },
       "type": "text"
     },
+    "rL0VT4Xy": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "2vugc77Q",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "rL9Rr4fb": {
       "content": "والسين",
       "index": "a00005",
@@ -71386,6 +73085,23 @@
         "width": 8
       },
       "type": "frame"
+    },
+    "rQ33ROyV": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "D6vLrAfJ",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "rQLF0koD": {
       "index": "a000",
@@ -71992,6 +73708,23 @@
       },
       "type": "frame"
     },
+    "rvXZc0HF": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "1XOlxoYR",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "rw0O2qwY": {
       "index": "a004",
       "name": "TOC · بابُ معرفةِ علاماتِ الإعرابِ",
@@ -72386,6 +74119,23 @@
       },
       "type": "text"
     },
+    "sB3Xik0o": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "vjq43RyG",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "sBUmAT8O": {
       "index": "a005",
       "name": "TOC · بابُ الأفعالِ",
@@ -72642,6 +74392,23 @@
       },
       "type": "text"
     },
+    "sKXd5ebO": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "OWxfWkZX",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "sLx0Swg3": {
       "index": "a7",
       "name": "Chapter opening",
@@ -72789,7 +74556,7 @@
     },
     "sVwuwMdz": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00",
       "name": "Note anchor · اسمٌ",
       "parentId": "baRqbR43",
@@ -73234,6 +75001,20 @@
       },
       "type": "text"
     },
+    "sso6zAmV": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "WSWVqmob",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "stmVAZI5": {
       "index": "a001",
       "name": "Spacer",
@@ -73277,6 +75058,23 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "sz16zZcX": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "sso6zAmV",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "sz1Tc0qE": {
       "content": "The numbers notes and Ask AI use",
@@ -73666,6 +75464,20 @@
         "text-align": "justify",
         "text-align-last": "right",
         "text-indent": "-1.5em"
+      },
+      "type": "frame"
+    },
+    "tKEmr6oO": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "eUKlxw2W",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -75315,7 +77127,7 @@
     },
     "uYUr0pPp": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "imveUFJk",
@@ -75342,7 +77154,7 @@
     },
     "uadL07BQ": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "bLMofNY2",
@@ -75645,7 +77457,7 @@
     },
     "unnwpuyw": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "VpdBqoVw",
@@ -76181,7 +77993,7 @@
     },
     "v98sqaNH": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "lKG0H5Ko",
@@ -76707,6 +78519,23 @@
       },
       "type": "text"
     },
+    "vcEZsUOh": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "2TN1EzNE",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "vcHa6tXl": {
       "index": "a004",
       "name": "Passage",
@@ -76719,6 +78548,23 @@
         "text-align": "right"
       },
       "type": "frame"
+    },
+    "vcoxvt6m": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "qHKGkWAh",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "vfdGQ9Bm": {
       "index": "b07",
@@ -76781,6 +78627,20 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "vjq43RyG": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "8sohL1p9",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
       },
       "type": "frame"
     },
@@ -77236,7 +79096,7 @@
     },
     "w9ZpVtBJ": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "twrtWW85",
@@ -77418,6 +79278,20 @@
         "width": 16
       },
       "type": "icon"
+    },
+    "wJ47b4EO": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "4Mo6KE2W",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "wJIY7uO8": {
       "componentId": "46QiZLNZ",
@@ -77713,7 +79587,7 @@
     },
     "wVEYacCe": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "TdCuKU0w",
@@ -78154,6 +80028,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "wqXwK9Hl": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "IgYfAjXQ",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
     },
     "wqvDg9d6": {
       "index": "a001",
@@ -79421,6 +81309,20 @@
       },
       "type": "frame"
     },
+    "xhTYfhi9": {
+      "index": "a000010V",
+      "name": "Note icon",
+      "parentId": "hbqOd7kz",
+      "style": {
+        "display": "inline-block",
+        "height": 0,
+        "pointer-events": "none",
+        "position": "relative",
+        "user-select": "none",
+        "width": 0
+      },
+      "type": "frame"
+    },
     "xhvI3yvz": {
       "index": "a0",
       "name": "Page area",
@@ -79754,6 +81656,23 @@
       },
       "type": "frame"
     },
+    "xyCYBIvU": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "tKEmr6oO",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "xzlmzEu9": {
       "index": "Za000",
       "name": "Line number",
@@ -79879,7 +81798,7 @@
     },
     "y4pTk1b5": {
       "content": "يصلحُ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "l5xujw5E",
@@ -80097,6 +82016,23 @@
         "line-height": "24px"
       },
       "type": "text"
+    },
+    "yK1uepB5": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "QM4ZaZPq",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "yK6bAr7d": {
       "index": "a0",
@@ -81522,7 +83458,7 @@
     },
     "zSt8B1SC": {
       "content": "اسمٌ",
-      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 65%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "yTdiosuZ",
@@ -81836,6 +83772,23 @@
       "name": "Label",
       "parentId": "CJLUHJ27",
       "type": "text"
+    },
+    "zcOLCMRb": {
+      "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
+      "icon": "message-square-text",
+      "index": "a0",
+      "name": "Icon message-square-text",
+      "parentId": "HnfFmFdm",
+      "set": "lucide",
+      "style": {
+        "color": "color-mix(in oklab, {color.accent} 55%, transparent)",
+        "height": 10,
+        "left": -7,
+        "position": "absolute",
+        "top": -26,
+        "width": 10
+      },
+      "type": "icon"
     },
     "zcS6qXYB": {
       "content": "5",

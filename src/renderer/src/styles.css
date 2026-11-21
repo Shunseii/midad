@@ -159,14 +159,10 @@ body {
   height: auto;
 }
 /*
- * Noted words have their ink tinted toward the accent, which adds nothing above or
- * below the letters. While their note is hovered (its margin mark, the words or a peek
- * entry) they also take a faint accent fill; on a highlight that fill is a soft ring
- * instead, so the highlight's band still shows.
+ * Noted words keep their ink; a small icon after the last word marks them. While their
+ * note is hovered (its margin mark, the words or a peek entry) they take a faint accent
+ * fill; on a highlight that fill is a soft ring instead, so the highlight's band still shows.
  */
-.note-ink {
-  color: color-mix(in oklab, var(--color-ink), var(--color-accent) 65%);
-}
 .note-span {
   border-radius: 4px;
   transition:
