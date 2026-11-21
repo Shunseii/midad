@@ -3527,6 +3527,22 @@
       },
       "type": "instance"
     },
+    "2TFw0qGU": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "BUV2lkeA",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "2TLxeQnv": {
       "content": "2",
       "index": "a0",
@@ -4060,6 +4076,22 @@
         "width": 28
       },
       "type": "frame"
+    },
+    "2om8Bcpv": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "FaJxpBto",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "2opmLDJp": {
       "content": "Library",
@@ -9002,6 +9034,22 @@
       },
       "type": "instance"
     },
+    "5zOVbsMS": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "ooInQp8U",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "60HsJc6y": {
       "content": "11",
       "index": "a000",
@@ -9735,6 +9783,22 @@
         "top": 0
       },
       "type": "text"
+    },
+    "6XWUFBk7": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "gvkkgVDz",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "6Xlh1zdV": {
       "index": "a0",
@@ -10544,6 +10608,22 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "79WvO2EA": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "AUg1cvBq",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "79XPIF9N": {
       "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
@@ -12490,6 +12570,22 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "8XgOBVFz": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "vQKqrlOD",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "8XkTxcL0": {
       "index": "a007",
@@ -16966,6 +17062,22 @@
       "style": {},
       "type": "instance"
     },
+    "BWu0tExH": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "lAQPWqde",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "BXnGk0wi": {
       "content": "د",
       "index": "a00002",
@@ -18806,6 +18918,22 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "CaRQMo4u": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "kvlJy5UY",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "Cb4LJiqI": {
       "index": "a007",
@@ -20783,6 +20911,22 @@
       },
       "type": "text"
     },
+    "E7TeGEk8": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "43EAgjoo",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "E7hieFo5": {
       "componentId": "RV1DOgzp",
       "index": "a009",
@@ -21476,6 +21620,22 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "EnDgFNdO": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "Ifm0COSu",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "EnaSDV1Q": {
       "index": "a001",
@@ -22523,6 +22683,22 @@
         "position": "absolute"
       },
       "type": "frame"
+    },
+    "FRuZefDh": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "Jpl0kall",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "FSDb5F1n": {
       "icon": "arrow-left",
@@ -28444,6 +28620,22 @@
       },
       "type": "frame"
     },
+    "JI3OwZq1": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "UIqIZn3b",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "JIZkCdme": {
       "componentId": "HZhkp90k",
       "index": "a1",
@@ -31438,6 +31630,22 @@
       },
       "type": "instance"
     },
+    "LOQvumtr": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "KjEpgo51",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "LOSABQCS": {
       "css": "view-transition-name: reader-page;",
       "index": "a000",
@@ -31681,6 +31889,22 @@
         "padding": "8px 4px 8px 10px"
       },
       "type": "frame"
+    },
+    "Lb58csme": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "aZWAQfE8",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "LbE5SJXf": {
       "componentId": "RV1DOgzp",
@@ -31941,6 +32165,22 @@
         "padding": "12px 20px"
       },
       "type": "frame"
+    },
+    "Lm6hNRPH": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "EJycE0hh",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "LmMb8hkp": {
       "content": "، ",
@@ -32735,6 +32975,22 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "MSIMPlac": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "8i8jUndA",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "MTVtNgkM": {
       "css": "view-transition-name: reader-page;",
@@ -34959,6 +35215,22 @@
       "parentId": "lAQPWqde",
       "props": {
         "label": "Show highlights and notes",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
+    "NsLD3Bm2": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "R6Ec078M",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
         "variant": "ghost"
       },
       "type": "instance"
@@ -39306,6 +39578,23 @@
       },
       "type": "frame"
     },
+    "Qpqr0Dko": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "CGGhkxt4",
+      "props": {
+        "label": "Close find",
+        "state": "selected",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "Qs5Epv5B": {
       "content": "فالاسمُ يُعرَفُ: بالخفضِ، والتنوينِ، ودخولِ الألفِ واللامِ، وحروفِ الخفضِ، وهي: مِن، وإلى، وعن، وعلى، وفي، ورُبَّ، والباءُ، والكافُ، واللامُ، وحروفِ القسمِ، وهي: الواوُ، والباءُ، والتاءُ.",
       "index": "a1",
@@ -43489,6 +43778,22 @@
       },
       "type": "frame"
     },
+    "TkuTKwxc": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "FODat1fi",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "TlQPFQT1": {
       "index": "a004",
       "name": "Spacer",
@@ -44076,6 +44381,22 @@
         "position": "relative"
       },
       "type": "frame"
+    },
+    "U4SsNTLM": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "mW44eddP",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "U4X9l9me": {
       "index": "a002",
@@ -49407,6 +49728,22 @@
       },
       "type": "frame"
     },
+    "XnquTcIW": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "kcv0SP3m",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "Xo0ODtC7": {
       "content": "والفعلُ يُعرَفُ: بقد، والسينِ، وسوف، وتاءِ التأنيثِ الساكنةِ.",
       "index": "a1",
@@ -50225,6 +50562,22 @@
       },
       "type": "text"
     },
+    "YLPTrn0Z": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "bOz6s4rz",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "YMCSHIrH": {
       "index": "a002",
       "name": "Segmented control",
@@ -50727,6 +51080,22 @@
       },
       "type": "frame"
     },
+    "YoFJx87N": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "CUtfH8TA",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "YoVzmQmZ": {
       "index": "ad",
       "name": "Highlight dot",
@@ -50823,6 +51192,22 @@
       "type": "frame",
       "x": 12440,
       "y": 2120
+    },
+    "YuSXDt51": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "kBc4UzCj",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "Yuba6MRd": {
       "componentId": "RV1DOgzp",
@@ -56372,6 +56757,22 @@
       },
       "type": "text"
     },
+    "ciUslkkk": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "2VEskiht",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "cijKinXa": {
       "content": "بابُ معرفةِ علاماتِ الإعرابِ",
       "index": "a002",
@@ -59780,6 +60181,22 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "f1L9POEx": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "VH4yz21j",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "f1f4MUFW": {
       "icon": "sparkles",
@@ -71075,6 +71492,22 @@
       },
       "type": "frame"
     },
+    "mb3oBVv5": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "AJ2MjqTL",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "mbsTs8lP": {
       "componentId": "RV1DOgzp",
       "index": "a006V",
@@ -72009,6 +72442,22 @@
       },
       "type": "text"
     },
+    "nFIMgI9w": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "5SZb18rJ",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "nFwCdMLg": {
       "content": "6 works · 2,772 pages transcribed",
       "index": "a001",
@@ -72554,6 +73003,22 @@
         "text-align": "right"
       },
       "type": "frame"
+    },
+    "ne8pB8wW": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "PWLWiPzM",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "neL2Lx9L": {
       "icon": "notebook-pen",
@@ -76691,6 +77156,22 @@
       },
       "type": "frame"
     },
+    "qPSykP3T": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "i0GkvsvO",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "qQ2kftek": {
       "content": "3",
       "index": "a000",
@@ -76970,6 +77451,22 @@
       "parentId": "wGblipLR",
       "props": {
         "shape": "line"
+      },
+      "type": "instance"
+    },
+    "qbW0gq9R": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "NUcBJATN",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
       },
       "type": "instance"
     },
@@ -78458,6 +78955,22 @@
         "gap": 6
       },
       "type": "frame"
+    },
+    "rSy3x6BW": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "Dutljw9i",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "rUQrrU6w": {
       "content": "14",
@@ -87786,6 +88299,22 @@
       },
       "type": "icon"
     },
+    "xtyEONDM": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "qA4qOBcB",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "xwGJLoNr": {
       "content": "Marks you added, drawn in red",
       "index": "a1",
@@ -88584,6 +89113,22 @@
         "padding": "4px 10px"
       },
       "type": "frame"
+    },
+    "ybQeyOlz": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "vMx0tscm",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "yc5xZbvC": {
       "content": "Ibn Ājurrūm · Bāb al-Kalām",
@@ -89546,6 +90091,22 @@
         "line-height": "24px"
       },
       "type": "text"
+    },
+    "zHe87O8k": {
+      "componentId": "RV1DOgzp",
+      "index": "a004V",
+      "name": "Find",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "search"
+        }
+      },
+      "parentId": "KTEUYcuA",
+      "props": {
+        "label": "Find on page (Ctrl+F)",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "zIHqIcc2": {
       "content": "بابُ الكلامِ",

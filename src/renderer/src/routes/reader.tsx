@@ -1,4 +1,4 @@
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Search, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
 import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -1110,6 +1110,12 @@ export const ReaderRoute = () => {
           <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
         </div>
         <div className="flex-1" />
+        <IconButton
+          icon={Search}
+          label={find.open ? "Close find" : "Find on page (Ctrl+F)"}
+          selected={find.open}
+          onClick={() => (find.open ? closeFind() : openFind())}
+        />
         <DisplayMenu
           open={menuOpen}
           onOpenChange={setMenuOpen}
