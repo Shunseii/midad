@@ -1064,7 +1064,7 @@
       "name": "Sidebar · Bookmarks",
       "parentId": "2D8XlLEQ",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -10188,7 +10188,7 @@
       "name": "Contents",
       "parentId": "jL0FcADC",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -11345,7 +11345,7 @@
       "name": "Contents",
       "parentId": "DP941Ugn",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -13418,7 +13418,7 @@
       "name": "Contents",
       "parentId": "HUbKJcBG",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -15530,7 +15530,7 @@
       "name": "Contents rail",
       "parentId": "TQOpml5M",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -16548,7 +16548,7 @@
       "name": "Contents",
       "parentId": "JSjawCy9",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -16956,7 +16956,7 @@
       "name": "Sidebar · Bookmarks",
       "parentId": "7dJBjXDy",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -18820,7 +18820,7 @@
       "name": "Contents",
       "parentId": "eXgt6Yq7",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -19304,7 +19304,7 @@
       "name": "Contents",
       "parentId": "cLnsusQx",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -24338,7 +24338,7 @@
       "name": "Contents",
       "parentId": "T2b4bxXt",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -28724,7 +28724,7 @@
       "name": "Contents",
       "parentId": "PTuSRyua",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -29375,7 +29375,7 @@
       "name": "Contents",
       "parentId": "r0HhmN7B",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -30065,7 +30065,7 @@
       "name": "Contents",
       "parentId": "o5AzTn98",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -32456,7 +32456,7 @@
       "name": "Contents",
       "parentId": "EqIl1JS5",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -35354,7 +35354,7 @@
       "name": "Contents",
       "parentId": "AqJFjCnA",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -36376,7 +36376,7 @@
       "name": "Contents",
       "parentId": "YpaaVLU7",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -36550,7 +36550,7 @@
       "name": "Contents",
       "parentId": "apwpu495",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -37178,8 +37178,7 @@
       "parentId": "A1rUuRyL",
       "style": {
         "align-items": "center",
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
+        "background": "{color.surface-2}",
         "border-radius": 8,
         "display": "flex",
         "gap": 2,
@@ -38312,7 +38311,7 @@
       "name": "Contents",
       "parentId": "0Q4pvFZm",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -42734,7 +42733,7 @@
       "name": "Contents",
       "parentId": "X4uesPtl",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -42861,7 +42860,7 @@
       "name": "Contents",
       "parentId": "Na7dOKzM",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -43286,7 +43285,7 @@
       "name": "Contents",
       "parentId": "DE2nGvmr",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -44214,7 +44213,7 @@
       "name": "Contents",
       "parentId": "SGd3rpmT",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -51263,7 +51262,7 @@
       "name": "Contents",
       "parentId": "DKgYBMoQ",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -51879,7 +51878,7 @@
       "name": "Contents",
       "parentId": "uQYYJiye",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -53567,7 +53566,7 @@
       "name": "Contents rail",
       "parentId": "DIsJvSA3",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -54871,7 +54870,7 @@
       "name": "Contents",
       "parentId": "esOc4J4o",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -56841,7 +56840,7 @@
       "name": "Sidebar · Bookmarks",
       "parentId": "Cz5Otcjp",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -59935,8 +59934,7 @@
       "parentId": "x0H4yd3G",
       "style": {
         "align-items": "center",
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
+        "background": "{color.surface-2}",
         "border-radius": 8,
         "display": "flex",
         "gap": 2,
@@ -60566,7 +60564,7 @@
       "name": "Contents rail",
       "parentId": "rlniNQTO",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -68206,8 +68204,7 @@
       "parentId": "0ZS5i3S8",
       "style": {
         "align-items": "center",
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
+        "background": "{color.surface-2}",
         "border-radius": 8,
         "display": "flex",
         "gap": 2,
@@ -68598,7 +68595,7 @@
       "name": "Contents",
       "parentId": "8BeV8PFY",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -71535,7 +71532,7 @@
       "name": "Contents",
       "parentId": "ZzpvFLwI",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -72658,7 +72655,7 @@
       "name": "Contents",
       "parentId": "ihRD5DdX",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -75949,8 +75946,7 @@
       "parentId": "XUJKoMIs",
       "style": {
         "align-items": "center",
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
+        "background": "{color.surface-2}",
         "border-radius": 8,
         "display": "flex",
         "gap": 2,
@@ -78214,7 +78210,7 @@
       "name": "Contents",
       "parentId": "RxrZ7yPt",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -78686,7 +78682,7 @@
       "name": "Contents",
       "parentId": "wrk8FGcD",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -83684,7 +83680,7 @@
       "name": "Contents",
       "parentId": "rly1bzIk",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -85038,7 +85034,7 @@
       "name": "Contents",
       "parentId": "aYExKYTF",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -89163,7 +89159,7 @@
       "name": "Contents rail",
       "parentId": "7kLejtUt",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -95243,7 +95239,7 @@
       "name": "Contents",
       "parentId": "Xh2eQVJQ",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -97080,7 +97076,7 @@
       "name": "Contents rail",
       "parentId": "tGlhP5sS",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -97401,7 +97397,7 @@
       "name": "Contents",
       "parentId": "wKg60xjv",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -100058,7 +100054,7 @@
       "name": "Sidebar · Bookmarks",
       "parentId": "ubIR3A55",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -102346,7 +102342,7 @@
       "name": "Contents",
       "parentId": "553B4Q3J",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -102854,7 +102850,7 @@
       "name": "Contents",
       "parentId": "uXmMODLt",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -103535,7 +103531,7 @@
       "name": "Contents",
       "parentId": "jLCOsKNV",
       "style": {
-        "background": "{color.surface-2}",
+        "background": "{color.bg}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",

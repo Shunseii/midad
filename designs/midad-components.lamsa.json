@@ -537,8 +537,8 @@
               "selected": {
                 "46QiZLNZ": {
                   "style": {
-                    "background": "{color.surface}",
-                    "box-shadow": "{shadow.xs}",
+                    "background": "{color.bg}",
+                    "box-shadow": "{shadow.sm}",
                     "color": "{color.ink}"
                   }
                 }

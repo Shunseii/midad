@@ -30,6 +30,18 @@
   --color-ring: var(--color-accent);
 }
 
+/* `dark:` follows the same rule as tokens.css: the system scheme, unless Settings forces a theme. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
 @layer base {
   * {
     border-color: var(--color-line);

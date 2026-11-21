@@ -153,11 +153,16 @@ export const Segmented = <T extends string>({
   value,
   onChange,
   label,
+  fullWidth = false,
+  className,
 }: {
   options: { value: T; label: string }[];
   value: T;
   onChange: (value: T) => void;
   label: string;
+  /** Stretches the control to its container, splitting the width evenly between the options. */
+  fullWidth?: boolean;
+  className?: string;
 }) => (
   <Tabs
     value={value}
@@ -165,8 +170,9 @@ export const Segmented = <T extends string>({
       const option = options.find((o) => o.value === next);
       if (option) onChange(option.value);
     }}
+    className={className}
   >
-    <TabsList aria-label={label}>
+    <TabsList aria-label={label} className={cn(fullWidth && "w-full")}>
       {options.map((o) => (
         <TabsTrigger key={o.value} value={o.value}>
           {o.label}

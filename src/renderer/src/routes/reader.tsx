@@ -18,7 +18,7 @@ import { findOnPage } from "../../../shared/find";
 import { citeSpan } from "../../../shared/ask";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
-import { IconButton, Skeleton, Toast, cx } from "../components/ui";
+import { IconButton, Segmented, Skeleton, Toast, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
 import { tintWords } from "../lib/reveal";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
@@ -27,7 +27,6 @@ import { type BookmarkState, createUndoStack, type MarkerAt, type UndoStack } fr
 import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookmarks, useBookMarks, useMarker, usePage, useSetBookmark, useSetMarker } from "../lib/midad";
 import { BookmarkList, BookmarkRibbon } from "../components/bookmarks";
 import { bookmarkFolio } from "../lib/bookmarks";
-import { Tabs, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { usePref } from "../lib/prefs";
 import { useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
@@ -218,23 +217,8 @@ const ContentsRail = ({
   onTab: (tab: SidebarTab) => void;
   bookmarks: ReactNode;
 }) => (
-  <nav aria-label={tab === "contents" ? "Contents" : "Bookmarks"} className="flex w-62 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-line bg-surface-2 px-4 py-6">
-    <Tabs
-      value={tab}
-      onValueChange={(next) => {
-        const option = SIDEBAR_TABS.find((o) => o.value === next);
-        if (option) onTab(option.value);
-      }}
-      className="mb-3"
-    >
-      <TabsList aria-label="Sidebar" className="w-full bg-surface">
-        {SIDEBAR_TABS.map((o) => (
-          <TabsTrigger key={o.value} value={o.value} className="flex-1">
-            {o.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
-    </Tabs>
+  <nav aria-label={tab === "contents" ? "Contents" : "Bookmarks"} className="flex w-62 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-line bg-bg px-4 py-6">
+    <Segmented<SidebarTab> label="Sidebar" value={tab} onChange={onTab} options={SIDEBAR_TABS} fullWidth className="mb-3" />
     {tab === "contents" ? <ContentsList entries={entries} active={active} onGo={onGo} /> : bookmarks}
   </nav>
 );
