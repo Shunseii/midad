@@ -68,7 +68,7 @@ const FOCUS_CHOICES: { value: FocusChoice; label: string }[] = [
 const FOCUS_HINTS: Record<FocusChoice, string> = {
   off: "Toolbars are always visible.",
   auto: "Hides toolbars while you read. Move the pointer to show them.",
-  locked: "Hides toolbars while you read. Point at the top or bottom edge to show them.",
+  locked: "Hides toolbars while you read. Point at any edge of the window to show them.",
 };
 
 const ON_LAUNCH_CHOICES: { value: OnLaunch; label: string }[] = [

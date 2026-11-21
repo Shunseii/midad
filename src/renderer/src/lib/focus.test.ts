@@ -10,8 +10,10 @@ import {
   focusReducer,
   initialFocus,
   msUntilChange,
+  PEEK_BOTTOM_EDGE_PX,
   PEEK_DWELL_MS,
   PEEK_EDGE_PX,
+  pointerAtEdge,
   toggledFocus,
 } from "./focus";
 
@@ -158,13 +160,68 @@ describe("focus mode locked", () => {
 });
 
 describe("the window edge", () => {
-  it("counts the top and bottom few pixels and nothing between", () => {
-    expect(atWindowEdge({ y: 0, height: 800 })).toBe(true);
-    expect(atWindowEdge({ y: PEEK_EDGE_PX, height: 800 })).toBe(true);
-    expect(atWindowEdge({ y: PEEK_EDGE_PX + 1, height: 800 })).toBe(false);
-    expect(atWindowEdge({ y: 400, height: 800 })).toBe(false);
-    expect(atWindowEdge({ y: 799, height: 800 })).toBe(true);
-    expect(atWindowEdge({ y: 799 - PEEK_EDGE_PX - 1, height: 800 })).toBe(false);
+  const size = { width: 1400, height: 900 };
+  const at = (x: number, y: number) => atWindowEdge({ x, y, ...size });
+
+  it("counts a band along the top, left and right, anywhere along each", () => {
+    for (const x of [0, 300, 700, 1100, 1399]) {
+      expect(at(x, 0)).toBe(true);
+      expect(at(x, PEEK_EDGE_PX - 1)).toBe(true);
+    }
+    for (const y of [0, 200, 450, 700, 899]) {
+      expect(at(0, y)).toBe(true);
+      expect(at(PEEK_EDGE_PX - 1, y)).toBe(true);
+      expect(at(1399, y)).toBe(true);
+      expect(at(1400 - PEEK_EDGE_PX, y)).toBe(true);
+    }
+  });
+
+  it("counts a taller band along the bottom, anywhere along it, corners included", () => {
+    for (const x of [0, 50, 700, 1350, 1399]) {
+      expect(at(x, 899)).toBe(true);
+      expect(at(x, 900 - PEEK_BOTTOM_EDGE_PX)).toBe(true);
+    }
+    expect(PEEK_BOTTOM_EDGE_PX).toBeGreaterThan(PEEK_EDGE_PX);
+  });
+
+  it("stops at the inner side of each band", () => {
+    expect(at(700, PEEK_EDGE_PX)).toBe(false);
+    expect(at(PEEK_EDGE_PX, 450)).toBe(false);
+    expect(at(1400 - PEEK_EDGE_PX - 1, 450)).toBe(false);
+    expect(at(700, 900 - PEEK_BOTTOM_EDGE_PX - 1)).toBe(false);
+    expect(at(700, 450)).toBe(false);
+  });
+
+  it("leaves the page area alone, 60px in from any edge", () => {
+    expect(at(700, 60)).toBe(false);
+    expect(at(700, 840)).toBe(false);
+    expect(at(60, 450)).toBe(false);
+    expect(at(1340, 450)).toBe(false);
+  });
+
+  it("counts points outside the window", () => {
+    expect(at(700, -5)).toBe(true);
+    expect(at(700, 905)).toBe(true);
+    expect(at(-5, 450)).toBe(true);
+    expect(at(1405, 450)).toBe(true);
+  });
+});
+
+describe("the pointer against an edge", () => {
+  const base = { width: 1400, height: 900, buttons: 0, leftWindow: false };
+
+  it("follows the edge band while the pointer is in the window", () => {
+    expect(pointerAtEdge({ ...base, x: 10, y: 890 })).toBe(true);
+    expect(pointerAtEdge({ ...base, x: 700, y: 450 })).toBe(false);
+  });
+
+  it("counts leaving the window, even when the reported position is short of the edge", () => {
+    expect(pointerAtEdge({ ...base, x: 300, y: 820, leftWindow: true })).toBe(true);
+  });
+
+  it("ignores the edge while a button is down, as when dragging a selection", () => {
+    expect(pointerAtEdge({ ...base, x: 700, y: 895, buttons: 1 })).toBe(false);
+    expect(pointerAtEdge({ ...base, x: 700, y: 950, buttons: 1, leftWindow: true })).toBe(false);
   });
 });
 

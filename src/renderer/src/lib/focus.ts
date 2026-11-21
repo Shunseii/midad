@@ -4,25 +4,32 @@
  *
  * - Auto: they come back on any mouse movement or key press, and leave again
  *   once the reader is idle.
- * - Locked: they stay away through movement, selecting and highlighting. Holding
- *   the pointer against the top or bottom edge of the window peeks them; Esc or
- *   F leaves focus mode.
+ * - Locked: they stay away through movement, selecting and highlighting. Resting
+ *   the pointer against any edge of the window, or pushing it out past one, peeks
+ *   them; they stay while the pointer is over them. Esc or F leaves focus mode.
  */
 export type FocusKind = "auto" | "locked";
 export type FocusChoice = "off" | FocusKind;
 
 export const FOCUS_IDLE_MS = 2000;
-/** How long the pointer has to rest against the window's top or bottom edge before Locked peeks the bars. */
+/** How long the pointer has to rest against an edge of the window before Locked peeks the bars. */
 export const PEEK_DWELL_MS = 300;
-/** How close to the window's top or bottom edge counts as against it. */
-export const PEEK_EDGE_PX = 6;
+/**
+ * How close to the top, left or right edge of the window counts as against it.
+ * Wide enough that a quick flick to the edge lands a pointer sample inside it,
+ * and inside the empty space the header and the page's side margins already
+ * leave, so it never reaches the text.
+ */
+export const PEEK_EDGE_PX = 24;
+/** The bottom band is a little taller: it reaches the scrubber, which sits 20px up, so the pointer can go straight from the edge onto it. */
+export const PEEK_BOTTOM_EDGE_PX = 32;
 
 export interface FocusState {
   /** When the reader last moved the mouse or pressed a key. */
   lastActivity: number;
   /** Set when focus mode is turned on: hide as soon as nothing holds the chrome, without waiting out the idle time. */
   entering: boolean;
-  /** Since when the pointer has rested against the top or bottom edge; null while it is anywhere else. */
+  /** Since when the pointer has rested against an edge of the window; null while it is anywhere else. */
   edgeSince: number | null;
 }
 
@@ -49,7 +56,27 @@ export const focusReducer = (state: FocusState, event: FocusEvent): FocusState =
   }
 };
 
-export const atWindowEdge = ({ y, height }: { y: number; height: number }) => y <= PEEK_EDGE_PX || y >= height - 1 - PEEK_EDGE_PX;
+interface WindowPoint {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** Whether a point is in the band along any edge of the window, or outside the window altogether. */
+export const atWindowEdge = ({ x, y, width, height }: WindowPoint) =>
+  x < PEEK_EDGE_PX || x >= width - PEEK_EDGE_PX || y < PEEK_EDGE_PX || y >= height - PEEK_BOTTOM_EDGE_PX;
+
+/**
+ * Whether the pointer counts as pushed against an edge. Leaving the window always
+ * does, whatever position the event reports: it can only leave across an edge, and
+ * on Wayland the leave event carries no position, so Chromium reports wherever
+ * the last move was, which after a quick flick is often well short of the edge.
+ * Nothing counts while a button is down, so dragging a selection to the bottom
+ * of the page doesn't peek the scrubber over it.
+ */
+export const pointerAtEdge = ({ leftWindow, buttons, ...point }: WindowPoint & { leftWindow: boolean; buttons: number }) =>
+  buttons === 0 && (leftWindow || atWindowEdge(point));
 
 export const peeking = ({ state, now }: { state: FocusState; now: number }) => state.edgeSince !== null && now - state.edgeSince >= PEEK_DWELL_MS;
 

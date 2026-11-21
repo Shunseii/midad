@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from "react";
-import { atWindowEdge, chromeHidden, type FocusChoice, focusReducer, initialFocus, msUntilChange } from "./focus";
+import { chromeHidden, type FocusChoice, focusReducer, initialFocus, msUntilChange, pointerAtEdge } from "./focus";
 
 /** Activity closer together than this is one burst; the chrome is never hidden while it lasts. */
 const ACTIVITY_THROTTLE_MS = 250;
@@ -8,7 +8,7 @@ const ACTIVITY_THROTTLE_MS = 250;
  * Whether focus mode has the top bar, rail and scrubber stepped aside right now.
  * In Auto any mouse movement, click, scroll or key press brings them back, and
  * they leave again once the reader is idle. In Locked only resting the pointer
- * against the top or bottom edge of the window brings them back.
+ * against an edge of the window, or pushing it out past one, brings them back.
  */
 export const useFocusChrome = ({ mode, held, textHeld }: { mode: FocusChoice; held: boolean; textHeld: boolean }) => {
   const [state, dispatch] = useReducer(focusReducer, 0, () => initialFocus(Date.now()));
@@ -40,16 +40,23 @@ export const useFocusChrome = ({ mode, held, textHeld }: { mode: FocusChoice; he
 
   useEffect(() => {
     if (mode !== "locked") return;
-    const onMove = (e: MouseEvent) => dispatch({ type: "pointer", now: Date.now(), atEdge: atWindowEdge({ y: e.clientY, height: window.innerHeight }) });
-    // Pushing past the edge into the title bar or panel still counts as holding it there.
+    const report = ({ e, leftWindow }: { e: MouseEvent; leftWindow: boolean }) =>
+      dispatch({
+        type: "pointer",
+        now: Date.now(),
+        atEdge: pointerAtEdge({ x: e.clientX, y: e.clientY, width: window.innerWidth, height: window.innerHeight, buttons: e.buttons, leftWindow }),
+      });
+    const onMove = (e: MouseEvent) => report({ e, leftWindow: false });
+    // Pushing past the edge into the title bar, a panel or the dock still counts as holding it there.
     const onLeave = (e: MouseEvent) => {
-      if (e.relatedTarget === null) onMove(e);
+      if (e.relatedTarget === null) report({ e, leftWindow: true });
     };
-    window.addEventListener("mousemove", onMove, { passive: true });
-    document.addEventListener("mouseout", onLeave, { passive: true });
+    // Capture, so nothing on the page can keep a move from us by stopping it on the way up.
+    window.addEventListener("mousemove", onMove, { passive: true, capture: true });
+    window.addEventListener("mouseout", onLeave, { passive: true, capture: true });
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseout", onLeave);
+      window.removeEventListener("mousemove", onMove, { capture: true });
+      window.removeEventListener("mouseout", onLeave, { capture: true });
       dispatch({ type: "pointer", now: Date.now(), atEdge: false });
     };
   }, [mode]);
