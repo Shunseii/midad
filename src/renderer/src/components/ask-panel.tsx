@@ -88,7 +88,7 @@ export const useAskConversation = (bookId: string) => {
       requestId: id,
       bookId,
       position,
-      question,
+      question: question || "Explain this passage.",
       selection: selection && position === selection.position ? { span: selection.span, text: selection.text } : undefined,
       quotes: quotes.map((q) => ({ text: q.text, span: q.position === position ? q.span : null })),
       sessionId: sessionId.current,
@@ -163,10 +163,12 @@ const CiteChip = ({
 }) => (
   <Tooltip disabled={!text} disableHoverablePopup>
     <TooltipTrigger
-      render={<span />}
+      // The label is English: keep its icon first inside right-to-left text too.
+      render={<span dir="ltr" />}
       className={cx(
         "mx-0.5 inline-flex translate-y-px items-center gap-1 rounded-md align-baseline font-sans text-xs text-accent",
-        onBubble ? "bg-surface" : "bg-accent-soft",
+        // In a sent question the chips flow with its words, centred on the line.
+        onBubble ? "translate-y-0 bg-surface align-middle" : "bg-accent-soft",
       )}
     >
       <button
@@ -235,6 +237,19 @@ const plainAnswer = (text: string) =>
 
 const quoteLabel = (q: Quote) => (q.span ? citeLabel(quoteCitation(q.span)) : "Pasted");
 
+const QuoteChip = ({ quote, onCite, onRemove, onBubble }: { quote: Quote; onCite: (c: Citation) => void; onRemove?: () => void; onBubble?: boolean }) => {
+  const { span } = quote;
+  return (
+    <CiteChip
+      label={quoteLabel(quote)}
+      text={quote.text}
+      onBubble={onBubble}
+      onClick={span ? () => onCite({ ...quoteCitation(span), position: quote.position }) : undefined}
+      onRemove={onRemove}
+    />
+  );
+};
+
 /** Pasted passages, as chips like the answer's citations: hover for the words, click to jump to them. */
 const QuoteChips = ({
   quotes,
@@ -248,19 +263,9 @@ const QuoteChips = ({
   onBubble?: boolean;
 }) => (
   <div className="-mx-0.5 flex flex-wrap gap-y-1">
-    {quotes.map((q) => {
-      const { span } = q;
-      return (
-        <CiteChip
-          key={q.id}
-          label={quoteLabel(q)}
-          text={q.text}
-          onBubble={onBubble}
-          onClick={span ? () => onCite({ ...quoteCitation(span), position: q.position }) : undefined}
-          onRemove={onRemove && (() => onRemove(q.id))}
-        />
-      );
-    })}
+    {quotes.map((q) => (
+      <QuoteChip key={q.id} quote={q} onCite={onCite} onBubble={onBubble} onRemove={onRemove && (() => onRemove(q.id))} />
+    ))}
   </div>
 );
 
@@ -339,7 +344,7 @@ export const AskPanel = ({
 
   const send = (question: string) => {
     if ((!question.trim() && quotes.length === 0) || busy) return;
-    void ask({ question: question.trim() || "Explain this passage.", position, selection: activeSelection, quotes });
+    void ask({ question: question.trim(), position, selection: activeSelection, quotes });
     setDraft("");
     setQuotes([]);
   };
@@ -424,12 +429,15 @@ export const AskPanel = ({
 
         {turns.map((turn) => (
           <div key={turn.id} className="flex flex-col gap-3">
-            <div className="flex max-w-[85%] flex-col gap-2 self-end rounded-xl bg-accent-soft px-3.5 py-2.5">
-              {turn.quotes.length > 0 && <QuoteChips quotes={turn.quotes} onCite={onCite} onBubble />}
-              <p dir="auto" className="text-body [unicode-bidi:plaintext]">
-                {turn.question}
-              </p>
-            </div>
+            <p
+              dir={turn.question ? (ARABIC_START.test(turn.question) ? "rtl" : "ltr") : "auto"}
+              className={cx("max-w-[85%] self-end rounded-xl bg-accent-soft px-3.5 py-2.5", ARABIC_START.test(turn.question) ? "ar text-ar-body" : "text-body")}
+            >
+              {turn.quotes.map((q) => (
+                <QuoteChip key={q.id} quote={q} onCite={onCite} onBubble />
+              ))}
+              {turn.question && <span className={cx(turn.quotes.length > 0 && "ms-1")}>{turn.question}</span>}
+            </p>
             {turn.answer && (
               <Answer text={turn.answer} cite={(c, key) => <AnswerCite key={key} bookId={bookId} cite={c} position={turn.position} onCite={onCite} />} />
             )}

@@ -106,7 +106,7 @@ export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; 
       db.prepare(
         `INSERT INTO conversations (id, book_id, session_id, title, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, ?)
          ON CONFLICT (id) DO UPDATE SET updated_at = excluded.updated_at`,
-      ).run(conversationId, bookId, turn.question.trim().slice(0, TITLE_MAX), at, at);
+      ).run(conversationId, bookId, (turn.question.trim() || turn.quotes[0]?.text.trim() || "Explain this passage.").slice(0, TITLE_MAX), at, at);
       db.prepare(
         `INSERT INTO turns (id, conversation_id, question, quotes, position, selection, answer, status, error, created_at)
          VALUES (?, ?, ?, ?, ?, ?, '', 'streaming', NULL, ?)`,

@@ -64,6 +64,11 @@ describe("Ask AI conversations", () => {
     expect(c?.turns[1]).toMatchObject({ answer: "partial", status: "error", error: "Stopped." });
   });
 
+  it("titles a conversation started from a pasted passage alone by that passage", async () => {
+    await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question("t1", "") });
+    expect((await conversations.list({ bookId: "b1" }))[0]?.title).toBe("الكلام");
+  });
+
   it("keeps turns in the order they were asked", async () => {
     for (const id of ["t1", "t2", "t3"]) await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question(id) });
     expect((await conversations.get({ id: "c1" }))?.turns.map((t) => t.id)).toEqual(["t1", "t2", "t3"]);
