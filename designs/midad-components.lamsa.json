@@ -625,6 +625,24 @@
       },
       "type": "frame"
     },
+    "4XyGCMOB": {
+      "css": "transform-origin: center;\ntransition:\n  scale {transition.duration-sweep} {ease.out},\n  opacity {transition.duration-sweep} {ease.out};\n\n@starting-style {\n  scale: 1 0;\n  opacity: 0;\n}\n\n*:hover > & {\n  scale: 1 1.25;\n}\n\n&[data-state=\"removed\"] {\n  scale: 1 0;\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n  transition-timing-function: {ease.in};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    scale: 1;\n  }\n}",
+      "hidden": true,
+      "index": "b0A1",
+      "name": "Bookmark tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.accent}",
+        "border-radius": 999,
+        "height": 14,
+        "position": "absolute",
+        "right": "31.36%",
+        "top": 9,
+        "translate": "50% 0",
+        "width": 3
+      },
+      "type": "frame"
+    },
     "4aJZW1V7": {
       "component": {
         "props": {
@@ -1299,6 +1317,24 @@
         "justify-content": "center",
         "margin-bottom": 4,
         "width": 40
+      },
+      "type": "frame"
+    },
+    "9cgZExtA": {
+      "css": "transform-origin: center;\ntransition:\n  scale {transition.duration-sweep} {ease.out},\n  opacity {transition.duration-sweep} {ease.out};\n\n@starting-style {\n  scale: 1 0;\n  opacity: 0;\n}\n\n*:hover > & {\n  scale: 1 1.25;\n}\n\n&[data-state=\"removed\"] {\n  scale: 1 0;\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n  transition-timing-function: {ease.in};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    scale: 1;\n  }\n}",
+      "hidden": true,
+      "index": "b0A2",
+      "name": "Bookmark tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.accent}",
+        "border-radius": 999,
+        "height": 14,
+        "position": "absolute",
+        "right": "56.40%",
+        "top": 9,
+        "translate": "50% 0",
+        "width": 3
       },
       "type": "frame"
     },
@@ -3037,6 +3073,24 @@
       },
       "type": "instance"
     },
+    "Jjn9ypoc": {
+      "css": "transform-origin: center;\ntransition:\n  scale {transition.duration-sweep} {ease.out},\n  opacity {transition.duration-sweep} {ease.out};\n\n@starting-style {\n  scale: 1 0;\n  opacity: 0;\n}\n\n*:hover > & {\n  scale: 1 1.25;\n}\n\n&[data-state=\"removed\"] {\n  scale: 1 0;\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n  transition-timing-function: {ease.in};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    scale: 1;\n  }\n}",
+      "hidden": true,
+      "index": "b0A3",
+      "name": "Bookmark tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.accent}",
+        "border-radius": 999,
+        "height": 14,
+        "position": "absolute",
+        "right": "82.10%",
+        "top": 9,
+        "translate": "50% 0",
+        "width": 3
+      },
+      "type": "frame"
+    },
     "JvS7uKlb": {
       "index": "a000",
       "name": "Chip",
@@ -3473,6 +3527,24 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "Mokdjv2H": {
+      "css": "transform-origin: center;\ntransition:\n  scale {transition.duration-sweep} {ease.out},\n  opacity {transition.duration-sweep} {ease.out};\n\n@starting-style {\n  scale: 1 0;\n  opacity: 0;\n}\n\n*:hover > & {\n  scale: 1 1.25;\n}\n\n&[data-state=\"removed\"] {\n  scale: 1 0;\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n  transition-timing-function: {ease.in};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    scale: 1;\n  }\n}",
+      "hidden": true,
+      "index": "b0A0",
+      "name": "Bookmark tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.accent}",
+        "border-radius": 999,
+        "height": 14,
+        "position": "absolute",
+        "right": "11.80%",
+        "top": 9,
+        "translate": "50% 0",
+        "width": 3
+      },
+      "type": "frame"
     },
     "MxtqOA6D": {
       "content": "Noto Naskh Arabic · 20/36 · 400",
@@ -8729,7 +8801,32 @@
     },
     "v8FmfBf5": {
       "component": {
-        "props": {}
+        "props": {
+          "bookmarks": {
+            "default": "off",
+            "options": [
+              "off",
+              "on"
+            ],
+            "overrides": {
+              "on": {
+                "4XyGCMOB": {
+                  "hidden": false
+                },
+                "9cgZExtA": {
+                  "hidden": false
+                },
+                "Jjn9ypoc": {
+                  "hidden": false
+                },
+                "Mokdjv2H": {
+                  "hidden": false
+                }
+              }
+            },
+            "type": "enum"
+          }
+        }
       },
       "css": "transition:\n  translate {transition.duration-panel} {ease.sheet},\n  opacity {transition.duration-panel} {ease.sheet};\n\n&[data-focus=\"hidden\"] {\n  translate: 0 100%;\n  opacity: 0;\n  pointer-events: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
       "name": "Page scrubber",
