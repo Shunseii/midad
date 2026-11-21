@@ -20,6 +20,8 @@ export const keys = {
   syncPreview: (bookId: string) => ["library", bookId, "sync-preview"] as const,
   annotations: (bookId: string, position: number) => ["library", bookId, "annotations", position] as const,
   marker: (bookId: string) => ["library", bookId, "marker"] as const,
+  bookMarks: (bookId: string) => ["library", bookId, "book-marks"] as const,
+  firstLine: (bookId: string, position: number) => ["library", bookId, "first-line", position] as const,
 };
 
 export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: () => midad["settings.get"]() });
@@ -77,6 +79,19 @@ export const useSetMarker = (bookId: string) => {
   };
 };
 
+/** The pages with highlights and notes, for the scrubber's dots. */
+export const useBookMarks = (bookId: string) =>
+  useQuery({ queryKey: keys.bookMarks(bookId), queryFn: () => midad["annotations.bookMarks"]({ bookId }) });
+
+/** A page's first line, fetched only while `enabled`; a page fetched before stays available either way. */
+export const useFirstLine = ({ bookId, position, enabled }: { bookId: string; position: number; enabled: boolean }) =>
+  useQuery({
+    queryKey: keys.firstLine(bookId, position),
+    queryFn: () => midad["library.firstLine"]({ bookId, position }),
+    enabled,
+    staleTime: 5 * 60_000,
+  });
+
 export const useAnnotations = ({ bookId, position }: { bookId: string; position: number }) =>
   useQuery({
     queryKey: keys.annotations(bookId, position),
@@ -87,7 +102,8 @@ export const useAnnotations = ({ bookId, position }: { bookId: string; position:
 export const useAnnotationActions = ({ bookId, position }: { bookId: string; position: number }) => {
   const client = useQueryClient();
   const key = keys.annotations(bookId, position);
-  const refresh = () => client.invalidateQueries({ queryKey: key });
+  const refresh = () =>
+    Promise.all([client.invalidateQueries({ queryKey: key }), client.invalidateQueries({ queryKey: keys.bookMarks(bookId) })]);
   return {
     addHighlight: async ({ span, color }: { span: Span; color: HighlightColor }) => {
       const highlight = await midad["highlights.add"]({ bookId, position, span, color });

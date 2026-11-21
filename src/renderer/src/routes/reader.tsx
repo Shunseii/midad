@@ -11,6 +11,7 @@ import { useMediaQuery } from "../lib/media";
 import { NoteEditor, NoteLayer, NotePeek, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
+import { PageScrubber } from "../components/page-scrubber";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Skeleton, Toast, cx } from "../components/ui";
@@ -18,7 +19,7 @@ import { rememberCopy } from "../lib/copied";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
-import { midad, keys, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker } from "../lib/midad";
+import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookMarks, useMarker, usePage, useSetMarker } from "../lib/midad";
 import { usePref } from "../lib/prefs";
 import { useFocusMode, useHighlightStyle, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
@@ -359,6 +360,7 @@ export const ReaderRoute = () => {
   const page = usePage({ bookId, position });
   const annotations = useAnnotations({ bookId, position });
   const actions = useAnnotationActions({ bookId, position });
+  const bookMarks = useBookMarks(bookId);
   const toc = useMemo(() => (book.data ? tableOfContents(book.data) : []), [book.data]);
   // Load the pages either side ahead of time, so a page turn's snapshot never catches a loading page.
   useEffect(() => {
@@ -880,7 +882,10 @@ export const ReaderRoute = () => {
           onCite={citeLines}
           onSaveNote={(turn, body) => {
             void midad["notes.add"]({ bookId, position: turn.position, span: turn.selection.span, body }).then(() =>
-              client.invalidateQueries({ queryKey: keys.annotations(bookId, turn.position) }),
+              Promise.all([
+                client.invalidateQueries({ queryKey: keys.annotations(bookId, turn.position) }),
+                client.invalidateQueries({ queryKey: keys.bookMarks(bookId) }),
+              ]),
             );
           }}
         />
@@ -990,9 +995,10 @@ export const ReaderRoute = () => {
         )}
         {/* The scan sits beside the text, or replaces it when there isn't room for both. */}
         <div className="@container flex min-w-0 flex-1">
+        <div className={cx("flex min-w-0 flex-1 flex-col", showScan && page.data && "@max-2xl:hidden")}>
         <div
           ref={pageRoot}
-          className={cx("@container min-w-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable_both-edges]", showScan && page.data && "@max-2xl:hidden")}
+          className="@container min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable_both-edges]"
           onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
           onCopy={() => {
@@ -1041,6 +1047,26 @@ export const ReaderRoute = () => {
             />
           )}
           </div>
+        </div>
+        {book.data && total > 0 && (
+          <div
+            {...chromeHover}
+            data-focus={focused ? "hidden" : undefined}
+            className="relative z-10 h-18 shrink-0 px-6 transition-[translate,opacity] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
+          >
+            <div className="mx-auto h-full max-w-190">
+              <PageScrubber
+                bookId={bookId}
+                pages={book.data.pages}
+                entries={toc}
+                marks={bookMarks.data}
+                position={position}
+                markerAt={marker.data?.position ?? null}
+                onGo={go}
+              />
+            </div>
+          </div>
+        )}
         </div>
         <ScanSlot open={showScan && !!page.data}>
           {page.data && <ScanPane bookId={bookId} fileId={page.data.fileId} onClose={() => setShowScan(false)} />}
