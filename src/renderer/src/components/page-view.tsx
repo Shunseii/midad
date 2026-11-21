@@ -15,7 +15,7 @@ import {
 import { stripHarakat } from "../../../shared/arabic";
 import { displayMarks, inContext, isMark, lettersOf } from "../../../shared/harakat";
 import type { StoredPage } from "../../../shared/library";
-import type { PageWidth } from "../lib/appearance";
+import type { HighlightStyle, PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
 import { footnotesByMarker, splitFootnoteRef } from "../lib/footnotes";
 import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
@@ -29,7 +29,7 @@ export const MARK_BG: Record<HighlightColor, string> = {
   blue: "bg-mark-4",
 };
 
-/** Highlighted text: a band of the colour behind the lower part of the letters (see .mark-band). */
+/** Highlighted text: a band of the colour under the letters, or behind the whole word (see .mark-band). */
 export const MARK_BAND: Record<HighlightColor, string> = {
   yellow: "mark-band mark-yellow",
   green: "mark-band mark-green",
@@ -422,6 +422,7 @@ export const PageView = ({
   bookTitle,
   chapter,
   width,
+  highlightStyle,
   annotations,
   freshHighlight,
   display,
@@ -436,6 +437,7 @@ export const PageView = ({
   /** The chapter this page falls in, for the running header. */
   chapter: string | null;
   width: PageWidth;
+  highlightStyle: HighlightStyle;
   annotations: PageAnnotations;
   /** The highlight just made, if any, to draw in. */
   freshHighlight: string | null;
@@ -467,7 +469,11 @@ export const PageView = ({
     <Footnotes value={footnotes}>
       <article
         style={{ "--text-scale": display.textScale } as CSSProperties}
-        className={cx("reader-text mx-auto flex w-full flex-col pb-24", width === "wide" ? "page-wide max-w-190" : "page-narrow max-w-160")}
+        className={cx(
+          "reader-text mx-auto flex w-full flex-col pb-24",
+          width === "wide" ? "page-wide max-w-190" : "page-narrow max-w-160",
+          highlightStyle === "behind" && "highlights-behind",
+        )}
       >
         <header className="mb-6 flex items-baseline justify-between gap-6 border-b border-line pb-3 text-ink-3" dir="rtl">
           <span className="ar truncate text-ar-small">{t(bookTitle)}</span>

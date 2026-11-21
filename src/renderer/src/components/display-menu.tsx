@@ -1,7 +1,7 @@
 import { Minus, Plus, Type } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Theme } from "../../../shared/ipc";
-import { type PageWidth, useFocusMode, usePageWidth, useTheme } from "../lib/appearance";
+import { type HighlightStyle, type PageWidth, useFocusMode, useHighlightStyle, usePageWidth, useTheme } from "../lib/appearance";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { IconButton, Kbd, Segmented, Switch, cx } from "./ui";
 
@@ -109,6 +109,7 @@ export const DisplayMenu = ({
   const [theme, setTheme] = useTheme();
   const [pageWidth, setPageWidth] = usePageWidth();
   const [focusMode, setFocusMode] = useFocusMode();
+  const [highlightStyle, setHighlightStyle] = useHighlightStyle();
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger render={<IconButton icon={Type} label="Text display" selected={open} />} />
@@ -119,6 +120,9 @@ export const DisplayMenu = ({
           </Row>
           <Row title="Page width" hint={pageWidth === "narrow" ? "Justified, a shorter line" : "Longer lines, ragged edge"} stacked>
             <Segmented label="Page width" value={pageWidth} onChange={setPageWidth} options={PAGE_WIDTHS} />
+          </Row>
+          <Row title="Highlight style" hint={highlightStyle === "under" ? "A band under the letters" : "A fill behind the whole word"} stacked>
+            <Segmented label="Highlight style" value={highlightStyle} onChange={setHighlightStyle} options={HIGHLIGHT_STYLES} />
           </Row>
           <Row title="Focus mode" hint="Hide the bars while you read">
             <Switch label="Focus mode" checked={focusMode} onChange={setFocusMode} />
@@ -151,6 +155,11 @@ const THEMES: { value: Theme; label: string }[] = [
   { value: "system", label: "System" },
   { value: "light", label: "Light" },
   { value: "dark", label: "Dark" },
+];
+
+export const HIGHLIGHT_STYLES: { value: HighlightStyle; label: string }[] = [
+  { value: "under", label: "Under text" },
+  { value: "behind", label: "Behind text" },
 ];
 
 const PAGE_WIDTHS: { value: PageWidth; label: string }[] = [

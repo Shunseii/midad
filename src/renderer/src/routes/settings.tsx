@@ -1,9 +1,9 @@
 import { Check, Minus, Plug, Plus } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import type { Theme } from "../../../shared/ipc";
-import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
+import { HIGHLIGHT_STYLES, LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
-import { type PageWidth, useFocusMode, usePageWidth, useTheme } from "../lib/appearance";
+import { type HighlightStyle, type PageWidth, useFocusMode, useHighlightStyle, usePageWidth, useTheme } from "../lib/appearance";
 import { midad, useSaveSettings, useSettings } from "../lib/midad";
 import { usePref } from "../lib/prefs";
 
@@ -33,6 +33,7 @@ const Appearance = () => {
   const [theme, setTheme] = useTheme();
   const [pageWidth, setPageWidth] = usePageWidth();
   const [focusMode, setFocusMode] = useFocusMode();
+  const [highlightStyle, setHighlightStyle] = useHighlightStyle();
   return (
     <Section title="Appearance" description="How Midad looks. Changes apply at once.">
       <Row title="Theme" hint="Follow the system, or always light or dark">
@@ -57,6 +58,9 @@ const Appearance = () => {
             { value: "wide", label: "Wide" },
           ]}
         />
+      </Row>
+      <Row title="Highlight style" hint="Under keeps the harakat clear; Behind fills the whole word">
+        <Segmented<HighlightStyle> label="Highlight style" value={highlightStyle} onChange={setHighlightStyle} options={HIGHLIGHT_STYLES} />
       </Row>
       <Row title="Focus mode" hint="The bars step aside while you read and return when you move">
         <Switch label="Focus mode" checked={focusMode} onChange={setFocusMode} />

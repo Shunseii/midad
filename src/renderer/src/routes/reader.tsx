@@ -20,7 +20,7 @@ import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
 import { midad, keys, useAnnotationActions, useAnnotations, useBook, useMarker, usePage, useSetMarker } from "../lib/midad";
 import { usePref } from "../lib/prefs";
-import { useFocusMode, usePageWidth } from "../lib/appearance";
+import { useFocusMode, useHighlightStyle, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
 import { neighbourPages } from "../lib/neighbours";
 
@@ -356,6 +356,7 @@ export const ReaderRoute = () => {
   }, [client, bookId, position, book.data?.pageCount]);
   const chapterTitle = toc[entryIndexFor(toc, position)]?.text ?? null;
   const [pageWidth] = usePageWidth();
+  const [highlightStyle] = useHighlightStyle();
   const [onScreen, setOnScreen] = useState<{ position: number; lines: number[] }>({ position, lines: [] });
   const measureFrame = useRef(0);
   const measureOnScreen = useCallback(() => {
@@ -964,6 +965,7 @@ export const ReaderRoute = () => {
               bookTitle={book.data?.title ?? ""}
               chapter={chapterTitle}
               width={pageWidth}
+              highlightStyle={highlightStyle}
               freshHighlight={freshHighlight}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
               display={{ showHarakat, showMine, lineNumbers, textScale, target }}

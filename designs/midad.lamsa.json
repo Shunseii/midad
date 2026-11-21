@@ -67034,6 +67034,386 @@
       "content": "Motion",
       "x": 0,
       "y": 7760
+    },
+    "0AGlRjOQ": {
+      "index": "a1V",
+      "name": "Row · Highlight style",
+      "parentId": "L4VG9uR9",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
+    },
+    "2VlBl9sE": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "0AGlRjOQ",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
+    "8PRmefwg": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "U2f0WeyQ",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
+    "8yocxjAK": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "8PRmefwg",
+      "props": {
+        "label": "Under text",
+        "state": "selected"
+      },
+      "style": {},
+      "type": "instance"
+    },
+    "ARQ0W5t0": {
+      "content": "Highlight style",
+      "index": "a0",
+      "name": "Label",
+      "parentId": "LPk2BZY6",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "AnCgkPId": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "DftbgHXq",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
+    "BBZXzOYJ": {
+      "content": "Highlight style",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "2VlBl9sE",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "DJd6fDUP": {
+      "index": "a2V",
+      "name": "Row · Highlight style",
+      "parentId": "PZagMSx3",
+      "style": {
+        "align-items": "flex-start",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 8
+      },
+      "type": "frame"
+    },
+    "DeQIFOkQ": {
+      "content": "Highlight style",
+      "index": "a0",
+      "name": "Label",
+      "parentId": "NZuf2Ow7",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "DftbgHXq": {
+      "index": "a1V",
+      "name": "Row · Highlight style",
+      "parentId": "c2YUEwGO",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
+    },
+    "FKDIZvSh": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "ydU4hGSY",
+      "props": {
+        "label": "Behind text",
+        "state": "default"
+      },
+      "style": {},
+      "type": "instance"
+    },
+    "JbFQBDfl": {
+      "content": "Highlight style",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "AnCgkPId",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "LPk2BZY6": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "Rn43bP3l",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 8
+      },
+      "type": "frame"
+    },
+    "NZuf2Ow7": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "V2lrI2Fw",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 8
+      },
+      "type": "frame"
+    },
+    "QaepMosP": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "fUm5DZQz",
+      "props": {
+        "label": "Behind text",
+        "state": "default"
+      },
+      "style": {},
+      "type": "instance"
+    },
+    "Rn43bP3l": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "DJd6fDUP",
+      "style": {
+        "align-self": "stretch",
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
+    "SXYPl41V": {
+      "content": "A band under the letters",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "V2lrI2Fw",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "U2f0WeyQ": {
+      "index": "a2V",
+      "name": "Row · Highlight style",
+      "parentId": "1rKewHXe",
+      "style": {
+        "align-items": "flex-start",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 8
+      },
+      "type": "frame"
+    },
+    "V2lrI2Fw": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "U2f0WeyQ",
+      "style": {
+        "align-self": "stretch",
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
+    "Vb7kgAdF": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "8PRmefwg",
+      "props": {
+        "label": "Behind text",
+        "state": "default"
+      },
+      "style": {},
+      "type": "instance"
+    },
+    "WWLjijMz": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "DftbgHXq",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
+    "Wlelz8gY": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "WWLjijMz",
+      "props": {
+        "label": "Behind text",
+        "state": "default"
+      },
+      "style": {},
+      "type": "instance"
+    },
+    "ZzrundGR": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "ydU4hGSY",
+      "props": {
+        "label": "Under text",
+        "state": "selected"
+      },
+      "style": {},
+      "type": "instance"
+    },
+    "fUm5DZQz": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "DJd6fDUP",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
+    "h7WLqqW6": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "WWLjijMz",
+      "props": {
+        "label": "Under text",
+        "state": "selected"
+      },
+      "style": {},
+      "type": "instance"
+    },
+    "lvEEcP9E": {
+      "content": "Under keeps the harakat clear; Behind fills the whole word",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "AnCgkPId",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "nkEDQveF": {
+      "content": "Under keeps the harakat clear; Behind fills the whole word",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "2VlBl9sE",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "yFuOAy0q": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "fUm5DZQz",
+      "props": {
+        "label": "Under text",
+        "state": "selected"
+      },
+      "style": {},
+      "type": "instance"
+    },
+    "ydU4hGSY": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "0AGlRjOQ",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
+    "z1KR3HJm": {
+      "content": "A band under the letters",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "Rn43bP3l",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
     }
   },
   "version": 1

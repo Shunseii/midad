@@ -111,7 +111,8 @@ body {
 
 /*
  * Highlights are a band behind the lower part of the letters, so harakat above
- * them stay clear. Each colour class sets the band's colour.
+ * them stay clear, or with "Behind text" a fill over the word's full height,
+ * under the letters and their harakat. Each colour class sets the colour.
  */
 .mark-band {
   position: relative;
@@ -151,6 +152,11 @@ body {
   from {
     opacity: 0;
   }
+}
+.highlights-behind .mark-band::before {
+  top: 0.15em;
+  bottom: 0.05em;
+  height: auto;
 }
 .mark-yellow {
   --mark: var(--color-mark-1);

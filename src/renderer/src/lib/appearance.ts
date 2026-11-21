@@ -4,9 +4,12 @@ import { midad } from "./midad";
 import { usePref } from "./prefs";
 
 export type PageWidth = "narrow" | "wide";
+/** Under: a band below the letters, clear of the harakat above. Behind: a fill over the word's full height. */
+export type HighlightStyle = "under" | "behind";
 
 export const useTheme = () => usePref<Theme>({ key: "appearance.theme", fallback: "system" });
 export const usePageWidth = () => usePref<PageWidth>({ key: "reader.pageWidth", fallback: "narrow" });
+export const useHighlightStyle = () => usePref<HighlightStyle>({ key: "reader.highlightStyle", fallback: "under" });
 export const useFocusMode = () => usePref<boolean>({ key: "reader.focusMode", fallback: false });
 
 /** Applies the chosen theme to the page and tells the main process, which colours the window to match. */

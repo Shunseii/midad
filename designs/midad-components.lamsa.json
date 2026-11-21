@@ -1,5 +1,6 @@
 {
   "$schema": "https://lamsa.dev/schema/v1.json",
+  "css": "@keyframes highlight-sweep {\n  from {\n    background-size: 0% 100%;\n  }\n\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes highlight-fade {\n  from {\n    opacity: 0;\n  }\n}",
   "nodes": {
     "0F854f9p": {
       "content": "danger",
@@ -7951,6 +7952,416 @@
         "width": 112,
         "flex-shrink": 0
       }
+    },
+    "7ZtLl4qs": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Under · Pink",
+      "parentId": "na29ZmAC",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-3} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "7z1GNnhd": {
+      "index": "aB",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "8tsoyg6d": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Behind · Green",
+      "parentId": "lobkWsZD",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-2} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "DwOwwfxu": {
+      "content": "Behind text",
+      "index": "a2",
+      "name": "Column",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 13,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "F2kWwNWv": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Under · Blue",
+      "parentId": "z6WY07Cc",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-4} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "Gajc91bQ": {
+      "content": "Under: a band 0.55em high under the letters, so harakat above stay clear. Behind: a fill from 0.15em below the top of the line box to 0.05em above its bottom; the letters and harakat sit on it. Set in the display menu and Settings (Highlight style). A new highlight draws in right to left in both: 80ms plus 25ms a word, capped at 220ms, ease-out across the words (these two words take 130ms). Reduced motion fades it in.",
+      "index": "aI",
+      "name": "Spec note",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "grid-column": "1 / -1",
+        "line-height": "18px",
+        "width": 560
+      },
+      "type": "text"
+    },
+    "LAcLrCrY": {
+      "index": "aH",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "RvmbHqxA": {
+      "content": "Green",
+      "index": "a6",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "Sqgqbvm6": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Under · Green",
+      "parentId": "xYGKUhnB",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-2} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "UDZsQhuA": {
+      "index": "a5",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "USQFgNmZ": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Behind · Blue",
+      "parentId": "XZ0ItKY0",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-4} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "WRvDdh1M": {
+      "index": "a0",
+      "name": "Highlight · Styles",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 20,
+        "column-gap": 40,
+        "display": "grid",
+        "grid-template-columns": "100px repeat(2, max-content)",
+        "padding": 32,
+        "row-gap": 12
+      },
+      "type": "frame",
+      "x": 1900,
+      "y": 6400
+    },
+    "XZ0ItKY0": {
+      "index": "aE",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "XkNAVhXB": {
+      "content": "Blue",
+      "index": "aC",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "XmhvxAFn": {
+      "index": "a4",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "c8t7sRa2": {
+      "index": "aG",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "dbJbwzwd": {
+      "content": "Pink",
+      "index": "a9",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "fHs9qiLf": {
+      "content": "Under text (default)",
+      "index": "a1",
+      "name": "Column",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 13,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "gEHMqGLB": {
+      "content": "",
+      "index": "a0",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "hIkHzsvx": {
+      "content": "Yellow",
+      "index": "a3",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "iyRbm7xH": {
+      "content": "المفيدُ بالوضعِ",
+      "css": "background-repeat: no-repeat;\nbackground-position: right center;\nanimation: highlight-sweep 130ms {ease.out} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: highlight-fade {transition.duration-pop} ease both;\n}",
+      "index": "a0",
+      "name": "Highlight · Under · Sweep",
+      "parentId": "c8t7sRa2",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-1} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "jSToZxll": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Behind · Pink",
+      "parentId": "7z1GNnhd",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-3} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "lobkWsZD": {
+      "index": "a8",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "n0VJGGr3": {
+      "content": "Drawing in",
+      "index": "aF",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "n4TAHd6A": {
+      "content": "المفيدُ بالوضعِ",
+      "css": "background-repeat: no-repeat;\nbackground-position: right center;\nanimation: highlight-sweep 130ms {ease.out} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: highlight-fade {transition.duration-pop} ease both;\n}",
+      "index": "a0",
+      "name": "Highlight · Behind · Sweep",
+      "parentId": "LAcLrCrY",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-1} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "na29ZmAC": {
+      "index": "aA",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "wVc42TnH": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Under · Yellow",
+      "parentId": "XmhvxAFn",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-1} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "xYGKUhnB": {
+      "index": "a7",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "z6WY07Cc": {
+      "index": "aD",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "zwMHr2H6": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Behind · Yellow",
+      "parentId": "UDZsQhuA",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-1} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
     }
   },
   "version": 1
