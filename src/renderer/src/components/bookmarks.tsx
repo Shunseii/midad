@@ -300,7 +300,7 @@ export const BookmarkRibbon = ({
             aria-label="Edit bookmark"
             aria-hidden={!on}
             tabIndex={on ? 0 : -1}
-            className="absolute -top-10 -left-9 z-2 h-14 w-4 cursor-pointer bg-accent transition-[translate,height,opacity] duration-sweep ease-out [clip-path:polygon(0_0,100%_0,100%_100%,50%_calc(100%-7px),0_100%)] hover:h-16 data-[state=off]:pointer-events-none data-[state=off]:-translate-y-full data-[state=off]:duration-panel-exit data-[state=off]:ease-in motion-reduce:transition-opacity motion-reduce:data-[state=off]:translate-y-0 motion-reduce:data-[state=off]:opacity-0"
+            className="absolute -top-10 -left-9 z-2 h-14 w-4 cursor-pointer bg-accent transition-[translate,height,opacity] duration-sweep ease-out [clip-path:polygon(0_0,100%_0,100%_100%,50%_calc(100%-7px),0_100%)] hover:h-16 data-[state=off]:pointer-events-none data-[state=off]:-translate-y-full data-[state=off]:opacity-0 data-[state=off]:duration-panel-exit data-[state=off]:ease-in motion-reduce:transition-opacity motion-reduce:data-[state=off]:translate-y-0 motion-reduce:data-[state=off]:opacity-0"
           />
         }
       />
