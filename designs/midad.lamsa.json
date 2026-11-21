@@ -47928,7 +47928,7 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 160px 40px 48px"
+        "padding": "40px 120px"
       },
       "type": "frame"
     },
@@ -49431,7 +49431,7 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 160px 40px 48px"
+        "padding": "40px 120px"
       },
       "type": "frame"
     },
@@ -50510,7 +50510,7 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 160px 40px 48px",
+        "padding": "40px 120px",
         "min-width": 0
       },
       "type": "frame"
@@ -52083,7 +52083,7 @@
         "flex": 1,
         "flex-direction": "column",
         "overflow": "hidden",
-        "padding": "40px 160px 40px 48px"
+        "padding": "40px 120px"
       },
       "type": "frame"
     },
@@ -55389,7 +55389,8 @@
         "flex-direction": "column"
       },
       "parentId": "YyDIfIZw",
-      "index": "a0"
+      "index": "a0",
+      "css": "/* Half the rail's 248px: the page sits in the middle of the window, not of the space beside the rail. */\ntranslate: -124px 0;\ntransition: translate {transition.duration-panel} {ease.sheet};"
     },
     "41HuEGLm": {
       "type": "frame",
@@ -55768,7 +55769,7 @@
       },
       "parentId": "PTZ0Mv3M",
       "index": "a2",
-      "content": "Focus mode on, reader idle: the top bar and rail have slid away but keep their space, so the page never reflows. A 2px line at the top fills right to left with progress through the book, and a dot per contents entry stands where the rail was."
+      "content": "Focus mode on, reader idle: the top bar and rail have slid away but keep their space, so the page never reflows; the page moves left by half the rail's width so it sits in the middle of the window. A 2px line at the top fills right to left with progress through the book, and a dot per contents entry stands where the rail was."
     },
     "vu0oEhOx": {
       "type": "frame",
@@ -56317,7 +56318,8 @@
         "flex-direction": "column"
       },
       "parentId": "vzp1vTB1",
-      "index": "a0"
+      "index": "a0",
+      "css": "/* Half the rail's 248px: the page sits in the middle of the window, not of the space beside the rail. */\ntranslate: -124px 0;\ntransition: translate {transition.duration-panel} {ease.sheet};"
     },
     "duHj9R7w": {
       "type": "frame",
