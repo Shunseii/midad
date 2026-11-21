@@ -1,11 +1,11 @@
 import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Search, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
-import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
 import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
-import type { BookDetail, ScrollAnchor, StoredPage } from "../../../shared/library";
+import type { BookDetail, Bookmark as SavedBookmark, ScrollAnchor, StoredPage } from "../../../shared/library";
 import { DisplayMenu, stepScale, WHEEL_STEP, ZOOM_SHOWN_MS, ZoomLevel } from "../components/display-menu";
 import { InlinePanel, SideSheet } from "../components/side-sheet";
 import { useMediaQuery } from "../lib/media";
@@ -23,8 +23,11 @@ import { rememberCopy } from "../lib/copied";
 import { tintWords } from "../lib/reveal";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
-import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
-import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookMarks, useMarker, usePage, useSetMarker } from "../lib/midad";
+import { type BookmarkState, createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
+import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookmarks, useBookMarks, useMarker, usePage, useSetBookmark, useSetMarker } from "../lib/midad";
+import { BookmarkList, BookmarkRibbon } from "../components/bookmarks";
+import { bookmarkFolio } from "../lib/bookmarks";
+import { Tabs, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { usePref } from "../lib/prefs";
 import { useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
@@ -191,23 +194,55 @@ const useActiveIndicator = (active: number[]) => {
   return { list, box };
 };
 
+export type SidebarTab = "contents" | "bookmarks";
+
+const SIDEBAR_TABS: { value: SidebarTab; label: string }[] = [
+  { value: "contents", label: "Contents" },
+  { value: "bookmarks", label: "Bookmarks" },
+];
+
+/** The left sidebar: the book's contents, or its bookmarks. */
 const ContentsRail = ({
   entries,
   active,
-  markerAt,
   onGo,
+  tab,
+  onTab,
+  bookmarks,
 }: {
   entries: TocEntry[];
   /** The entries whose text is on screen. */
   active: number[];
-  markerAt: number | null;
   onGo: (position: number) => void;
-}) => {
-  const markerIndex = markerAt === null ? -1 : entryIndexFor(entries, markerAt);
+  tab: SidebarTab;
+  onTab: (tab: SidebarTab) => void;
+  bookmarks: ReactNode;
+}) => (
+  <nav aria-label={tab === "contents" ? "Contents" : "Bookmarks"} className="flex w-62 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-line bg-surface-2 px-4 py-6">
+    <Tabs
+      value={tab}
+      onValueChange={(next) => {
+        const option = SIDEBAR_TABS.find((o) => o.value === next);
+        if (option) onTab(option.value);
+      }}
+      className="mb-3"
+    >
+      <TabsList aria-label="Sidebar" className="w-full bg-surface">
+        {SIDEBAR_TABS.map((o) => (
+          <TabsTrigger key={o.value} value={o.value} className="flex-1">
+            {o.label}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
+    {tab === "contents" ? <ContentsList entries={entries} active={active} onGo={onGo} /> : bookmarks}
+  </nav>
+);
+
+const ContentsList = ({ entries, active, onGo }: { entries: TocEntry[]; active: number[]; onGo: (position: number) => void }) => {
   const { list, box } = useActiveIndicator(active);
   return (
-    <nav aria-label="Contents" className="flex w-62 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-line bg-surface-2 px-4 py-6">
-      <h2 className="mb-2 px-2.5 text-overline font-semibold uppercase tracking-widest text-ink-3">Contents</h2>
+    <>
       {entries.length === 0 && <p className="px-2.5 text-xs text-ink-3">This book has no chapter headings.</p>}
       <div ref={list} className="relative flex flex-col gap-0.5">
         {box && (
@@ -234,12 +269,11 @@ const ContentsRail = ({
             )}
           >
             <span className="ar text-ar-small text-ink-3">{arabicNumber(e.number ?? e.position)}</span>
-            {i === markerIndex && <Bookmark aria-label="Last read" className="size-3.5 text-accent" />}
             <span className="ar flex-1 text-right text-ar-small">{e.text}</span>
           </button>
         ))}
       </div>
-    </nav>
+    </>
   );
 };
 
@@ -372,6 +406,9 @@ export const ReaderRoute = () => {
 
   const marker = useMarker(bookId);
   const setMarker = useSetMarker(bookId);
+  const bookmarks = useBookmarks(bookId);
+  const setBookmark = useSetBookmark(bookId);
+  const [sidebarTab, setSidebarTab] = usePref<SidebarTab>({ key: "reader.sidebarTab", fallback: "contents" });
   const pendingReveal = useRef<(Citation & { position: number }) | null>(null);
   const pendingRow = useRef<{ position: number; part: Part; line: number; word: number } | null>(null);
   const arrivedWith = useLocation().state as ReaderState | null;
@@ -695,6 +732,8 @@ export const ReaderRoute = () => {
   latestActions.current = actions;
   const latestSetMarker = useRef(setMarker);
   latestSetMarker.current = setMarker;
+  const latestSetBookmark = useRef(setBookmark);
+  latestSetBookmark.current = setBookmark;
   const undoStack = useRef<{ position: number; stack: UndoStack } | null>(null);
   const edits = (): UndoStack => {
     if (undoStack.current?.position !== position) {
@@ -710,6 +749,7 @@ export const ReaderRoute = () => {
           setMarks: ({ ref, marks }) => (marks ? a().setHarakat({ ...ref, marks }) : a().removeHarakat(ref)),
           clearMarks: (span) => a().clearHarakat(span),
           setMarker: (at) => latestSetMarker.current(at),
+          setBookmark: (input) => latestSetBookmark.current(input),
         }),
       };
     }
@@ -721,6 +761,21 @@ export const ReaderRoute = () => {
   const typeMark = (ref: LetterRef, typed: string) => editMarks(ref, mergeMarks({ existing: mineAt(ref), typed }));
 
   const announceRemoval = (message: string) => setRemoval({ id: Date.now(), message });
+
+  const pageBookmark = bookmarks.data?.find((b) => b.position === position) ?? null;
+  const bookmarkedPages = useMemo(() => bookmarks.data?.map((b) => b.position) ?? [], [bookmarks.data]);
+  const savedState = (b: SavedBookmark): BookmarkState => ({ name: b.name, createdAt: b.createdAt });
+  const removeBookmark = (b: SavedBookmark) => {
+    void edits().setBookmark({ position: b.position, before: savedState(b), after: null });
+    announceRemoval("Bookmark removed");
+  };
+  const renameBookmark = ({ bookmark, name }: { bookmark: SavedBookmark; name: string }) =>
+    void edits().setBookmark({ position: bookmark.position, before: savedState(bookmark), after: { name, createdAt: bookmark.createdAt } });
+  const toggleBookmark = () => {
+    if (!book.data || position < 1 || position > total) return;
+    if (pageBookmark) removeBookmark(pageBookmark);
+    else void edits().setBookmark({ position, before: null, after: { name: null } });
+  };
 
   const removeHighlight = (id: string) => {
     const h = annotations.data?.highlights.find((x) => x.id === id);
@@ -970,6 +1025,19 @@ export const ReaderRoute = () => {
     textHeld: toolbar !== null || noteEditor !== null || selecting,
   });
 
+  const bookmarkList = (open: (position: number) => void) => (
+    <BookmarkList
+      bookId={bookId}
+      bookmarks={bookmarks.data ?? []}
+      pages={book.data?.pages ?? []}
+      current={position}
+      showHarakat={showHarakat}
+      onOpen={open}
+      onRename={renameBookmark}
+      onDelete={removeBookmark}
+    />
+  );
+
   const keyHandler = useRef<(e: KeyboardEvent) => void>(() => {});
   keyHandler.current = (e: KeyboardEvent) => {
     if (zoomKeys(e)) return;
@@ -979,6 +1047,11 @@ export const ReaderRoute = () => {
     if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.code === "KeyF") {
       e.preventDefault();
       openFind();
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.code === "KeyD") {
+      e.preventDefault();
+      toggleBookmark();
       return;
     }
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
@@ -1150,6 +1223,13 @@ export const ReaderRoute = () => {
         </div>
         <div className="flex-1" />
         <IconButton
+          icon={Bookmark}
+          label={pageBookmark ? "Remove bookmark (Ctrl+D)" : "Bookmark page (Ctrl+D)"}
+          selected={pageBookmark !== null}
+          onClick={toggleBookmark}
+          className={cx("[&_svg]:transition-[fill,scale] [&_svg]:duration-pop [&_svg]:ease-out motion-reduce:[&_svg]:transition-none", pageBookmark && "[&_svg]:fill-current")}
+        />
+        <IconButton
           icon={Search}
           label={find.open ? "Close find" : "Find on page (Ctrl+F)"}
           selected={find.open}
@@ -1192,7 +1272,7 @@ export const ReaderRoute = () => {
               data-focus={focused ? "hidden" : undefined}
               className="flex transition-[translate,opacity] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:-translate-x-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
             >
-              <ContentsRail entries={toc} active={activeEntries} markerAt={marker.data?.position ?? null} onGo={go} />
+              <ContentsRail entries={toc} active={activeEntries} onGo={go} tab={sidebarTab} onTab={setSidebarTab} bookmarks={bookmarkList(go)} />
             </div>
           </InlinePanel>
         ) : (
@@ -1200,7 +1280,12 @@ export const ReaderRoute = () => {
             <ContentsRail
               entries={toc}
               active={activeEntries}
-              markerAt={marker.data?.position ?? null}
+              tab={sidebarTab}
+              onTab={setSidebarTab}
+              bookmarks={bookmarkList((at) => {
+                setContentsOpen(false);
+                go(at);
+              })}
               onGo={(at) => {
                 setContentsOpen(false);
                 go(at);
@@ -1271,6 +1356,17 @@ export const ReaderRoute = () => {
               onClearMark={() => void edits().setMarker({ before: markerAt(), after: null })}
               onWordHover={onWordHover}
               onWordClick={onWordClick}
+              ribbon={
+                book.data && (
+                  <BookmarkRibbon
+                    key={position}
+                    bookmark={pageBookmark}
+                    folio={bookmarkFolio({ position, pages: book.data.pages })}
+                    onRename={(name) => pageBookmark && renameBookmark({ bookmark: pageBookmark, name })}
+                    onRemove={() => pageBookmark && removeBookmark(pageBookmark)}
+                  />
+                )
+              }
             />
           )}
           </div>
@@ -1289,6 +1385,7 @@ export const ReaderRoute = () => {
                 marks={bookMarks.data}
                 position={position}
                 markerAt={marker.data?.position ?? null}
+                bookmarks={bookmarkedPages}
                 onGo={go}
               />
             </div>

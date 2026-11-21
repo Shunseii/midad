@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowUp, Bookmark, BookmarkCheck, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowUp, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
@@ -453,7 +453,7 @@ const CiteChip = ({
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-2">
           {history.length === 0 && (
             <div className="flex flex-col items-center gap-1 px-6 py-16 text-center">
-              <Bookmark aria-hidden className="mb-2 size-5 text-ink-3" />
+              <Star aria-hidden className="mb-2 size-5 text-ink-3" />
               <p className="text-sm font-medium">No saved conversations</p>
               <p className="text-sm text-ink-3">Save a conversation to come back to it here.</p>
             </div>
@@ -699,9 +699,10 @@ const CiteChip = ({
           <span className="flex-1" />
           {turns.length > 0 && (
             <IconButton
-              icon={conversationSaved ? BookmarkCheck : Bookmark}
+              icon={Star}
               label={conversationSaved ? "Saved" : "Save conversation"}
               selected={conversationSaved}
+              className={conversationSaved ? "[&_svg]:fill-current" : undefined}
               onClick={() => void save()}
             />
           )}

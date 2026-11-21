@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { HighlightColor, LetterRef, PageAnnotations, Part, Span } from "../../../shared/annotations";
 import type { MidadApi, MidadEvents, SyncInput } from "../../../shared/ipc";
+import type { BookmarkState } from "./undo";
 
 declare global {
   interface Window {
@@ -23,6 +24,7 @@ export const keys = {
   conversations: (bookId: string) => ["library", bookId, "conversations"] as const,
   bookMarks: (bookId: string) => ["library", bookId, "book-marks"] as const,
   firstLine: (bookId: string, position: number) => ["library", bookId, "first-line", position] as const,
+  bookmarks: (bookId: string) => ["library", bookId, "bookmarks"] as const,
 };
 
 export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: () => midad["settings.get"]() });
@@ -79,6 +81,28 @@ export const useSetMarker = (bookId: string) => {
     await client.invalidateQueries({ queryKey: keys.marker(bookId) });
   };
 };
+
+export const useBookmarks = (bookId: string) =>
+  useQuery({ queryKey: keys.bookmarks(bookId), queryFn: () => midad["bookmarks.list"]({ bookId }) });
+
+/** Adds, renames or (with `null`) removes the bookmark on a page. */
+export const useSetBookmark = (bookId: string) => {
+  const client = useQueryClient();
+  return async ({ position, bookmark }: { position: number; bookmark: BookmarkState }) => {
+    if (bookmark) await midad["bookmarks.set"]({ bookId, position, ...bookmark });
+    else await midad["bookmarks.remove"]({ bookId, position });
+    await client.invalidateQueries({ queryKey: keys.bookmarks(bookId) });
+  };
+};
+
+/** A page, fetched only while `enabled`; for previews that load as they're needed. */
+export const usePagePreview = ({ bookId, position, enabled }: { bookId: string; position: number; enabled: boolean }) =>
+  useQuery({
+    queryKey: keys.page(bookId, position),
+    queryFn: () => midad["library.page"]({ bookId, position }),
+    enabled,
+    staleTime: 5 * 60_000,
+  });
 
 /** The pages with highlights and notes, for the scrubber's dots. */
 export const useBookMarks = (bookId: string) =>

@@ -823,6 +823,7 @@ export const PageView = ({
   tinted,
   dimNoteMarks,
   noteMarkHandlers,
+  ribbon,
 }: {
   stored: StoredPage;
   bookTitle: string;
@@ -844,6 +845,8 @@ export const PageView = ({
   /** Focus mode keeps the note marks faint until hovered. */
   dimNoteMarks: boolean;
   noteMarkHandlers: NoteMarkHandlers;
+  /** The bookmark ribbon, hung from the page's top corner. */
+  ribbon?: ReactNode;
 }) => {
   const { page } = stored;
   const articleRef = useRef<HTMLElement>(null);
@@ -877,11 +880,12 @@ export const PageView = ({
         ref={articleRef}
         style={{ "--text-scale": display.textScale } as CSSProperties}
         className={cx(
-          "reader-text mx-auto flex w-full flex-col pb-24",
+          "reader-text relative mx-auto flex w-full flex-col pb-24",
           width === "wide" ? "page-wide max-w-190" : "page-narrow max-w-160",
           highlightStyle === "behind" && "highlights-behind",
         )}
       >
+        {ribbon}
         <header className="mb-6 flex items-baseline justify-between gap-6 border-b border-line pb-3 text-ink-3" dir="rtl">
           <span className="ar truncate text-ar-small">{t(bookTitle)}</span>
           <span className="ar truncate text-ar-small">{chapter && t(chapter)}</span>

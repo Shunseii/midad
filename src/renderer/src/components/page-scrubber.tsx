@@ -39,7 +39,7 @@ const pageLabel = ({ page, number }: { page: number; number: number | null }) =>
 /**
  * The whole book as a line under the page, page 1 at the right like the book
  * itself. Ticks mark the top-level chapters, dots the pages with highlights
- * (above) and notes (below), the bookmark the last-read page, and the thumb
+ * (above) and notes (below), the accent bars the bookmarked pages, the bookmark icon the last-read page, and the thumb
  * this page. Hovering previews a page; clicking jumps to it. Dragging moves
  * the thumb with the pointer and turns the page on release (Esc cancels). As a slider it takes the arrow keys.
  */
@@ -50,6 +50,7 @@ export const PageScrubber = ({
   marks,
   position,
   markerAt,
+  bookmarks = [],
   onGo,
 }: {
   bookId: string;
@@ -58,6 +59,8 @@ export const PageScrubber = ({
   marks: BookMarks | undefined;
   position: number;
   markerAt: number | null;
+  /** The bookmarked pages. */
+  bookmarks?: number[];
   onGo: (position: number) => void;
 }) => {
   const total = pages.length;
@@ -91,8 +94,9 @@ export const PageScrubber = ({
     () => ({
       highlights: thinMarks({ marks: marks?.highlights ?? [], weight: () => 1, total, width, gap: DOT_GAP }),
       notes: thinMarks({ marks: (marks?.notes ?? []).map((p) => ({ position: p })), weight: () => 1, total, width, gap: DOT_GAP }),
+      bookmarks: thinMarks({ marks: bookmarks.map((p) => ({ position: p })), weight: () => 1, total, width, gap: DOT_GAP }),
     }),
-    [marks, total, width],
+    [marks, bookmarks, total, width],
   );
 
   const pointerAt = (clientX: number) => {
@@ -222,6 +226,14 @@ export const PageScrubber = ({
         ))}
         {dots.notes.map((n) => (
           <span key={`n${n.position}`} style={{ right: at(n.position) }} className="absolute bottom-0 size-1.25 translate-x-1/2 rounded-full border-[1.5px] border-accent" />
+        ))}
+        {dots.bookmarks.map((b) => (
+          <span
+            key={`b${b.position}`}
+            data-bookmark-tick={b.position}
+            style={{ right: at(b.position) }}
+            className="absolute top-2.25 h-3.5 w-0.75 translate-x-1/2 rounded-full bg-accent transition-[scale,opacity] duration-sweep ease-out starting:scale-y-0 starting:opacity-0 group-hover/scrub:scale-y-125 motion-reduce:transition-opacity motion-reduce:starting:scale-y-100"
+          />
         ))}
         {markerAt !== null && markerAt <= total && (
           <Bookmark aria-hidden style={{ right: at(markerAt) }} className="absolute -top-3.5 size-3 translate-x-1/2 text-accent" />

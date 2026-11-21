@@ -7,6 +7,7 @@ import { ASK_EVENT, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
+import { createBookmarks } from "./bookmarks";
 import { createMarkers } from "./markers";
 import { createConversations } from "./conversations";
 import { type CorpusSource, createCorpusClient } from "./corpus";
@@ -60,6 +61,7 @@ db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
 const library = createLibrary({ db, corpus });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
+const bookmarks = createBookmarks({ db });
 const conversations = createConversations({ db });
 const scans = createScans({ dir: join(userData, "scans"), fetchScan: (input) => corpusClient().fetchScan(input) });
 
@@ -114,6 +116,9 @@ const handlers: MidadApi = {
   "marker.get": (input) => markers.get(input),
   "marker.set": (input) => markers.set(input),
   "marker.clear": (input) => markers.clear(input),
+  "bookmarks.list": (input) => bookmarks.list(input),
+  "bookmarks.set": (input) => bookmarks.set(input),
+  "bookmarks.remove": (input) => bookmarks.remove(input),
   "ai.ask": async ({ requestId, bookId, position, question, selection, quotes, sessionId }) => {
     const book = await library.getBook(bookId);
     const page = await library.getPage({ bookId, position });

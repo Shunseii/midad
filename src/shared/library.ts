@@ -74,3 +74,10 @@ export interface LastRead {
   word: number;
   setAt: number;
 }
+
+/** A page bookmark. `name` is the reader's own, or null when they gave none. */
+export interface Bookmark {
+  position: number;
+  name: string | null;
+  createdAt: number;
+}

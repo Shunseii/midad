@@ -4,6 +4,7 @@ import type { Conversation, ConversationSummary, StoredTurn } from "./conversati
 import type { CorpusBookListing } from "./corpus";
 import type {
   BookDetail,
+  Bookmark,
   ImportResult,
   LastRead,
   LibraryBook,
@@ -52,6 +53,9 @@ export interface MidadApi {
   "marker.get": (input: { bookId: string }) => Promise<LastRead | null>;
   "marker.set": (input: { bookId: string; position: number; part: Part; line: number; word: number }) => Promise<void>;
   "marker.clear": (input: { bookId: string }) => Promise<void>;
+  "bookmarks.list": (input: { bookId: string }) => Promise<Bookmark[]>;
+  "bookmarks.set": (input: { bookId: string; position: number; name?: string | null; createdAt?: number }) => Promise<Bookmark>;
+  "bookmarks.remove": (input: { bookId: string; position: number }) => Promise<void>;
   /** Streams StreamEvents for requestId while it runs; resolves with the whole answer. */
   /** `restarted`: Claude no longer had the conversation's session, so the answer came from a new one given the conversation so far. */
   "ai.ask": (input: AskInput) => Promise<{ sessionId: string; text: string; restarted: boolean }>;
@@ -112,6 +116,9 @@ export const CHANNELS = [
   "marker.get",
   "marker.set",
   "marker.clear",
+  "bookmarks.list",
+  "bookmarks.set",
+  "bookmarks.remove",
   "ai.ask",
   "ai.cancel",
   "conversations.list",

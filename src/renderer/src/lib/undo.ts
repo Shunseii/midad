@@ -2,6 +2,9 @@ import type { HighlightColor, LetterRef, Part, Span } from "../../../shared/anno
 
 export type ClearedMark = { ref: LetterRef; marks: string };
 
+/** A page's bookmark as undo restores it; `null` when the page has none. `createdAt` is omitted for a new one. */
+export type BookmarkState = { name: string | null; createdAt?: number } | null;
+
 /** Where the book's last-read marker sits; `null` when there is none. */
 export type MarkerAt = { position: number; part: Part; line: number; word: number } | null;
 import { EMPTY_HISTORY, type History, record, redo, undo } from "./history";
@@ -18,6 +21,7 @@ export interface PageWrites {
   /** Removes every added mark inside the span; returns what it removed. */
   clearMarks: (span: Span) => Promise<ClearedMark[]>;
   setMarker: (at: MarkerAt) => Promise<void>;
+  setBookmark: (input: { position: number; bookmark: BookmarkState }) => Promise<void>;
 }
 
 export type Change =
@@ -27,7 +31,8 @@ export type Change =
   | { kind: "harakat"; ref: LetterRef; before: string; after: string }
   | { kind: "harakat-clear"; span: Span; removed: ClearedMark[] }
   | { kind: "highlights-clear"; removed: { id: string; span: Span; color: HighlightColor }[] }
-  | { kind: "marker"; before: MarkerAt; after: MarkerAt };
+  | { kind: "marker"; before: MarkerAt; after: MarkerAt }
+  | { kind: "bookmark"; position: number; before: BookmarkState; after: BookmarkState };
 
 /**
  * Every edit on a page goes through here so Ctrl+Z can take it back. Undoing a
@@ -86,6 +91,8 @@ export const createUndoStack = (writes: PageWrites) => {
         return forward ? writes.clearMarks(c.span).then(() => undefined) : restoreMarks(c.removed);
       case "marker":
         return writes.setMarker(forward ? c.after : c.before);
+      case "bookmark":
+        return writes.setBookmark({ position: c.position, bookmark: forward ? c.after : c.before });
     }
   };
 
@@ -165,6 +172,13 @@ export const createUndoStack = (writes: PageWrites) => {
       return serial(async () => {
         await writes.setMarker(after);
         history = record(history, { kind: "marker", before, after });
+      });
+    },
+    /** Adds, renames or removes a page's bookmark as one undo step. */
+    setBookmark({ position, before, after }: { position: number; before: BookmarkState; after: BookmarkState }): Promise<void> {
+      return serial(async () => {
+        await writes.setBookmark({ position, bookmark: after });
+        history = record(history, { kind: "bookmark", position, before, after });
       });
     },
     undo: () => step("undo"),

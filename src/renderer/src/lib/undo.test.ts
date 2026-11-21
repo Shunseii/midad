@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { HighlightColor, LetterRef, Span } from "../../../shared/annotations";
-import { createUndoStack, type MarkerAt, type PageWrites } from "./undo";
+import { type BookmarkState, createUndoStack, type MarkerAt, type PageWrites } from "./undo";
 
 const SPAN: Span = { part: "matn", start: { line: 2, word: 1 }, end: { line: 2, word: 3 } };
 const REF: LetterRef = { part: "matn", line: 2, word: 1, letter: 2 };
@@ -11,7 +11,7 @@ const fakePage = () => {
   const highlights = new Map<string, { span: Span; color: HighlightColor }>();
   const notes = new Map<string, { span: Span; body: string }>();
   const harakat = new Map<string, string>();
-  const book = { marker: null as MarkerAt };
+  const book = { marker: null as MarkerAt, bookmarks: new Map<number, NonNullable<BookmarkState>>() };
   const writes: PageWrites = {
     addHighlight: async ({ span, color }) => {
       const id = `h${++next}`;
@@ -47,6 +47,10 @@ const fakePage = () => {
     },
     setMarker: async (at) => {
       book.marker = at;
+    },
+    setBookmark: async ({ position, bookmark }) => {
+      if (bookmark) book.bookmarks.set(position, { createdAt: book.bookmarks.get(position)?.createdAt ?? 1, ...bookmark });
+      else book.bookmarks.delete(position);
     },
   };
   return { writes, highlights, notes, harakat, book };
@@ -185,6 +189,24 @@ describe("undo stack", () => {
     expect(page.book.marker).toBeNull();
     await stack.redo();
     expect(page.book.marker).toEqual(first);
+  });
+
+  it("undoes adding, renaming and deleting a bookmark, keeping the date it was added", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    await stack.setBookmark({ position: 12, before: null, after: { name: null } });
+    const added = page.book.bookmarks.get(12);
+    await stack.setBookmark({ position: 12, before: { name: null, createdAt: added?.createdAt }, after: { name: "الفاعل" } });
+    await stack.setBookmark({ position: 12, before: { name: "الفاعل", createdAt: 77 }, after: null });
+    expect(page.book.bookmarks.has(12)).toBe(false);
+    await stack.undo();
+    expect(page.book.bookmarks.get(12)).toEqual({ name: "الفاعل", createdAt: 77 });
+    await stack.undo();
+    expect(page.book.bookmarks.get(12)?.name).toBeNull();
+    await stack.undo();
+    expect(page.book.bookmarks.has(12)).toBe(false);
+    await stack.redo();
+    expect(page.book.bookmarks.has(12)).toBe(true);
   });
 
   it("brings back a cleared marker", async () => {
