@@ -5,7 +5,6 @@ import {
   FOCUS_IDLE_MS,
   type FocusChoice,
   focusChoiceFromLegacy,
-  focusKeyAction,
   type FocusState,
   focusReducer,
   initialFocus,
@@ -238,39 +237,5 @@ describe("turning focus mode on and off", () => {
     expect(focusChoiceFromLegacy(false)).toBe("off");
     expect(focusChoiceFromLegacy(undefined)).toBe("off");
     expect(focusChoiceFromLegacy("garbage")).toBe("off");
-  });
-});
-
-describe("focus keys", () => {
-  const press = (over: Partial<Parameters<typeof focusKeyAction>[0]> = {}) =>
-    focusKeyAction({ key: "f", code: "KeyF", modified: false, typing: false, choice: "off", escapeTaken: false, ...over });
-  const esc = { key: "Escape", code: "Escape" };
-
-  it("toggles with F in any mode, by key position so the Arabic layout works too", () => {
-    expect(press()).toBe("toggle");
-    expect(press({ choice: "auto" })).toBe("toggle");
-    expect(press({ key: "ب", choice: "locked" })).toBe("toggle");
-  });
-
-  it("ignores F while typing in a field, a note or the harakat editor", () => {
-    expect(press({ typing: true })).toBeNull();
-    expect(press({ typing: true, choice: "locked" })).toBeNull();
-  });
-
-  it("ignores F with a modifier, so shortcuts like Ctrl+F stay free", () => {
-    expect(press({ modified: true })).toBeNull();
-  });
-
-  it("leaves Locked with Esc", () => {
-    expect(press({ ...esc, choice: "locked" })).toBe("leave");
-  });
-
-  it("lets Esc close a menu, toolbar or note first", () => {
-    expect(press({ ...esc, choice: "locked", escapeTaken: true })).toBeNull();
-  });
-
-  it("leaves Esc alone in Auto and when focus mode is off", () => {
-    expect(press({ ...esc, choice: "auto" })).toBeNull();
-    expect(press({ ...esc, choice: "off" })).toBeNull();
   });
 });

@@ -31,7 +31,7 @@ import { usePref } from "../lib/prefs";
 import { useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
 import { switchListInTransition } from "../lib/view-transition";
-import { focusKeyAction } from "../lib/focus";
+import { useKeybindings } from "../lib/use-keybindings";
 import { neighbourPages } from "../lib/neighbours";
 import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop, wordSelector } from "../lib/zoom-anchor";
 
@@ -946,17 +946,6 @@ export const ReaderRoute = () => {
   };
   const zoomBy = ({ by, pointer = null }: { by: 1 | -1; pointer?: Point | null }) => zoomTo({ scale: stepScale({ scale: latestScale.current, by }), pointer });
 
-  /** Ctrl with =, - or 0 sizes the page's text instead of zooming the whole window. */
-  const zoomKeys = (e: KeyboardEvent) => {
-    if (!(e.ctrlKey || e.metaKey) || e.altKey) return false;
-    if (e.code === "Equal" || e.code === "NumpadAdd") zoomBy({ by: 1 });
-    else if (e.code === "Minus" || e.code === "NumpadSubtract") zoomBy({ by: -1 });
-    else if (e.code === "Digit0" || e.code === "Numpad0") zoomTo({ scale: 1 });
-    else return false;
-    e.preventDefault();
-    return true;
-  };
-
   // Ctrl+wheel (and trackpad pinch, which arrives as one) steps the text size too, holding the word under the pointer.
   const wheelZoom = useRef({ zoomBy, owed: 0 });
   wheelZoom.current.zoomBy = zoomBy;
@@ -1024,60 +1013,63 @@ export const ReaderRoute = () => {
     />
   );
 
-  const keyHandler = useRef<(e: KeyboardEvent) => void>(() => {});
-  keyHandler.current = (e: KeyboardEvent) => {
-    if (zoomKeys(e)) return;
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-    if (e.target instanceof HTMLElement && e.target.isContentEditable) return;
-    if (e.target instanceof Element && e.target.closest(".sheet")) return;
-    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.code === "KeyF") {
-      e.preventDefault();
-      openFind();
-      return;
-    }
-    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.code === "KeyD") {
-      e.preventDefault();
-      toggleBookmark();
-      return;
-    }
-    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.code === "BracketLeft" || e.code === "BracketRight" || e.code === "Backslash")) {
-      e.preventDefault();
-      if (e.code === "BracketLeft") setContentsOpen(!contentsOpen);
-      else if (e.code === "BracketRight") setPanelOpen(!panelOpen);
-      else {
-        const open = !(contentsOpen || panelOpen);
-        setContentsOpen(open);
-        // A narrow window shows one sheet at a time.
-        if (wide || !open) setPanelOpen(open);
-      }
-      return;
-    }
-    if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
-      e.preventDefault();
-      step(e.code === "KeyY" || e.shiftKey ? "redo" : "undo");
-      return;
-    }
-    const focusKey = focusKeyAction({
-      key: e.key,
-      code: e.code,
-      modified: e.metaKey || e.ctrlKey || e.altKey || e.shiftKey,
-      typing: target !== null || focusInNoteEditor() || (e.target instanceof HTMLElement && e.target.isContentEditable),
-      choice: focusMode.choice,
-      // A menu or popover may already have closed itself on this Esc, before this handler runs.
-      escapeTaken: menuOpen || toolbar !== null || noteEditor !== null || find.open || (e.target instanceof Element && e.target.closest("[data-slot=popover-content], [role=dialog], [role=toolbar]") !== null),
-    });
-    if (focusKey) {
-      e.preventDefault();
-      focusMode.toggle();
-      return;
-    }
-    if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (target && page.data && letterKeys({ e, target, page: page.data.page })) {
-      e.preventDefault();
-      return;
-    }
-    pageKeys(e);
+  const togglePanels = () => {
+    const open = !(contentsOpen || panelOpen);
+    setContentsOpen(open);
+    // A narrow window shows one sheet at a time.
+    if (wide || !open) setPanelOpen(open);
   };
+
+  /** At either end of the book a page key does nothing here, and keeps its own job of scrolling the page. */
+  const turnTo = (next: number) => {
+    if (next < 1 || next > total || next === position) return false;
+    go(next);
+  };
+
+  /** Esc has something else to close first. A menu or popover may already have closed itself on this Esc, before the reader sees it. */
+  const escapeTaken = (e: KeyboardEvent) =>
+    menuOpen ||
+    toolbar !== null ||
+    noteEditor !== null ||
+    find.open ||
+    focusInNoteEditor() ||
+    (e.target instanceof Element && e.target.closest("[data-slot=popover-content], [role=dialog], [role=toolbar]") !== null);
+
+  useKeybindings({
+    scope: "route",
+    handlers: {
+      // Ctrl with =, - or 0 sizes the page's text instead of zooming the whole window.
+      "text.bigger": () => zoomBy({ by: 1 }),
+      "text.smaller": () => zoomBy({ by: -1 }),
+      "text.reset": () => zoomTo({ scale: 1 }),
+      "find.open": openFind,
+      "bookmark.toggle": toggleBookmark,
+      "contents.toggle": () => setContentsOpen(!contentsOpen),
+      "panel.toggle": () => setPanelOpen(!panelOpen),
+      "panels.toggle": togglePanels,
+      "edit.undo": () => step("undo"),
+      "edit.redo": () => step("redo"),
+      // F is a letter in the harakat editor and the note editor.
+      "focus.toggle": () => {
+        if (target !== null || focusInNoteEditor()) return false;
+        focusMode.toggle();
+      },
+      "focus.leave": (e) => {
+        if (focusMode.choice !== "locked" || escapeTaken(e)) return false;
+        focusMode.toggle();
+      },
+      // Right-to-left book: the next page is to the left.
+      "page.next": () => turnTo(position + 1),
+      "page.previous": () => turnTo(position - 1),
+      "harakat.toggle": () => setShowHarakat(!showHarakat),
+      "scan.toggle": () => setShowScan(!showScan),
+      "reader.dismiss": () => {
+        setMenuOpen(false);
+        if (find.open && !toolbar && !noteEditor && !menuOpen) closeFind();
+        dismiss();
+      },
+    },
+  });
 
   /** Keys while a letter is targeted. Returns false for keys it leaves to the page. */
   const letterKeys = ({ e, target, page }: { e: KeyboardEvent; target: LetterRef; page: StoredPage["page"] }) => {
@@ -1094,24 +1086,13 @@ export const ReaderRoute = () => {
     return true;
   };
 
-  const pageKeys = (e: KeyboardEvent) => {
-    // Right-to-left book: the next page is to the left.
-    if (e.key === "ArrowLeft" || e.key === "PageDown") go(position + 1);
-    else if (e.key === "ArrowRight" || e.key === "PageUp") go(position - 1);
-    else if (e.code === "KeyH" && !e.shiftKey) setShowHarakat(!showHarakat);
-    else if (e.code === "KeyS" && !e.shiftKey) setShowScan(!showScan);
-    else if (e.key === "Escape") {
-      setMenuOpen(false);
-      if (find.open && !toolbar && !noteEditor && !menuOpen) closeFind();
-      dismiss();
-    }
-  };
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => keyHandler.current(e);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  // A targeted letter takes the keys it types or moves with before the page does.
+  useKeybindings({
+    scope: "popover",
+    enabled: target !== null && !!page.data,
+    handlers: {},
+    fallback: (e) => !(e.metaKey || e.ctrlKey || e.altKey) && target !== null && !!page.data && letterKeys({ e, target, page: page.data.page }),
+  });
 
 
   if (book.isSuccess && book.data === null) {

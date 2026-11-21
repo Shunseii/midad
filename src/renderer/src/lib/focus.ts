@@ -111,33 +111,3 @@ export const toggledFocus = ({ choice, kind }: { choice: FocusChoice; kind: Focu
 
 /** Focus mode used to be a plain on/off preference; on meant what is now Auto. */
 export const focusChoiceFromLegacy = (legacy: unknown): FocusChoice => (legacy === true ? "auto" : "off");
-
-export type FocusKeyAction = "toggle" | "leave" | null;
-
-/**
- * What a key press does to focus mode. F turns it on and off; Esc leaves Locked
- * when it has nothing else to close. Neither fires while the reader is typing:
- * in a field, a note, or the harakat editor.
- */
-export const focusKeyAction = ({
-  key,
-  code,
-  modified,
-  typing,
-  choice,
-  escapeTaken,
-}: {
-  key: string;
-  code: string;
-  /** Ctrl, Alt, Meta or Shift is down. */
-  modified: boolean;
-  typing: boolean;
-  choice: FocusChoice;
-  /** Esc has something else to close first: a menu, toolbar, note or letter cursor. */
-  escapeTaken: boolean;
-}): FocusKeyAction => {
-  if (typing || modified) return null;
-  if (code === "KeyF") return "toggle";
-  if (key === "Escape" && choice === "locked" && !escapeTaken) return "leave";
-  return null;
-};

@@ -1,10 +1,12 @@
 import { useRef, useState, type ReactNode } from "react";
+import { OWN_KEYS } from "../lib/use-keybindings";
 import { cx } from "./ui";
 import { Sheet, SheetContent, SheetTitle } from "./ui/sheet";
 
 /**
  * A side panel that slides over the page, for windows too narrow to show it
- * beside the text. Base UI handles focus, Esc and the click-away scrim.
+ * beside the text. Base UI handles focus, Esc and the click-away scrim, and
+ * the reader's shortcuts leave keys pressed inside it alone.
  */
 export const SideSheet = ({
   side,
@@ -28,7 +30,8 @@ export const SideSheet = ({
         showCloseButton={false}
         // Focus the sheet itself rather than ringing its first button.
         initialFocus={popupRef}
-        className="sheet max-w-[90vw] bg-transparent"
+        {...{ [OWN_KEYS]: "" }}
+        className="max-w-[90vw] bg-transparent"
       >
         <SheetTitle className="sr-only">{title}</SheetTitle>
         {children}
