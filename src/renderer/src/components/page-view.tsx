@@ -495,7 +495,7 @@ export const PageView = ({
           ),
         )}
         {page.hashiya.length > 0 && (
-          <section className="mt-10 flex flex-col gap-2" dir="rtl">
+          <section className="relative mt-10 flex flex-col gap-2" dir="rtl">
             <h3 className="sr-only">الحاشية</h3>
             <span aria-hidden className="mb-2 h-px w-1/3 bg-ink-3/40" />
             {page.hashiya.map((f, i) => (

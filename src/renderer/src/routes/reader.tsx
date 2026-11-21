@@ -1,6 +1,6 @@
 import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
 import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
@@ -779,6 +779,8 @@ export const ReaderRoute = () => {
   }, []);
   const [overChrome, setOverChrome] = useState(false);
   const chromeHover = { onMouseEnter: () => setOverChrome(true), onMouseLeave: () => setOverChrome(false) };
+  // In focus mode the rail keeps its space but steps out of sight, so the page shifts to the middle of the window.
+  const balanced = focusMode && wide && contentsOpen && !panelOpen && !(showScan && page.data);
   const focused = useFocusChrome({
     enabled: focusMode,
     held: menuOpen || toolbar !== null || noteEditor !== null || selecting || overChrome || (!wide && (contentsOpen || panelOpen)),
@@ -925,7 +927,7 @@ export const ReaderRoute = () => {
         <div className="@container flex min-w-0 flex-1">
         <div
           ref={pageRoot}
-          className={cx("@container min-w-0 flex-1 overflow-y-auto overflow-x-hidden", showScan && page.data && "@max-2xl:hidden")}
+          className={cx("@container min-w-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable_both-edges]", showScan && page.data && "@max-2xl:hidden")}
           onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
           onCopy={() => {
@@ -939,8 +941,13 @@ export const ReaderRoute = () => {
             if (toolbar) setToolbar(null);
           }}
         >
-          {/* The wide right padding leaves room for the last-read marker in the margin. */}
-          <div data-page-area className="px-6 py-10 [view-transition-name:reader-page] @3xl:pl-12 @3xl:pr-40">
+          {/* Even padding keeps the page centred; it leaves room for the last-read marker in the right margin. */}
+          <div
+            data-page-area
+            data-balance={balanced ? "" : undefined}
+            style={{ "--balance": `${CONTENTS_WIDTH / 2}px` } as CSSProperties}
+            className="px-6 py-10 [view-transition-name:reader-page] @3xl:px-30"
+          >
           {page.isPending && (
             <div className="mx-auto flex w-full max-w-160 flex-col gap-4">
               <Skeleton className="h-4 w-full" />

@@ -180,6 +180,30 @@ body {
   padding-inline-start: 1.25em;
   text-indent: -1.25em;
 }
+.page-narrow {
+  --page-max: 40rem;
+}
+.page-wide {
+  --page-max: 47.5rem;
+}
+
+/*
+ * Balancing the page in focus mode (data-balance, see reader.tsx): it moves
+ * left by --balance, as far as the room beside it allows while keeping 3rem
+ * for the line numbers, so a narrow window never squeezes or clips it.
+ */
+[data-page-area] .reader-text {
+  transition: translate var(--transition-duration-panel) var(--ease-sheet);
+}
+[data-page-area][data-balance] .reader-text {
+  translate: calc(-1 * min(var(--balance), max(0px, (100cqw - var(--page-max)) / 2 - 3rem))) 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-page-area] .reader-text {
+    transition: none;
+  }
+}
+
 /* Only the line's own rows hang; the margin controls inside it don't. */
 .page-line * {
   text-indent: 0;
