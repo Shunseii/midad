@@ -60,9 +60,9 @@ const FOCUS_CHOICES: { value: FocusChoice; label: string }[] = [
 ];
 
 const FOCUS_HINTS: Record<FocusChoice, string> = {
-  off: "The bars stay put. F or the Display menu turns focus on",
-  auto: "The bars step aside while you read and return when you move",
-  locked: "Hidden until you rest the pointer on the top or bottom edge. Esc or F leaves",
+  off: "Toolbars are always visible.",
+  auto: "Hides toolbars while you read. Move the pointer to show them.",
+  locked: "Hides toolbars while you read. Point at the top or bottom edge to show them.",
 };
 
 const Appearance = () => {
