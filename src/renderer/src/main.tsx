@@ -8,6 +8,7 @@ import { AppShell } from "./components/app-shell";
 import { ThemeSync } from "./lib/appearance";
 import { launchPlace, ON_LAUNCH_PREF } from "./lib/launch";
 import { getPref } from "./lib/prefs";
+import { KeybindingsRoot } from "./lib/use-keybindings";
 import { keys, midad } from "./lib/midad";
 import { passPressesThroughTransitions } from "./lib/view-transition";
 import { LibraryRoute } from "./routes/library";
@@ -59,6 +60,7 @@ createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeSync />
+      <KeybindingsRoot />
       <TooltipProvider delay={400}>
       <RouterProvider router={router} />
       <Toaster />
