@@ -232,11 +232,12 @@ export const layoutRow = ({ row, options }: { row: RowInput; options: LayoutOpti
   let lane = Math.max(row.obstacles.below.length > 0 ? 1 : 0, ...placed.filter((p) => p.slot === "below").map((p) => p.lane + p.lines));
   let rest = left.map((g) => two(g) ?? one(g));
   while (rest.length > 0) {
-    const tried = fill({ items: rest, bounds, obstacles: [], options: { ...options, reach: Number.POSITIVE_INFINITY } });
+    // Each lane keeps its glosses near their words too; what doesn't fit waits for the next.
+    const tried = fill({ items: rest, bounds, obstacles: [], options });
     const inLane = rest.filter((i) => tried.placed.has(i.id));
-    // A lane always takes at least one: alone, a gloss fits the bounds.
+    // A lane always takes at least one: alone, a gloss fits the bounds as near its words as they allow.
     const taken = inLane.length > 0 ? inLane : rest.slice(0, 1);
-    const xs = inLane.length > 0 ? tried.placed : new Map(taken.map((i) => [i.id, bounds.left]));
+    const xs = inLane.length > 0 ? tried.placed : new Map(taken.map((i) => [i.id, pack({ items: [i], bounds, gap: options.gap })[0]!]));
     for (const i of taken) placed.push({ id: i.id, slot: "below", lane, lines: i.lines, left: xs.get(i.id)!, width: i.width });
     lane += Math.max(...taken.map((i) => i.lines));
     rest = rest.filter((i) => !taken.includes(i));

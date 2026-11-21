@@ -17,7 +17,9 @@ import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } 
 import { findOnPage } from "../../../shared/find";
 import { citeSpan } from "../../../shared/ask";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
-import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
+import type { GlossActions } from "../components/glosses";
+import { glossKey } from "../../../shared/page";
+import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rectWithGlosses, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Segmented, Skeleton, Toast, ToastAction, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
 import { tintWords } from "../lib/reveal";
@@ -28,7 +30,7 @@ import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookmark
 import { BookmarkList, BookmarkRibbon } from "../components/bookmarks";
 import { bookmarkFolio } from "../lib/bookmarks";
 import { usePref } from "../lib/prefs";
-import { useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
+import { useFocusMode, useGlossMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
 import { switchListInTransition } from "../lib/view-transition";
 import { useKeybindings } from "../lib/use-keybindings";
@@ -319,7 +321,7 @@ export const ReaderRoute = () => {
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine] = usePref({ key: "reader.showMine", fallback: true });
   const [lineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
-  const [glossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
+  const [glosses] = useGlossMode();
   const [hashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
   const [noteIcons] = useNoteIcons();
   const [textScale, setTextScale] = usePref({ key: "reader.textScale", fallback: 1 });
@@ -585,7 +587,7 @@ export const ReaderRoute = () => {
     clearTimeout(closeTimer.current);
     if (toolbar || focusInNoteEditor() || noteEditor?.note?.id === note.id) return;
     if (noteEditor?.mode === "edit" && pointerInNote.current) return;
-    setNoteEditor({ note, span: note.span, rect: target.element.getBoundingClientRect(), mode: "peek" });
+    setNoteEditor({ note, span: note.span, rect: rectWithGlosses(target.element), mode: "peek" });
   };
 
   /** A margin mark's notes as the note layer shows them: one note's peek or editor, or the row's list. */
@@ -596,6 +598,20 @@ export const ReaderRoute = () => {
   };
   const sameNotes = (a: NoteState | null, b: NoteState) =>
     a?.mode === b.mode && a.note?.id === b.note?.id && (a.row ?? []).map((n) => n.id).join() === (b.row ?? []).map((n) => n.id).join();
+
+  /** Saves the words a gloss explains (every gloss merged into it), then reads the page again. */
+  const glossActions: GlossActions = {
+    correct: ({ run, from, to }) => {
+      void Promise.all(run.glosses.map((g) => midad["glosses.correct"]({ bookId, position, key: glossKey(g), from, to })))
+        .catch((err: unknown) => console.error(err))
+        .finally(() => void client.invalidateQueries({ queryKey: keys.page(bookId, position) }));
+    },
+    reset: ({ run }) => {
+      void Promise.all(run.glosses.filter((g) => g.book).map((g) => midad["glosses.reset"]({ bookId, position, key: glossKey(g) })))
+        .catch((err: unknown) => console.error(err))
+        .finally(() => void client.invalidateQueries({ queryKey: keys.page(bookId, position) }));
+    },
+  };
 
   const noteMarkHandlers = {
     /** Hovering a margin mark only tints its notes' words; clicking opens them. */
@@ -622,7 +638,7 @@ export const ReaderRoute = () => {
     }
     if (!highlight) return;
     setNoteEditor(null);
-    setToolbar({ mode: "highlight", highlight, rect: word.element.getBoundingClientRect() });
+    setToolbar({ mode: "highlight", highlight, rect: rectWithGlosses(word.element) });
   };
 
   /**
@@ -665,7 +681,7 @@ export const ReaderRoute = () => {
     setMenuOpen(false);
     dismiss();
     if (e.button === 0 && pageRoot.current) markDragging(pageRoot.current);
-    const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss], [role=link], button, a, input, textarea");
+    const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss-label], [data-gloss-handle], [data-gloss-adjust-bar], [role=link], button, a, input, textarea");
     if (e.button === 0 && e.detail === 1 && offText) return startDragSelection(e);
     const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
     const root = pageRoot.current;
@@ -1327,10 +1343,11 @@ export const ReaderRoute = () => {
               highlightStyle={highlightStyle}
               freshHighlight={freshHighlight}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
-              display={{ showHarakat, showMine, lineNumbers, textScale, target, glossMarkers, hashiyaMarkers, noteIcons }}
+              display={{ showHarakat, showMine, lineNumbers, textScale, target, glosses, hashiyaMarkers, noteIcons }}
               tinted={tinted}
               dimNoteMarks={focusOn}
               noteMarkHandlers={noteMarkHandlers}
+              glossActions={glossActions}
               marker={marker.data?.position === position ? marker.data : null}
               onMark={markRow}
               onClearMark={() => void edits().setMarker({ before: markerAt(), after: null })}

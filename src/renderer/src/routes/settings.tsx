@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import type { Theme } from "../../../shared/ipc";
 import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
-import { type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
+import { GLOSS_HINTS, GLOSS_MODES, type GlossMode, type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useGlossMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
 import type { FocusChoice } from "../lib/focus";
 import { ariaKeyShortcuts } from "../lib/keymap";
 import { ON_LAUNCH_PREF, type OnLaunch } from "../lib/launch";
@@ -57,8 +57,8 @@ const HIGHLIGHT_STYLES: { value: HighlightStyle; label: string }[] = [
 ];
 
 const NOTE_ICONS: { value: NoteIcons; label: string }[] = [
-  { value: "words", label: "On the words" },
-  { value: "margin", label: "In the margin" },
+  { value: "corners", label: "Corners" },
+  { value: "margin", label: "Margin" },
 ];
 
 const FOCUS_CHOICES: { value: FocusChoice; label: string }[] = [
@@ -128,7 +128,7 @@ const Reading = () => {
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
   const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
-  const [glossMarkers, setGlossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
+  const [glosses, setGlosses] = useGlossMode();
   const [hashiyaMarkers, setHashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
   const [noteIcons, setNoteIcons] = useNoteIcons();
   const [onLaunch, setOnLaunch] = usePref(ON_LAUNCH_PREF);
@@ -153,13 +153,13 @@ const Reading = () => {
       <Row title="Line numbers" hint="The numbers notes and Ask AI use">
         <Switch label="Show line numbers" checked={lineNumbers} onChange={setLineNumbers} />
       </Row>
-      <Row title="Gloss markers" hint="Rings after words with an interlinear gloss; hidden, the glosses aren't shown">
-        <Switch label="Show gloss markers" checked={glossMarkers} onChange={setGlossMarkers} />
+      <Row title="Glosses" hint={GLOSS_HINTS[glosses]}>
+        <Segmented<GlossMode> label="Glosses" value={glosses} onChange={setGlosses} options={GLOSS_MODES} />
       </Row>
       <Row title="Hashiya markers" hint="Footnote numbers in the main text; the hashiya below stays">
         <Switch label="Show hashiya markers" checked={hashiyaMarkers} onChange={setHashiyaMarkers} />
       </Row>
-      <Row title="Note icons" hint="Show a note icon next to each note, or one per line in the margin">
+      <Row title="Note marks" hint={noteIcons === "corners" ? "Corners at the ends of each note's words, and a mark in the margin" : "Only a mark in the margin beside each line with notes"}>
         <Segmented<NoteIcons> label="Note icons" value={noteIcons} onChange={setNoteIcons} options={NOTE_ICONS} />
       </Row>
     </Section>

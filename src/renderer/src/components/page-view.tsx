@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { type CSSProperties, createContext, Fragment, type KeyboardEvent as ReactKeyboardEvent, type ReactNode, type MouseEvent as ReactMouseEvent, type RefObject, useContext, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, createContext, Fragment, type KeyboardEvent as ReactKeyboardEvent, type ReactNode, type MouseEvent as ReactMouseEvent, type RefObject, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -16,13 +16,13 @@ import { stripHarakat } from "../../../shared/arabic";
 import { displayMarks, inContext, isMark, lettersOf } from "../../../shared/harakat";
 import type { StoredPage } from "../../../shared/library";
 import type { Gloss } from "../../../shared/page";
-import type { HighlightStyle, NoteIcons, PageWidth } from "../lib/appearance";
+import type { GlossMode, HighlightStyle, NoteIcons, PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
 import { FOOTNOTE_REF, footnotesByMarker, splitFootnoteRef, toArabicIndic } from "../lib/footnotes";
 import { scrollToMiddle, tintWords } from "../lib/reveal";
 import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
+import { AdjustBar, type AdjustState, AdjustHandle, type GlossActions, GlossLabel, type GlossRun, GlossStrut, glossRuns, runText, useGlossLayout } from "./glosses";
 import { cx, IconButton } from "./ui";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const MARK_BG: Record<HighlightColor, string> = {
@@ -133,15 +133,9 @@ const FootnoteRef = ({ marker }: { marker: string }) => {
 
 /**
  * The browser paints a selection only behind text at the text's own size, which leaves holes
- * at the small inline-block footnote refs and at the gloss rings. Their full-height boxes
- * (data-sel-box) take the selection colour instead while the selection covers them.
+ * at the small inline-block footnote refs. Their full-height boxes (data-sel-box) take the
+ * selection colour instead while the selection covers them.
  */
-/** Whether a selection runs to the end of the glossed word a ring box follows, so the ring goes with it. */
-const endsWordBefore = ({ range, box }: { range: Range; box: HTMLElement }) => {
-  const word = box.previousElementSibling;
-  return word instanceof HTMLElement && word.dataset.w !== undefined && range.intersectsNode(word) && range.comparePoint(word, word.childNodes.length) === 0;
-};
-
 const useSelectionBoxes = (root: RefObject<HTMLElement | null>) => {
   useEffect(() => {
     const update = () => {
@@ -150,7 +144,7 @@ const useSelectionBoxes = (root: RefObject<HTMLElement | null>) => {
       const selection = window.getSelection();
       const range = selection && !selection.isCollapsed && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
       for (const box of el.querySelectorAll<HTMLElement>("[data-sel-box]")) {
-        box.toggleAttribute("data-in-selection", !!range && (range.intersectsNode(box) || endsWordBefore({ range, box })));
+        box.toggleAttribute("data-in-selection", !!range && range.intersectsNode(box));
       }
     };
     document.addEventListener("selectionchange", update);
@@ -169,98 +163,6 @@ const withFootnoteRefs = ({ text, shown }: { text: string; shown: boolean }): Re
   return [ref.before, marker, withFootnoteRefs({ text: ref.after, shown })];
 };
 
-/** Overlapping glosses on a line, merged so each base gets one marker. */
-const glossRuns = (glosses: Gloss[]): { from: number; to: number; texts: string[] }[] =>
-  [...glosses]
-    .sort((a, b) => a.from - b.from || a.to - b.to)
-    .reduce<{ from: number; to: number; texts: string[] }[]>((runs, g) => {
-      const last = runs.at(-1);
-      if (last && g.from <= last.to) {
-        last.to = Math.max(last.to, g.to);
-        last.texts.push(g.text);
-      } else runs.push({ from: g.from, to: g.to, texts: [g.text] });
-      return runs;
-    }, []);
-
-/**
- * The marker after an interlinear gloss's base: a small drawn ring. The base words stay
- * undecorated, so notes and highlights keep the text to themselves; only the ring opens the
- * gloss (hover, click or Enter), above the line where an interlinear gloss is written.
- * The ring is an inline-block inside an inline box that takes its word's highlight, sweep and
- * note tint, so they run on under it level.
- */
-const GlossMarker = ({
-  texts,
-  showHarakat,
-  band,
-  onActive,
-}: {
-  texts: string[];
-  showHarakat: boolean;
-  band: { className: string; style?: CSSProperties };
-  /** Hovered, focused or open: the base words take the gloss tint. */
-  onActive: (active: boolean) => void;
-}) => {
-  const id = useId();
-  const [open, setOpen] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const [focused, setFocused] = useState(false);
-  const active = open || hovered || focused;
-  const report = useRef(onActive);
-  report.current = onActive;
-  useEffect(() => report.current(active), [active]);
-  const shown = texts.map((t) => (showHarakat ? t : stripHarakat(t))).join("\n");
-  return (
-    <span
-      data-sel-box
-      className={band.className}
-      style={band.style}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-    >
-      <Popover
-        open={open}
-        onOpenChange={(next, details) => {
-          // Not while the reader drags a selection across it.
-          const pressed = details.event instanceof MouseEvent && details.event.buttons !== 0 && details.event.type !== "click";
-          if (next && pressed) return;
-          setOpen(next);
-        }}
-      >
-        <PopoverTrigger
-          openOnHover
-          delay={150}
-          closeDelay={200}
-          nativeButton={false}
-          aria-label="Interlinear gloss"
-          aria-describedby={id}
-          onClick={stopPageHandlers}
-          render={<span data-gloss className="gloss-ring" />}
-        >
-          <span id={id} hidden>
-            {shown}
-          </span>
-        </PopoverTrigger>
-        <PopoverContent
-          side="top"
-          sideOffset={6}
-          initialFocus={false}
-          onMouseDown={stopPageHandlers}
-          onMouseUp={stopPageHandlers}
-          onClick={stopPageHandlers}
-          className="w-max max-w-96 gap-0 bg-surface-3 p-0 text-ink"
-        >
-          <div dir="rtl" className="gloss-scroll ar max-h-48 overflow-y-auto overscroll-contain px-3.5 py-2.5 text-right text-ar-small whitespace-pre-line text-ink-2">
-            {shown}
-          </div>
-        </PopoverContent>
-      </Popover>
-    </span>
-  );
-};
-
 export interface WordTarget {
   part: Part;
   ref: WordRef;
@@ -277,8 +179,8 @@ export interface Display {
   textScale: number;
   /** The letter the reader is typing harakat on. */
   target: LetterRef | null;
-  /** The rings after interlinear glosses' bases. */
-  glossMarkers: boolean;
+  /** How interlinear glosses show: under their words, on hover, or not at all. */
+  glosses: GlossMode;
   /** The superscript footnote references in the text. */
   hashiyaMarkers: boolean;
   noteIcons: NoteIcons;
@@ -301,8 +203,11 @@ interface LineProps {
   display: Display;
   /** Notes whose words are tinted, while their peek or margin mark is hovered. */
   tinted: ReadonlySet<string>;
-  /** Focus mode fades the note icons on the words, like the margin marks. */
+  /** Focus mode fades the note corners, like the margin marks. */
   dimNoteIcons: boolean;
+  /** Changes when the text may have reflowed, so the glosses are laid out again. */
+  layoutKey: string;
+  glossActions: GlossActions;
   onWordHover: (target: WordTarget, note: Note | null) => void;
   onWordClick: (target: WordTarget, highlight: Highlight | null) => void;
 }
@@ -372,24 +277,21 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
 };
 
 /**
- * A small note icon raised past the end of a note's last word, like a superscript. It is an
- * overlay: it takes no room, so line breaks and justification stay as they were, and it is
- * left out of hit tests, selection and copying.
+ * A corner mark at one end of a note's words: at the top of the first word's leading edge,
+ * or the bottom of the last word's trailing edge. It sits just outside the word's box, so it
+ * stays clear of the letters and of a highlight band in either style; it takes no room and
+ * is left out of hit tests, selection and copying. Gloss layout treats it as taken space.
  */
-const NoteIcon = ({ active, dim }: { active: boolean; dim: boolean }) => (
-  <MessageSquareText
+const NoteCorner = ({ edge, active, dim }: { edge: "start" | "end"; active: boolean; dim: boolean }) => (
+  <span
     data-overlay
+    data-note-corner={edge}
     aria-hidden
-    strokeWidth={1.75}
-    className={cx(
-      "pointer-events-none absolute -right-0.5 top-0 size-3.5 translate-x-full -translate-y-1/2 select-none transition-[color,opacity] duration-press ease-out",
-      active ? "text-accent" : "text-accent/55",
-      dim && !active && "opacity-30",
-    )}
+    className={cx("note-corner", edge === "start" ? "note-corner-start" : "note-corner-end", active && "note-corner-active", dim && !active && "note-corner-dim")}
   />
 );
 
-const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, dimNoteIcons, onWordHover, onWordClick }: LineProps) => {
+const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, dimNoteIcons, layoutKey, glossActions, onWordHover, onWordClick }: LineProps) => {
   const sweepAt = (h: Highlight | null, ref: WordRef) => (sweep && h?.id === sweep.id ? sweep.order.get(`${part}:${ref.line}:${ref.word}`) : undefined);
   const tokens = tokenize(text);
   const wordAt = (i: number) => {
@@ -397,14 +299,42 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     return t?.kind === "word" ? { line, word: t.word } : null;
   };
 
-  const runs = display.glossMarkers ? glossRuns(glosses.filter((g) => g.part === part && g.line === line)) : [];
-  const [activeGloss, setActiveGloss] = useState<number | null>(null);
-  const glossActiveFor = (to: number) => (active: boolean) => setActiveGloss((current) => (active ? to : current === to ? null : current));
-  const runOf = (word: number) => runs.find((r) => r.from <= word && word <= r.to) ?? null;
-  const glossClasses = (run: { to: number } | null) => run && cx("gloss-span", activeGloss === run.to && "gloss-tint");
+  const mode = display.glosses;
+  const runs = mode === "hidden" ? [] : glossRuns({ glosses, part, line });
+  const probe = useRef<HTMLSpanElement>(null);
+  const cornersKey = display.noteIcons === "corners" ? annotations.notes.map((n) => `${n.id}:${n.span.start.line}:${n.span.start.word}:${n.span.end.line}:${n.span.end.word}`).join(",") : "";
+  const glossLayout = useGlossLayout({ probe, part, line, runs, enabled: mode === "under", layoutKey: `${layoutKey}|${cornersKey}` });
+  const [hover, setHover] = useState<{ run: string; on: "words" | "label" } | null>(null);
+  const [adjust, setAdjust] = useState<AdjustState | null>(null);
+  /** The shortest run over a word: the gloss most about that word. */
+  const runOf = (word: number) =>
+    runs.filter((r) => r.from <= word && word <= r.to).reduce<GlossRun | null>((best, r) => (!best || r.to - r.from < best.to - best.from ? r : best), null);
+  const adjusting = adjust ? (runs.find((r) => r.id === adjust.run) ?? null) : null;
+  // The words tinted violet: those being adjusted, or those of the gloss under the pointer.
+  const hoveredRun = hover?.on === "label" ? (runs.find((r) => r.id === hover.run) ?? null) : null;
+  const tintSpan = adjust ?? hoveredRun;
+  const inTint = (word: number) => tintSpan !== null && tintSpan.from <= word && word <= tintSpan.to;
+  const glossClasses = (word: number, joinsTo?: number) => {
+    if (!inTint(word) || (joinsTo !== undefined && !inTint(joinsTo))) return null;
+    return cx("gloss-span gloss-tint", joinsTo === undefined && word === tintSpan?.from && "gloss-from", joinsTo === undefined && word === tintSpan?.to && "gloss-to");
+  };
+  const hoverWords = (word: number, entering: boolean) => {
+    const run = runOf(word);
+    if (!run) return;
+    setHover((h) => (entering ? { run: run.id, on: "words" } : h?.run === run.id && h.on === "words" ? null : h));
+  };
   const tintOf = (ref: WordRef) => tintedAt({ notes: annotations.notes, tinted, part, ref });
+  const corners = display.noteIcons === "corners";
+  const startsHere = (word: number) => (corners ? annotations.notes.filter((n) => n.span.part === part && n.span.start.line === line && n.span.start.word === word) : []);
+  const endsHere = (word: number) => (corners ? annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line && n.span.end.word === word) : []);
+  const anchoredAt = (word: number) => runs.filter((r) => (glossLayout.labels[r.id]?.anchor ?? r.to) === word);
 
-  return tokens.map((token, i) => {
+  const saveAdjust = () => {
+    if (adjust && adjusting) glossActions.correct({ run: adjusting, from: adjust.from, to: adjust.to });
+    setAdjust(null);
+  };
+
+  const nodes = tokens.map((token, i) => {
     if (token.kind === "space") {
       const before = wordAt(i - 1);
       const after = wordAt(i + 1);
@@ -414,12 +344,10 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
       const at = joins && before ? sweepAt(shared, before) : undefined;
       const tintBefore = before ? tintOf(before) : [];
       const tintJoins = after !== null && tintBefore.some((n) => spanContains({ span: n.span, part, ref: after }));
-      const glossRun = before && after ? runOf(before.word) : null;
-      const glossJoins = glossRun && after && after.word <= glossRun.to ? glossRun : null;
       return (
         <span
           key={i}
-          className={cx(joins && MARK_BAND[shared.color], at !== undefined && "mark-sweep", "note-span", tintJoins && "note-tint", glossClasses(glossJoins))} style={at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.5 }) : undefined}>
+          className={cx(joins && MARK_BAND[shared.color], at !== undefined && "mark-sweep", "note-span", tintJoins && "note-tint", before && after && glossClasses(before.word, after.word))} style={at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.5 }) : undefined}>
           {token.text}
         </span>
       );
@@ -428,7 +356,8 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const highlight = highlightAt(annotations.highlights, part, ref);
     const note = noteAt(annotations.notes, part, ref);
     const tint = tintOf(ref).length > 0;
-    const startingHere = display.noteIcons !== "words" ? [] : annotations.notes.filter((n) => n.span.part === part && n.span.start.line === line && n.span.start.word === token.word);
+    const starting = startsHere(token.word);
+    const ending = endsHere(token.word);
     const target = (e: ReactMouseEvent<HTMLElement>): WordTarget => ({
       part,
       ref,
@@ -443,24 +372,22 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const { target: t } = display;
     const at = sweepAt(highlight, ref);
     const targetLetter = t && t.part === part && t.line === line && t.word === token.word ? t.letter : null;
-    const glossRun = runOf(token.word);
-    const endsGloss = runs.filter((r) => r.to === token.word);
-    // A ring goes right against its word, before any footnote reference ending it.
-    const trailingRef = endsGloss.length > 0 ? splitFootnoteRef(token.text) : null;
-    const movedRef = trailingRef && trailingRef.before !== "" && !/\p{L}/u.test(trailingRef.after) && !splitFootnoteRef(trailingRef.after) ? trailingRef : null;
-    const wordText = movedRef ? movedRef.before : token.text;
-    const band = {
-      className: cx(highlight && MARK_BAND[highlight.color], at !== undefined && "mark-sweep", note && "note-span", tint && "note-tint", glossClasses(glossRun)),
-      style: at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.25 }) : undefined,
-    };
+    const anchored = anchoredAt(token.word);
+    const lastOfAdjust = adjust?.to === token.word;
     return (
-      <span key={i} className={startingHere.length > 0 ? "relative" : undefined}>
+      <span key={i} className="relative whitespace-nowrap">
         <span
           data-part={part}
           data-line={line}
           data-w={token.word}
-          onMouseEnter={(e) => onWordHover(target(e), note)}
-          onMouseLeave={(e) => note && onWordHover(target(e), null)}
+          onMouseEnter={(e) => {
+            onWordHover(target(e), note);
+            hoverWords(token.word, true);
+          }}
+          onMouseLeave={(e) => {
+            if (note) onWordHover(target(e), null);
+            hoverWords(token.word, false);
+          }}
           onClick={(e) => onWordClick(target(e), highlight)}
           style={at !== undefined && sweep ? sweepStyle({ sweep, at }) : undefined}
           className={cx(
@@ -469,23 +396,43 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
             highlight && "cursor-pointer",
             note && "note-span",
             tint && "note-tint",
-            glossClasses(glossRun),
+            glossClasses(token.word),
           )}
         >
-          <WordText text={wordText} mine={mine} display={display} targetLetter={targetLetter} />
+          <WordText text={token.text} mine={mine} display={display} targetLetter={targetLetter} />
         </span>
-        {endsGloss.map((r) => (
-          <GlossMarker key="gloss" texts={r.texts} showHarakat={display.showHarakat} band={band} onActive={glossActiveFor(r.to)} />
+        {starting.length > 0 && <NoteCorner edge="start" active={starting.some((n) => tinted.has(n.id))} dim={dimNoteIcons} />}
+        {ending.length > 0 && <NoteCorner edge="end" active={ending.some((n) => tinted.has(n.id))} dim={dimNoteIcons} />}
+        {mode === "under" && anchored.length > 0 && <GlossStrut room={glossLayout.struts[token.word]} />}
+        {anchored.map((run) => (
+          <GlossLabel
+            key={run.id}
+            run={run}
+            text={runText({ run, showHarakat: display.showHarakat })}
+            mode={mode}
+            placement={glossLayout.labels[run.id]}
+            labelSize={glossLayout.labelSize}
+            active={hover?.run === run.id || adjust?.run === run.id}
+            onHover={(hovered) => setHover((h) => (hovered ? { run: run.id, on: "label" } : h?.run === run.id ? null : h))}
+            onAdjust={() => {
+              setHover(null);
+              setAdjust({ run: run.id, from: run.from, to: run.to });
+            }}
+            onReset={() => glossActions.reset({ run })}
+          />
         ))}
-        {movedRef && (
-          <span className={band.className} style={band.style}>
-            {withFootnoteRefs({ text: token.text.slice(movedRef.before.length), shown: display.hashiyaMarkers })}
-          </span>
-        )}
-        {startingHere.length > 0 && <NoteIcon active={startingHere.some((n) => tinted.has(n.id))} dim={dimNoteIcons} />}
+        {adjust && adjust.from === token.word && <AdjustHandle edge="start" part={part} line={line} adjust={adjust} onChange={setAdjust} />}
+        {adjust && adjust.to === token.word && <AdjustHandle edge="end" part={part} line={line} adjust={adjust} onChange={setAdjust} />}
+        {adjust && lastOfAdjust && <AdjustBar onSave={saveAdjust} onCancel={() => setAdjust(null)} />}
       </span>
     );
   });
+  return (
+    <>
+      <span ref={probe} hidden />
+      {nodes}
+    </>
+  );
 };
 
 /** One row of a matn line as laid out on screen, relative to its paragraph. `word` is the row's first word. */
@@ -602,7 +549,7 @@ export interface NoteMarkHandlers {
 const noteAnchor = ({ from, note }: { from: HTMLElement; note: Note }) => {
   const { part, end } = note.span;
   const word = from.closest("article")?.querySelector<HTMLElement>(`[data-part="${part}"][data-line="${end.line}"][data-w="${end.word}"]`);
-  return (word ?? from).getBoundingClientRect();
+  return word ? rectWithGlosses(word) : from.getBoundingClientRect();
 };
 
 /**
@@ -815,6 +762,7 @@ export const PageView = ({
   tinted,
   dimNoteMarks,
   noteMarkHandlers,
+  glossActions,
   ribbon,
 }: {
   stored: StoredPage;
@@ -837,6 +785,8 @@ export const PageView = ({
   /** Focus mode keeps the note marks faint until hovered. */
   dimNoteMarks: boolean;
   noteMarkHandlers: NoteMarkHandlers;
+  /** Saves or resets the reader's choice of which words a gloss explains. */
+  glossActions: GlossActions;
   /** The bookmark ribbon, hung from the page's top corner. */
   ribbon?: ReactNode;
 }) => {
@@ -845,16 +795,17 @@ export const PageView = ({
   useSelectionBoxes(articleRef);
   const fresh = freshHighlight ? annotations.highlights.find((h) => h.id === freshHighlight) : undefined;
   const sweep = fresh ? sweepOrder({ page, highlight: fresh }) : null;
-  const lineProps = { glosses: page.glosses, annotations, sweep, display, tinted, dimNoteIcons: dimNoteMarks, onWordHover, onWordClick };
+  const layoutKey = `${display.showHarakat}-${display.showMine}-${display.textScale}-${display.glosses}-${display.hashiyaMarkers}-${display.noteIcons}-${width}`;
+  const lineProps = { glosses: page.glosses, annotations, sweep, display, tinted, dimNoteIcons: dimNoteMarks, layoutKey, glossActions, onWordHover, onWordClick };
   const t = (s: string) => (display.showHarakat ? s : stripHarakat(s));
   const markable = (part: Part, line: number) => ({
     part,
     line,
     markerWord: marker?.part === part && marker.line === line ? marker.word : null,
-    layoutKey: `${display.showHarakat}-${display.showMine}-${display.textScale}-${display.glossMarkers}-${display.hashiyaMarkers}`,
+    layoutKey,
     onMark: (word: number) => onMark({ part, line, word }),
     onClearMark,
-    notes: display.noteIcons === "margin" ? annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line) : [],
+    notes: annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line),
     numbered: part === "matn" && display.lineNumbers,
     noteMarks: { dim: dimNoteMarks, tinted, handlers: noteMarkHandlers },
   });
@@ -928,6 +879,22 @@ export const PageView = ({
     </Footnotes>
     </MarkPage>
   );
+};
+
+/**
+ * A word's box grown to take in the interlinear glosses printed under its row, so a peek or
+ * toolbar opened below the word lands clear of them instead of covering them.
+ */
+export const rectWithGlosses = (word: HTMLElement): DOMRect => {
+  const box = word.getBoundingClientRect();
+  const block = word.closest("p, h2");
+  if (!block) return box;
+  let bottom = box.bottom;
+  for (const label of block.querySelectorAll<HTMLElement>("[data-gloss-label]")) {
+    const r = label.getBoundingClientRect();
+    if (r.top >= box.bottom - 1 && r.top < bottom + box.height) bottom = Math.max(bottom, r.bottom);
+  }
+  return new DOMRect(box.left, box.top, box.width, bottom - box.top);
 };
 
 /** The word's own text nodes, skipping the red copies drawn under the reader's harakat. */

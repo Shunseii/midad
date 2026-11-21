@@ -2,18 +2,39 @@ import { useCallback, useEffect } from "react";
 import type { Theme } from "../../../shared/ipc";
 import { type FocusChoice, focusChoiceFromLegacy, type FocusKind, toggledFocus } from "./focus";
 import { midad } from "./midad";
+import { type GlossMode, glossModeFrom, type NoteIcons, noteIconsFrom } from "./mark-prefs";
 import { readPref, usePref } from "./prefs";
 
 export type PageWidth = "narrow" | "wide";
 /** Under: a band below the letters, clear of the harakat above. Behind: a fill over the word's full height. */
 export type HighlightStyle = "under" | "behind";
-/** Words: an icon at the start of each note. Margin: one mark per row, with a count. */
-export type NoteIcons = "words" | "margin";
+export type { GlossMode, NoteIcons } from "./mark-prefs";
 
 export const useTheme = () => usePref<Theme>({ key: "appearance.theme", fallback: "system" });
 export const usePageWidth = () => usePref<PageWidth>({ key: "reader.pageWidth", fallback: "narrow" });
 export const useHighlightStyle = () => usePref<HighlightStyle>({ key: "reader.highlightStyle", fallback: "under" });
-export const useNoteIcons = () => usePref<NoteIcons>({ key: "reader.noteIcons", fallback: "words" });
+export const useNoteIcons = () => {
+  const [stored, set] = usePref<unknown>({ key: "reader.noteIcons", fallback: "corners" });
+  return [noteIconsFrom(stored), set as (next: NoteIcons) => void] as const;
+};
+
+export const GLOSS_MODES: { value: GlossMode; label: string }[] = [
+  { value: "under", label: "Under the words" },
+  { value: "hover", label: "On hover" },
+  { value: "hidden", label: "Hidden" },
+];
+
+export const GLOSS_HINTS: Record<GlossMode, string> = {
+  under: "Interlinear glosses printed small under their words, as the book does",
+  hover: "A word's gloss shows while you point at it",
+  hidden: "Interlinear glosses aren't shown",
+};
+
+const GLOSS_FALLBACK = glossModeFrom({ stored: null, legacyMarkers: readPref<unknown>({ key: "reader.glossMarkers", fallback: true }) });
+export const useGlossMode = () => {
+  const [stored, set] = usePref<unknown>({ key: "reader.glosses", fallback: GLOSS_FALLBACK });
+  return [glossModeFrom({ stored, legacyMarkers: true }), set as (next: GlossMode) => void] as const;
+};
 
 const FOCUS_FALLBACK = focusChoiceFromLegacy(readPref<unknown>({ key: "reader.focusMode", fallback: false }));
 

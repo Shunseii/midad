@@ -171,22 +171,16 @@ body {
   height: auto;
 }
 /*
- * Noted words keep their ink; a small icon after the last word marks them. While their
- * note is hovered (its margin mark, the words or a peek entry) they take a faint accent
- * fill; on a highlight that fill is a soft ring instead, so the highlight's band still shows.
+ * Noted words keep their ink; corners at the ends of their words and a mark in the margin
+ * show them. While their note is hovered (its mark, the words or a peek entry) they take a
+ * faint accent fill over the words' full height, with any highlight band inside it.
  */
 .note-span {
   border-radius: 4px;
-  transition:
-    background-color var(--transition-duration-press) var(--ease-out),
-    box-shadow var(--transition-duration-press) var(--ease-out);
+  transition: background-color var(--transition-duration-press) var(--ease-out);
 }
 .note-tint {
   background-color: var(--color-accent-soft);
-}
-.note-tint.mark-band {
-  background-color: transparent;
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent-soft) 90%, transparent);
 }
 /* Where a tinted word meets its gloss ring or a tinted space, the corners there stay square. */
 .note-tint:has(+ .note-tint),
@@ -203,22 +197,182 @@ body {
 }
 
 /*
- * A gloss's base words, the spaces between them and its ring box take a soft violet
- * while the ring is hovered, focused or open: a hue apart from the note tint and the
- * highlight colours. On a highlight it is a ring, like the note tint.
+ * While a gloss is hovered (or its words are being adjusted) its words and the spaces
+ * between them take one soft violet band at the height of a "Behind text" highlight:
+ * square joins, rounded only at the two ends. It lies under an "Under text" band; over a
+ * "Behind text" band, which would hide it, it is a wash.
  */
 .gloss-span {
+  position: relative;
+  isolation: isolate;
+}
+.gloss-span::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0.15em;
+  bottom: 0.05em;
+  z-index: -2;
+  background: var(--color-gloss-soft);
+  pointer-events: none;
+  animation: gloss-tint-in var(--transition-duration-press) var(--ease-out);
+}
+.gloss-from::after {
+  border-start-start-radius: 4px;
+  border-end-start-radius: 4px;
+}
+.gloss-to::after {
+  border-start-end-radius: 4px;
+  border-end-end-radius: 4px;
+}
+.highlights-behind .gloss-span.mark-band::after {
+  z-index: -1;
+  background: color-mix(in oklab, var(--color-gloss-soft) 55%, transparent);
+}
+@keyframes gloss-tint-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gloss-span::after {
+    animation: none;
+  }
+}
+
+/*
+ * An interlinear gloss, printed small under (or over) its words in a muted ink, as the book
+ * prints it. Hovering its words inks it. gloss-layout.ts places it; it never moves a word.
+ */
+.gloss-label {
+  position: absolute;
+  z-index: 1;
+  color: var(--color-ink-3);
+  font-weight: 400;
+  text-align: center;
+  text-indent: 0;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 4px;
   transition:
-    background-color 120ms var(--ease-out),
-    box-shadow 120ms var(--ease-out);
+    color var(--transition-duration-press) var(--ease-out),
+    background-color var(--transition-duration-press) var(--ease-out);
 }
-.gloss-tint {
-  border-radius: 0;
-  background-color: var(--color-gloss-soft);
+.gloss-label-active {
+  color: var(--color-ink);
 }
-.gloss-tint.mark-band {
-  background-color: transparent;
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gloss-soft) 90%, transparent);
+.gloss-label:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+/* On hover: a small card under the words while they're pointed at. */
+.gloss-label-floating {
+  z-index: 30;
+  width: max-content;
+  max-width: 20em;
+  padding: 0.25em 0.6em;
+  font-size: 0.55em;
+  line-height: 1.6;
+  white-space: normal;
+  text-align: start;
+  color: var(--color-ink-2);
+  background: var(--color-surface-3);
+  box-shadow: var(--elevation-float);
+  border-radius: 8px;
+  animation: gloss-card-in var(--transition-duration-pop) var(--ease-out);
+}
+@keyframes gloss-card-in {
+  from {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gloss-label-floating {
+    animation: gloss-tint-in var(--transition-duration-pop) var(--ease-out);
+  }
+}
+
+/* The two ends of the words a gloss is being moved to: a bar with a knob, dragged sideways. */
+.gloss-handle {
+  position: absolute;
+  top: 0.1em;
+  bottom: 0.05em;
+  z-index: 25;
+  width: 2px;
+  background: var(--color-accent);
+  border-radius: 1px;
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+}
+.gloss-handle::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  translate: -50% 0;
+  border-radius: 9999px;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-bg);
+}
+.gloss-handle::after {
+  content: "";
+  position: absolute;
+  inset: -0.2em -0.4em;
+}
+.gloss-handle-start {
+  right: -2px;
+}
+.gloss-handle-start::before {
+  top: -6px;
+}
+.gloss-handle-end {
+  left: -2px;
+}
+.gloss-handle-end::before {
+  bottom: -6px;
+}
+.gloss-adjust-bar {
+  animation: gloss-card-in var(--transition-duration-pop) var(--ease-out);
+}
+
+/*
+ * A note's corners: one at the top of its first word's leading edge, one at the bottom of
+ * its last word's trailing edge. They sit just outside the word's box, clear of the letters
+ * and of the highlight band in both styles (which never leaves the box).
+ */
+.note-corner {
+  position: absolute;
+  width: 0.26em;
+  height: 0.26em;
+  border-color: color-mix(in oklab, var(--color-accent) 60%, transparent);
+  border-style: solid;
+  border-width: 0;
+  pointer-events: none;
+  user-select: none;
+  transition:
+    border-color var(--transition-duration-press) var(--ease-out),
+    opacity var(--transition-duration-press) var(--ease-out);
+}
+.note-corner-start {
+  top: -0.12em;
+  right: -0.14em;
+  border-top-width: 1.5px;
+  border-right-width: 1.5px;
+}
+.note-corner-end {
+  bottom: -0.12em;
+  left: -0.14em;
+  border-bottom-width: 1.5px;
+  border-left-width: 1.5px;
+}
+.note-corner-active {
+  border-color: var(--color-accent);
+}
+.note-corner-dim {
+  opacity: 0.3;
 }
 
 .mark-yellow {
@@ -277,39 +431,6 @@ body {
 }
 
 /*
- * The marker after an interlinear gloss's base: a small drawn ring in a muted ink, raised
- * like a superscript but unlike the bold numerals of footnote refs. Its ::after widens the
- * hit area, mostly upward and downward, without touching the line's layout.
- */
-.gloss-ring {
-  position: relative;
-  display: inline-block;
-  width: 0.32em;
-  height: 0.32em;
-  margin-inline: 0.08em;
-  vertical-align: 0.55em;
-  border: 1.5px solid var(--color-ink-3);
-  border-radius: 9999px;
-  cursor: pointer;
-  transition:
-    border-color var(--transition-duration-press) var(--ease-out),
-    background-color var(--transition-duration-press) var(--ease-out);
-}
-.gloss-ring::after {
-  content: "";
-  position: absolute;
-  inset: -0.6em -0.25em;
-}
-.gloss-ring:hover,
-.gloss-ring:focus-visible,
-.gloss-ring[data-popup-open] {
-  border-color: var(--color-accent);
-}
-.gloss-ring[data-popup-open] {
-  background-color: var(--color-accent-soft);
-}
-
-/*
  * A long gloss scrolls inside its popup. The edge it's cut at fades out; the fade
  * shrinks as that edge is reached (a scroll-driven animation on its own scroller).
  */
@@ -340,7 +461,7 @@ body {
 }
 
 /*
- * Footnote refs and gloss rings inside a selection (see useSelectionBoxes in page-view.tsx):
+ * Footnote refs inside a selection (see useSelectionBoxes in page-view.tsx):
  * their full-height box takes the selection colour, stretched by shadows to the height the
  * browser paints a text selection at (padding would move a highlight band drawn from the box),
  * and the ref's own small selection box is dropped so it doesn't double up.

@@ -2,7 +2,7 @@ import { ArrowRight, Minus, Plus, Settings2, Type } from "lucide-react";
 import { useNavigate } from "react-router";
 import { type ReactNode, useRef } from "react";
 import type { Theme } from "../../../shared/ipc";
-import { type PageWidth, useFocusMode, usePageWidth, useTheme } from "../lib/appearance";
+import { GLOSS_HINTS, GLOSS_MODES, type PageWidth, useFocusMode, useGlossMode, usePageWidth, useTheme } from "../lib/appearance";
 import { shortcutKeys, shortcutLabel, shortcutParts } from "../lib/keymap";
 import { usePref } from "../lib/prefs";
 import type { BookReturn, SettingsState } from "../routes/settings";
@@ -93,7 +93,7 @@ export const DisplayMenu = ({
   const [pageWidth, setPageWidth] = usePageWidth();
   const focusMode = useFocusMode();
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
-  const [glossMarkers, setGlossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
+  const [glosses, setGlosses] = useGlossMode();
   const [hashiyaMarkers, setHashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
   const navigate = useNavigate();
   // Opening focuses the menu itself: on the first control, Text size's tooltip would open and take the first Esc.
@@ -107,8 +107,8 @@ export const DisplayMenu = ({
           <Row title="Harakat" hint="The corpus's marks and yours" shortcut={shortcutKeys("harakat.toggle")}>
             <Switch label="Show harakat" checked={showHarakat} onChange={setShowHarakat} />
           </Row>
-          <Row title="Gloss markers" hint="Rings after words with an interlinear gloss">
-            <Switch label="Show gloss markers" checked={glossMarkers} onChange={setGlossMarkers} />
+          <Row title="Glosses" hint={GLOSS_HINTS[glosses]} stacked>
+            <Segmented label="Glosses" value={glosses} onChange={setGlosses} options={GLOSS_MODES} />
           </Row>
           <Row title="Hashiya markers" hint="Footnote numbers in the text">
             <Switch label="Show hashiya markers" checked={hashiyaMarkers} onChange={setHashiyaMarkers} />
