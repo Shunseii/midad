@@ -1363,7 +1363,7 @@ export const ReaderRoute = () => {
             data-focus={focused ? "hidden" : undefined}
             className="absolute inset-x-0 bottom-0 z-10 h-24 bg-bg px-6 transition-[translate,opacity] [view-transition-name:page-scrubber] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
           >
-            <div className="mx-auto h-full max-w-190">
+            <div className={cx("mx-auto h-full transition-[max-width] duration-slide ease-move motion-reduce:transition-none", pageWidth === "wide" ? "max-w-190" : "max-w-160")}>
               <PageScrubber
                 bookId={bookId}
                 pages={book.data.pages}
