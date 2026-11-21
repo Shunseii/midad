@@ -24482,9 +24482,9 @@
       "name": "Label",
       "parentId": "OyEgvpfI",
       "style": {
-        "color": "{color.ink-3}",
+        "color": "{color.ink-2}",
         "font-family": "{font.body}",
-        "font-size": 12,
+        "font-size": 14,
         "font-weight": 500
       },
       "type": "text"
@@ -42455,10 +42455,10 @@
       "style": {
         "align-items": "center",
         "background": "transparent",
-        "border-radius": 6,
+        "border-radius": 8,
         "display": "flex",
         "height": 28,
-        "padding": "0 8px"
+        "padding": "0 10px"
       },
       "type": "frame"
     },
@@ -60671,9 +60671,9 @@
       "name": "Label",
       "parentId": "fA95hKaQ",
       "style": {
-        "color": "{color.ink-3}",
+        "color": "{color.ink-2}",
         "font-family": "{font.body}",
-        "font-size": 12,
+        "font-size": 14,
         "font-weight": 500
       },
       "type": "text"
@@ -69833,10 +69833,10 @@
       "style": {
         "align-items": "center",
         "background": "transparent",
-        "border-radius": 6,
+        "border-radius": 8,
         "display": "flex",
         "height": 28,
-        "padding": "0 8px"
+        "padding": "0 10px"
       },
       "type": "frame"
     },

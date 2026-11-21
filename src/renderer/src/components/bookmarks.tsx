@@ -6,7 +6,7 @@ import type { Bookmark, PageSummary } from "../../../shared/library";
 import { bookmarkFolio, openingLines } from "../lib/bookmarks";
 import { timeAgo } from "../lib/format";
 import { usePagePreview } from "../lib/midad";
-import { Button, cx, IconButton } from "./ui";
+import { Button, cx, IconButton, Kbd } from "./ui";
 import { Input } from "./ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
@@ -219,8 +219,8 @@ export const BookmarkList = ({
           <span className="text-xs text-ink-3">Bookmark a page to come back to it later.</span>
         </span>
         <span className="flex gap-1 text-xs text-ink-3">
-          <kbd className="rounded border border-line bg-surface px-1.5 py-0.5 font-mono">Ctrl</kbd>
-          <kbd className="rounded border border-line bg-surface px-1.5 py-0.5 font-mono">D</kbd>
+          <Kbd>Ctrl</Kbd>
+          <Kbd>D</Kbd>
         </span>
       </div>
     );

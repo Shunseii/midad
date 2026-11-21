@@ -275,16 +275,10 @@ const BackToBook = ({ from }: { from: BookReturn }) => {
   }, []);
 
   return (
-    <button
-      type="button"
-      onClick={back}
-      aria-keyshortcuts="Alt+ArrowLeft Escape"
-      className="-ml-2 flex w-fit max-w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-ink-2 transition-colors duration-press hover:bg-ink/4 hover:text-ink"
-    >
-      <ArrowLeft aria-hidden className="size-4 shrink-0" />
+    <Button variant="ghost" icon={ArrowLeft} onClick={back} aria-keyshortcuts="Alt+ArrowLeft Escape" className="-ml-3.5 w-fit max-w-full">
       <span className="shrink-0">Back to</span>
       <span className="ar truncate font-medium">{from.title}</span>
-    </button>
+    </Button>
   );
 };
 

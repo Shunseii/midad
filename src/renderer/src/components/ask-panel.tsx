@@ -9,7 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { copiedPassage } from "../lib/copied";
 import { arabicNumber, timeAgo } from "../lib/format";
 import { keys, midad, usePage } from "../lib/midad";
-import { Button, IconButton, Toast, cx } from "./ui";
+import { Button, IconButton, Toast, ToastAction, cx } from "./ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export type { AskSelection, Quote };
@@ -666,9 +666,7 @@ const CiteChip = ({
           <Toast onDone={commitDelete}>
             <span className="flex items-center gap-3">
               Conversation deleted
-              <button type="button" onClick={undoDelete} className="-my-1 rounded-md px-2 py-1 font-semibold hover:bg-bg/15">
-                Undo
-              </button>
+              <ToastAction onClick={undoDelete}>Undo</ToastAction>
             </span>
           </Toast>
         )}

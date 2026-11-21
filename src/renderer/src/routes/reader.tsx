@@ -18,7 +18,7 @@ import { findOnPage } from "../../../shared/find";
 import { citeSpan } from "../../../shared/ask";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
-import { IconButton, Segmented, Skeleton, Toast, cx } from "../components/ui";
+import { IconButton, Segmented, Skeleton, Toast, ToastAction, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
 import { tintWords } from "../lib/reveal";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
@@ -1166,9 +1166,7 @@ export const ReaderRoute = () => {
         <Toast key={removal.id} onDone={() => setRemoval(null)}>
           <span className="flex items-center gap-3">
             {removal.message}
-            <button type="button" onClick={() => step("undo")} className="-my-1 rounded-md px-2 py-1 font-semibold hover:bg-bg/15">
-              Undo
-            </button>
+            <ToastAction onClick={() => step("undo")}>Undo</ToastAction>
             <span className="text-xs opacity-60">Ctrl+Z</span>
           </span>
         </Toast>

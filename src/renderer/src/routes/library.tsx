@@ -26,7 +26,7 @@ const BookCard = ({ book, onSync }: { book: LibraryBook; onSync: () => void }) =
       >
         <BookCover title={book.title} author={[book.author, book.edition].filter(Boolean).join(" · ") || null} size="sm" />
       </Link>
-      <IconButton icon={RefreshCw} label="Sync with corpus" onClick={onSync} className="absolute top-3 right-3 bg-surface opacity-0 group-hover:opacity-100 focus-visible:opacity-100" />
+      <IconButton icon={RefreshCw} label="Sync with corpus" variant="outline" onClick={onSync} className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 focus-visible:opacity-100" />
       <Progress value={book.pageCount ? position / book.pageCount : 0} />
       <span className="flex justify-between text-xs text-ink-3">
         <span>{position ? `Page ${position} of ${book.pageCount}` : "Not started"}</span>

@@ -21,7 +21,7 @@ import { arabicNumber } from "../lib/format";
 import { FOOTNOTE_REF, footnotesByMarker, splitFootnoteRef, toArabicIndic } from "../lib/footnotes";
 import { scrollToMiddle, tintWords } from "../lib/reveal";
 import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
-import { cx } from "./ui";
+import { cx, IconButton } from "./ui";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -764,15 +764,7 @@ const MarkableLine = ({
           className="absolute left-full ml-6 hidden select-none items-center gap-3 font-sans @3xl:flex"
         >
           <span className="w-px self-stretch bg-line" />
-          <button
-            type="button"
-            onClick={() => onMark(hover.word)}
-            onMouseDown={(e) => e.stopPropagation()}
-            aria-label="Mark as last read"
-            className="flex size-8 items-center justify-center rounded-md border border-line bg-surface text-ink-2 transition-colors hover:text-accent"
-          >
-            <BookmarkPlus aria-hidden className="size-4" />
-          </button>
+          <IconButton icon={BookmarkPlus} label="Mark as last read" variant="outline" onClick={() => onMark(hover.word)} onMouseDown={(e) => e.stopPropagation()} />
         </span>
       )}
     </Tag>

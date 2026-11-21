@@ -3,7 +3,7 @@ import { type KeyboardEvent, type RefObject, useEffect, useLayoutEffect, useRef 
 import type { Span, WordRef } from "../../../shared/annotations";
 import type { FindOptions } from "../../../shared/find";
 import { arabicNumber } from "../lib/format";
-import { IconButton, cx } from "./ui";
+import { Button, IconButton, cx } from "./ui";
 
 export interface FindState {
   open: boolean;
@@ -73,18 +73,9 @@ export const revealMatch = ({ root, span }: { root: HTMLElement | null; span: Sp
 };
 
 const OptionToggle = ({ label, title, on, onToggle }: { label: string; title: string; on: boolean; onToggle: () => void }) => (
-  <button
-    type="button"
-    aria-pressed={on}
-    title={title}
-    onClick={onToggle}
-    className={cx(
-      "h-7 shrink-0 rounded-md px-2 text-xs font-medium transition-colors duration-press ease-out",
-      on ? "bg-accent-soft text-accent" : "text-ink-3 hover:bg-ink/6 hover:text-ink",
-    )}
-  >
+  <Button variant="ghost" size="sm" pressed={on} tooltip={title} onClick={onToggle} className="shrink-0">
     {label}
-  </button>
+  </Button>
 );
 
 /** Find on the page: a small bar over the top of the page that steps through the matches. */

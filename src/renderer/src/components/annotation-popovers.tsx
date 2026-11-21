@@ -6,7 +6,8 @@ import { timeAgo } from "../lib/format";
 import { MARK_BG } from "./page-view";
 import { HighlighterOff } from "./icons";
 import { Popover, PopoverArrow, PopoverContent } from "./ui/popover";
-import { Button, IconButton, Kbd, cx } from "./ui";
+import { Button, IconButton, Kbd, WithTooltip, cx } from "./ui";
+import { Textarea } from "./ui/textarea";
 
 const COLOR_NAMES: Record<HighlightColor, string> = { yellow: "Yellow", green: "Green", pink: "Pink", blue: "Blue" };
 
@@ -60,14 +61,14 @@ export const SelectionToolbar = ({
       >
         {mode === "selection" ? (
           HIGHLIGHT_COLORS.map((color) => (
-            <button
-              key={color}
-              type="button"
-              aria-label={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
-              title={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
-              onClick={() => onHighlight(color)}
-              className={cx("mx-0.5 size-5 rounded-full ring-1 ring-line ring-offset-surface-3 transition-[box-shadow] duration-pop ease-out hover:ring-2 hover:ring-ink-3 hover:ring-offset-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2", MARK_BG[color])}
-            />
+            <WithTooltip key={color} label={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}>
+              <button
+                type="button"
+                aria-label={`Highlight ${COLOR_NAMES[color].toLowerCase()}`}
+                onClick={() => onHighlight(color)}
+                className={cx("mx-0.5 size-5 rounded-full ring-1 ring-line ring-offset-surface-3 transition-[box-shadow] duration-pop ease-out hover:ring-2 hover:ring-ink-3 hover:ring-offset-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2", MARK_BG[color])}
+              />
+            </WithTooltip>
           ))
         ) : (
           <Button variant="ghost" size="sm" icon={Trash2} onClick={onRemoveHighlight}>
@@ -263,15 +264,7 @@ export const NoteEditor = ({
         </span>
         <IconButton icon={Trash2} label="Delete note" onClick={() => void remove()} />
       </div>
-      <textarea
-        autoFocus
-        dir="auto"
-        value={body}
-        onChange={(e) => change(e.target.value)}
-        placeholder="Write a note…"
-        rows={3}
-        className="resize-none rounded-lg border border-line bg-bg px-3 py-2 text-body outline-hidden focus:border-accent [unicode-bidi:plaintext]"
-      />
+      <Textarea autoFocus dir="auto" value={body} onChange={(e) => change(e.target.value)} placeholder="Write a note…" className="min-h-20 resize-none text-body" />
       <div className="flex items-center gap-2 text-xs text-ink-3">
         {!body.trim() && id.current ? (
           <span>Empty notes aren't saved. Delete it instead.</span>

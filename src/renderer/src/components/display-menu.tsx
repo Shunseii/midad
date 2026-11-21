@@ -6,7 +6,7 @@ import { type PageWidth, useFocusMode, usePageWidth, useTheme } from "../lib/app
 import { usePref } from "../lib/prefs";
 import type { BookReturn, SettingsState } from "../routes/settings";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { IconButton, Kbd, Segmented, Switch, cx } from "./ui";
+import { Button, IconButton, Kbd, Segmented, Switch, cx } from "./ui";
 
 /** The text sizes the reader steps through, as multiples of the normal size. */
 export const TEXT_SCALES = [0.875, 1, 1.125, 1.25, 1.5, 1.75, 2];
@@ -65,14 +65,9 @@ const TextSize = ({ scale, onScale }: { scale: number; onScale: (v: number) => v
   <Row title="Text size" hint="The page's Arabic text" shortcut="Ctrl ±">
     <div className="flex items-center gap-1">
       <IconButton icon={Minus} label="Smaller text (Ctrl+−)" disabled={scale <= SMALLEST} onClick={() => onScale(stepScale({ scale, by: -1 }))} />
-      <button
-        type="button"
-        title="Reset to normal size (Ctrl+0)"
-        onClick={() => onScale(1)}
-        className="w-12 rounded-md py-1 text-center text-sm tabular-nums text-ink-2 transition-colors duration-press hover:bg-ink/6"
-      >
+      <Button variant="ghost" size="sm" tooltip="Reset to normal size (Ctrl+0)" onClick={() => onScale(1)} className="w-12 tabular-nums">
         {Math.round(scale * 100)}%
-      </button>
+      </Button>
       <IconButton icon={Plus} label="Larger text (Ctrl+=)" disabled={scale >= LARGEST} onClick={() => onScale(stepScale({ scale, by: 1 }))} />
     </div>
   </Row>

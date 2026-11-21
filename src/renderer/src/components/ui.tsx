@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { X } from "lucide-react";
-import { type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type Ref, type RefObject, useEffect, useId, useRef } from "react";
+import { type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactElement, type ReactNode, type Ref, type RefObject, useEffect, useId, useRef } from "react";
 import { toast } from "sonner";
 import { Badge as BadgeBase } from "@/components/ui/badge";
 import { Button as ButtonBase } from "@/components/ui/button";
@@ -31,22 +31,49 @@ const BUTTON_VARIANTS = {
   danger: "destructive",
 } as const;
 
+const PRESSED = "bg-accent-soft text-accent";
+
+export const WithTooltip = ({ label, children }: { label?: string; children: ReactElement }) =>
+  label ? (
+    <Tooltip>
+      <TooltipTrigger render={children} />
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
+  ) : (
+    children
+  );
+
 export const Button = ({
   variant = "primary",
   size = "md",
   icon: Icon,
+  pressed,
+  tooltip,
   type = "button",
+  className,
   children,
   ...rest
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: keyof typeof BUTTON_VARIANTS;
   size?: "md" | "sm";
   icon?: LucideIcon;
+  /** Makes it a toggle button: `aria-pressed`, tinted with the accent while on. */
+  pressed?: boolean;
+  tooltip?: string;
 }) => (
-  <ButtonBase type={type} variant={BUTTON_VARIANTS[variant]} size={size === "md" ? "default" : "sm"} {...rest}>
-    {Icon && <Icon />}
-    {children}
-  </ButtonBase>
+  <WithTooltip label={tooltip}>
+    <ButtonBase
+      type={type}
+      variant={BUTTON_VARIANTS[variant]}
+      size={size === "md" ? "default" : "sm"}
+      aria-pressed={pressed}
+      className={cn(pressed && PRESSED, className)}
+      {...rest}
+    >
+      {Icon && <Icon />}
+      {children}
+    </ButtonBase>
+  </WithTooltip>
 );
 
 export const IconButton = ({
@@ -72,7 +99,7 @@ export const IconButton = ({
           size="icon"
           aria-label={label}
           aria-pressed={selected || undefined}
-          className={cn(selected ? "bg-accent-soft text-accent" : "text-ink-2 hover:text-ink", className)}
+          className={cn(selected ? PRESSED : "text-ink-2 hover:text-ink", className)}
           {...rest}
         />
       }
@@ -244,6 +271,17 @@ const ToastBody = ({ children }: { children: ReactNode }) => (
       {children}
     </div>
   </div>
+);
+
+/** A text button inside a toast, such as Undo. The toast is inverted (ink on bg), so it tints with bg rather than Button's ink wash. */
+export const ToastAction = ({ children, onClick }: { children: ReactNode; onClick: () => void }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className="-my-1 rounded-md px-2 py-1 font-semibold transition-colors duration-press hover:bg-bg/15 focus-visible:outline-2 focus-visible:outline-bg"
+  >
+    {children}
+  </button>
 );
 
 /** Shows `children` as a sonner toast while mounted; calls `onDone` when it times out or is swiped away. */
