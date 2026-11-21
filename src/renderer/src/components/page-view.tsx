@@ -86,11 +86,15 @@ const useSelectionBoxes = (root: RefObject<HTMLElement | null>) => {
   }, [root]);
 };
 
-/** Plain word text with any footnote reference in it raised as a superscript. */
-const withFootnoteRefs = (text: string): ReactNode => {
+/**
+ * Plain word text with any footnote reference in it raised as a superscript. With the
+ * markers hidden the reference takes no room at all, but stays in the text for copying.
+ */
+const withFootnoteRefs = ({ text, shown }: { text: string; shown: boolean }): ReactNode => {
   const ref = splitFootnoteRef(text);
   if (!ref) return text;
-  return [ref.before, <FootnoteRef key="ref" marker={ref.marker} />, withFootnoteRefs(ref.after)];
+  const marker = shown ? <FootnoteRef key="ref" marker={ref.marker} /> : <span key="ref" className="sr-only">{ref.marker}</span>;
+  return [ref.before, marker, withFootnoteRefs({ text: ref.after, shown })];
 };
 
 /** Overlapping glosses on a line, merged so each base gets one marker. */
@@ -177,6 +181,10 @@ export interface Display {
   textScale: number;
   /** The letter the reader is typing harakat on. */
   target: LetterRef | null;
+  /** The rings after interlinear glosses' bases. */
+  glossMarkers: boolean;
+  /** The superscript footnote references in the text. */
+  hashiyaMarkers: boolean;
 }
 
 /** The style that times one word's (or the gap after it's) part of the sweep. */
@@ -194,6 +202,8 @@ interface LineProps {
   annotations: PageAnnotations;
   sweep: Sweep | null;
   display: Display;
+  /** Notes whose words are tinted, while their peek or margin mark is hovered. */
+  tinted: ReadonlySet<string>;
   onWordHover: (target: WordTarget, note: Note | null) => void;
   onWordClick: (target: WordTarget, highlight: Highlight | null) => void;
 }
@@ -208,7 +218,8 @@ const highlightAt = (highlights: Highlight[], part: Part, ref: WordRef) =>
 const noteAt = (notes: Note[], part: Part, ref: WordRef) =>
   notes.find((n) => spanContains({ span: n.span, part, ref })) ?? null;
 
-const isLastWord = (span: Span, ref: WordRef) => span.end.line === ref.line && span.end.word === ref.word;
+const tintedAt = ({ notes, tinted, part, ref }: { notes: Note[]; tinted: ReadonlySet<string>; part: Part; ref: WordRef }) =>
+  notes.filter((n) => tinted.has(n.id) && spanContains({ span: n.span, part, ref }));
 
 /** A short tick under the targeted letter, below where a kasra sits. */
 const TARGET_TICK = "pointer-events-none absolute inset-x-px bottom-1 h-0.5 select-none rounded-full bg-accent";
@@ -218,14 +229,14 @@ const TARGET_TICK = "pointer-events-none absolute inset-x-px bottom-1 h-0.5 sele
  * without anything special stay in one text run so the word shapes normally.
  */
 const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: Map<number, string>; display: Display; targetLetter: number | null }) => {
-  const { showHarakat, showMine } = display;
+  const { showHarakat, showMine, hashiyaMarkers } = display;
   const showingMine = showHarakat && showMine && mine.size > 0;
-  if (!showingMine && targetLetter === null) return withFootnoteRefs(showHarakat ? text : stripHarakat(text));
+  if (!showingMine && targetLetter === null) return withFootnoteRefs({ text: showHarakat ? text : stripHarakat(text), shown: hashiyaMarkers });
 
   const nodes: ReactNode[] = [];
   let run = "";
   const flush = (key: string) => {
-    if (run) nodes.push(<Fragment key={key}>{withFootnoteRefs(run)}</Fragment>);
+    if (run) nodes.push(<Fragment key={key}>{withFootnoteRefs({ text: run, shown: hashiyaMarkers })}</Fragment>);
     run = "";
   };
   const letters = lettersOf(text);
@@ -261,7 +272,7 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
   return nodes;
 };
 
-const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHover, onWordClick }: LineProps) => {
+const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, onWordHover, onWordClick }: LineProps) => {
   const sweepAt = (h: Highlight | null, ref: WordRef) => (sweep && h?.id === sweep.id ? sweep.order.get(`${part}:${ref.line}:${ref.word}`) : undefined);
   const tokens = tokenize(text);
   const wordAt = (i: number) => {
@@ -269,7 +280,8 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHo
     return t?.kind === "word" ? { line, word: t.word } : null;
   };
 
-  const runs = glossRuns(glosses.filter((g) => g.part === part && g.line === line));
+  const runs = display.glossMarkers ? glossRuns(glosses.filter((g) => g.part === part && g.line === line)) : [];
+  const tintOf = (ref: WordRef) => tintedAt({ notes: annotations.notes, tinted, part, ref });
 
   return tokens.map((token, i) => {
     if (token.kind === "space") {
@@ -279,8 +291,12 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHo
         before && after ? highlightAt(annotations.highlights, part, before) : null;
       const joins = shared && after && spanContains({ span: shared.span, part, ref: after });
       const at = joins && before ? sweepAt(shared, before) : undefined;
+      const tintBefore = before ? tintOf(before) : [];
+      const tintJoins = after !== null && tintBefore.some((n) => spanContains({ span: n.span, part, ref: after }));
       return (
-        <span key={i} className={cx(joins && MARK_BAND[shared.color], at !== undefined && "mark-sweep")} style={at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.5 }) : undefined}>
+        <span
+          key={i}
+          className={cx(joins && MARK_BAND[shared.color], at !== undefined && "mark-sweep", "note-span", tintJoins && "note-tint")} style={at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.5 }) : undefined}>
           {token.text}
         </span>
       );
@@ -288,6 +304,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHo
     const ref = { line, word: token.word };
     const highlight = highlightAt(annotations.highlights, part, ref);
     const note = noteAt(annotations.notes, part, ref);
+    const tint = tintOf(ref).length > 0;
     const target = (e: ReactMouseEvent<HTMLElement>): WordTarget => ({
       part,
       ref,
@@ -316,7 +333,8 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHo
             highlight && MARK_BAND[highlight.color],
             at !== undefined && "mark-sweep",
             highlight && "cursor-pointer",
-            note && "underline decoration-accent decoration-dotted decoration-2 underline-offset-8",
+            note && "note-span",
+            tint && "note-tint",
           )}
         >
           <WordText text={token.text} mine={mine} display={display} targetLetter={targetLetter} />
@@ -338,9 +356,6 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHo
               }
             />
           ))}
-        {note && isLastWord(note.span, ref) && (
-          <MessageSquareText aria-label="Note" className="mx-0.5 inline size-3.5 -translate-y-3 text-accent" />
-        )}
       </span>
     );
   });
@@ -445,6 +460,84 @@ const LastReadMark = ({ row, onClear }: { row: ScreenRow; onClear: () => void })
   );
 };
 
+/** What a note mark in the margin hands the reader: the notes ending on its row, and where their words are. */
+export interface NoteMarkTarget {
+  notes: Note[];
+  anchor: DOMRect;
+}
+
+export interface NoteMarkHandlers {
+  onHover: (target: NoteMarkTarget | null) => void;
+  onOpen: (target: NoteMarkTarget) => void;
+}
+
+/** The words a note ends on, to anchor its peek to. */
+const noteAnchor = ({ from, note }: { from: HTMLElement; note: Note }) => {
+  const { part, end } = note.span;
+  const word = from.closest("article")?.querySelector<HTMLElement>(`[data-part="${part}"][data-line="${end.line}"][data-w="${end.word}"]`);
+  return (word ?? from).getBoundingClientRect();
+};
+
+/**
+ * The notes ending on one screen row, marked in the left margin: a small note icon
+ * (with a count when there are several), out in the margin past the line numbers or
+ * in their place when they're hidden. Without room for the margin, a thin bar.
+ */
+const NoteMark = ({
+  row,
+  notes,
+  numbered,
+  dim,
+  active,
+  handlers,
+}: {
+  row: ScreenRow;
+  notes: Note[];
+  numbered: boolean;
+  dim: boolean;
+  active: boolean;
+  handlers: NoteMarkHandlers;
+}) => {
+  const target = (el: HTMLElement): NoteMarkTarget => {
+    const last = notes.reduce((a, b) => (b.span.end.word > a.span.end.word ? b : a));
+    return { notes, anchor: noteAnchor({ from: el, note: last }) };
+  };
+  return (
+    <>
+      <button
+        type="button"
+        data-margin
+        data-active={active ? "" : undefined}
+        aria-label={notes.length === 1 ? "Note" : `${notes.length} notes`}
+        style={rowStyle(row)}
+        onMouseEnter={(e) => handlers.onHover(target(e.currentTarget))}
+        onMouseLeave={() => handlers.onHover(null)}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => handlers.onOpen(target(e.currentTarget))}
+        className={cx(
+          "absolute right-full hidden w-8 select-none items-center justify-end gap-0.5 font-sans text-ink-3 outline-none transition-[color,scale,opacity] duration-press ease-out hover:text-accent hover:opacity-100 focus-visible:text-accent focus-visible:opacity-100 active:scale-92 data-active:text-accent data-active:opacity-100 motion-reduce:transition-[color,opacity] @3xl:flex",
+          numbered ? "mr-13" : "mr-3",
+          dim && "opacity-30",
+        )}
+      >
+        {notes.length > 1 && <span className="text-overline font-semibold tabular-nums">{notes.length}</span>}
+        <MessageSquareText aria-hidden className="size-3.5" />
+      </button>
+      <span aria-hidden style={rowStyle(row)} className={cx("pointer-events-none absolute right-full mr-1 w-0.5 rounded-full bg-ink-3/50 @3xl:hidden", dim && "opacity-30")} />
+    </>
+  );
+};
+
+/** Notes ending on a line, grouped by the screen row their last word sits on. */
+const notesByRow = ({ rows, notes }: { rows: ScreenRow[]; notes: Note[] }) => {
+  const groups = new Map<ScreenRow, Note[]>();
+  for (const note of notes) {
+    const row = rowOfWord(rows, note.span.end.word);
+    if (row) groups.set(row, [...(groups.get(row) ?? []), note]);
+  }
+  return [...groups];
+};
+
 /** A line of text with its margin: the last-read marker on one screen row, or on hover a button beside the row. */
 const MarkableLine = ({
   as: Tag,
@@ -455,6 +548,9 @@ const MarkableLine = ({
   layoutKey,
   onMark,
   onClearMark,
+  notes,
+  numbered,
+  noteMarks,
   children,
 }: {
   as: "p" | "h2";
@@ -466,24 +562,32 @@ const MarkableLine = ({
   layoutKey: string;
   onMark: (word: number) => void;
   onClearMark: () => void;
+  /** The notes that end on this line. */
+  notes: Note[];
+  /** Whether the line has a number in the margin, which the note marks sit beyond. */
+  numbered: boolean;
+  noteMarks: { dim: boolean; tinted: ReadonlySet<string>; handlers: NoteMarkHandlers };
   children: ReactNode;
 }) => {
   const ref = useRef<HTMLParagraphElement>(null);
   const [hover, setHover] = useState<ScreenRow | null>(null);
-  const [marked, setMarked] = useState<ScreenRow | null>(null);
+  const [rows, setRows] = useState<ScreenRow[]>([]);
+  const measured = markerWord !== null || notes.length > 0;
+  const notesKey = notes.map((n) => `${n.id}:${n.span.end.word}`).join(",");
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el || markerWord === null) {
-      setMarked(null);
+    if (!el || !measured) {
+      setRows([]);
       return;
     }
-    const measure = () => setMarked(rowOfWord(screenRows(el), markerWord));
+    const measure = () => setRows(screenRows(el));
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [markerWord, layoutKey]);
+  }, [measured, layoutKey, notesKey]);
+  const marked = markerWord === null ? null : rowOfWord(rows, markerWord);
 
   const rowAt = (clientY: number) => {
     const el = ref.current;
@@ -510,6 +614,17 @@ const MarkableLine = ({
         className="absolute inset-y-0 left-full hidden w-36 @3xl:block"
       />
       {marked && <LastReadMark row={marked} onClear={onClearMark} />}
+      {notesByRow({ rows, notes }).map(([row, onRow]) => (
+        <NoteMark
+          key={row.word}
+          row={row}
+          notes={onRow}
+          numbered={numbered}
+          dim={noteMarks.dim}
+          active={onRow.some((n) => noteMarks.tinted.has(n.id))}
+          handlers={noteMarks.handlers}
+        />
+      ))}
       {hover && hover.word !== marked?.word && (
         <span
           data-margin
@@ -557,6 +672,9 @@ export const PageView = ({
   onClearMark,
   onWordHover,
   onWordClick,
+  tinted,
+  dimNoteMarks,
+  noteMarkHandlers,
 }: {
   stored: StoredPage;
   bookTitle: string;
@@ -574,21 +692,28 @@ export const PageView = ({
   onClearMark: () => void;
   onWordHover: LineProps["onWordHover"];
   onWordClick: LineProps["onWordClick"];
+  tinted: ReadonlySet<string>;
+  /** Focus mode keeps the note marks faint until hovered. */
+  dimNoteMarks: boolean;
+  noteMarkHandlers: NoteMarkHandlers;
 }) => {
   const { page } = stored;
   const articleRef = useRef<HTMLElement>(null);
   useSelectionBoxes(articleRef);
   const fresh = freshHighlight ? annotations.highlights.find((h) => h.id === freshHighlight) : undefined;
   const sweep = fresh ? sweepOrder({ page, highlight: fresh }) : null;
-  const lineProps = { glosses: page.glosses, annotations, sweep, display, onWordHover, onWordClick };
+  const lineProps = { glosses: page.glosses, annotations, sweep, display, tinted, onWordHover, onWordClick };
   const t = (s: string) => (display.showHarakat ? s : stripHarakat(s));
   const markable = (part: Part, line: number) => ({
     part,
     line,
     markerWord: marker?.part === part && marker.line === line ? marker.word : null,
-    layoutKey: `${display.showHarakat}-${display.showMine}-${display.textScale}`,
+    layoutKey: `${display.showHarakat}-${display.showMine}-${display.textScale}-${display.glossMarkers}-${display.hashiyaMarkers}`,
     onMark: (word: number) => onMark({ part, line, word }),
     onClearMark,
+    notes: annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line),
+    numbered: part === "matn" && display.lineNumbers,
+    noteMarks: { dim: dimNoteMarks, tinted, handlers: noteMarkHandlers },
   });
   const footnotes = footnotesByMarker(page.hashiya.map((f) => ({ marker: f.marker, text: t(f.text) })));
   const folio = arabicNumber(stored.number ?? stored.position);

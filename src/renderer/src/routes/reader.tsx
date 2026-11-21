@@ -9,12 +9,12 @@ import type { BookDetail, StoredPage } from "../../../shared/library";
 import { DisplayMenu, stepScale, WHEEL_STEP, ZOOM_SHOWN_MS, ZoomLevel } from "../components/display-menu";
 import { InlinePanel, SideSheet } from "../components/side-sheet";
 import { useMediaQuery } from "../lib/media";
-import { NoteEditor, NoteLayer, NotePeek, SelectionToolbar } from "../components/annotation-popovers";
+import { NoteEditor, NoteLayer, NotePeek, NoteRowPeek, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
 import { PageScrubber } from "../components/page-scrubber";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
-import { caretNear, letterAtSelectionStart, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
+import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Skeleton, Toast, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
@@ -62,8 +62,10 @@ interface NoteState {
   note: Note | null;
   span: Span;
   rect: DOMRect;
-  /** Hovering shows a read-only peek; clicking it (or adding a note) edits. */
-  mode: "peek" | "edit";
+  /** Hovering shows a read-only peek; clicking it (or adding a note) edits. A row lists every note ending on one row. */
+  mode: "peek" | "edit" | "row";
+  /** In row mode, the notes on the row. */
+  row?: Note[];
 }
 
 interface Point {
@@ -323,6 +325,8 @@ export const ReaderRoute = () => {
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine] = usePref({ key: "reader.showMine", fallback: true });
   const [lineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
+  const [glossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
+  const [hashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
   const [textScale, setTextScale] = usePref({ key: "reader.textScale", fallback: 1 });
   const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
@@ -355,6 +359,12 @@ export const ReaderRoute = () => {
   // Kept after closing so the popover can animate out with its content.
   const lastNote = useRef<NoteState | null>(null);
   if (noteEditor) lastNote.current = noteEditor;
+  const [entryTint, setEntryTint] = useState<string | null>(null);
+  const tinted = useMemo<ReadonlySet<string>>(() => {
+    if (!noteEditor) return new Set();
+    if (noteEditor.mode === "row") return new Set(entryTint ? [entryTint] : (noteEditor.row ?? []).map((n) => n.id));
+    return new Set(noteEditor.note ? [noteEditor.note.id] : []);
+  }, [noteEditor, entryTint]);
   const pageRoot = useRef<HTMLDivElement>(null);
   const pointerInNote = useRef(false);
   const leftNote = useRef(false);
@@ -526,6 +536,37 @@ export const ReaderRoute = () => {
     if (toolbar || focusInNoteEditor() || noteEditor?.note?.id === note.id) return;
     if (noteEditor?.mode === "edit" && pointerInNote.current) return;
     setNoteEditor({ note, span: note.span, rect: target.element.getBoundingClientRect(), mode: "peek" });
+  };
+
+  /** A margin mark's notes as the note layer shows them: one note's peek or editor, or the row's list. */
+  const noteMarkState = ({ notes, anchor }: NoteMarkTarget, single: "peek" | "edit"): NoteState | null => {
+    const [first] = notes;
+    if (!first) return null;
+    return notes.length === 1 ? { note: first, span: first.span, rect: anchor, mode: single } : { note: null, span: first.span, rect: anchor, mode: "row", row: notes };
+  };
+  const sameNotes = (a: NoteState | null, b: NoteState) =>
+    a?.mode === b.mode && a.note?.id === b.note?.id && (a.row ?? []).map((n) => n.id).join() === (b.row ?? []).map((n) => n.id).join();
+
+  const noteMarkHandlers = {
+    onHover: (target: NoteMarkTarget | null) => {
+      if (!target) {
+        if (noteEditor) scheduleNoteClose();
+        return;
+      }
+      clearTimeout(closeTimer.current);
+      if (toolbar || focusInNoteEditor()) return;
+      if (noteEditor?.mode === "edit" && pointerInNote.current) return;
+      const next = noteMarkState(target, "peek");
+      if (!next || sameNotes(noteEditor, next)) return;
+      setEntryTint(null);
+      setNoteEditor(next);
+    },
+    onOpen: (target: NoteMarkTarget) => {
+      clearTimeout(closeTimer.current);
+      setToolbar(null);
+      const next = noteMarkState(target, "edit");
+      if (next && !sameNotes(noteEditor, next)) setNoteEditor(next);
+    },
   };
 
   const onWordClick = (word: WordTarget, highlight: Highlight | null) => {
@@ -1146,7 +1187,10 @@ export const ReaderRoute = () => {
               highlightStyle={highlightStyle}
               freshHighlight={freshHighlight}
               annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
-              display={{ showHarakat, showMine, lineNumbers, textScale, target }}
+              display={{ showHarakat, showMine, lineNumbers, textScale, target, glossMarkers, hashiyaMarkers }}
+              tinted={tinted}
+              dimNoteMarks={focusOn}
+              noteMarkHandlers={noteMarkHandlers}
               marker={marker.data?.position === position ? marker.data : null}
               onMark={markRow}
               onClearMark={() => void edits().setMarker({ before: markerAt(), after: null })}
@@ -1262,6 +1306,17 @@ export const ReaderRoute = () => {
           {(() => {
             const shown = lastNote.current;
             const lineLabel = spanLabel(shown.span).toLowerCase();
+            if (shown.mode === "row" && shown.row)
+              return (
+                <NoteRowPeek
+                  notes={shown.row}
+                  onTint={setEntryTint}
+                  onEdit={(note) => {
+                    setEntryTint(null);
+                    setNoteEditor({ note, span: note.span, rect: shown.rect, mode: "edit" });
+                  }}
+                />
+              );
             return shown.mode === "peek" && shown.note ? (
               <NotePeek key={shown.note.id} note={shown.note} lineLabel={lineLabel} onEdit={() => setNoteEditor({ ...shown, mode: "edit" })} />
             ) : (

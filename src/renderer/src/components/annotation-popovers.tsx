@@ -164,6 +164,32 @@ export const NotePeek = ({ note, lineLabel, onEdit }: { note: Note; lineLabel: s
   </button>
 );
 
+/** Every note ending on one row, from the row's margin mark. Hovering an entry tints its words; clicking it edits. */
+export const NoteRowPeek = ({ notes, onEdit, onTint }: { notes: Note[]; onEdit: (note: Note) => void; onTint: (id: string | null) => void }) => (
+  <div role="list" aria-label={`${notes.length} notes`} className="flex w-72 flex-col gap-0.5 rounded-xl bg-surface-3 p-1.5 shadow-float" onMouseLeave={() => onTint(null)}>
+    {notes.map((note) => (
+      <button
+        key={note.id}
+        type="button"
+        role="listitem"
+        aria-label="Edit note"
+        onClick={() => onEdit(note)}
+        onMouseEnter={() => onTint(note.id)}
+        onFocus={() => onTint(note.id)}
+        className="group flex flex-col gap-1 rounded-lg px-2.5 py-2 text-left transition-colors duration-press ease-out hover:bg-ink/5 focus-visible:outline-2 focus-visible:outline-accent"
+      >
+        <span dir="auto" className="line-clamp-2 text-sm leading-snug text-ink [unicode-bidi:plaintext]">
+          {note.body}
+        </span>
+        <span className="flex items-center gap-2 text-xs text-ink-3">
+          <span className="flex-1 first-letter:uppercase">{timeAgo(note.updatedAt)}</span>
+          <span className="opacity-0 transition-opacity duration-press group-hover:text-accent group-hover:opacity-100">Click to edit</span>
+        </span>
+      </button>
+    ))}
+  </div>
+);
+
 /**
  * Edits a note in place. A new note (no `note` yet) is created on the first
  * non-empty text; after that every pause in typing saves.

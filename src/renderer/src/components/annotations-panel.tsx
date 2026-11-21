@@ -153,7 +153,7 @@ export const AnnotationsPanel = ({
           <p className="text-xs text-ink-3">
             {tab === "highlights"
               ? "Select text and pick a colour to highlight it."
-              : "Notes belong to this page. Hover a dotted word to edit its note in place."}
+              : "Notes belong to this page. Hover the note mark in the margin to edit its note in place."}
           </p>
         )}
       </div>

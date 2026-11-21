@@ -97,6 +97,8 @@ export const DisplayMenu = ({
   const [pageWidth, setPageWidth] = usePageWidth();
   const focusMode = useFocusMode();
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
+  const [glossMarkers, setGlossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
+  const [hashiyaMarkers, setHashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
   const navigate = useNavigate();
   // Opening focuses the menu itself: on the first control, Text size's tooltip would open and take the first Esc.
   const popup = useRef<HTMLDivElement>(null);
@@ -108,6 +110,12 @@ export const DisplayMenu = ({
           <TextSize scale={textScale} onScale={onTextScale} />
           <Row title="Harakat" hint="The corpus's marks and yours" shortcut="H">
             <Switch label="Show harakat" checked={showHarakat} onChange={setShowHarakat} />
+          </Row>
+          <Row title="Gloss markers" hint="Rings after words with an interlinear gloss">
+            <Switch label="Show gloss markers" checked={glossMarkers} onChange={setGlossMarkers} />
+          </Row>
+          <Row title="Hashiya markers" hint="Footnote numbers in the text">
+            <Switch label="Show hashiya markers" checked={hashiyaMarkers} onChange={setHashiyaMarkers} />
           </Row>
           <Row title="Theme" hint="Follow the system or choose one" stacked>
             <Segmented label="Theme" value={theme} onChange={setTheme} options={THEMES} />

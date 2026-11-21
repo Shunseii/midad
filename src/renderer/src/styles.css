@@ -158,6 +158,25 @@ body {
   bottom: 0.05em;
   height: auto;
 }
+/*
+ * Noted words carry no mark of their own. While their note is hovered (its margin
+ * mark, the words or a peek entry) they take a faint accent tint; on a highlight the
+ * tint is a soft ring instead, so the highlight's band still shows.
+ */
+.note-span {
+  border-radius: 4px;
+  transition:
+    background-color var(--transition-duration-press) var(--ease-out),
+    box-shadow var(--transition-duration-press) var(--ease-out);
+}
+.note-tint {
+  background-color: var(--color-accent-soft);
+}
+.note-tint.mark-band {
+  background-color: transparent;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent-soft) 90%, transparent);
+}
+
 .mark-yellow {
   --mark: var(--color-mark-1);
 }

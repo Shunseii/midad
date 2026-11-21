@@ -110,6 +110,8 @@ const Reading = () => {
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
   const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
+  const [glossMarkers, setGlossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
+  const [hashiyaMarkers, setHashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
   return (
     <Section title="Reading" description="The page's text. Text size and harakat are also in the reader's Display menu.">
       <Row title="Text size" hint="The page's Arabic text">
@@ -127,6 +129,12 @@ const Reading = () => {
       </Row>
       <Row title="Line numbers" hint="The numbers notes and Ask AI use">
         <Switch label="Show line numbers" checked={lineNumbers} onChange={setLineNumbers} />
+      </Row>
+      <Row title="Gloss markers" hint="Rings after words with an interlinear gloss; hidden, the glosses aren't shown">
+        <Switch label="Show gloss markers" checked={glossMarkers} onChange={setGlossMarkers} />
+      </Row>
+      <Row title="Hashiya markers" hint="Footnote numbers in the main text; the hashiya below stays">
+        <Switch label="Show hashiya markers" checked={hashiyaMarkers} onChange={setHashiyaMarkers} />
       </Row>
     </Section>
   );

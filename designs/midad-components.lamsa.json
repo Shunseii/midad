@@ -8240,6 +8240,26 @@
       },
       "type": "text"
     },
+    "tYmYFnOI": {
+      "content": "ص ٤٢",
+      "css": "transition: opacity {transition.duration-pop} {ease.out};\n\n*:hover > * > &, [data-dragging] > * > & {\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n}",
+      "index": "Z0",
+      "name": "Page label",
+      "parentId": "4djLM0MK",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 14,
+        "line-height": "14px",
+        "position": "absolute",
+        "right": 0,
+        "top": -20,
+        "translate": "50% 0",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "tfdX0Exy": {
       "content": "disabled",
       "index": "a005",
