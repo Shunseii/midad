@@ -108,7 +108,7 @@ export const DisplayMenu = ({
 }) => {
   const [theme, setTheme] = useTheme();
   const [pageWidth, setPageWidth] = usePageWidth();
-  const [focusMode, setFocusMode] = useFocusMode();
+  const focusMode = useFocusMode();
   const [highlightStyle, setHighlightStyle] = useHighlightStyle();
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
@@ -124,8 +124,8 @@ export const DisplayMenu = ({
           <Row title="Highlight style" hint={highlightStyle === "under" ? "A band under the letters" : "A fill behind the whole word"} stacked>
             <Segmented label="Highlight style" value={highlightStyle} onChange={setHighlightStyle} options={HIGHLIGHT_STYLES} />
           </Row>
-          <Row title="Focus mode" hint="Hide the bars while you read">
-            <Switch label="Focus mode" checked={focusMode} onChange={setFocusMode} />
+          <Row title="Focus mode" hint={focusMode.kind === "locked" ? "Locked: hidden until Esc or F" : "Hide the bars while you read"} shortcut="F">
+            <Switch label="Focus mode" checked={focusMode.choice !== "off"} onChange={focusMode.toggle} />
           </Row>
         </Section>
         <div className="h-px bg-line" />

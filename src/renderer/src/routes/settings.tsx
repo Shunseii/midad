@@ -4,6 +4,7 @@ import type { Theme } from "../../../shared/ipc";
 import { HIGHLIGHT_STYLES, LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
 import { type HighlightStyle, type PageWidth, useFocusMode, useHighlightStyle, usePageWidth, useTheme } from "../lib/appearance";
+import type { FocusChoice } from "../lib/focus";
 import { midad, useSaveSettings, useSettings } from "../lib/midad";
 import { usePref } from "../lib/prefs";
 
@@ -29,10 +30,22 @@ const Row = ({ title, hint, children }: { title: string; hint: string; children:
   </div>
 );
 
+const FOCUS_CHOICES: { value: FocusChoice; label: string }[] = [
+  { value: "off", label: "Off" },
+  { value: "auto", label: "Auto" },
+  { value: "locked", label: "Locked" },
+];
+
+const FOCUS_HINTS: Record<FocusChoice, string> = {
+  off: "The bars stay put. F or the Display menu turns focus on",
+  auto: "The bars step aside while you read and return when you move",
+  locked: "Hidden until you rest the pointer on the top or bottom edge. Esc or F leaves",
+};
+
 const Appearance = () => {
   const [theme, setTheme] = useTheme();
   const [pageWidth, setPageWidth] = usePageWidth();
-  const [focusMode, setFocusMode] = useFocusMode();
+  const focusMode = useFocusMode();
   const [highlightStyle, setHighlightStyle] = useHighlightStyle();
   return (
     <Section title="Appearance" description="How Midad looks. Changes apply at once.">
@@ -62,8 +75,8 @@ const Appearance = () => {
       <Row title="Highlight style" hint="Under keeps the harakat clear; Behind fills the whole word">
         <Segmented<HighlightStyle> label="Highlight style" value={highlightStyle} onChange={setHighlightStyle} options={HIGHLIGHT_STYLES} />
       </Row>
-      <Row title="Focus mode" hint="The bars step aside while you read and return when you move">
-        <Switch label="Focus mode" checked={focusMode} onChange={setFocusMode} />
+      <Row title="Focus mode" hint={FOCUS_HINTS[focusMode.choice]}>
+        <Segmented<FocusChoice> label="Focus mode" value={focusMode.choice} onChange={focusMode.setChoice} options={FOCUS_CHOICES} />
       </Row>
     </Section>
   );

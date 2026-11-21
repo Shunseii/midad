@@ -23,6 +23,7 @@ import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookMark
 import { usePref } from "../lib/prefs";
 import { useFocusMode, useHighlightStyle, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
+import { focusKeyAction } from "../lib/focus";
 import { neighbourPages } from "../lib/neighbours";
 import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop } from "../lib/zoom-anchor";
 
@@ -773,6 +774,31 @@ export const ReaderRoute = () => {
     return () => window.removeEventListener("wheel", onWheel);
   }, []);
 
+  // Focus mode: the top bar, rail and scrubber step aside while reading, unless something needs them.
+  const focusMode = useFocusMode();
+  const [selecting, setSelecting] = useState(false);
+  useEffect(() => {
+    const onChange = () => setSelecting(!(window.getSelection()?.isCollapsed ?? true));
+    document.addEventListener("selectionchange", onChange);
+    return () => document.removeEventListener("selectionchange", onChange);
+  }, []);
+  const [overChrome, setOverChrome] = useState(false);
+  const [keyboardInChrome, setKeyboardInChrome] = useState(false);
+  const chromeHover = {
+    onMouseEnter: () => setOverChrome(true),
+    onMouseLeave: () => setOverChrome(false),
+    onFocus: (e: React.FocusEvent) => setKeyboardInChrome(e.target.matches(":focus-visible")),
+    onBlur: () => setKeyboardInChrome(false),
+  };
+  const focusOn = focusMode.choice !== "off";
+  // In focus mode the rail keeps its space but steps out of sight, so the page shifts to the middle of the window.
+  const balanced = focusOn && wide && contentsOpen && !panelOpen && !(showScan && page.data);
+  const focused = useFocusChrome({
+    mode: focusMode.choice,
+    held: menuOpen || overChrome || keyboardInChrome || (!wide && (contentsOpen || panelOpen)),
+    textHeld: toolbar !== null || noteEditor !== null || selecting,
+  });
+
   const keyHandler = useRef<(e: KeyboardEvent) => void>(() => {});
   keyHandler.current = (e: KeyboardEvent) => {
     if (zoomKeys(e)) return;
@@ -781,6 +807,19 @@ export const ReaderRoute = () => {
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
       e.preventDefault();
       step(e.code === "KeyY" || e.shiftKey ? "redo" : "undo");
+      return;
+    }
+    const focusKey = focusKeyAction({
+      key: e.key,
+      code: e.code,
+      modified: e.metaKey || e.ctrlKey || e.altKey || e.shiftKey,
+      typing: target !== null || focusInNoteEditor() || (e.target instanceof HTMLElement && e.target.isContentEditable),
+      choice: focusMode.choice,
+      escapeTaken: menuOpen || toolbar !== null || noteEditor !== null,
+    });
+    if (focusKey) {
+      e.preventDefault();
+      focusMode.toggle();
       return;
     }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -836,22 +875,6 @@ export const ReaderRoute = () => {
     );
   }
 
-  // Focus mode: the top bar and contents step aside while reading, unless something needs them.
-  const [focusMode] = useFocusMode();
-  const [selecting, setSelecting] = useState(false);
-  useEffect(() => {
-    const onChange = () => setSelecting(!(window.getSelection()?.isCollapsed ?? true));
-    document.addEventListener("selectionchange", onChange);
-    return () => document.removeEventListener("selectionchange", onChange);
-  }, []);
-  const [overChrome, setOverChrome] = useState(false);
-  const chromeHover = { onMouseEnter: () => setOverChrome(true), onMouseLeave: () => setOverChrome(false) };
-  // In focus mode the rail keeps its space but steps out of sight, so the page shifts to the middle of the window.
-  const balanced = focusMode && wide && contentsOpen && !panelOpen && !(showScan && page.data);
-  const focused = useFocusChrome({
-    enabled: focusMode,
-    held: menuOpen || toolbar !== null || noteEditor !== null || selecting || overChrome || (!wide && (contentsOpen || panelOpen)),
-  });
 
   const sidePanel = (
     <AnnotationsPanel
@@ -896,7 +919,7 @@ export const ReaderRoute = () => {
   return (
     <div className="relative flex h-full flex-col">
       <ZoomLevel scale={textScale} shown={zoomShown} />
-      {focusMode && (
+      {focusOn && (
         <FocusTrace
           shown={focused}
           progress={total ? position / total : 0}
