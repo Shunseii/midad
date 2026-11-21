@@ -1,7 +1,8 @@
 import { Check, Minus, Plug, Plus } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import type { Theme } from "../../../shared/ipc";
-import { HIGHLIGHT_STYLES, LARGEST, SMALLEST, stepScale } from "../components/display-menu";
+import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
 import { type HighlightStyle, type PageWidth, useFocusMode, useHighlightStyle, usePageWidth, useTheme } from "../lib/appearance";
 import type { FocusChoice } from "../lib/focus";
@@ -10,10 +11,17 @@ import { usePref } from "../lib/prefs";
 
 type TestState = { kind: "idle" } | { kind: "testing" } | { kind: "ok" } | { kind: "error"; message: string };
 
+/** What a link into Settings can ask for: the section to land on. */
+export interface SettingsState {
+  section: "appearance";
+}
+
 const Section = ({ title, description, children }: { title: string; description: string; children: ReactNode }) => (
-  <section className="flex flex-col gap-3">
+  <section id={title.toLowerCase()} aria-labelledby={`${title.toLowerCase()}-title`} className="flex scroll-mt-10 flex-col gap-3">
     <div className="flex flex-col gap-0.5 px-1">
-      <h2 className="text-heading font-semibold">{title}</h2>
+      <h2 id={`${title.toLowerCase()}-title`} tabIndex={-1} className="text-heading font-semibold outline-none">
+        {title}
+      </h2>
       <p className="text-small text-ink-3">{description}</p>
     </div>
     <div className="flex flex-col divide-y divide-line rounded-2xl border border-line bg-surface">{children}</div>
@@ -29,6 +37,11 @@ const Row = ({ title, hint, children }: { title: string; hint: string; children:
     {children}
   </div>
 );
+
+const HIGHLIGHT_STYLES: { value: HighlightStyle; label: string }[] = [
+  { value: "under", label: "Under text" },
+  { value: "behind", label: "Behind text" },
+];
 
 const FOCUS_CHOICES: { value: FocusChoice; label: string }[] = [
   { value: "off", label: "Off" },
@@ -88,7 +101,7 @@ const Reading = () => {
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
   const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
   return (
-    <Section title="Reading" description="The page's text. The same settings are in the reader's Aa menu.">
+    <Section title="Reading" description="The page's text. Text size is also in the reader's Display menu.">
       <Row title="Text size" hint="The page's Arabic text">
         <div className="flex items-center gap-1">
           <IconButton icon={Minus} label="Smaller text" disabled={textScale <= SMALLEST} onClick={() => setTextScale(stepScale({ scale: textScale, by: -1 }))} />
@@ -195,14 +208,29 @@ const Corpus = () => {
   );
 };
 
-export const SettingsRoute = () => (
-  <div className="mx-auto flex max-w-3xl flex-col gap-10 px-12 py-10">
-    <header className="flex flex-col gap-1">
-      <h1 className="font-display text-display font-semibold">Settings</h1>
-      <p className="text-sm text-ink-2">Appearance, reading and where Midad gets its books.</p>
-    </header>
-    <Appearance />
-    <Reading />
-    <Corpus />
-  </div>
-);
+/** Lands on the section a link asked for, with keyboard focus on its heading. */
+const useLandOnSection = () => {
+  const { state } = useLocation();
+  const section = (state as SettingsState | null)?.section;
+  useEffect(() => {
+    if (!section) return;
+    const heading = document.getElementById(`${section}-title`);
+    heading?.scrollIntoView({ block: "start" });
+    heading?.focus({ preventScroll: true });
+  }, [section]);
+};
+
+export const SettingsRoute = () => {
+  useLandOnSection();
+  return (
+    <div className="mx-auto flex max-w-3xl flex-col gap-10 px-12 py-10">
+      <header className="flex flex-col gap-1">
+        <h1 className="font-display text-display font-semibold">Settings</h1>
+        <p className="text-sm text-ink-2">Appearance, reading and where Midad gets its books.</p>
+      </header>
+      <Appearance />
+      <Reading />
+      <Corpus />
+    </div>
+  );
+};

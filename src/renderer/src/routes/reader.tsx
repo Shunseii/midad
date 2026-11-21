@@ -301,8 +301,8 @@ export const ReaderRoute = () => {
   const contentsOpen = wide ? contentsPref : contentsSheet;
   const setContentsOpen = wide ? setContentsPref : setContentsSheet;
   const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
-  const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
-  const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
+  const [showMine] = usePref({ key: "reader.showMine", fallback: true });
+  const [lineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
   const [textScale, setTextScale] = usePref({ key: "reader.textScale", fallback: 1 });
   const [showScan, setShowScan] = usePref({ key: "reader.showScan", fallback: false });
   const [target, setTarget] = useState<LetterRef | null>(null);
@@ -815,7 +815,8 @@ export const ReaderRoute = () => {
       modified: e.metaKey || e.ctrlKey || e.altKey || e.shiftKey,
       typing: target !== null || focusInNoteEditor() || (e.target instanceof HTMLElement && e.target.isContentEditable),
       choice: focusMode.choice,
-      escapeTaken: menuOpen || toolbar !== null || noteEditor !== null,
+      // A menu or popover may already have closed itself on this Esc, before this handler runs.
+      escapeTaken: menuOpen || toolbar !== null || noteEditor !== null || (e.target instanceof Element && e.target.closest("[data-slot=popover-content], [role=dialog], [role=toolbar]") !== null),
     });
     if (focusKey) {
       e.preventDefault();
@@ -969,7 +970,7 @@ export const ReaderRoute = () => {
           <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
         </div>
         <div className="flex-1" />
-        <DisplayMenu open={menuOpen} onOpenChange={setMenuOpen} textScale={textScale} onTextScale={(scale) => resize({ scale, pointer: null })} lineNumbers={lineNumbers} onLineNumbers={setLineNumbers} showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
+        <DisplayMenu open={menuOpen} onOpenChange={setMenuOpen} textScale={textScale} onTextScale={(scale) => resize({ scale, pointer: null })} />
         <IconButton icon={FileImage} label={showScan ? "Hide scan (S)" : "Show scan (S)"} selected={showScan} onClick={() => setShowScan(!showScan)} />
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton
