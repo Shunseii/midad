@@ -93,19 +93,8 @@ interface ZoomAnchor {
   at: number;
 }
 
-/** How far the page's column, with its line numbers and margin marks, sits in from each side of the page area. */
-const columnInsets = (area: HTMLElement) => {
-  const box = area.getBoundingClientRect();
-  let left = Infinity;
-  let right = -Infinity;
-  for (const el of [area.querySelector(".reader-text"), ...area.querySelectorAll(".reader-text *")]) {
-    const r = el?.getBoundingClientRect();
-    if (!r || r.width === 0) continue;
-    left = Math.min(left, r.left);
-    right = Math.max(right, r.right);
-  }
-  return left > right ? { left: 0, right: 0 } : { left: Math.max(left - box.left, 0), right: Math.max(box.right - right, 0) };
-};
+/** Longer than the column's width transition, in case its transitionend never comes. */
+const WIDTH_FOLLOW_MAX_MS = 600;
 
 const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
 
@@ -457,7 +446,7 @@ export const ReaderRoute = () => {
   };
   const chapterTitle = toc[entryIndexFor(toc, position)]?.text ?? null;
   const [chosenWidth] = usePageWidth();
-  // Lags the choice by one view transition, so the reflow can play from the old column to the new one.
+  // Lags the choice by a render, so the reading place is picked in the old column before it changes.
   const [pageWidth, setPageWidth] = useState(chosenWidth);
   const [highlightStyle] = useHighlightStyle();
   const [onScreen, setOnScreen] = useState<{ position: number; lines: number[] }>({ position, lines: [] });
@@ -906,37 +895,39 @@ export const ReaderRoute = () => {
   }, [textScale]);
 
   /**
-   * Narrow and Wide reflow the text, so the change plays as a view transition:
-   * the column's edges ease from the old width to the new one while the old
-   * lines fade into the new. The first whole word at the top stays put.
+   * Narrow and Wide: the column eases to its new width (a max-width
+   * transition in styles.css), reflowing as it goes, while the first whole word
+   * at the top is held in place every frame until it settles.
    */
+  const stopWidthFollow = useRef<(hold: boolean) => void>(() => {});
   useEffect(() => {
     if (chosenWidth === pageWidth) return;
-    const area = pageRoot.current?.querySelector<HTMLElement>("[data-page-area]");
+    stopWidthFollow.current(false);
     const anchor = pickAnchor(null);
-    const apply = () => {
-      flushSync(() => setPageWidth(chosenWidth));
+    flushSync(() => setPageWidth(chosenWidth));
+    holdAnchor(anchor);
+    const article = pageRoot.current?.querySelector<HTMLElement>(".reader-text");
+    if (!article) return;
+    let frame = requestAnimationFrame(function follow() {
       holdAnchor(anchor);
+      frame = requestAnimationFrame(follow);
+    });
+    const settled = (e: TransitionEvent) => {
+      if (e.target === article && e.propertyName === "max-width") stop(true);
     };
-    if (!area || !document.startViewTransition) {
-      apply();
-      return;
-    }
-    const root = document.documentElement;
-    const from = columnInsets(area);
-    const fromTop = area.getBoundingClientRect().top;
-    root.dataset.reflow = "";
-    const transition = document.startViewTransition(() => {
-      apply();
-      const to = columnInsets(area);
-      const vars = { "--reflow-from-left": from.left, "--reflow-from-right": from.right, "--reflow-to-left": to.left, "--reflow-to-right": to.right, "--reflow-shift": fromTop - area.getBoundingClientRect().top };
-      for (const [name, px] of Object.entries(vars)) root.style.setProperty(name, `${px}px`);
-    });
-    void transition.finished.finally(() => {
-      delete root.dataset.reflow;
-      for (const name of ["--reflow-from-left", "--reflow-from-right", "--reflow-to-left", "--reflow-to-right", "--reflow-shift"]) root.style.removeProperty(name);
-    });
+    const timer = setTimeout(() => stop(true), WIDTH_FOLLOW_MAX_MS);
+    const stop = (hold: boolean) => {
+      cancelAnimationFrame(frame);
+      clearTimeout(timer);
+      article.removeEventListener("transitionend", settled);
+      if (hold) holdAnchor(anchor);
+      stopWidthFollow.current = () => {};
+    };
+    article.addEventListener("transitionend", settled);
+    stopWidthFollow.current = stop;
   }, [chosenWidth, pageWidth]);
+  // A page turn or leaving the reader ends the hold; the new page keeps its own scroll.
+  useEffect(() => () => stopWidthFollow.current(false), [position]);
 
   /** Changes the text size, keeping the reader's place on the page. */
   const resize = ({ scale, pointer }: { scale: number; pointer: Point | null }) => {

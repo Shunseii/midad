@@ -1,6 +1,6 @@
 {
   "$schema": "https://lamsa.dev/schema/v1.json",
-  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%, 60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n@keyframes marker-sweep {\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes marker-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes page-out {\n  to {\n    opacity: 0;\n  }\n}\n\n@keyframes page-in-forward {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes page-in-back {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes cover-content-in {\n  0%, 40% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-old(reader-page) {\n  animation-name: page-out;\n  animation-duration: 90ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-forward;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-back;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n::view-transition-group(page-counter) {\n  animation-duration: 0s;\n}\n\n::view-transition-old(page-counter) {\n  display: none;\n}\n\n::view-transition-new(page-counter) {\n  animation: none;\n}\n\n::view-transition-group(book-cover) {\n  animation-duration: 420ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n}\n\n::view-transition-new(book-cover) {\n  animation-name: cover-content-in;\n  animation-duration: 420ms;\n}\n\n@keyframes reflow-fade-in {\n  0%, 15% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(page-column) {\n  animation-duration: 240ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n  overflow: clip;\n  overflow-clip-margin: 3rem;\n}\n\n::view-transition-old(page-column) {\n  animation-name: page-out;\n  animation-duration: 120ms;\n  animation-fill-mode: both;\n  inline-size: auto;\n  left: 50%;\n  translate: -50% 0;\n}\n\n::view-transition-new(page-column) {\n  animation-name: reflow-fade-in;\n  animation-fill-mode: both;\n  inline-size: auto;\n  left: 50%;\n  translate: -50% 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  :active-view-transition-type(forward)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  :active-view-transition-type(back)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  ::view-transition-group(book-cover) {\n    animation-duration: 0s;\n  }\n\n  ::view-transition-group(page-column) {\n    overflow: visible;\n  }\n}\n\n@property --fade-top {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@property --fade-bottom {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@keyframes gloss-fade {\n  from {\n    --fade-top: 0px;\n    --fade-bottom: 1.5rem;\n  }\n\n  to {\n    --fade-top: 1.5rem;\n    --fade-bottom: 0px;\n  }\n}\n\n@keyframes footnote-reveal {\n  0%, 60% {\n    background-color: var(--color-accent-soft);\n  }\n\n  100% {\n    background-color: transparent;\n  }\n}\n\n@keyframes screen-in-forward {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes screen-in-back {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes screen-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes bookmark-pop {\n  0% {\n    scale: 1;\n  }\n\n  40% {\n    scale: 1.2;\n  }\n\n  100% {\n    scale: 1;\n  }\n}\n\n@keyframes fade-in {\n  from {\n    opacity: 0;\n  }\n\n  to {\n    opacity: 1;\n  }\n}",
+  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%, 60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n@keyframes marker-sweep {\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes marker-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes page-out {\n  to {\n    opacity: 0;\n  }\n}\n\n@keyframes page-in-forward {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes page-in-back {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes cover-content-in {\n  0%, 40% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-old(reader-page) {\n  animation-name: page-out;\n  animation-duration: 90ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-forward;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-back;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n::view-transition-group(page-counter) {\n  animation-duration: 0s;\n}\n\n::view-transition-old(page-counter) {\n  display: none;\n}\n\n::view-transition-new(page-counter) {\n  animation: none;\n}\n\n::view-transition-group(book-cover) {\n  animation-duration: 420ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n}\n\n::view-transition-new(book-cover) {\n  animation-name: cover-content-in;\n  animation-duration: 420ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  :active-view-transition-type(forward)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  :active-view-transition-type(back)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  ::view-transition-group(book-cover) {\n    animation-duration: 0s;\n  }\n}\n\n@property --fade-top {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@property --fade-bottom {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@keyframes gloss-fade {\n  from {\n    --fade-top: 0px;\n    --fade-bottom: 1.5rem;\n  }\n\n  to {\n    --fade-top: 1.5rem;\n    --fade-bottom: 0px;\n  }\n}\n\n@keyframes footnote-reveal {\n  0%, 60% {\n    background-color: var(--color-accent-soft);\n  }\n\n  100% {\n    background-color: transparent;\n  }\n}\n\n@keyframes screen-in-forward {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes screen-in-back {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes screen-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes bookmark-pop {\n  0% {\n    scale: 1;\n  }\n\n  40% {\n    scale: 1.2;\n  }\n\n  100% {\n    scale: 1;\n  }\n}\n\n@keyframes fade-in {\n  from {\n    opacity: 0;\n  }\n\n  to {\n    opacity: 1;\n  }\n}",
   "nodes": {
     "01SU8sPl": {
       "index": "a3",
@@ -42522,6 +42522,7 @@
       "type": "frame"
     },
     "OwzNTdOd": {
+      "css": "/* Narrow ⇄ Wide: the column eases to its new max-width and the text reflows as it goes (no crossfade); the top word stays in place. Reduced motion: instant. */\ntransition: max-width 280ms var(--ease-move);\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
       "name": "Page",
       "parentId": "8IyjYFX5",
@@ -45543,7 +45544,7 @@
       "type": "icon"
     },
     "QedUStPK": {
-      "css": "view-transition-name: page-column;",
+      "css": "/* Narrow ⇄ Wide: the column eases to its new max-width and the text reflows as it goes (no crossfade); the top word stays in place. Reduced motion: instant. */\ntransition: max-width 280ms var(--ease-move);\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
       "name": "Page",
       "parentId": "De1f8rES",
@@ -46400,6 +46401,7 @@
       "type": "frame"
     },
     "RIP6dY31": {
+      "css": "/* Narrow ⇄ Wide: the column eases to its new max-width and the text reflows as it goes (no crossfade); the top word stays in place. Reduced motion: instant. */\ntransition: max-width 280ms var(--ease-move);\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
       "name": "Page",
       "parentId": "4Xi289V3",
@@ -60052,7 +60054,7 @@
       "type": "frame"
     },
     "ZQ3zgT5N": {
-      "css": "view-transition-name: page-column;",
+      "css": "/* Narrow ⇄ Wide: the column eases to its new max-width and the text reflows as it goes (no crossfade); the top word stays in place. Reduced motion: instant. */\ntransition: max-width 280ms var(--ease-move);\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
       "name": "Page",
       "parentId": "YRgLX3Ye",
@@ -61164,7 +61166,7 @@
       "type": "icon"
     },
     "ZytnmesR": {
-      "css": "view-transition-name: page-column;",
+      "css": "/* Narrow ⇄ Wide: the column eases to its new max-width and the text reflows as it goes (no crossfade); the top word stays in place. Reduced motion: instant. */\ntransition: max-width 280ms var(--ease-move);\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
       "name": "Page",
       "parentId": "Vks61r6T",
@@ -79204,7 +79206,7 @@
       "type": "frame"
     },
     "kQ1okTBG": {
-      "css": "view-transition-name: page-column;",
+      "css": "/* Narrow ⇄ Wide: the column eases to its new max-width and the text reflows as it goes (no crossfade); the top word stays in place. Reduced motion: instant. */\ntransition: max-width 280ms var(--ease-move);\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
       "name": "Page",
       "parentId": "DoV8gz4F",
@@ -100256,7 +100258,7 @@
       "type": "frame"
     },
     "wrLeImNh": {
-      "css": "view-transition-name: page-column;",
+      "css": "/* Narrow ⇄ Wide: the column eases to its new max-width and the text reflows as it goes (no crossfade); the top word stays in place. Reduced motion: instant. */\ntransition: max-width 280ms var(--ease-move);\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
       "name": "Page",
       "parentId": "5hcaj3aK",
