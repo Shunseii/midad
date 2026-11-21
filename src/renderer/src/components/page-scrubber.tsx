@@ -21,9 +21,15 @@ interface Entry {
 }
 
 interface Drag {
+  /** Where the pointer is along the line, from the right end; the thumb follows it exactly. */
+  fraction: number;
+  /** The page under the pointer, which the preview names and a release turns to. */
   page: number;
   pointerId: number;
 }
+
+/** How long the thumb takes to settle on the page after a drag; it shows as data-settling. */
+const SETTLE_MS = 120;
 
 const inPercent = (fraction: number) => `${fraction * 100}%`;
 
@@ -33,8 +39,8 @@ const pageCount = (n: number) => n.toLocaleString("en");
  * The whole book as a line under the page, page 1 at the right like the book
  * itself. Ticks mark the top-level chapters, dots the pages with highlights
  * (above) and notes (below), the bookmark the last-read page, and the thumb
- * this page. Hovering previews a page; clicking jumps to it; dragging turns
- * the page on release (Esc cancels). As a slider it takes the arrow keys.
+ * this page. Hovering previews a page; clicking jumps to it. Dragging moves
+ * the thumb with the pointer and turns the page on release (Esc cancels). As a slider it takes the arrow keys.
  */
 export const PageScrubber = ({
   bookId,
@@ -58,6 +64,13 @@ export const PageScrubber = ({
   const [width, setWidth] = useState(0);
   const [hover, setHover] = useState<{ page: number; x: number } | null>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
+  // After a drag the thumb glides from the pointer to its page's own spot, which may not be the current page yet.
+  const [settle, setSettle] = useState<{ page: number } | null>(null);
+  useEffect(() => {
+    if (!settle || settle.page !== position) return;
+    const timer = setTimeout(() => setSettle(null), SETTLE_MS + 30);
+    return () => clearTimeout(timer);
+  }, [settle, position]);
 
   useLayoutEffect(() => {
     const el = bar.current;
@@ -84,12 +97,18 @@ export const PageScrubber = ({
   const pointerAt = (clientX: number) => {
     const r = bar.current?.getBoundingClientRect();
     if (!r) return null;
-    return { page: pageAtFraction({ fraction: (r.right - clientX) / r.width, total }), x: clientX - r.left };
+    const fraction = Math.min(Math.max((r.right - clientX) / r.width, 0), 1);
+    return { fraction, page: pageAtFraction({ fraction, total }), x: clientX - r.left };
   };
 
+  // Set while a drag is under way; events after its release (lost capture, blur) must not treat it as cancelled.
+  const dragging = useRef(false);
   const cancelDrag = () => {
-    if (drag) bar.current?.releasePointerCapture(drag.pointerId);
+    if (!drag || !dragging.current) return;
+    dragging.current = false;
+    bar.current?.releasePointerCapture(drag.pointerId);
     setDrag(null);
+    setSettle({ page: position });
   };
 
   // Esc during a drag puts the thumb back; nothing else should see that key.
@@ -99,11 +118,13 @@ export const PageScrubber = ({
       if (e.key !== "Escape") return;
       e.preventDefault();
       e.stopPropagation();
+      dragging.current = false;
       setDrag(null);
+      setSettle({ page: position });
     };
     window.addEventListener("keydown", onKey, { capture: true });
     return () => window.removeEventListener("keydown", onKey, { capture: true });
-  }, [drag]);
+  }, [drag, position]);
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     const at = pointerAt(e.clientX);
@@ -111,20 +132,24 @@ export const PageScrubber = ({
     e.currentTarget.setPointerCapture(e.pointerId);
     e.currentTarget.focus({ preventScroll: true });
     setHover(at);
-    setDrag({ page: at.page, pointerId: e.pointerId });
+    setSettle(null);
+    dragging.current = true;
+    setDrag({ fraction: at.fraction, page: at.page, pointerId: e.pointerId });
   };
 
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
     const at = pointerAt(e.clientX);
     if (!at) return;
     setHover(at);
-    if (drag) setDrag({ ...drag, page: at.page });
+    if (drag) setDrag({ ...drag, fraction: at.fraction, page: at.page });
   };
 
   const onPointerUp = (e: PointerEvent<HTMLDivElement>) => {
-    if (!drag) return;
+    if (!drag || !dragging.current) return;
+    dragging.current = false;
     e.currentTarget.releasePointerCapture(e.pointerId);
     setDrag(null);
+    setSettle({ page: drag.page });
     onGo(drag.page);
   };
 
@@ -138,7 +163,7 @@ export const PageScrubber = ({
     onGo(Math.min(Math.max(to, 1), total));
   };
 
-  const shownPage = drag?.page ?? position;
+  const thumbFraction = drag ? drag.fraction : pageFraction({ position: settle?.page ?? position, total });
   const previewPage = drag?.page ?? hover?.page ?? null;
   const chapterOf = (page: number) => entries[entryIndexFor(entries, page)]?.text ?? null;
   const at = (page: number) => inPercent(pageFraction({ position: page, total }));
@@ -165,10 +190,11 @@ export const PageScrubber = ({
         aria-valuenow={position}
         aria-valuetext={[`Page ${position} of ${pageCount(total)}`, chapterOf(position)].filter(Boolean).join(", ")}
         data-dragging={drag ? "" : undefined}
+        data-settling={settle ? "" : undefined}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        onLostPointerCapture={() => drag && setDrag(null)}
+        onLostPointerCapture={cancelDrag}
         onPointerLeave={() => !drag && setHover(null)}
         onKeyDown={onKeyDown}
         onBlur={cancelDrag}
@@ -199,8 +225,8 @@ export const PageScrubber = ({
         )}
         {drag && <span style={{ right: at(position) }} className="absolute top-2.5 size-3 translate-x-1/2 rounded-full border-2 border-accent opacity-40" />}
         <div
-          style={{ translate: `${-pageFraction({ position: shownPage, total }) * 100}% 0` }}
-          className="pointer-events-none absolute inset-0 transition-[translate] duration-slide ease-move group-data-dragging/scrub:transition-none motion-reduce:transition-none"
+          style={{ translate: `${-thumbFraction * 100}% 0` }}
+          className="pointer-events-none absolute inset-0 transition-[translate] duration-slide ease-move group-data-settling/scrub:duration-120 group-data-settling/scrub:ease-out group-data-dragging/scrub:transition-none motion-reduce:transition-none"
         >
           <span
             data-thumb
