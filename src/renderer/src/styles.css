@@ -283,6 +283,17 @@ body {
   }
 }
 
+/* The scrubber row stays put and covers the sliding page, whose snapshot isn't clipped by the scroller. */
+::view-transition-group(page-scrubber) {
+  animation: none;
+}
+::view-transition-old(page-scrubber) {
+  display: none;
+}
+::view-transition-new(page-scrubber) {
+  animation: none;
+}
+
 /* The page counter changes in place rather than crossfading two numbers. */
 ::view-transition-group(page-counter) {
   animation: none;

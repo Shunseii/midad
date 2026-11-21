@@ -1088,7 +1088,7 @@ export const ReaderRoute = () => {
           <div
             {...chromeHover}
             data-focus={focused ? "hidden" : undefined}
-            className="relative z-10 h-18 shrink-0 px-6 transition-[translate,opacity] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
+            className="relative z-10 h-18 shrink-0 bg-bg px-6 transition-[translate,opacity] [view-transition-name:page-scrubber] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
           >
             <div className="mx-auto h-full max-w-190">
               <PageScrubber
