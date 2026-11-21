@@ -80,3 +80,114 @@ const headingKey = (text: string) => stripHarakat(text).replace(/[\p{P}\sـ]+/gu
  */
 export const previewFirstLine = ({ chapter, firstLine }: { chapter: string | null; firstLine: string | null }) =>
   firstLine !== null && chapter !== null && headingKey(firstLine) === headingKey(chapter) ? null : firstLine;
+
+/** How far (in px) from a mark the pointer can be and still pick it: a bigger target than the mark itself. */
+export const MARK_HIT_PX = 7;
+
+/**
+ * The page of the mark nearest the pointer, or null when none is within
+ * `radius` px. `offset` is the pointer's distance from the line's right end.
+ */
+export const nearestMarkPage = ({
+  pages,
+  offset,
+  total,
+  width,
+  radius = MARK_HIT_PX,
+}: {
+  /** The pages that carry a mark on the line. */
+  pages: number[];
+  offset: number;
+  total: number;
+  width: number;
+  radius?: number;
+}): number | null => {
+  let best: number | null = null;
+  let bestDistance = radius;
+  for (const page of pages) {
+    const distance = Math.abs(pageFraction({ position: page, total }) * width - offset);
+    if (distance <= bestDistance && (best === null || distance < bestDistance || page < best)) {
+      best = page;
+      bestDistance = distance;
+    }
+  }
+  return best;
+};
+
+/** A picked mark stays picked while the pointer is this close (in px), so it doesn't flicker between neighbours. */
+export const MARK_KEEP_PX = 11;
+/** Another mark takes over from the picked one only when it is this much (in px) closer. */
+export const MARK_SWITCH_PX = 2;
+
+/**
+ * Like nearestMarkPage, but sticky: the mark already picked (`current`) holds
+ * while the pointer stays within `keep` px of it, unless another mark is
+ * clearly closer. Without a current mark it is plain nearestMarkPage.
+ */
+export const stickyMarkPage = ({
+  pages,
+  offset,
+  total,
+  width,
+  current,
+  radius = MARK_HIT_PX,
+  keep = MARK_KEEP_PX,
+  margin = MARK_SWITCH_PX,
+}: {
+  pages: number[];
+  offset: number;
+  total: number;
+  width: number;
+  current: number | null;
+  radius?: number;
+  keep?: number;
+  margin?: number;
+}): number | null => {
+  const nearest = nearestMarkPage({ pages, offset, total, width, radius });
+  if (current === null || !pages.includes(current)) return nearest;
+  const distance = (page: number) => Math.abs(pageFraction({ position: page, total }) * width - offset);
+  const held = distance(current);
+  if (held > keep) return nearest;
+  return nearest !== null && nearest !== current && distance(nearest) + margin < held ? nearest : current;
+};
+
+/** The next marked page after `from` (direction 1) or before it (-1), or null when there is none that way. */
+export const nextMarkPage = ({ pages, from, direction }: { pages: number[]; from: number; direction: 1 | -1 }): number | null => {
+  let found: number | null = null;
+  for (const page of pages) {
+    if (direction === 1 ? page > from && (found === null || page < found) : page < from && (found === null || page > found)) found = page;
+  }
+  return found;
+};
+
+/** At most this many pages share one mark preview. */
+export const CLUSTER_MAX = 3;
+
+/**
+ * The marked pages a preview around `around` covers: that page first, then
+ * the other marked pages drawn within `radius` px of it, nearest first. Where
+ * marks crowd together they can't be told apart by pointing, so the card
+ * shows them side by side.
+ */
+export const markCluster = ({
+  pages,
+  around,
+  total,
+  width,
+  radius = MARK_HIT_PX,
+  max = CLUSTER_MAX,
+}: {
+  pages: number[];
+  around: number;
+  total: number;
+  width: number;
+  radius?: number;
+  max?: number;
+}): number[] => {
+  const x = (page: number) => pageFraction({ position: page, total }) * width;
+  const others = [...new Set(pages)]
+    .filter((p) => p !== around && Math.abs(x(p) - x(around)) <= radius)
+    // Pages are evenly spaced, so the page gap orders them by distance without rounding noise.
+    .sort((a, b) => Math.abs(a - around) - Math.abs(b - around) || a - b);
+  return [around, ...others].slice(0, max);
+};

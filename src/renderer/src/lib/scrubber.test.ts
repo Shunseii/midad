@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type Chapter, pageAtFraction, pageFraction, previewFirstLine, TICK_GAP, thinMarks, topLevelChapters } from "./scrubber";
+import { type Chapter, markCluster, nearestMarkPage, nextMarkPage, pageAtFraction, pageFraction, previewFirstLine, TICK_GAP, stickyMarkPage, thinMarks, topLevelChapters } from "./scrubber";
 
 const thinChapters = ({ chapters, total, width }: { chapters: Chapter[]; total: number; width: number }) =>
   thinMarks({ marks: chapters, weight: (c) => c.pages, total, width, gap: TICK_GAP });
@@ -115,5 +115,112 @@ describe("previewFirstLine", () => {
   it("keeps the first line when there is no heading, and passes a missing line through", () => {
     expect(previewFirstLine({ chapter: null, firstLine: "سطر" })).toBe("سطر");
     expect(previewFirstLine({ chapter: "باب", firstLine: null })).toBeNull();
+  });
+});
+
+describe("nearestMarkPage", () => {
+  // 100 pages on a 1000px line: page n's mark sits (n - 0.5) * 10 px from the right end.
+  const line = { total: 100, width: 1000 };
+
+  it("picks the mark under the pointer, or a few px off it", () => {
+    expect(nearestMarkPage({ pages: [10, 40], offset: 95, ...line })).toBe(10);
+    expect(nearestMarkPage({ pages: [10, 40], offset: 101, ...line })).toBe(10);
+  });
+
+  it("picks nothing over empty track", () => {
+    expect(nearestMarkPage({ pages: [10, 40], offset: 250, ...line })).toBeNull();
+    expect(nearestMarkPage({ pages: [], offset: 95, ...line })).toBeNull();
+  });
+
+  it("picks the closer of two nearby marks, and the earlier page on a tie", () => {
+    expect(nearestMarkPage({ pages: [10, 11], offset: 103, ...line })).toBe(11);
+    expect(nearestMarkPage({ pages: [11, 10], offset: 100, ...line })).toBe(10);
+  });
+
+  it("takes a custom radius", () => {
+    expect(nearestMarkPage({ pages: [10], offset: 110, ...line })).toBeNull();
+    expect(nearestMarkPage({ pages: [10], offset: 110, radius: 20, ...line })).toBe(10);
+  });
+});
+
+describe("nearestMarkPage at the ends and in crowds", () => {
+  it("reaches marks on the first and last page", () => {
+    // 10 pages on 100px: page 1 at 5px from the right end, page 10 at 95px.
+    expect(nearestMarkPage({ pages: [1, 10], offset: 0, total: 10, width: 100 })).toBe(1);
+    expect(nearestMarkPage({ pages: [1, 10], offset: 100, total: 10, width: 100 })).toBe(10);
+  });
+
+  it("in a crowd of marks 2px apart, picks the one under the pointer", () => {
+    // 500 pages on 1000px: pages 2px apart.
+    const crowd = Array.from({ length: 50 }, (_, i) => 100 + i);
+    expect(nearestMarkPage({ pages: crowd, offset: (120 - 0.5) * 2, total: 500, width: 1000 })).toBe(120);
+    expect(nearestMarkPage({ pages: crowd, offset: (120 - 0.5) * 2 + 0.9, total: 500, width: 1000 })).toBe(120);
+  });
+
+  it("ignores repeated pages", () => {
+    expect(nearestMarkPage({ pages: [10, 10, 10], offset: 95, total: 100, width: 1000 })).toBe(10);
+  });
+});
+
+describe("stickyMarkPage", () => {
+  const line = { total: 100, width: 1000 };
+
+  it("behaves like nearestMarkPage with nothing picked yet", () => {
+    expect(stickyMarkPage({ pages: [10, 11], offset: 103, current: null, ...line })).toBe(11);
+  });
+
+  it("keeps the picked mark while the pointer drifts toward a neighbour", () => {
+    // Marks at 95 and 105; at 101 the pointer is 6px from page 10 and 4px from page 11.
+    expect(stickyMarkPage({ pages: [10, 11], offset: 101, current: 10, ...line })).toBe(10);
+  });
+
+  it("hands over once the neighbour is clearly closer", () => {
+    expect(stickyMarkPage({ pages: [10, 11], offset: 104, current: 10, ...line })).toBe(11);
+  });
+
+  it("keeps the picked mark a little past the pick radius, then lets go", () => {
+    expect(stickyMarkPage({ pages: [10], offset: 105, current: 10, ...line })).toBe(10);
+    expect(stickyMarkPage({ pages: [10], offset: 110, current: 10, ...line })).toBeNull();
+  });
+
+  it("drops a picked mark that is no longer on the line", () => {
+    expect(stickyMarkPage({ pages: [40], offset: 95, current: 10, ...line })).toBeNull();
+  });
+});
+
+describe("nextMarkPage", () => {
+  const pages = [30, 4, 12, 12, 50];
+
+  it("finds the next marked page either way, in page order whatever the input order", () => {
+    expect(nextMarkPage({ pages, from: 12, direction: 1 })).toBe(30);
+    expect(nextMarkPage({ pages, from: 12, direction: -1 })).toBe(4);
+    expect(nextMarkPage({ pages, from: 13, direction: -1 })).toBe(12);
+  });
+
+  it("is null past the last or before the first mark", () => {
+    expect(nextMarkPage({ pages, from: 50, direction: 1 })).toBeNull();
+    expect(nextMarkPage({ pages, from: 4, direction: -1 })).toBeNull();
+    expect(nextMarkPage({ pages: [], from: 1, direction: 1 })).toBeNull();
+  });
+});
+
+describe("markCluster", () => {
+  // 800 pages on 760px: neighbouring pages under 1px apart.
+  const dense = { total: 800, width: 760 };
+
+  it("puts the picked page first, then its crowded neighbours nearest first", () => {
+    expect(markCluster({ pages: [28, 25, 30, 60], around: 28, ...dense })).toEqual([28, 30, 25]);
+  });
+
+  it("caps how many pages share the card", () => {
+    expect(markCluster({ pages: [10, 11, 12, 13, 14], around: 12, ...dense })).toEqual([12, 11, 13]);
+  });
+
+  it("is just the page when nothing is close", () => {
+    expect(markCluster({ pages: [10, 40], around: 10, total: 100, width: 1000 })).toEqual([10]);
+  });
+
+  it("lists a page once however many marks it has", () => {
+    expect(markCluster({ pages: [10, 10, 11, 11], around: 10, ...dense })).toEqual([10, 11]);
   });
 });

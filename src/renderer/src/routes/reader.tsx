@@ -763,7 +763,6 @@ export const ReaderRoute = () => {
   const announceRemoval = (message: string) => setRemoval({ id: Date.now(), message });
 
   const pageBookmark = bookmarks.data?.find((b) => b.position === position) ?? null;
-  const bookmarkedPages = useMemo(() => bookmarks.data?.map((b) => b.position) ?? [], [bookmarks.data]);
   const savedState = (b: SavedBookmark): BookmarkState => ({ name: b.name, createdAt: b.createdAt });
   const removeBookmark = (b: SavedBookmark) => {
     void edits().setBookmark({ position: b.position, before: savedState(b), after: null });
@@ -1385,7 +1384,7 @@ export const ReaderRoute = () => {
                 marks={bookMarks.data}
                 position={position}
                 markerAt={marker.data?.position ?? null}
-                bookmarks={bookmarkedPages}
+                bookmarks={bookmarks.data}
                 onGo={go}
               />
             </div>
