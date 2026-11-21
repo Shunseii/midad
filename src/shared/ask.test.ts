@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { citeSpan, claudeArgs, parseCitations, readingContext, streamEvent } from "./ask";
+import { citeSpan, claudeArgs, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -160,6 +160,15 @@ describe("readingContext quotes", () => {
 describe("streamEvent", () => {
   const line = (o: unknown) => JSON.stringify(o);
 
+  it("reads the error Claude gives for a session it no longer has, which comes in errors, not result", () => {
+    // As printed by claude -p --resume <unknown id> --output-format stream-json (checked against Claude Code, Nov 2026).
+    const event = streamEvent(
+      line({ type: "result", subtype: "error_during_execution", is_error: true, num_turns: 0, session_id: "s1", errors: ["No conversation found with session ID: s1"] }),
+    );
+    expect(event).toEqual({ kind: "error", message: "No conversation found with session ID: s1" });
+    expect(event?.kind === "error" && isLostSession(event.message)).toBe(true);
+  });
+
   it("reads streamed text", () => {
     expect(streamEvent(line({ type: "stream_event", event: { type: "content_block_delta", delta: { type: "text_delta", text: "hi" } } }))).toEqual({
       kind: "delta",
@@ -203,5 +212,30 @@ describe("claudeArgs", () => {
   it("resumes the conversation's session", () => {
     const args = claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: "s1" });
     expect(args[args.indexOf("--resume") + 1]).toBe("s1");
+  });
+});
+
+describe("sessionRecap", () => {
+  it("is empty when nothing was answered", () => {
+    expect(sessionRecap([])).toBe("");
+    expect(sessionRecap([{ question: "q", answer: "", quotes: [] }])).toBe("");
+  });
+
+  it("carries the questions, quotes and answers over in order", () => {
+    const recap = sessionRecap([
+      { question: "What is الكلام?", answer: "It is [[line 1]].", quotes: [] },
+      { question: "And this?", answer: "A ḥarf.", quotes: [{ text: "في" }] },
+    ]);
+    expect(recap).toContain("Reader: What is الكلام?\nYou: It is [[line 1]].");
+    expect(recap).toContain("Reader: And this? (quoting: في)\nYou: A ḥarf.");
+    expect(recap.startsWith("<earlier-conversation>")).toBe(true);
+  });
+
+  it("keeps the latest turns and cuts long answers short", () => {
+    const turns = Array.from({ length: 20 }, (_, i) => ({ question: `q${i}`, answer: "x".repeat(2000), quotes: [] }));
+    const recap = sessionRecap(turns);
+    expect(recap).not.toContain("Reader: q7\n");
+    expect(recap).toContain("Reader: q8\n");
+    expect(recap).toContain(`${"x".repeat(1500)}…`);
   });
 });

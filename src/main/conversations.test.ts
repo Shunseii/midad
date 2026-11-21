@@ -94,6 +94,20 @@ describe("Ask AI conversations", () => {
     expect((await reopened.get({ id: "c1" }))?.turns[0]?.status).toBe("interrupted");
   });
 
+  it("deletes one conversation with its turns, leaving the others", async () => {
+    await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question("t1") });
+    await conversations.addTurn({ conversationId: "c2", bookId: "b1", turn: question("t2") });
+    await conversations.remove({ id: "c1" });
+    expect((await conversations.list({ bookId: "b1" })).map((c) => c.id)).toEqual(["c2"]);
+    expect(db.prepare("SELECT COUNT(*) AS n FROM turns").get()).toEqual({ n: 1 });
+  });
+
+  it("gives the turns asked before a question, for carrying them into a new session", async () => {
+    for (const id of ["t1", "t2", "t3"]) await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question(id) });
+    expect((await conversations.earlierTurns({ turnId: "t3" })).map((t) => t.id)).toEqual(["t1", "t2"]);
+    expect(await conversations.earlierTurns({ turnId: "missing" })).toEqual([]);
+  });
+
   it("deletes a book's conversations and turns with the book", async () => {
     await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question("t1") });
     db.prepare("DELETE FROM books WHERE book_id = ?").run("b1");

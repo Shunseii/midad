@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
-import { readingContext } from "../shared/ask";
+import { isLostSession, readingContext, sessionRecap } from "../shared/ask";
 import { ASK_EVENT, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
@@ -121,12 +121,17 @@ const handlers: MidadApi = {
     const context = readingContext({ bookId, title: book.title, position, number: page.number, selection, quotes });
     const prompt = `${context}\n\n${question}`;
     try {
-      const result = await ask.ask({ requestId, prompt, sessionId }).catch((err: unknown) => {
-        // A session Claude no longer has (cleared or from another machine): carry on in a new one.
-        if (!sessionId || !(err instanceof Error) || !/no conversation found/i.test(err.message)) throw err;
-        streamed.delete(requestId);
-        return ask.ask({ requestId, prompt, sessionId: null });
-      });
+      const result = await ask.ask({ requestId, prompt, sessionId }).then(
+        (answer) => ({ ...answer, restarted: false }),
+        async (err: unknown) => {
+          // A session Claude no longer has (cleared or from another machine): carry on in a new one, told what was said so far.
+          if (!sessionId || !(err instanceof Error) || !isLostSession(err.message)) throw err;
+          streamed.delete(requestId);
+          const recap = sessionRecap(await conversations.earlierTurns({ turnId: requestId }));
+          const answer = await ask.ask({ requestId, prompt: recap ? `${recap}\n\n${prompt}` : prompt, sessionId: null });
+          return { ...answer, restarted: true };
+        },
+      );
       await conversations.finishTurn({ id: requestId, answer: result.text, sessionId: result.sessionId });
       return result;
     } catch (err) {
@@ -141,6 +146,7 @@ const handlers: MidadApi = {
   "conversations.latest": (input) => conversations.latest(input),
   "conversations.get": (input) => conversations.get(input),
   "conversations.addTurn": (input) => conversations.addTurn(input),
+  "conversations.remove": (input) => conversations.remove(input),
   "app.setTheme": async ({ theme }) => {
     settings.saveTheme(theme);
     applyTheme(theme);

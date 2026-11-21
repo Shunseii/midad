@@ -52,7 +52,8 @@ export interface MidadApi {
   "marker.set": (input: { bookId: string; position: number; part: Part; line: number; word: number }) => Promise<void>;
   "marker.clear": (input: { bookId: string }) => Promise<void>;
   /** Streams StreamEvents for requestId while it runs; resolves with the whole answer. */
-  "ai.ask": (input: AskInput) => Promise<{ sessionId: string; text: string }>;
+  /** `restarted`: Claude no longer had the conversation's session, so the answer came from a new one given the conversation so far. */
+  "ai.ask": (input: AskInput) => Promise<{ sessionId: string; text: string; restarted: boolean }>;
   "ai.cancel": (input: { requestId: string }) => Promise<void>;
   "conversations.list": (input: { bookId: string }) => Promise<ConversationSummary[]>;
   "conversations.latest": (input: { bookId: string }) => Promise<Conversation | null>;
@@ -63,6 +64,7 @@ export interface MidadApi {
     bookId: string;
     turn: Omit<StoredTurn, "answer" | "status" | "error" | "createdAt">;
   }) => Promise<void>;
+  "conversations.remove": (input: { id: string }) => Promise<void>;
   "app.setTheme": (input: { theme: Theme }) => Promise<void>;
 }
 
@@ -111,6 +113,7 @@ export const CHANNELS = [
   "conversations.list",
   "conversations.latest",
   "conversations.get",
+  "conversations.remove",
   "conversations.addTurn",
   "app.setTheme",
 ] as const satisfies readonly Channel[];

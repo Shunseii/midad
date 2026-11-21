@@ -124,6 +124,8 @@ interface RawEvent {
   is_error?: boolean;
   result?: string;
   session_id?: string;
+  /** Set instead of `result` when Claude stops before answering, e.g. "No conversation found with session ID: …". */
+  errors?: string[];
   event?: { type?: string; delta?: { type?: string; text?: string }; content_block?: { type?: string; name?: string } };
 }
 
@@ -142,10 +144,35 @@ export const streamEvent = (line: string): StreamEvent | null => {
     return null;
   }
   if (raw.type === "result") {
-    if (raw.is_error || raw.subtype !== "success") return { kind: "error", message: raw.result || `Claude stopped (${raw.subtype ?? "unknown"}).` };
+    if (raw.is_error || raw.subtype !== "success") return { kind: "error", message: raw.result || raw.errors?.join(" ") || `Claude stopped (${raw.subtype ?? "unknown"}).` };
     return { kind: "done", text: raw.result ?? "", sessionId: raw.session_id ?? "" };
   }
   return null;
+};
+
+/** Claude's answer to a session it no longer has; asking again in a new session is the way on. */
+export const isLostSession = (message: string): boolean => /no conversation found/i.test(message);
+
+const RECAP_TURNS = 12;
+const RECAP_ANSWER_CHARS = 1500;
+
+/**
+ * The conversation so far, for a new Claude session when the old one is gone.
+ * The latest turns, with long answers cut short. Empty when there's nothing to carry over.
+ */
+export const sessionRecap = (turns: { question: string; answer: string; quotes: { text: string }[] }[]): string => {
+  const carried = turns.filter((t) => t.answer.trim()).slice(-RECAP_TURNS);
+  if (carried.length === 0) return "";
+  const cut = (text: string) => (text.length > RECAP_ANSWER_CHARS ? `${text.slice(0, RECAP_ANSWER_CHARS)}…` : text);
+  return [
+    "<earlier-conversation>",
+    "Your earlier session with this reader is no longer available. This is what was said so far, for context; don't repeat it.",
+    ...carried.flatMap((t) => [
+      `Reader: ${t.question || "Explain this passage."}${t.quotes.length ? ` (quoting: ${t.quotes.map((q) => q.text).join(" / ")})` : ""}`,
+      `You: ${cut(t.answer.trim())}`,
+    ]),
+    "</earlier-conversation>",
+  ].join("\n");
 };
 
 export const claudeArgs = ({ prompt, systemPrompt, sessionId }: { prompt: string; systemPrompt: string; sessionId: string | null }): string[] => [

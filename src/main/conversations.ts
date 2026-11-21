@@ -113,6 +113,20 @@ export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; 
       ).run(turn.id, conversationId, turn.question, JSON.stringify(turn.quotes), turn.position, turn.selection ? JSON.stringify(turn.selection) : null, at);
     },
 
+    /** Deletes a conversation and its turns. */
+    async remove({ id }: { id: string }): Promise<void> {
+      db.prepare("DELETE FROM turns WHERE conversation_id = ?").run(id);
+      db.prepare("DELETE FROM conversations WHERE id = ?").run(id);
+    },
+
+    /** The conversation a question belongs to, with the turns asked before it. */
+    async earlierTurns({ turnId }: { turnId: string }): Promise<StoredTurn[]> {
+      const row = db.prepare("SELECT conversation_id FROM turns WHERE id = ?").get(turnId) as { conversation_id: string } | undefined;
+      const conversation = row ? await get({ id: row.conversation_id }) : null;
+      const at = conversation?.turns.findIndex((t) => t.id === turnId) ?? -1;
+      return conversation && at >= 0 ? conversation.turns.slice(0, at) : [];
+    },
+
     /** Saves the answer, or the error, and the Claude session the next question continues. */
     async finishTurn({
       id,

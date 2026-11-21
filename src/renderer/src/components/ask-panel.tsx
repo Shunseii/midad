@@ -1,4 +1,4 @@
-import { ArrowUp, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
+import { ArrowUp, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
@@ -9,7 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { copiedPassage } from "../lib/copied";
 import { arabicNumber, timeAgo } from "../lib/format";
 import { keys, midad, usePage } from "../lib/midad";
-import { Button, IconButton, cx } from "./ui";
+import { Button, IconButton, Toast, cx } from "./ui";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
@@ -18,7 +18,12 @@ export type { AskSelection, Quote };
 export interface Turn extends Omit<StoredTurn, "createdAt"> {
   /** While streaming: what Claude is doing, e.g. reading the page. */
   activity: string | null;
+  /** Answered in a new Claude session because the old one was gone. Only known for answers given since the panel opened. */
+  restarted?: boolean;
 }
+
+/** How long a deleted conversation can be brought back; a little longer than its toast shows. */
+const UNDO_DELETE_MS = 4500;
 
 const fromStored = ({ createdAt: _, ...turn }: StoredTurn): Turn => ({ ...turn, activity: null });
 
@@ -38,6 +43,8 @@ export const useAskConversation = (bookId: string) => {
     setTurns((all) => all.map((t) => (t.id === id ? { ...t, ...change(t) } : t)));
   }, []);
   const history = useQuery({ queryKey: keys.conversations(bookId), queryFn: () => midad["conversations.list"]({ bookId }) });
+  const [deleted, setDeleted] = useState<{ id: string; wasOpen: boolean } | null>(null);
+  const deleting = useRef<{ id: string; timer: ReturnType<typeof setTimeout> } | null>(null);
   const refreshHistory = () => client.invalidateQueries({ queryKey: keys.conversations(bookId) });
 
   const show = useCallback((conversation: Conversation | null) => {
@@ -98,7 +105,7 @@ export const useAskConversation = (bookId: string) => {
       .then(
         (result) => {
           if (started === generation.current) sessionId.current = result.sessionId || sessionId.current;
-          update(id, () => ({ answer: result.text, status: "done", activity: null }));
+          update(id, () => ({ answer: result.text, status: "done", activity: null, restarted: result.restarted }));
         },
         (err: unknown) => update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) })),
       )
@@ -121,7 +128,48 @@ export const useAskConversation = (bookId: string) => {
     stop();
     load(() => midad["conversations.get"]({ id }));
   };
-  return { turns, ask, busy, stop, retry, reset, open, conversationId, history: history.data ?? [] };
+  /** Deletes the conversation for good once the chance to undo has passed. */
+  const commitDelete = useCallback(() => {
+    const pending = deleting.current;
+    if (!pending) return;
+    deleting.current = null;
+    clearTimeout(pending.timer);
+    setDeleted(null);
+    void midad["conversations.remove"]({ id: pending.id }).finally(() => void client.invalidateQueries({ queryKey: keys.conversations(bookId) }));
+  }, [client, bookId]);
+  useEffect(() => commitDelete, [commitDelete]);
+
+  const remove = (id: string) => {
+    commitDelete();
+    const wasOpen = id === current.current;
+    if (wasOpen) reset();
+    deleting.current = { id, timer: setTimeout(commitDelete, UNDO_DELETE_MS) };
+    setDeleted({ id, wasOpen });
+  };
+  const undoDelete = () => {
+    const pending = deleting.current;
+    if (!pending) return;
+    clearTimeout(pending.timer);
+    deleting.current = null;
+    if (deleted?.wasOpen) load(() => midad["conversations.get"]({ id: pending.id }));
+    setDeleted(null);
+  };
+
+  return {
+    turns,
+    ask,
+    busy,
+    stop,
+    retry,
+    reset,
+    open,
+    conversationId,
+    history: (history.data ?? []).filter((c) => c.id !== deleted?.id),
+    remove,
+    undoDelete,
+    commitDelete,
+    deleted: deleted !== null,
+  };
 };
 
 const ARABIC_START = /^[^\p{L}]*\p{Script=Arabic}/u;
@@ -317,12 +365,17 @@ const ConversationHistory = ({
   history,
   currentId,
   onOpen,
+  onDelete,
 }: {
   history: ConversationSummary[];
   currentId: string | null;
   onOpen: (id: string) => void;
+  onDelete: (id: string) => void;
 }) => {
   const [open, setOpen] = useState(false);
+  // A deleted row folds away before it leaves the list.
+  const [leaving, setLeaving] = useState<string | null>(null);
+  const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger render={<IconButton icon={History} label="Past conversations" selected={open} />} />
@@ -330,23 +383,41 @@ const ConversationHistory = ({
         <p className="px-2.5 pt-1.5 pb-1 text-xs font-medium text-ink-3">Past conversations</p>
         <div className="flex max-h-80 flex-col overflow-y-auto">
           {history.map((c) => (
-            <button
+            <div
               key={c.id}
-              type="button"
-              aria-current={c.id === currentId || undefined}
-              onClick={() => {
-                onOpen(c.id);
-                setOpen(false);
+              data-state={leaving === c.id ? "leaving" : undefined}
+              onTransitionEnd={(e) => {
+                if (e.target !== e.currentTarget || e.propertyName !== "grid-template-rows" || leaving !== c.id) return;
+                setLeaving(null);
+                onDelete(c.id);
               }}
-              className="flex flex-col gap-0.5 rounded-lg px-2.5 py-2 text-left transition-colors duration-press hover:bg-ink/6 aria-[current]:bg-accent-soft"
+              className="grid grid-rows-[1fr] transition-[grid-template-rows,opacity] duration-pop ease-out data-[state=leaving]:grid-rows-[0fr] data-[state=leaving]:opacity-0 motion-reduce:transition-none"
             >
-              <span dir="auto" className="truncate text-sm [unicode-bidi:plaintext]">
-                {c.title || "Untitled"}
-              </span>
-              <span className="text-xs text-ink-3">
-                {timeAgo(c.updatedAt)} · {c.turnCount} {c.turnCount === 1 ? "question" : "questions"}
-              </span>
-            </button>
+              <div className="group/row relative min-h-0 overflow-hidden">
+                <button
+                  type="button"
+                  aria-current={c.id === currentId || undefined}
+                  onClick={() => {
+                    onOpen(c.id);
+                    setOpen(false);
+                  }}
+                  className="flex w-full flex-col gap-0.5 rounded-lg py-2 pr-10 pl-2.5 text-left transition-colors duration-press hover:bg-ink/6 aria-[current]:bg-accent-soft"
+                >
+                  <span dir="auto" className="truncate text-sm [unicode-bidi:plaintext]">
+                    {c.title || "Untitled"}
+                  </span>
+                  <span className="text-xs text-ink-3">
+                    {timeAgo(c.updatedAt)} · {c.turnCount} {c.turnCount === 1 ? "question" : "questions"}
+                  </span>
+                </button>
+                <IconButton
+                  icon={Trash2}
+                  label="Delete conversation"
+                  onClick={() => (reduceMotion() ? onDelete(c.id) : setLeaving(c.id))}
+                  className="absolute top-1/2 right-1 -translate-y-1/2 opacity-0 transition-opacity duration-press group-hover/row:opacity-100 focus-visible:opacity-100"
+                />
+              </div>
+            </div>
           ))}
         </div>
       </PopoverContent>
@@ -373,7 +444,7 @@ export const AskPanel = ({
   onCite: (cite: Citation) => void;
   onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
 }) => {
-  const { turns, ask, busy, stop, retry, reset, open, conversationId, history } = conversation;
+  const { turns, ask, busy, stop, retry, reset, open, conversationId, history, remove, undoDelete, commitDelete, deleted } = conversation;
   const [draft, setDraft] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
   const editor = useRef<HTMLDivElement>(null);
   // Each pill's quote and the span it renders into, kept in the editor's text flow.
@@ -488,10 +559,20 @@ export const AskPanel = ({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
+      {deleted && (
+        <Toast onDone={commitDelete}>
+          <span className="flex items-center gap-3">
+            Conversation deleted
+            <button type="button" onClick={undoDelete} className="-my-1 rounded-md px-2 py-1 font-semibold hover:bg-bg/15">
+              Undo
+            </button>
+          </span>
+        </Toast>
+      )}
       {(turns.length > 0 || history.length > 0) && (
         <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-5">
           <span className="flex-1" />
-          {history.length > 0 && <ConversationHistory history={history} currentId={conversationId} onOpen={open} />}
+          {history.length > 0 && <ConversationHistory history={history} currentId={conversationId} onOpen={open} onDelete={remove} />}
           {turns.length > 0 && (
             <Button variant="ghost" size="sm" icon={SquarePen} onClick={reset}>
               New conversation
@@ -553,6 +634,7 @@ export const AskPanel = ({
             )}
             {turn.status === "error" && <p className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">{turn.error}</p>}
             {turn.status === "interrupted" && <p className="text-xs text-ink-3">Interrupted when Midad closed.</p>}
+            {turn.restarted && <p className="text-xs text-ink-3">Claude no longer had this conversation, so it picked up in a new session from what was said so far.</p>}
             {turn.status !== "streaming" && (
               <div className="flex items-center gap-1">
                 {turn.status === "done" && turn.selection && (
