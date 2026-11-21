@@ -190,6 +190,25 @@ body {
   border-end-start-radius: 0;
 }
 
+/*
+ * A gloss's base words, the spaces between them and its ring box take a soft violet
+ * while the ring is hovered, focused or open: a hue apart from the note tint and the
+ * highlight colours. On a highlight it is a ring, like the note tint.
+ */
+.gloss-span {
+  transition:
+    background-color 120ms var(--ease-out),
+    box-shadow 120ms var(--ease-out);
+}
+.gloss-tint {
+  border-radius: 0;
+  background-color: var(--color-gloss-soft);
+}
+.gloss-tint.mark-band {
+  background-color: transparent;
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-gloss-soft) 90%, transparent);
+}
+
 .mark-yellow {
   --mark: var(--color-mark-1);
 }

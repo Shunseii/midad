@@ -125,12 +125,37 @@ const stopPageHandlers = (e: { stopPropagation: () => void }) => e.stopPropagati
  * The ring is an inline-block inside an inline box that takes its word's highlight, sweep and
  * note tint, so they run on under it level.
  */
-const GlossMarker = ({ texts, showHarakat, band }: { texts: string[]; showHarakat: boolean; band: { className: string; style?: CSSProperties } }) => {
+const GlossMarker = ({
+  texts,
+  showHarakat,
+  band,
+  onActive,
+}: {
+  texts: string[];
+  showHarakat: boolean;
+  band: { className: string; style?: CSSProperties };
+  /** Hovered, focused or open: the base words take the gloss tint. */
+  onActive: (active: boolean) => void;
+}) => {
   const id = useId();
   const [open, setOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const active = open || hovered || focused;
+  const report = useRef(onActive);
+  report.current = onActive;
+  useEffect(() => report.current(active), [active]);
   const shown = texts.map((t) => (showHarakat ? t : stripHarakat(t))).join("\n");
   return (
-    <span data-sel-box className={band.className} style={band.style}>
+    <span
+      data-sel-box
+      className={band.className}
+      style={band.style}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+    >
       <Popover
         open={open}
         onOpenChange={(next, details) => {
@@ -308,6 +333,10 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
   };
 
   const runs = display.glossMarkers ? glossRuns(glosses.filter((g) => g.part === part && g.line === line)) : [];
+  const [activeGloss, setActiveGloss] = useState<number | null>(null);
+  const glossActiveFor = (to: number) => (active: boolean) => setActiveGloss((current) => (active ? to : current === to ? null : current));
+  const runOf = (word: number) => runs.find((r) => r.from <= word && word <= r.to) ?? null;
+  const glossClasses = (run: { to: number } | null) => run && cx("gloss-span", activeGloss === run.to && "gloss-tint");
   const tintOf = (ref: WordRef) => tintedAt({ notes: annotations.notes, tinted, part, ref });
 
   return tokens.map((token, i) => {
@@ -320,10 +349,12 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
       const at = joins && before ? sweepAt(shared, before) : undefined;
       const tintBefore = before ? tintOf(before) : [];
       const tintJoins = after !== null && tintBefore.some((n) => spanContains({ span: n.span, part, ref: after }));
+      const glossRun = before && after ? runOf(before.word) : null;
+      const glossJoins = glossRun && after && after.word <= glossRun.to ? glossRun : null;
       return (
         <span
           key={i}
-          className={cx(joins && MARK_BAND[shared.color], at !== undefined && "mark-sweep", "note-span", tintJoins && "note-tint")} style={at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.5 }) : undefined}>
+          className={cx(joins && MARK_BAND[shared.color], at !== undefined && "mark-sweep", "note-span", tintJoins && "note-tint", glossClasses(glossJoins))} style={at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.5 }) : undefined}>
           {token.text}
         </span>
       );
@@ -347,6 +378,12 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const { target: t } = display;
     const at = sweepAt(highlight, ref);
     const targetLetter = t && t.part === part && t.line === line && t.word === token.word ? t.letter : null;
+    const glossRun = runOf(token.word);
+    const endsGloss = runs.filter((r) => r.to === token.word);
+    const band = {
+      className: cx(highlight && MARK_BAND[highlight.color], at !== undefined && "mark-sweep", note && "note-span", tint && "note-tint", glossClasses(glossRun)),
+      style: at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.25 }) : undefined,
+    };
     return (
       <span key={i} className={startingHere.length > 0 ? "relative" : undefined}>
         <span
@@ -363,23 +400,14 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
             highlight && "cursor-pointer",
             note && "note-span",
             tint && "note-tint",
+            glossClasses(glossRun),
           )}
         >
           <WordText text={token.text} mine={mine} display={display} targetLetter={targetLetter} />
         </span>
-        {runs
-          .filter((r) => r.to === token.word)
-          .map((r) => (
-            <GlossMarker
-              key="gloss"
-              texts={r.texts}
-              showHarakat={display.showHarakat}
-              band={{
-                className: cx(highlight && MARK_BAND[highlight.color], at !== undefined && "mark-sweep", note && "note-span", tint && "note-tint"),
-                style: at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.25 }) : undefined,
-              }}
-            />
-          ))}
+        {endsGloss.map((r) => (
+          <GlossMarker key="gloss" texts={r.texts} showHarakat={display.showHarakat} band={band} onActive={glossActiveFor(r.to)} />
+        ))}
         {startingHere.length > 0 && <NoteIcon active={startingHere.some((n) => tinted.has(n.id))} dim={dimNoteIcons} />}
       </span>
     );
