@@ -80,21 +80,6 @@
       },
       "type": "icon"
     },
-    "0hAQIBt1": {
-      "index": "a7",
-      "name": "Space",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "0nFgw1F4": {
       "index": "b00",
       "name": "Highlight dot",
@@ -108,22 +93,6 @@
         "top": 2,
         "translate": "50% 0",
         "width": 5
-      },
-      "type": "frame"
-    },
-    "0zA6bH11": {
-      "index": "aB",
-      "mode": "dark",
-      "name": "Gloss tint · Behind · Dark",
-      "parentId": "m7axEolV",
-      "style": {
-        "align-items": "flex-end",
-        "background": "{color.bg}",
-        "border-radius": "{radius.lg}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 8,
-        "padding": "20px 24px 16px"
       },
       "type": "frame"
     },
@@ -186,21 +155,6 @@
       },
       "type": "text"
     },
-    "1N7wQIAM": {
-      "index": "a0",
-      "name": "Word · لأنها",
-      "parentId": "2Wi39z9s",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "1PCQaY9U": {
       "content": "removable",
       "index": "a000VVVVVV",
@@ -216,36 +170,6 @@
         "text-transform": "uppercase"
       },
       "type": "text"
-    },
-    "1YxeSE28": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "i1rhVdh4",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "1iLUNC3c": {
-      "index": "a7",
-      "name": "Word · إلا",
-      "parentId": "MVsrJkH9",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "1lq7vclo": {
       "content": "Button",
@@ -346,22 +270,6 @@
       },
       "type": "icon"
     },
-    "2Wi39z9s": {
-      "index": "a0",
-      "name": "Line · Two-word gloss",
-      "parentId": "mPvcKSlf",
-      "style": {
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "block",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px",
-        "text-align": "right",
-        "white-space": "nowrap"
-      },
-      "type": "frame"
-    },
     "2exG2r0t": {
       "content": "Synced 2 min ago",
       "index": "a002",
@@ -389,21 +297,6 @@
       },
       "type": "instance"
     },
-    "2m9xNVbw": {
-      "index": "a6",
-      "name": "Word · في",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "2vpGFfhs": {
       "content": "variant ↓ / shape →",
       "index": "a000",
@@ -417,21 +310,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "2yFTBTRN": {
-      "index": "a6",
-      "name": "Space",
-      "parentId": "2Wi39z9s",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "34w0eWGr": {
       "componentId": "uJd03iQq",
@@ -488,47 +366,6 @@
         "top": 11,
         "translate": "50% 0",
         "width": 1
-      },
-      "type": "frame"
-    },
-    "3Re8hKWa": {
-      "content": "لأنها",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "tlqkW3B7",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "3bSIAeoZ": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "lXTrbaKY",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "3eD9lHNA": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "aS5zQQkh",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
       },
       "type": "frame"
     },
@@ -803,17 +640,6 @@
       },
       "type": "frame"
     },
-    "4HCEdUFE": {
-      "content": "،",
-      "index": "a2",
-      "name": "Text",
-      "parentId": "aQnP7wix",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "4XyGCMOB": {
       "css": "transform-origin: center;\ntransition:\n  scale {transition.duration-sweep} {ease.out},\n  opacity {transition.duration-sweep} {ease.out};\n\n@starting-style {\n  scale: 1 0;\n  opacity: 0;\n}\n\n*:hover > & {\n  scale: 1 1.25;\n}\n\n&[data-state=\"removed\"] {\n  scale: 1 0;\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n  transition-timing-function: {ease.in};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    scale: 1;\n  }\n}",
       "hidden": true,
@@ -957,37 +783,6 @@
       },
       "type": "instance"
     },
-    "5ACMkN6t": {
-      "index": "a2",
-      "name": "Word · لم",
-      "parentId": "2Wi39z9s",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
-    "5Akq1yX0": {
-      "index": "a0",
-      "name": "Line · Combined",
-      "parentId": "FJyWttfx",
-      "style": {
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "block",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px",
-        "text-align": "right",
-        "white-space": "nowrap"
-      },
-      "type": "frame"
-    },
     "5CN6h6ZA": {
       "index": "b05",
       "name": "Note dot",
@@ -1001,24 +796,6 @@
         "right": "30.30%",
         "translate": "50% 0",
         "width": 5
-      },
-      "type": "frame"
-    },
-    "5J5QlGx4": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Gloss tint · Wash",
-      "parentId": "SsxNqrMn",
-      "style": {
-        "background": "color-mix(in oklab, {color.gloss-soft} 55%, transparent)",
-        "border-end-start-radius": 4,
-        "border-start-start-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
       },
       "type": "frame"
     },
@@ -1048,22 +825,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "5UUtUSfc": {
-      "index": "a0",
-      "name": "Line · Combined",
-      "parentId": "ru42rWdQ",
-      "style": {
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "block",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px",
-        "text-align": "right",
-        "white-space": "nowrap"
-      },
-      "type": "frame"
     },
     "5fnQdLt8": {
       "content": "no icon",
@@ -1123,40 +884,6 @@
       },
       "type": "text"
     },
-    "602GRxEB": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a0",
-      "name": "Gloss tint",
-      "parentId": "5ACMkN6t",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "border-end-start-radius": 4,
-        "border-start-start-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
-    "61h2qEZY": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a0",
-      "name": "Gloss tint",
-      "parentId": "Y5edTzCL",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
     "62hDhas4": {
       "componentId": "46VX0CV6",
       "index": "a005",
@@ -1167,17 +894,6 @@
         "variant": "assistant"
       },
       "type": "instance"
-    },
-    "63bBuuj4": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "yIMY57zR",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "64X3zBo1": {
       "content": "block",
@@ -1194,21 +910,6 @@
         "text-transform": "uppercase"
       },
       "type": "text"
-    },
-    "68MbOHV2": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "yIMY57zR",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
     },
     "6GhAAVCY": {
       "index": "a010",
@@ -1308,28 +1009,6 @@
       },
       "type": "frame"
     },
-    "6b6vGTMr": {
-      "content": " ",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "SIgyRASU",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "6cDljAN2": {
-      "content": "،",
-      "index": "a2",
-      "name": "Text",
-      "parentId": "YzXEexEl",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "6dA59xdP": {
       "content": "short",
       "index": "a002",
@@ -1357,22 +1036,6 @@
         "font-size": 14,
         "font-weight": 500,
         "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "75fspbKt": {
-      "content": "٣",
-      "index": "a1",
-      "name": "Footnote ref",
-      "parentId": "FtrXHY2S",
-      "style": {
-        "color": "{color.accent}",
-        "display": "inline",
-        "font-size": "0.6em",
-        "font-weight": 700,
-        "margin-inline": "1px",
-        "position": "relative",
-        "top": "-0.75em"
       },
       "type": "text"
     },
@@ -1458,19 +1121,6 @@
         "font-family": "{font.body}",
         "font-size": 12,
         "font-weight": 400,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "7oRGqQ8b": {
-      "content": "On a highlight",
-      "index": "a6",
-      "name": "Label",
-      "parentId": "m7axEolV",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
         "line-height": "16px"
       },
       "type": "text"
@@ -1581,17 +1231,6 @@
       },
       "type": "text"
     },
-    "8J9xm7YN": {
-      "content": "الصلاة",
-      "index": "a2",
-      "name": "Text",
-      "parentId": "s9t648yt",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "8OFZTdSt": {
       "content": "Light #C8D8F0\nDark #2A3A55",
       "index": "a002",
@@ -1653,21 +1292,6 @@
       },
       "type": "text"
     },
-    "8x8Lznnw": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "JXXxbbgi",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "9747YV0V": {
       "content": "تفسير السعدي",
       "index": "a0",
@@ -1683,21 +1307,6 @@
       },
       "type": "text"
     },
-    "9QKBrIb0": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "rkYv1DjQ",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "9UYKPjHl": {
       "content": "Tokens",
       "name": "Row Label · Tokens",
@@ -1712,21 +1321,6 @@
       "type": "text",
       "x": 0,
       "y": 0
-    },
-    "9WR6rQEC": {
-      "index": "a8",
-      "name": "Word · سائر",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "9WhjatdK": {
       "index": "a002",
@@ -1806,24 +1400,6 @@
       },
       "type": "frame"
     },
-    "9nBwABQv": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Gloss tint",
-      "parentId": "p6gaJmIO",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "border-end-end-radius": 4,
-        "border-start-end-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
     "9nfVLI9R": {
       "content": "focus",
       "index": "a002",
@@ -1892,21 +1468,6 @@
       },
       "type": "text"
     },
-    "A3E9opaR": {
-      "index": "a1",
-      "name": "Ring box",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "A4HgQYYL": {
       "content": "warn",
       "index": "a004",
@@ -1922,21 +1483,6 @@
         "text-transform": "uppercase"
       },
       "type": "text"
-    },
-    "AAqFxYUy": {
-      "index": "a5",
-      "name": "Ring box",
-      "parentId": "2Wi39z9s",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "AGASGk5e": {
       "index": "a000",
@@ -1963,21 +1509,6 @@
         "width": 12
       },
       "type": "icon"
-    },
-    "AJUJguGS": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "2m9xNVbw",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
     },
     "AWVvX0wR": {
       "content": "default",
@@ -2218,17 +1749,6 @@
       },
       "type": "frame"
     },
-    "ByRuxsU2": {
-      "content": "في",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "pr4z5i2T",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "C0BdphAg": {
       "index": "a000",
       "name": "Font · font-display",
@@ -2237,33 +1757,6 @@
         "align-items": "center",
         "display": "flex",
         "gap": 16
-      },
-      "type": "frame"
-    },
-    "C1w7sqCW": {
-      "content": "،",
-      "index": "a2",
-      "name": "Text",
-      "parentId": "aS5zQQkh",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "C488Y8WZ": {
-      "index": "a0",
-      "name": "Line · Combined",
-      "parentId": "0zA6bH11",
-      "style": {
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "block",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px",
-        "text-align": "right",
-        "white-space": "nowrap"
       },
       "type": "frame"
     },
@@ -2296,17 +1789,6 @@
       },
       "type": "instance"
     },
-    "CKOIRCvw": {
-      "content": "في",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "2m9xNVbw",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "CKfzVAIz": {
       "name": "Skeleton · States",
       "style": {
@@ -2337,21 +1819,6 @@
       },
       "type": "frame"
     },
-    "CMIECGJj": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "WYr88qxk",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "CNF6Y988": {
       "componentId": "HZhkp90k",
       "index": "a010",
@@ -2362,21 +1829,6 @@
         "state": "hover"
       },
       "type": "instance"
-    },
-    "CRpgSAI4": {
-      "index": "a3",
-      "name": "Space",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "CW48DgLu": {
       "componentId": "HicNahFA",
@@ -2497,17 +1949,6 @@
       "type": "frame",
       "x": 484,
       "y": 4668
-    },
-    "CoIJyhm8": {
-      "content": " ",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "IjqOABHh",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "D12DZktB": {
       "index": "a012",
@@ -2661,21 +2102,6 @@
       },
       "type": "text"
     },
-    "DxzpJcSx": {
-      "index": "a1",
-      "name": "Ring box",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "DydV7il8": {
       "content": "12",
       "index": "a002",
@@ -2720,21 +2146,6 @@
         "text-transform": "uppercase"
       },
       "type": "text"
-    },
-    "EJpllCEY": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "taNP7NBW",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
     },
     "EPjsX7TI": {
       "content": "count ↓ / state →",
@@ -2849,21 +2260,6 @@
         "tone": "mark-4"
       },
       "type": "instance"
-    },
-    "FJyWttfx": {
-      "index": "a7",
-      "name": "Gloss tint · Under",
-      "parentId": "m7axEolV",
-      "style": {
-        "align-items": "flex-end",
-        "background": "{color.bg}",
-        "border-radius": "{radius.lg}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 8,
-        "padding": "20px 24px 16px"
-      },
-      "type": "frame"
     },
     "FMDldom5": {
       "content": "فصلٌ في الفاعلِ المضمرِ",
@@ -3022,22 +2418,6 @@
       },
       "type": "text"
     },
-    "FtrXHY2S": {
-      "index": "a2",
-      "name": "Ref box · ٣،",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "padding-inline-start": "0.12em",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "G4DT9q0o": {
       "componentId": "qZDH6U3q",
       "index": "a007",
@@ -3139,21 +2519,6 @@
       },
       "type": "text"
     },
-    "GTJFFxFT": {
-      "index": "a8",
-      "name": "Gloss tint · Behind",
-      "parentId": "m7axEolV",
-      "style": {
-        "align-items": "flex-end",
-        "background": "{color.bg}",
-        "border-radius": "{radius.lg}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 8,
-        "padding": "20px 24px 16px"
-      },
-      "type": "frame"
-    },
     "Gajc91bQ": {
       "content": "Under: a band 0.55em high under the letters, so harakat above stay clear. Behind: a fill from 0.15em below the top of the line box to 0.05em above its bottom; the letters and harakat sit on it. Set in Settings (Highlight style). A new highlight draws in right to left in both: 80ms plus 25ms a word, capped at 220ms, ease-out across the words (these two words take 130ms). Reduced motion fades it in.",
       "index": "aI",
@@ -3213,17 +2578,6 @@
       },
       "type": "instance"
     },
-    "H8D777Ys": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "XKEq4f40",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "HEN8wdn0": {
       "componentId": "HZhkp90k",
       "index": "a007",
@@ -3234,21 +2588,6 @@
         "state": "disabled"
       },
       "type": "instance"
-    },
-    "HHL9cXvy": {
-      "index": "a1",
-      "name": "Ring box",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "HLtwADoi": {
       "content": "dot ↓ / tone →",
@@ -3346,24 +2685,6 @@
       "type": "frame",
       "x": 280,
       "y": 5604
-    },
-    "HaTISo3T": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Gloss tint",
-      "parentId": "WpO4YnKO",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "border-end-start-radius": 4,
-        "border-start-start-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
     },
     "HefJiPhW": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -3502,24 +2823,6 @@
       },
       "type": "frame"
     },
-    "HqBNdWKR": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a0",
-      "name": "Gloss tint",
-      "parentId": "AAqFxYUy",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "border-end-end-radius": 4,
-        "border-start-end-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
     "Hr0IzJwN": {
       "index": "aq",
       "name": "Highlight dot",
@@ -3535,17 +2838,6 @@
         "width": 5
       },
       "type": "frame"
-    },
-    "HsRyRb45": {
-      "content": "‌",
-      "index": "a3",
-      "name": "Strut",
-      "parentId": "HHL9cXvy",
-      "style": {
-        "display": "inline",
-        "font-family": "{font.ar}"
-      },
-      "type": "text"
     },
     "I6HYAjBz": {
       "content": "active",
@@ -3666,21 +2958,6 @@
       },
       "type": "instance"
     },
-    "IjqOABHh": {
-      "index": "a7",
-      "name": "Space",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "ImACchAk": {
       "content": "Label",
       "index": "a000",
@@ -3766,21 +3043,6 @@
       },
       "type": "frame"
     },
-    "JCtsgxY9": {
-      "index": "a4",
-      "name": "Word · تشرع",
-      "parentId": "MVsrJkH9",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "JFh2OVT7": {
       "index": "an",
       "name": "Highlight dot",
@@ -3810,24 +3072,6 @@
       },
       "type": "instance"
     },
-    "JLcIV6P7": {
-      "css": "transition: border-color {transition.duration-press} {ease.out};\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  border-color: {color.ink-3};\n}",
-      "index": "a1",
-      "name": "Gloss ring",
-      "parentId": "AAqFxYUy",
-      "style": {
-        "border": "1.5px solid {color.accent}",
-        "border-radius": 9999,
-        "box-sizing": "border-box",
-        "display": "inline-block",
-        "height": "0.32em",
-        "margin-inline": "0.08em",
-        "position": "relative",
-        "top": "-0.55em",
-        "width": "0.32em"
-      },
-      "type": "frame"
-    },
     "JS0NXyuY": {
       "componentId": "NpoaMS1Y",
       "index": "a007",
@@ -3838,21 +3082,6 @@
         "state": "disabled"
       },
       "type": "instance"
-    },
-    "JU39c6f2": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "qh35L5ix",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
     },
     "JVLpm7Ms": {
       "componentId": "NpoaMS1Y",
@@ -3879,21 +3108,6 @@
         "width": 20
       },
       "type": "icon"
-    },
-    "JXXxbbgi": {
-      "index": "a4",
-      "name": "Word · كما",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "JavS8H3D": {
       "componentId": "tkp520KP",
@@ -4260,24 +3474,6 @@
       },
       "type": "frame"
     },
-    "LwFVvVIE": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Gloss tint",
-      "parentId": "DxzpJcSx",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "border-end-end-radius": 4,
-        "border-start-end-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
     "LwgSNPqK": {
       "index": "a01",
       "name": "Marks",
@@ -4300,22 +3496,6 @@
         "display": "grid",
         "grid-template-columns": "140px 240px 1fr",
         "padding": "12px 0"
-      },
-      "type": "frame"
-    },
-    "MVsrJkH9": {
-      "index": "a0",
-      "name": "Line · Two-word gloss",
-      "parentId": "UBAYhhiL",
-      "style": {
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "block",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px",
-        "text-align": "right",
-        "white-space": "nowrap"
       },
       "type": "frame"
     },
@@ -4494,36 +3674,6 @@
       },
       "type": "instance"
     },
-    "NObPrSWF": {
-      "index": "a7",
-      "name": "Space",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
-    "NWx4YbTV": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "RqbQ8FdJ",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "Nac8CYtW": {
       "index": "a008",
       "name": "Swatch · accent",
@@ -4695,21 +3845,6 @@
       },
       "type": "text"
     },
-    "O3JBC09u": {
-      "index": "a3",
-      "name": "Space",
-      "parentId": "2Wi39z9s",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "O3gFkhOi": {
       "css": "transition: left 150ms var(--ease-out);",
       "index": "a0",
@@ -4765,17 +3900,6 @@
       },
       "type": "frame"
     },
-    "ODMfKKqZ": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "CRpgSAI4",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "OL0k24Wt": {
       "index": "b0",
       "name": "Panel · Notes on this page",
@@ -4792,17 +3916,6 @@
         "width": 360
       },
       "type": "frame"
-    },
-    "ONPYtXPo": {
-      "content": "الصلاة",
-      "index": "a2",
-      "name": "Text",
-      "parentId": "Qipz0Fte",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "OO4rweIb": {
       "content": "variant ↓ / state →",
@@ -4864,22 +3977,6 @@
         "letter-spacing": "0.08em",
         "line-height": "16px",
         "text-transform": "uppercase"
-      },
-      "type": "text"
-    },
-    "ObfA58vc": {
-      "content": "٣",
-      "index": "a1",
-      "name": "Footnote ref",
-      "parentId": "YzXEexEl",
-      "style": {
-        "color": "{color.accent}",
-        "display": "inline",
-        "font-size": "0.6em",
-        "font-weight": 700,
-        "margin-inline": "1px",
-        "position": "relative",
-        "top": "-0.75em"
       },
       "type": "text"
     },
@@ -4962,21 +4059,6 @@
       },
       "type": "text"
     },
-    "PEkz2WKe": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "WpO4YnKO",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "PNUlxUVo": {
       "content": "line",
       "index": "a001",
@@ -4990,21 +4072,6 @@
         "line-height": "20px"
       },
       "type": "text"
-    },
-    "Pcdt45zp": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "pr4z5i2T",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
     },
     "PdUEnLtv": {
       "componentId": "wTNsBmCc",
@@ -5273,43 +4340,6 @@
       },
       "type": "instance"
     },
-    "QiY12KmG": {
-      "content": "الصلاة",
-      "index": "a2",
-      "name": "Text",
-      "parentId": "WpO4YnKO",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "Qipz0Fte": {
-      "index": "a0",
-      "name": "Word · الصلاة",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
-    "QpdYWnMm": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "Xz8nd37r",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "RC9497tl": {
       "content": "default",
       "index": "a000VVVV",
@@ -5470,22 +4500,6 @@
       "x": 280,
       "y": 1578
     },
-    "Rf8K0q5c": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a0",
-      "name": "Gloss tint",
-      "parentId": "O3JBC09u",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
     "RjMVQH7R": {
       "index": "ar",
       "name": "Highlight dot",
@@ -5562,21 +4576,6 @@
       },
       "type": "text"
     },
-    "RqbQ8FdJ": {
-      "index": "a5",
-      "name": "Space",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "RvmbHqxA": {
       "content": "Green",
       "index": "a6",
@@ -5601,17 +4600,6 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "S2p0w0yY": {
-      "content": " ",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "c14tPjSM",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
       },
       "type": "text"
     },
@@ -5644,21 +4632,6 @@
         "withIcon": "no"
       },
       "type": "instance"
-    },
-    "SIgyRASU": {
-      "index": "a7",
-      "name": "Space",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "SJlDSAP1": {
       "index": "a015",
@@ -5711,21 +4684,6 @@
       },
       "type": "instance"
     },
-    "Sd6wyAqk": {
-      "index": "a5",
-      "name": "Ring box",
-      "parentId": "MVsrJkH9",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "SnbX1QDS": {
       "componentId": "3j9EZY72",
       "index": "a008",
@@ -5767,21 +4725,6 @@
         "top": 2,
         "translate": "50% 0",
         "width": 5
-      },
-      "type": "frame"
-    },
-    "SsxNqrMn": {
-      "index": "a0",
-      "name": "Word · الصلاة",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
       },
       "type": "frame"
     },
@@ -5857,21 +4800,6 @@
       },
       "type": "instance"
     },
-    "UBAYhhiL": {
-      "index": "a5",
-      "name": "Gloss tint · Plain · Behind",
-      "parentId": "m7axEolV",
-      "style": {
-        "align-items": "flex-end",
-        "background": "{color.bg}",
-        "border-radius": "{radius.lg}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 8,
-        "padding": "20px 24px 16px"
-      },
-      "type": "frame"
-    },
     "UDZsQhuA": {
       "index": "a5",
       "name": "Line",
@@ -5880,24 +4808,6 @@
         "direction": "rtl",
         "display": "flex",
         "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "UHwtBGLt": {
-      "css": "transition: border-color {transition.duration-press} {ease.out};\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  border-color: {color.ink-3};\n}",
-      "index": "a2",
-      "name": "Gloss ring",
-      "parentId": "p6gaJmIO",
-      "style": {
-        "border": "1.5px solid {color.accent}",
-        "border-radius": 9999,
-        "box-sizing": "border-box",
-        "display": "inline-block",
-        "height": "0.32em",
-        "margin-inline": "0.08em",
-        "position": "relative",
-        "top": "-0.55em",
-        "width": "0.32em"
       },
       "type": "frame"
     },
@@ -5929,51 +4839,6 @@
       },
       "type": "text"
     },
-    "UWlarYg7": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a0",
-      "name": "Gloss tint",
-      "parentId": "JCtsgxY9",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
-    "UfYhaoIn": {
-      "content": "‌",
-      "index": "a2",
-      "name": "Strut",
-      "parentId": "AAqFxYUy",
-      "style": {
-        "display": "inline",
-        "font-family": "{font.ar}"
-      },
-      "type": "text"
-    },
-    "UnKAgwxa": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a0",
-      "name": "Gloss tint",
-      "parentId": "Sd6wyAqk",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "border-end-end-radius": 4,
-        "border-start-end-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
     "Ur9X4tmp": {
       "content": "selected",
       "index": "a003",
@@ -5989,21 +4854,6 @@
         "text-transform": "uppercase"
       },
       "type": "text"
-    },
-    "V0X1iJgz": {
-      "index": "a4",
-      "name": "Word · كما",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "V8jkbOyN": {
       "index": "a00",
@@ -6101,24 +4951,6 @@
       },
       "type": "frame"
     },
-    "VqVIQ77V": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a0",
-      "name": "Gloss tint",
-      "parentId": "vN6mvuDp",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "border-end-start-radius": 4,
-        "border-start-start-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
-    },
     "VqbL0RyQ": {
       "componentId": "ua9C67i7",
       "index": "a014",
@@ -6146,32 +4978,6 @@
       },
       "type": "text"
     },
-    "Vy63RVSB": {
-      "content": "كما",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "rkYv1DjQ",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "Vz0hdLdm": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "aQnP7wix",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "W4YUqCHa": {
       "content": "with count",
       "index": "a004",
@@ -6185,19 +4991,6 @@
         "letter-spacing": "0.08em",
         "line-height": "16px",
         "text-transform": "uppercase"
-      },
-      "type": "text"
-    },
-    "WDd3c3O8": {
-      "content": "",
-      "index": "aC",
-      "name": "Label",
-      "parentId": "m7axEolV",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
       },
       "type": "text"
     },
@@ -6247,21 +5040,6 @@
       "type": "frame",
       "x": 1900,
       "y": 6400
-    },
-    "WYr88qxk": {
-      "index": "a3",
-      "name": "Space",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "WeEfFep9": {
       "componentId": "RV1DOgzp",
@@ -6315,21 +5093,6 @@
       },
       "type": "text"
     },
-    "WpO4YnKO": {
-      "index": "a0",
-      "name": "Word · الصلاة",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "WvPazdW7": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "aJ",
@@ -6365,21 +5128,6 @@
       },
       "type": "frame"
     },
-    "X4rhCxZE": {
-      "index": "a8",
-      "name": "Word · سائر",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "X8XzSKem": {
       "index": "a007",
       "name": "Style · Caption",
@@ -6391,21 +5139,6 @@
         "display": "grid",
         "grid-template-columns": "140px 240px 1fr",
         "padding": "12px 0"
-      },
-      "type": "frame"
-    },
-    "XClldHfm": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "FtrXHY2S",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
       },
       "type": "frame"
     },
@@ -6423,39 +5156,6 @@
         "top": 11,
         "translate": "50% 0",
         "width": 1
-      },
-      "type": "frame"
-    },
-    "XHqVcLtT": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Gloss tint · Wash",
-      "parentId": "A3E9opaR",
-      "style": {
-        "background": "color-mix(in oklab, {color.gloss-soft} 55%, transparent)",
-        "border-end-end-radius": 4,
-        "border-start-end-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "XKEq4f40": {
-      "index": "a5",
-      "name": "Space",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
       },
       "type": "frame"
     },
@@ -6660,76 +5360,6 @@
       },
       "type": "frame"
     },
-    "XuYnCL5C": {
-      "content": "سائر",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "qWem65aj",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "XwtFNeDx": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Gloss tint · Wash",
-      "parentId": "Qipz0Fte",
-      "style": {
-        "background": "color-mix(in oklab, {color.gloss-soft} 55%, transparent)",
-        "border-end-start-radius": 4,
-        "border-start-start-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "Xz8nd37r": {
-      "index": "a5",
-      "name": "Space",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
-    "XzhnoNgr": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "Y5edTzCL",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "Y5edTzCL": {
-      "index": "a3",
-      "name": "Space",
-      "parentId": "MVsrJkH9",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "YHkogDES": {
       "name": "Toast · States",
       "style": {
@@ -6819,24 +5449,6 @@
       },
       "type": "text"
     },
-    "YfFknpvl": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Gloss tint · Wash",
-      "parentId": "HHL9cXvy",
-      "style": {
-        "background": "color-mix(in oklab, {color.gloss-soft} 55%, transparent)",
-        "border-end-end-radius": 4,
-        "border-start-end-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "YmXxdBoI": {
       "name": "Swatch · States",
       "style": {
@@ -6881,22 +5493,6 @@
       },
       "type": "icon"
     },
-    "YzXEexEl": {
-      "index": "a2",
-      "name": "Ref box · ٣،",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "padding-inline-start": "0.12em",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "Z0wBG3XC": {
       "content": "Nav item",
       "index": "a001",
@@ -6908,17 +5504,6 @@
         "font-size": 14,
         "font-weight": 500,
         "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "ZCJAGCJU": {
-      "content": " ",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "acYaUUTX",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
       },
       "type": "text"
     },
@@ -6945,17 +5530,6 @@
         "font-size": 14,
         "font-weight": 500,
         "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "ZN4vF0U7": {
-      "content": "تشرع",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "r6VDv8oY",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
       },
       "type": "text"
     },
@@ -7054,24 +5628,6 @@
       },
       "type": "text"
     },
-    "ZsL4zk0W": {
-      "css": "transition: border-color {transition.duration-press} {ease.out};\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  border-color: {color.ink-3};\n}",
-      "index": "a2",
-      "name": "Gloss ring",
-      "parentId": "HHL9cXvy",
-      "style": {
-        "border": "1.5px solid {color.accent}",
-        "border-radius": 9999,
-        "box-sizing": "border-box",
-        "display": "inline-block",
-        "height": "0.32em",
-        "margin-inline": "0.08em",
-        "position": "relative",
-        "top": "-0.55em",
-        "width": "0.32em"
-      },
-      "type": "frame"
-    },
     "ZvgJY2Dw": {
       "content": "default",
       "index": "a004",
@@ -7085,17 +5641,6 @@
         "letter-spacing": "0.08em",
         "line-height": "16px",
         "text-transform": "uppercase"
-      },
-      "type": "text"
-    },
-    "a1mhq7hV": {
-      "content": "‌",
-      "index": "a2",
-      "name": "Strut",
-      "parentId": "Sd6wyAqk",
-      "style": {
-        "display": "inline",
-        "font-family": "{font.ar}"
       },
       "type": "text"
     },
@@ -7159,68 +5704,6 @@
       },
       "type": "frame"
     },
-    "aIvdzOJf": {
-      "index": "a6",
-      "name": "Word · في",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
-    "aQnP7wix": {
-      "index": "a2",
-      "name": "Ref box · ٣،",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "padding-inline-start": "0.12em",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
-    "aS5zQQkh": {
-      "index": "a2",
-      "name": "Ref box · ٣،",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "padding-inline-start": "0.12em",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
-    "aUxdhC0u": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "s9t648yt",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "aYUEFkyO": {
       "componentId": "RV1DOgzp",
       "index": "a015",
@@ -7231,36 +5714,6 @@
         "variant": "outline"
       },
       "type": "instance"
-    },
-    "aZiTOkn7": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "SsxNqrMn",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "acYaUUTX": {
-      "index": "a1",
-      "name": "Space",
-      "parentId": "MVsrJkH9",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "ahPFfnGf": {
       "index": "a000",
@@ -7401,21 +5854,6 @@
       },
       "type": "text"
     },
-    "biEoTDlx": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "YzXEexEl",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "bisQQOEC": {
       "content": "long",
       "index": "a004",
@@ -7479,21 +5917,6 @@
         "align-items": "center",
         "display": "flex",
         "gap": 8
-      },
-      "type": "frame"
-    },
-    "c14tPjSM": {
-      "index": "a6",
-      "name": "Space",
-      "parentId": "MVsrJkH9",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
       },
       "type": "frame"
     },
@@ -7596,32 +6019,6 @@
       },
       "type": "instance"
     },
-    "catgCyKF": {
-      "content": "كما",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "qh35L5ix",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "ceAoxjCL": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "XKEq4f40",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "cfumbUtm": {
       "content": "default",
       "index": "a001",
@@ -7682,30 +6079,6 @@
       },
       "type": "frame"
     },
-    "cqeXkBPV": {
-      "content": "Dark",
-      "index": "a9",
-      "name": "Label",
-      "parentId": "m7axEolV",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "cxGxqrzK": {
-      "content": "لم",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "5ACMkN6t",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "d1V6THvh": {
       "componentId": "uJd03iQq",
       "index": "a009",
@@ -7756,17 +6129,6 @@
         "tone": "mark-1"
       },
       "type": "instance"
-    },
-    "dLJ42JDX": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "WYr88qxk",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "dSFerazj": {
       "content": "hover",
@@ -7886,44 +6248,6 @@
       },
       "type": "frame"
     },
-    "e1ALbVCs": {
-      "content": "",
-      "index": "a0",
-      "name": "Label",
-      "parentId": "m7axEolV",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "e7aYM3TM": {
-      "content": "Behind text",
-      "index": "a2",
-      "name": "Column",
-      "parentId": "m7axEolV",
-      "style": {
-        "color": "{color.ink}",
-        "font-family": "{font.body}",
-        "font-size": 13,
-        "font-weight": 500,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "eAl0HXOu": {
-      "content": "‌",
-      "index": "a3",
-      "name": "Strut",
-      "parentId": "A3E9opaR",
-      "style": {
-        "display": "inline",
-        "font-family": "{font.ar}"
-      },
-      "type": "text"
-    },
     "ePE4Mhxl": {
       "componentId": "mUTXOEWB",
       "index": "a017",
@@ -7971,17 +6295,6 @@
       },
       "type": "frame"
     },
-    "efrDETAN": {
-      "content": "إلا",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "1iLUNC3c",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "emxOYKTZ": {
       "content": "Light #FFFFFF\nDark #0E1E1B",
       "index": "a002",
@@ -7996,22 +6309,6 @@
         "white-space": "pre-line"
       },
       "type": "text"
-    },
-    "fE56U37k": {
-      "index": "a0",
-      "name": "Line · Combined",
-      "parentId": "GTJFFxFT",
-      "style": {
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "block",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px",
-        "text-align": "right",
-        "white-space": "nowrap"
-      },
-      "type": "frame"
     },
     "fHs9qiLf": {
       "content": "Under text (default)",
@@ -8094,32 +6391,6 @@
       },
       "type": "text"
     },
-    "faBMm4ye": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "O3JBC09u",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "faO2j8gv": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "HHL9cXvy",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "fepOGjYm": {
       "content": "warn",
       "index": "a001",
@@ -8169,28 +6440,6 @@
         "font-size": 14,
         "font-weight": 500,
         "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "gAA6g9or": {
-      "content": "‌",
-      "index": "a3",
-      "name": "Strut",
-      "parentId": "DxzpJcSx",
-      "style": {
-        "display": "inline",
-        "font-family": "{font.ar}"
-      },
-      "type": "text"
-    },
-    "gAsHoF6s": {
-      "content": "لأنها",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "1N7wQIAM",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
       },
       "type": "text"
     },
@@ -8437,21 +6686,6 @@
       },
       "type": "frame"
     },
-    "i1rhVdh4": {
-      "index": "a3",
-      "name": "Space",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "i28KNAlk": {
       "index": "aw",
       "name": "Highlight dot",
@@ -8499,21 +6733,6 @@
       },
       "type": "text"
     },
-    "izEB6kzz": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "CRpgSAI4",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
     "izPTE4ia": {
       "index": "ae",
       "name": "Highlight dot",
@@ -8529,32 +6748,6 @@
         "width": 5
       },
       "type": "frame"
-    },
-    "j0Vkg3sW": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "A3E9opaR",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "j4YnUOLY": {
-      "content": "سائر",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "9WR6rQEC",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "j4mF9gzn": {
       "css": "transition: scale {transition.duration-pop-exit} {ease.out};\n\n*:hover > * > &, [data-dragging] > * > & {\n  scale: 1.15;\n  transition-duration: {transition.duration-pop};\n}",
@@ -8583,32 +6776,6 @@
         "flex-direction": "column",
         "gap": 8,
         "width": 168
-      },
-      "type": "frame"
-    },
-    "j9BOI7K5": {
-      "content": "سائر",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "X4rhCxZE",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "jA1heptx": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "DxzpJcSx",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
       },
       "type": "frame"
     },
@@ -8865,36 +7032,6 @@
       },
       "type": "frame"
     },
-    "kmAAh8tR": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "V0X1iJgz",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "kqEjkXMB": {
-      "index": "a8",
-      "name": "Word · سائر",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "kujlkEEq": {
       "componentId": "KLaQXYk7",
       "index": "a013",
@@ -8947,39 +7084,6 @@
         "width": 16
       },
       "type": "icon"
-    },
-    "l58nbtUC": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "Xz8nd37r",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "l5WiAcl9": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Gloss tint",
-      "parentId": "s9t648yt",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "border-end-start-radius": 4,
-        "border-start-start-radius": 4,
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
     },
     "l84BmEWI": {
       "content": "variant ↓ / state →",
@@ -9035,35 +7139,6 @@
       },
       "type": "text"
     },
-    "lK4HLkTt": {
-      "css": "transition: border-color {transition.duration-press} {ease.out};\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  border-color: {color.ink-3};\n}",
-      "index": "a2",
-      "name": "Gloss ring",
-      "parentId": "DxzpJcSx",
-      "style": {
-        "border": "1.5px solid {color.accent}",
-        "border-radius": 9999,
-        "box-sizing": "border-box",
-        "display": "inline-block",
-        "height": "0.32em",
-        "margin-inline": "0.08em",
-        "position": "relative",
-        "top": "-0.55em",
-        "width": "0.32em"
-      },
-      "type": "frame"
-    },
-    "lKDhoirZ": {
-      "content": "كما",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "JXXxbbgi",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "lLLoH54q": {
       "content": "default",
       "index": "a001",
@@ -9106,24 +7181,6 @@
       },
       "type": "text"
     },
-    "lNowc5rn": {
-      "content": "While its ring is hovered, focused or open, a gloss's base words, the spaces between them and the ring's box take one gloss-soft band at the height of a Behind highlight (0.15em from the top of the text box, 0.05em from the bottom). Square joins, 4px round ends, and it stops at the ring. It lies under an Under band; over a Behind band it is a 55% wash. Fades in and out over 120ms ease-out; reduced motion switches at once.",
-      "index": "aD",
-      "name": "Spec note",
-      "parentId": "m7axEolV",
-      "style": {
-        "background": "{color.surface-2}",
-        "border-radius": "{radius.lg}",
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "grid-column": "span 2",
-        "line-height": "18px",
-        "padding": "8px 12px",
-        "width": 620
-      },
-      "type": "text"
-    },
     "lPhxKxTf": {
       "content": "chord",
       "index": "a002",
@@ -9150,21 +7207,6 @@
         "withRemove": "yes"
       },
       "type": "instance"
-    },
-    "lXTrbaKY": {
-      "index": "a6",
-      "name": "Word · في",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "lhW70FDN": {
       "componentId": "ua9C67i7",
@@ -9250,38 +7292,6 @@
         "withIcon": "no"
       },
       "type": "instance"
-    },
-    "m7axEolV": {
-      "index": "a1",
-      "name": "Gloss tint · Styles",
-      "style": {
-        "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 20,
-        "column-gap": 40,
-        "display": "grid",
-        "grid-template-columns": "100px repeat(2, max-content)",
-        "padding": 32,
-        "row-gap": 12
-      },
-      "type": "frame",
-      "x": 2600,
-      "y": 6400
-    },
-    "mPvcKSlf": {
-      "index": "a4",
-      "name": "Gloss tint · Plain",
-      "parentId": "m7axEolV",
-      "style": {
-        "align-items": "flex-end",
-        "background": "{color.bg}",
-        "border-radius": "{radius.lg}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 8,
-        "padding": "20px 24px 16px"
-      },
-      "type": "frame"
     },
     "mRo4i690": {
       "content": "filled",
@@ -9610,17 +7620,6 @@
       },
       "type": "frame"
     },
-    "nbAgM1jJ": {
-      "content": " ",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "NObPrSWF",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "nd5yQz1s": {
       "content": "ink-2",
       "index": "a001",
@@ -9647,17 +7646,6 @@
       },
       "type": "frame"
     },
-    "nlElBoG6": {
-      "content": "لم",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "vN6mvuDp",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "ntHg7X5w": {
       "index": "ad",
       "name": "Highlight dot",
@@ -9671,36 +7659,6 @@
         "top": 2,
         "translate": "50% 0",
         "width": 5
-      },
-      "type": "frame"
-    },
-    "nxy1UjPS": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "aIvdzOJf",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "o8laGQYA": {
-      "index": "a0",
-      "name": "Highlight · Under",
-      "parentId": "p6gaJmIO",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": 0,
-        "height": "0.55em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "z-index": -1
       },
       "type": "frame"
     },
@@ -9813,24 +7771,6 @@
       },
       "type": "text"
     },
-    "otOBmccw": {
-      "css": "transition: border-color {transition.duration-press} {ease.out};\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  border-color: {color.ink-3};\n}",
-      "index": "a1",
-      "name": "Gloss ring",
-      "parentId": "Sd6wyAqk",
-      "style": {
-        "border": "1.5px solid {color.accent}",
-        "border-radius": 9999,
-        "box-sizing": "border-box",
-        "display": "inline-block",
-        "height": "0.32em",
-        "margin-inline": "0.08em",
-        "position": "relative",
-        "top": "-0.55em",
-        "width": "0.32em"
-      },
-      "type": "frame"
-    },
     "oyYQs0kQ": {
       "content": "on-accent",
       "index": "a001",
@@ -9860,21 +7800,6 @@
         "text-transform": "uppercase"
       },
       "type": "text"
-    },
-    "p6gaJmIO": {
-      "index": "a1",
-      "name": "Ring box",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "p7mVj2Bc": {
       "content": "المرفوعُ المذكورُ قبلَه فعلُه",
@@ -9919,17 +7844,6 @@
       },
       "type": "instance"
     },
-    "pY9liIHk": {
-      "content": "إلا",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "vQQ0wQnL",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "pcp8upyz": {
       "content": "error",
       "index": "a004",
@@ -9959,21 +7873,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "pr4z5i2T": {
-      "index": "a6",
-      "name": "Word · في",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "puNiiYCy": {
       "content": "Label",
@@ -10026,17 +7925,6 @@
       "type": "frame",
       "x": 280,
       "y": 6400
-    },
-    "q8eTkJmA": {
-      "content": "في",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "aIvdzOJf",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "qCOGPcYq": {
       "name": "NavItem · States",
@@ -10096,21 +7984,6 @@
         "withIcon": "no"
       },
       "type": "instance"
-    },
-    "qWem65aj": {
-      "index": "a8",
-      "name": "Word · سائر",
-      "parentId": "5UUtUSfc",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "qZDH6U3q": {
       "component": {
@@ -10185,21 +8058,6 @@
       },
       "type": "instance"
     },
-    "qh35L5ix": {
-      "index": "a4",
-      "name": "Word · كما",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "qkWMFvMn": {
       "index": "a002",
       "name": "Styles",
@@ -10236,32 +8094,6 @@
         "text-transform": "uppercase"
       },
       "type": "text"
-    },
-    "qunYizbc": {
-      "content": "في",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "lXTrbaKY",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "r6VDv8oY": {
-      "index": "a4",
-      "name": "Word · تشرع",
-      "parentId": "2Wi39z9s",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "rBDgEEOC": {
       "component": {
@@ -10358,21 +8190,6 @@
       },
       "type": "frame"
     },
-    "rkYv1DjQ": {
-      "index": "a4",
-      "name": "Word · كما",
-      "parentId": "fE56U37k",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "roHkeXtS": {
       "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  translate: 0 -4px;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
       "name": "Text size indicator",
@@ -10414,35 +8231,6 @@
       },
       "type": "frame"
     },
-    "rtbcJxuU": {
-      "content": "Two words",
-      "index": "a3",
-      "name": "Label",
-      "parentId": "m7axEolV",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "ru42rWdQ": {
-      "index": "aA",
-      "mode": "dark",
-      "name": "Gloss tint · Under · Dark",
-      "parentId": "m7axEolV",
-      "style": {
-        "align-items": "flex-end",
-        "background": "{color.bg}",
-        "border-radius": "{radius.lg}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 8,
-        "padding": "20px 24px 16px"
-      },
-      "type": "frame"
-    },
     "rx1zK3OS": {
       "index": "a002",
       "name": "Style · Heading",
@@ -10470,37 +8258,6 @@
         "line-height": "24px"
       },
       "type": "text"
-    },
-    "s9bSGJud": {
-      "content": "٣",
-      "index": "a1",
-      "name": "Footnote ref",
-      "parentId": "aQnP7wix",
-      "style": {
-        "color": "{color.accent}",
-        "display": "inline",
-        "font-size": "0.6em",
-        "font-weight": 700,
-        "margin-inline": "1px",
-        "position": "relative",
-        "top": "-0.75em"
-      },
-      "type": "text"
-    },
-    "s9t648yt": {
-      "index": "a0",
-      "name": "Word · الصلاة",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "sDGnx9Zf": {
       "componentId": "HZhkp90k",
@@ -10641,17 +8398,6 @@
       },
       "type": "text"
     },
-    "swIRsnPX": {
-      "content": " ",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "2yFTBTRN",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "t3WWAgk9": {
       "index": "ak",
       "name": "Highlight dot",
@@ -10667,17 +8413,6 @@
         "width": 5
       },
       "type": "frame"
-    },
-    "tBFl81kv": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "taNP7NBW",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "tBUqOQk8": {
       "css": "transition: transform {transition.duration-panel} {ease.out};",
@@ -10770,21 +8505,6 @@
       },
       "type": "text"
     },
-    "taNP7NBW": {
-      "index": "a5",
-      "name": "Space",
-      "parentId": "C488Y8WZ",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "tfdX0Exy": {
       "content": "disabled",
       "index": "a005",
@@ -10845,21 +8565,6 @@
       "type": "frame",
       "x": 280,
       "y": 4892
-    },
-    "tlqkW3B7": {
-      "index": "a0",
-      "name": "Word · لأنها",
-      "parentId": "MVsrJkH9",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "todclelP": {
       "content": "Body",
@@ -11267,17 +8972,6 @@
       },
       "type": "frame"
     },
-    "v2RcVMcu": {
-      "content": " ",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "zSXSssTA",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "v8FmfBf5": {
       "component": {
         "props": {
@@ -11411,21 +9105,6 @@
       },
       "type": "frame"
     },
-    "vN6mvuDp": {
-      "index": "a2",
-      "name": "Word · لم",
-      "parentId": "MVsrJkH9",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
     "vOKua2d6": {
       "content": "Title",
       "index": "a000",
@@ -11455,21 +9134,6 @@
         "text-transform": "uppercase"
       },
       "type": "text"
-    },
-    "vQQ0wQnL": {
-      "index": "a7",
-      "name": "Word · إلا",
-      "parentId": "2Wi39z9s",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "vWvf1GrS": {
       "content": "Page 3 of 24 · 2 highlights",
@@ -11519,32 +9183,6 @@
         "variant": "primary"
       },
       "type": "instance"
-    },
-    "vnrrceHZ": {
-      "index": "a0",
-      "name": "Highlight · Behind",
-      "parentId": "Qipz0Fte",
-      "style": {
-        "background": "{color.mark-1}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -1
-      },
-      "type": "frame"
-    },
-    "vqw2HMnN": {
-      "content": "سائر",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "kqEjkXMB",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "vyP6a49B": {
       "content": "Overline",
@@ -11598,22 +9236,6 @@
         "tone": "success"
       },
       "type": "instance"
-    },
-    "wFUa6Hrc": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  opacity: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a0",
-      "name": "Gloss tint",
-      "parentId": "r6VDv8oY",
-      "style": {
-        "background": "{color.gloss-soft}",
-        "bottom": "0.05em",
-        "inset-inline": 0,
-        "pointer-events": "none",
-        "position": "absolute",
-        "top": "0.15em",
-        "z-index": -2
-      },
-      "type": "frame"
     },
     "wRFJGBOD": {
       "content": "variant ↓ / state →",
@@ -11768,17 +9390,6 @@
       },
       "type": "text"
     },
-    "wXQU9bRx": {
-      "content": " ",
-      "index": "a0",
-      "name": "Text",
-      "parentId": "0hAQIBt1",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "wYxLZ6QG": {
       "content": "Components",
       "name": "Row Label · Components",
@@ -11793,35 +9404,6 @@
       "type": "text",
       "x": 0,
       "y": 1136
-    },
-    "wZqEECTt": {
-      "content": "كما",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "V0X1iJgz",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
-    "wcDDwHsM": {
-      "css": "transition: border-color {transition.duration-press} {ease.out};\n\n&[data-state=\"idle\"], [data-state=\"idle\"] & {\n  border-color: {color.ink-3};\n}",
-      "index": "a2",
-      "name": "Gloss ring",
-      "parentId": "A3E9opaR",
-      "style": {
-        "border": "1.5px solid {color.accent}",
-        "border-radius": 9999,
-        "box-sizing": "border-box",
-        "display": "inline-block",
-        "height": "0.32em",
-        "margin-inline": "0.08em",
-        "position": "relative",
-        "top": "-0.55em",
-        "width": "0.32em"
-      },
-      "type": "frame"
     },
     "wq7L5Z51": {
       "componentId": "K2A7iETC",
@@ -11889,17 +9471,6 @@
         "withIcon": "no"
       },
       "type": "instance"
-    },
-    "xQkB8KJ0": {
-      "content": "الصلاة",
-      "index": "a2",
-      "name": "Text",
-      "parentId": "SsxNqrMn",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "xRIjn0qV": {
       "index": "a0",
@@ -11983,36 +9554,6 @@
       },
       "type": "text"
     },
-    "xv3cKKnQ": {
-      "content": "٣",
-      "index": "a1",
-      "name": "Footnote ref",
-      "parentId": "aS5zQQkh",
-      "style": {
-        "color": "{color.accent}",
-        "display": "inline",
-        "font-size": "0.6em",
-        "font-weight": 700,
-        "margin-inline": "1px",
-        "position": "relative",
-        "top": "-0.75em"
-      },
-      "type": "text"
-    },
-    "xxdYR6ei": {
-      "content": "Under text (default)",
-      "index": "a1",
-      "name": "Column",
-      "parentId": "m7axEolV",
-      "style": {
-        "color": "{color.ink}",
-        "font-family": "{font.body}",
-        "font-size": 13,
-        "font-weight": 500,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "y0H980V8": {
       "index": "aj",
       "name": "Highlight dot",
@@ -12028,17 +9569,6 @@
         "width": 5
       },
       "type": "frame"
-    },
-    "y0mAlVcz": {
-      "content": "،",
-      "index": "a2",
-      "name": "Text",
-      "parentId": "FtrXHY2S",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "yABDoCri": {
       "content": "secondary",
@@ -12068,21 +9598,6 @@
         "withIcon": "no"
       },
       "type": "instance"
-    },
-    "yIMY57zR": {
-      "index": "a3",
-      "name": "Space",
-      "parentId": "5Akq1yX0",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
     },
     "yIONfrSq": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -12151,17 +9666,6 @@
         "height": 56
       },
       "type": "frame"
-    },
-    "yVScRhjI": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "RqbQ8FdJ",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
     },
     "yYQNpmn2": {
       "content": "Light #DCEBE7\nDark #1E3531",
@@ -12382,32 +9886,6 @@
       },
       "type": "instance"
     },
-    "zSXSssTA": {
-      "index": "a1",
-      "name": "Space",
-      "parentId": "2Wi39z9s",
-      "style": {
-        "display": "inline-block",
-        "height": 44,
-        "isolation": "isolate",
-        "line-height": "44px",
-        "position": "relative",
-        "vertical-align": "baseline",
-        "white-space": "pre"
-      },
-      "type": "frame"
-    },
-    "zd1vJykw": {
-      "content": "تشرع",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "JCtsgxY9",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "zeWgtqSi": {
       "css": "transition: opacity {transition.duration-pop-exit} {ease.out};\n\n:focus-visible ~ & {\n  opacity: 1;\n  transition-duration: {transition.duration-pop};\n}",
       "index": "a2",
@@ -12428,17 +9906,6 @@
       },
       "type": "frame"
     },
-    "zghwNqp7": {
-      "content": " ",
-      "index": "a1",
-      "name": "Text",
-      "parentId": "i1rhVdh4",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline"
-      },
-      "type": "text"
-    },
     "zoSQRonB": {
       "content": "line 1",
       "index": "a000V",
@@ -12450,17 +9917,6 @@
         "font-weight": 400,
         "line-height": "16px",
         "white-space": "nowrap"
-      },
-      "type": "text"
-    },
-    "zruI5YZn": {
-      "content": "‌",
-      "index": "a3",
-      "name": "Strut",
-      "parentId": "p6gaJmIO",
-      "style": {
-        "display": "inline",
-        "font-family": "{font.ar}"
       },
       "type": "text"
     },
