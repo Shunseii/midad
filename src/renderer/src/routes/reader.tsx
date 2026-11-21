@@ -30,6 +30,7 @@ import { bookmarkFolio } from "../lib/bookmarks";
 import { usePref } from "../lib/prefs";
 import { useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
+import { switchListInTransition } from "../lib/view-transition";
 import { focusKeyAction } from "../lib/focus";
 import { neighbourPages } from "../lib/neighbours";
 import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop, wordSelector } from "../lib/zoom-anchor";
@@ -200,23 +201,6 @@ const SIDEBAR_TABS: { value: SidebarTab; label: string }[] = [
   { value: "bookmarks", label: "Bookmarks" },
 ];
 
-/**
- * Switches the sidebar's list in a view transition: the old list fades out and
- * the new one slides in from the side of the tab that was picked.
- */
-const switchSidebarTab = ({ from, to, apply }: { from: SidebarTab; to: SidebarTab; apply: (tab: SidebarTab) => void }) => {
-  if (from === to) return;
-  if (!document.startViewTransition) {
-    apply(to);
-    return;
-  }
-  const order = SIDEBAR_TABS.map((t) => t.value);
-  const root = document.documentElement;
-  root.dataset.sidebarSwitch = order.indexOf(to) > order.indexOf(from) ? "forward" : "back";
-  const transition = document.startViewTransition(() => flushSync(() => apply(to)));
-  void transition.finished.finally(() => delete root.dataset.sidebarSwitch);
-};
-
 /** The left sidebar: the book's contents, or its bookmarks. */
 const ContentsRail = ({
   entries,
@@ -238,13 +222,13 @@ const ContentsRail = ({
     <Segmented<SidebarTab>
       label="Sidebar"
       value={tab}
-      onChange={(next) => switchSidebarTab({ from: tab, to: next, apply: onTab })}
+      onChange={(next) => switchListInTransition({ list: "sidebar", order: SIDEBAR_TABS.map((t) => t.value), from: tab, to: next, apply: onTab })}
       options={SIDEBAR_TABS}
       fullWidth
       className="mx-4 mb-3"
     />
     {/* Keyed by tab, so each list starts at its top. */}
-    <div key={tab} className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-4 pb-6 [view-transition-name:sidebar-list]">
+    <div key={tab} className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-4 pb-6" data-switch-list="sidebar">
       {tab === "contents" ? <ContentsList entries={entries} active={active} onGo={onGo} /> : bookmarks}
     </div>
   </nav>

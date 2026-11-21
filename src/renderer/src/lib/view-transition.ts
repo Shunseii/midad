@@ -1,3 +1,5 @@
+import { flushSync } from "react-dom";
+
 /**
  * While a view transition plays, its snapshots cover the window and every
  * press lands on the root element instead of the control under the pointer.
@@ -40,4 +42,26 @@ export const passPressesThroughTransitions = () => {
     window.removeEventListener("pointerdown", onPointerDown, { capture: true });
     window.removeEventListener("click", onClick, { capture: true });
   };
+};
+
+/**
+ * Swaps the list under a row of tabs in a view transition (see "Switching a
+ * tabbed list" in styles.css). The list is the element with a matching
+ * `data-switch-list`; it slides in from the side of the picked tab, which is
+ * later in `order` for forward. Everything else changes in place.
+ */
+export const switchListInTransition = <T extends string>({ list, order, from, to, apply }: { list: string; order: readonly T[]; from: T; to: T; apply: (tab: T) => void }) => {
+  if (from === to) return;
+  if (!document.startViewTransition) {
+    apply(to);
+    return;
+  }
+  const root = document.documentElement;
+  root.dataset.listSwitch = order.indexOf(to) > order.indexOf(from) ? "forward" : "back";
+  root.dataset.listSwitchTarget = list;
+  const transition = document.startViewTransition(() => flushSync(() => apply(to)));
+  void transition.finished.finally(() => {
+    delete root.dataset.listSwitch;
+    delete root.dataset.listSwitchTarget;
+  });
 };

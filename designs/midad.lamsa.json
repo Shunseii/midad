@@ -59850,6 +59850,7 @@
       "type": "frame"
     },
     "ZGGZhv1S": {
+      "css": "/* Switching Highlights | Notes: the list slides in from the picked tab's side (Notes from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. Same motion as the sidebar's Contents | Bookmarks. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a001",
       "name": "Panel body",
       "parentId": "Pk9KeL1t",
@@ -62075,6 +62076,7 @@
       "type": "text"
     },
     "aXxWeP6O": {
+      "css": "/* Switching Highlights | Notes: the list slides in from the picked tab's side (Notes from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. Same motion as the sidebar's Contents | Bookmarks. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a001",
       "name": "Panel body",
       "parentId": "1RNgK7EW",
@@ -70986,6 +70988,7 @@
       "type": "frame"
     },
     "fiTB5Nrv": {
+      "css": "/* Switching Highlights | Notes: the list slides in from the picked tab's side (Notes from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. Same motion as the sidebar's Contents | Bookmarks. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a001",
       "name": "Panel body",
       "parentId": "uvThT1h3",
@@ -72465,6 +72468,7 @@
       "type": "instance"
     },
     "gUUnp3bB": {
+      "css": "/* Switching Highlights | Notes: the list slides in from the picked tab's side (Notes from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. Same motion as the sidebar's Contents | Bookmarks. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a001",
       "name": "Panel body",
       "parentId": "n7aWpSn6",

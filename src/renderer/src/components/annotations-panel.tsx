@@ -3,11 +3,17 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { Highlight, Note, PageAnnotations, Span } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
 import { noteEditOutcome } from "../lib/note-edit";
+import { switchListInTransition } from "../lib/view-transition";
 import { MARK_BG } from "./page-view";
 import { Badge, IconButton, Segmented, cx } from "./ui";
 import { Textarea } from "./ui/textarea";
 
 export type PanelTab = "highlights" | "notes" | "ask";
+
+const ANNOTATION_TABS: { value: Exclude<PanelTab, "ask">; label: string }[] = [
+  { value: "highlights", label: "Highlights" },
+  { value: "notes", label: "Notes" },
+];
 
 export const spanLabel = (span: Span) =>
   span.part === "matn" ? `Line ${span.start.line}` : `Ḥāshiya ${span.start.line}`;
@@ -188,11 +194,8 @@ export const AnnotationsPanel = ({
           <Segmented
             label="Annotations"
             value={tab}
-            onChange={onTab}
-            options={[
-              { value: "highlights", label: "Highlights" },
-              { value: "notes", label: "Notes" },
-            ]}
+            onChange={(next) => switchListInTransition({ list: "annotations", order: ANNOTATION_TABS.map((t) => t.value), from: tab, to: next, apply: onTab })}
+            options={ANNOTATION_TABS}
           />
         )}
         <span className="flex-1" />
@@ -201,7 +204,8 @@ export const AnnotationsPanel = ({
       {tab === "ask" ? (
         askPanel
       ) : (
-      <div className="flex flex-col gap-4 overflow-y-auto p-5">
+      // Keyed by tab, so each list starts at its top.
+      <div key={tab} data-switch-list="annotations" className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-5">
         <h2 className="flex items-center gap-2 text-heading font-semibold">
           {tab === "highlights" ? "Highlights on this page" : "Notes on this page"}
           {items.length > 0 && <Badge>{items.length}</Badge>}

@@ -484,45 +484,54 @@ body {
 }
 
 /*
- * Switching the sidebar between Contents and Bookmarks (data-sidebar-switch,
- * see reader.tsx). Only the list moves: the old one fades out quickly, the new
- * one slides a short way in from the side of the picked tab (Bookmarks sits on
- * the right, so it comes from the right). Everything else, the tabs included,
- * changes in place so their indicator can slide live.
+ * Switching a tabbed list: the sidebar's Contents | Bookmarks and the right
+ * panel's Highlights | Notes (data-list-switch, see switchListInTransition).
+ * Only the list under the tabs moves: the old one fades out quickly toward the
+ * side it leaves, the new one slides a short way in from the side of the picked
+ * tab. Everything else, the tabs included, changes in place so their indicator
+ * can slide live.
  */
-:root[data-sidebar-switch]::view-transition-group(*),
-:root[data-sidebar-switch]::view-transition-new(*) {
+/* Nothing else takes part, so the header, page and panels stay in the live root and never paint over an open side sheet. */
+:root[data-list-switch] * {
+  view-transition-name: none !important;
+}
+:root[data-list-switch-target="sidebar"] [data-switch-list="sidebar"],
+:root[data-list-switch-target="annotations"] [data-switch-list="annotations"] {
+  view-transition-name: switch-list !important;
+}
+:root[data-list-switch]::view-transition-group(*),
+:root[data-list-switch]::view-transition-new(*) {
   animation: none;
 }
-:root[data-sidebar-switch]::view-transition-old(*) {
+:root[data-list-switch]::view-transition-old(*) {
   display: none;
 }
-:root[data-sidebar-switch]::view-transition-group(sidebar-list) {
+:root[data-list-switch]::view-transition-group(switch-list) {
   overflow: clip;
 }
-:root[data-sidebar-switch]::view-transition-old(sidebar-list) {
+:root[data-list-switch]::view-transition-old(switch-list) {
   display: block;
   animation: page-out 100ms var(--ease-out) both;
 }
-:root[data-sidebar-switch="forward"]::view-transition-old(sidebar-list) {
-  animation-name: sidebar-out-to-left;
+:root[data-list-switch="forward"]::view-transition-old(switch-list) {
+  animation-name: list-out-to-left;
 }
-:root[data-sidebar-switch="back"]::view-transition-old(sidebar-list) {
-  animation-name: sidebar-out-to-right;
+:root[data-list-switch="back"]::view-transition-old(switch-list) {
+  animation-name: list-out-to-right;
 }
-:root[data-sidebar-switch="forward"]::view-transition-new(sidebar-list) {
+:root[data-list-switch="forward"]::view-transition-new(switch-list) {
   animation: page-in-from-right 220ms var(--ease-out) 40ms both;
 }
-:root[data-sidebar-switch="back"]::view-transition-new(sidebar-list) {
+:root[data-list-switch="back"]::view-transition-new(switch-list) {
   animation: page-in-from-left 220ms var(--ease-out) 40ms both;
 }
-@keyframes sidebar-out-to-left {
+@keyframes list-out-to-left {
   to {
     opacity: 0;
     translate: -0.75rem 0;
   }
 }
-@keyframes sidebar-out-to-right {
+@keyframes list-out-to-right {
   to {
     opacity: 0;
     translate: 0.75rem 0;
@@ -581,10 +590,10 @@ body {
   :root[data-turn]::view-transition-new(reader-page) {
     animation-name: page-fade-in;
   }
-  :root[data-sidebar-switch]::view-transition-old(sidebar-list) {
+  :root[data-list-switch]::view-transition-old(switch-list) {
     animation-name: page-out;
   }
-  :root[data-sidebar-switch]::view-transition-new(sidebar-list) {
+  :root[data-list-switch]::view-transition-new(switch-list) {
     animation-name: page-fade-in;
   }
   ::view-transition-new(book-cover) {
