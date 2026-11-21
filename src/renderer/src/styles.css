@@ -165,7 +165,7 @@ body {
  * instead, so the highlight's band still shows.
  */
 .note-ink {
-  color: color-mix(in oklab, var(--color-ink), var(--color-accent) 35%);
+  color: color-mix(in oklab, var(--color-ink), var(--color-accent) 65%);
 }
 .note-span {
   border-radius: 4px;
