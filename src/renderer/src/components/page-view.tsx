@@ -9,7 +9,6 @@ import {
   type Part,
   type Span,
   spanContains,
-  type Token,
   tokenize,
   type WordRef,
 } from "../../../shared/annotations";
@@ -71,7 +70,7 @@ const withFootnoteRefs = (text: string): ReactNode => {
   return [ref.before, <FootnoteRef key="ref" marker={ref.marker} />, withFootnoteRefs(ref.after)];
 };
 
-/** Overlapping glosses on a line, merged so each word sits under at most one mark. */
+/** Overlapping glosses on a line, merged so each base gets one marker. */
 const glossRuns = (glosses: Gloss[]): { from: number; to: number; texts: string[] }[] =>
   [...glosses]
     .sort((a, b) => a.from - b.from || a.to - b.to)
@@ -84,56 +83,58 @@ const glossRuns = (glosses: Gloss[]): { from: number; to: number; texts: string[
       return runs;
     }, []);
 
-const wordNumber = (token: Token | undefined) => (token?.kind === "word" ? token.word : 0);
-
 const stopPageHandlers = (e: { stopPropagation: () => void }) => e.stopPropagation();
 
 /**
- * An interlinear gloss's base: its words keep working as page words (selecting, highlighting,
- * harakat), with a quiet dotted underline. Hovering, clicking or Enter shows the gloss
- * above them, where an interlinear gloss is written, clear of the footnote peek below.
+ * The marker after an interlinear gloss's base: a small drawn ring. The base words stay
+ * undecorated, so notes and highlights keep the text to themselves; only the ring opens the
+ * gloss (hover, click or Enter), above the line where an interlinear gloss is written.
+ * The ring is an inline-block inside an inline box, so a highlight runs on under it level.
  */
-const GlossMark = ({ texts, showHarakat, children }: { texts: string[]; showHarakat: boolean; children: ReactNode }) => {
+const GlossMarker = ({ texts, showHarakat, band }: { texts: string[]; showHarakat: boolean; band: { className: string; style?: CSSProperties } | null }) => {
   const id = useId();
   const [open, setOpen] = useState(false);
-  const shown = texts.map((t) => (showHarakat ? t : stripHarakat(t)));
+  const shown = texts.map((t) => (showHarakat ? t : stripHarakat(t))).join("\n");
   return (
-    <Popover
-      open={open}
-      onOpenChange={(next, details) => {
-        // Not while the reader drags a selection across the words.
-        const pressed = details.event instanceof MouseEvent && details.event.buttons !== 0 && details.event.type !== "click";
-        if (next && pressed) return;
-        setOpen(next);
-      }}
-    >
-      <PopoverTrigger
-        openOnHover
-        delay={250}
-        closeDelay={200}
-        nativeButton={false}
-        aria-describedby={id}
-        render={<span data-gloss className="gloss-mark" />}
+    <span className={band?.className} style={band?.style}>
+      <Popover
+        open={open}
+        onOpenChange={(next, details) => {
+          // Not while the reader drags a selection across it.
+          const pressed = details.event instanceof MouseEvent && details.event.buttons !== 0 && details.event.type !== "click";
+          if (next && pressed) return;
+          setOpen(next);
+        }}
       >
-        {children}
-        <span id={id} hidden>
-          {shown.join("\n")}
-        </span>
-      </PopoverTrigger>
-      <PopoverContent
-        side="top"
-        sideOffset={6}
-        initialFocus={false}
-        onMouseDown={stopPageHandlers}
-        onMouseUp={stopPageHandlers}
-        onClick={stopPageHandlers}
-        className="w-max max-w-96 gap-0 bg-surface-3 p-0 text-ink"
-      >
-        <div dir="rtl" className="gloss-scroll ar max-h-48 overflow-y-auto overscroll-contain px-3.5 py-2.5 text-right text-ar-small whitespace-pre-line text-ink-2">
-          {shown.join("\n")}
-        </div>
-      </PopoverContent>
-    </Popover>
+        <PopoverTrigger
+          openOnHover
+          delay={150}
+          closeDelay={200}
+          nativeButton={false}
+          aria-label="Interlinear gloss"
+          aria-describedby={id}
+          onClick={stopPageHandlers}
+          render={<span data-gloss className="gloss-ring" />}
+        >
+          <span id={id} hidden>
+            {shown}
+          </span>
+        </PopoverTrigger>
+        <PopoverContent
+          side="top"
+          sideOffset={6}
+          initialFocus={false}
+          onMouseDown={stopPageHandlers}
+          onMouseUp={stopPageHandlers}
+          onClick={stopPageHandlers}
+          className="w-max max-w-96 gap-0 bg-surface-3 p-0 text-ink"
+        >
+          <div dir="rtl" className="gloss-scroll ar max-h-48 overflow-y-auto overscroll-contain px-3.5 py-2.5 text-right text-ar-small whitespace-pre-line text-ink-2">
+            {shown}
+          </div>
+        </PopoverContent>
+      </Popover>
+    </span>
   );
 };
 
@@ -242,7 +243,9 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHo
     return t?.kind === "word" ? { line, word: t.word } : null;
   };
 
-  const rendered = tokens.map((token, i) => {
+  const runs = glossRuns(glosses.filter((g) => g.part === part && g.line === line));
+
+  return tokens.map((token, i) => {
     if (token.kind === "space") {
       const before = wordAt(i - 1);
       const after = wordAt(i + 1);
@@ -292,35 +295,29 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHo
         >
           <WordText text={token.text} mine={mine} display={display} targetLetter={targetLetter} />
         </span>
+        {runs
+          .filter((r) => r.to === token.word)
+          .map((r) => (
+            <GlossMarker
+              key="gloss"
+              texts={r.texts}
+              showHarakat={display.showHarakat}
+              band={
+                highlight
+                  ? {
+                      className: cx(MARK_BAND[highlight.color], at !== undefined && "mark-sweep"),
+                      style: at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.25 }) : undefined,
+                    }
+                  : null
+              }
+            />
+          ))}
         {note && isLastWord(note.span, ref) && (
           <MessageSquareText aria-label="Note" className="mx-0.5 inline size-3.5 -translate-y-3 text-accent" />
         )}
       </span>
     );
   });
-
-  const runs = glossRuns(glosses.filter((g) => g.part === part && g.line === line));
-  if (runs.length === 0) return rendered;
-  const out: ReactNode[] = [];
-  let i = 0;
-  while (i < tokens.length) {
-    const token = tokens[i];
-    const run = token?.kind === "word" ? runs.find((r) => r.from === token.word) : undefined;
-    if (!run) {
-      out.push(rendered[i]);
-      i += 1;
-      continue;
-    }
-    let end = i;
-    while (end < tokens.length - 1 && wordNumber(tokens[end]) < run.to) end += 1;
-    out.push(
-      <GlossMark key={`g${i}`} texts={run.texts} showHarakat={display.showHarakat}>
-        {rendered.slice(i, end + 1)}
-      </GlossMark>,
-    );
-    i = end + 1;
-  }
-  return out;
 };
 
 /** One row of a matn line as laid out on screen, relative to its paragraph. `word` is the row's first word. */

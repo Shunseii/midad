@@ -579,7 +579,7 @@ export const ReaderRoute = () => {
     setMenuOpen(false);
     dismiss();
     if (e.button === 0 && pageRoot.current) markDragging(pageRoot.current);
-    const offText = e.target instanceof Element && !e.target.closest("[data-w], button, a, input, textarea");
+    const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss], button, a, input, textarea");
     if (e.button === 0 && e.detail === 1 && offText) return startDragSelection(e);
     const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
     const root = pageRoot.current;

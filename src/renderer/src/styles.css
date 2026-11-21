@@ -211,30 +211,36 @@ body {
 }
 
 /*
- * An interlinear gloss's base: a quiet dotted underline, thinner and fainter than a
- * note's, that firms up while its gloss is showing. Vertical padding on the inline box
- * widens the hover target without touching the line's layout.
+ * The marker after an interlinear gloss's base: a small drawn ring in a muted ink, raised
+ * like a superscript but unlike the bold numerals of footnote refs. Its ::after widens the
+ * hit area, mostly upward and downward, without touching the line's layout.
  */
-.gloss-mark {
-  padding-block: 0.3em;
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 0.55em;
-  text-decoration-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
-  cursor: help;
-  transition: text-decoration-color var(--transition-duration-press) var(--ease-out);
+.gloss-ring {
+  position: relative;
+  display: inline-block;
+  width: 0.32em;
+  height: 0.32em;
+  margin-inline: 0.08em;
+  vertical-align: 0.55em;
+  border: 1.5px solid var(--color-ink-3);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-duration-press) var(--ease-out),
+    background-color var(--transition-duration-press) var(--ease-out);
 }
-/* A footnote number standing as the base is an inline-block, which the underline skips. */
-.gloss-mark sup {
-  text-decoration: inherit;
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
-  text-underline-offset: 0.3em;
+.gloss-ring::after {
+  content: "";
+  position: absolute;
+  inset: -0.6em -0.25em;
 }
-.gloss-mark:hover,
-.gloss-mark[data-popup-open] {
-  text-decoration-color: var(--color-accent);
+.gloss-ring:hover,
+.gloss-ring:focus-visible,
+.gloss-ring[data-popup-open] {
+  border-color: var(--color-accent);
+}
+.gloss-ring[data-popup-open] {
+  background-color: var(--color-accent-soft);
 }
 
 /*
