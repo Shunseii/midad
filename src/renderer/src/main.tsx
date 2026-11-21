@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { createHashRouter, RouterProvider } from "react-router";
 import { AppShell } from "./components/app-shell";
 import { ThemeSync } from "./lib/appearance";
+import { passPressesThroughTransitions } from "./lib/view-transition";
 import { LibraryRoute } from "./routes/library";
 import { ReaderRoute } from "./routes/reader";
 import { SettingsRoute } from "./routes/settings";
@@ -17,6 +18,8 @@ const queryClient = new QueryClient({
 
 // The midad CLI writes to the same library; show its changes as they land.
 window.midadEvents.onLibraryChanged(() => void queryClient.invalidateQueries({ queryKey: ["library"] }));
+
+passPressesThroughTransitions();
 
 const router = createHashRouter([
   {
