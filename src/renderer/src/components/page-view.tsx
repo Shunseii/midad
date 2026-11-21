@@ -316,8 +316,9 @@ const NoteIcon = ({ active, dim }: { active: boolean; dim: boolean }) => (
   <MessageSquareText
     data-overlay
     aria-hidden
+    strokeWidth={1.75}
     className={cx(
-      "pointer-events-none absolute -right-0.5 top-0 size-2.5 translate-x-full -translate-y-1/2 select-none transition-[color,opacity] duration-press ease-out",
+      "pointer-events-none absolute -right-0.5 top-0 size-3.5 translate-x-full -translate-y-1/2 select-none transition-[color,opacity] duration-press ease-out",
       active ? "text-accent" : "text-accent/55",
       dim && !active && "opacity-30",
     )}
