@@ -20,6 +20,7 @@ import { ScanPane, ScanSlot } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Skeleton, Toast, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
+import { tintWords } from "../lib/reveal";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
 import { createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
@@ -103,29 +104,6 @@ const columnInsets = (area: HTMLElement) => {
 };
 
 const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
-
-/** Scrolls a span into view and briefly tints its words, for jumping from the panel (and later, AI citations). */
-const REVEAL_TINT: Keyframe[] = [
-  { backgroundColor: "var(--color-accent-soft)" },
-  { backgroundColor: "var(--color-accent-soft)", offset: 0.6 },
-  { backgroundColor: "transparent" },
-];
-
-/**
- * Tints words for a moment, along with the spaces between neighbouring words
- * so the tint reads as one band. Each word sits in a wrapper with any gloss ring
- * after it; a space is the wrapper's next sibling.
- */
-const tintWords = (words: HTMLElement[]) => {
-  words.forEach((el, i) => {
-    const wrapper = el.parentElement;
-    const glossRings = wrapper ? [...wrapper.children].filter((c): c is HTMLElement => c !== el && c instanceof HTMLElement) : [];
-    const gap = wrapper?.nextElementSibling;
-    const nextWrapper = words[i + 1]?.parentElement;
-    const tinted = [el, ...glossRings, ...(gap && nextWrapper && gap.nextElementSibling === nextWrapper ? [gap] : [])];
-    for (const target of tinted) target.animate(REVEAL_TINT, { duration: 3000, easing: "ease-out" });
-  });
-};
 
 const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) => {
   if (!root) return;
@@ -656,7 +634,7 @@ export const ReaderRoute = () => {
     setMenuOpen(false);
     dismiss();
     if (e.button === 0 && pageRoot.current) markDragging(pageRoot.current);
-    const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss], button, a, input, textarea");
+    const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss], [role=link], button, a, input, textarea");
     if (e.button === 0 && e.detail === 1 && offText) return startDragSelection(e);
     const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
     const root = pageRoot.current;

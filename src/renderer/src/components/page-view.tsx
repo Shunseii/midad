@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { type CSSProperties, createContext, Fragment, type ReactNode, type MouseEvent as ReactMouseEvent, type RefObject, useContext, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, createContext, Fragment, type KeyboardEvent as ReactKeyboardEvent, type ReactNode, type MouseEvent as ReactMouseEvent, type RefObject, useContext, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -18,7 +18,8 @@ import type { StoredPage } from "../../../shared/library";
 import type { Gloss } from "../../../shared/page";
 import type { HighlightStyle, NoteIcons, PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
-import { footnotesByMarker, splitFootnoteRef } from "../lib/footnotes";
+import { FOOTNOTE_REF, footnotesByMarker, splitFootnoteRef, toArabicIndic } from "../lib/footnotes";
+import { scrollToMiddle, tintWords } from "../lib/reveal";
 import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
 import { cx } from "./ui";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -39,24 +40,89 @@ export const MARK_BAND: Record<HighlightColor, string> = {
   blue: "mark-band mark-blue",
 };
 
+const stopPageHandlers = (e: { stopPropagation: () => void }) => e.stopPropagation();
+
 /** The page's footnotes by marker, for the superscript references in the text to peek at. */
 const Footnotes = createContext<Map<string, string>>(new Map());
 
+/** Scrolls to the ḥāshiya entry with this marker and tints its words for a moment. */
+const revealFootnote = ({ from, marker }: { from: HTMLElement; marker: string }) => {
+  const entry = from.closest("article")?.querySelector<HTMLElement>(`[data-footnote="${marker}"]`);
+  if (!entry) return;
+  scrollToMiddle(entry);
+  tintWords([...entry.querySelectorAll<HTMLElement>("[data-w]")]);
+};
+
+/** Scrolls back to the first reference to this footnote in the text and tints its word. */
+const revealFootnoteRef = ({ from, marker }: { from: HTMLElement; marker: string }) => {
+  const word = from.closest("article")?.querySelector(`[data-footnote-ref="${marker}"]`)?.closest<HTMLElement>("[data-w]");
+  if (!word) return;
+  scrollToMiddle(word);
+  tintWords([word]);
+};
+
+const onActivate = (go: (el: HTMLElement) => void) => ({
+  onClick: (e: ReactMouseEvent<HTMLElement>) => {
+    // Not a click on the word: that would pick a letter for harakat.
+    e.stopPropagation();
+    go(e.currentTarget);
+  },
+  onKeyDown: (e: ReactKeyboardEvent<HTMLElement>) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault();
+    go(e.currentTarget);
+  },
+});
+
 /**
- * A footnote reference such as (١), set as a superscript that shows the footnote on hover.
+ * A footnote reference such as (١), set as a superscript that shows the footnote on hover
+ * and jumps to it in the ḥāshiya on click or Enter. Its hit area reaches past the small
+ * number (an overlay, so the line doesn't move); the em-based bounds track the text size and
+ * the zero line height Chromium gives the raised number. A long footnote scrolls inside the peek.
  * Inline-block: as a plain inline child it lifts the word's own box above its neighbours',
  * and the highlight band and reveal tint drawn from that box would step out of line.
  */
 const FootnoteRef = ({ marker }: { marker: string }) => {
   const footnote = useContext(Footnotes).get(marker);
-  const sup = <sup className="mx-px inline-block cursor-default align-super text-[0.6em] font-bold text-accent transition-colors duration-press hover:text-ink">{marker}</sup>;
-  if (!footnote) return <span data-sel-box>{sup}</span>;
+  const className = "relative mx-px inline-block align-super text-[0.6em] font-bold text-accent transition-colors duration-press";
+  if (!footnote) {
+    return (
+      <span data-sel-box>
+        <sup data-footnote-ref={marker} className={cx(className, "cursor-default")}>
+          {marker}
+        </sup>
+      </span>
+    );
+  }
+  const sup = (
+    <sup
+      data-footnote-ref={marker}
+      role="link"
+      tabIndex={0}
+      aria-label={`Footnote ${marker}`}
+      {...onActivate((el) => revealFootnote({ from: el, marker }))}
+      className={cx(
+        className,
+        "cursor-pointer rounded-sm outline-none before:absolute before:-inset-x-[0.5em] before:-top-[1.15em] before:-bottom-[1.1em] before:content-[''] hover:text-ink focus-visible:ring-2 focus-visible:ring-accent",
+      )}
+    >
+      {marker}
+    </sup>
+  );
   return (
     <span data-sel-box>
       <Tooltip>
         <TooltipTrigger render={sup} />
-        <TooltipContent side="bottom" sideOffset={6} arrow={false} className="block w-max max-w-96 rounded-xl bg-surface-3 px-3.5 py-2.5 text-ink shadow-float">
-          <span dir="rtl" className="ar block text-right text-ar-small text-ink-2">
+        <TooltipContent
+          side="bottom"
+          sideOffset={6}
+          arrow={false}
+          onMouseDown={stopPageHandlers}
+          onMouseUp={stopPageHandlers}
+          onClick={stopPageHandlers}
+          className="block w-max max-w-96 rounded-xl bg-surface-3 p-0 text-ink shadow-float"
+        >
+          <span dir="rtl" className="gloss-scroll ar block max-h-60 overflow-y-auto overscroll-contain px-3.5 py-2.5 text-right text-ar-small text-ink-2">
             ({marker}) {footnote}
           </span>
         </TooltipContent>
@@ -115,8 +181,6 @@ const glossRuns = (glosses: Gloss[]): { from: number; to: number; texts: string[
       } else runs.push({ from: g.from, to: g.to, texts: [g.text] });
       return runs;
     }, []);
-
-const stopPageHandlers = (e: { stopPropagation: () => void }) => e.stopPropagation();
 
 /**
  * The marker after an interlinear gloss's base: a small drawn ring. The base words stay
@@ -614,9 +678,12 @@ const MarkableLine = ({
   notes,
   numbered,
   noteMarks,
+  footnote,
   children,
 }: {
   as: "p" | "h2";
+  /** A ḥāshiya entry's marker, for references in the text to find it by. */
+  footnote?: string;
   part: Part;
   line: number;
   className: string;
@@ -661,7 +728,7 @@ const MarkableLine = ({
   };
 
   return (
-    <Tag ref={ref} data-line-block={`${part}-${line}`} onMouseLeave={() => setHover(null)} className={cx("relative", className)}>
+    <Tag ref={ref} data-line-block={`${part}-${line}`} data-footnote={footnote} onMouseLeave={() => setHover(null)} className={cx("relative", className)}>
       {children}
       {/* The margin beside the line: the mark button shows only while the pointer is here. */}
       <span
@@ -711,6 +778,24 @@ const MarkableLine = ({
     </Tag>
   );
 };
+
+/** A ḥāshiya entry's printed number. Where the text refers to it, it links back there. */
+const FootnoteBack = ({ marker, printed, linked }: { marker: string; printed: string; linked: boolean }) =>
+  linked ? (
+    <>
+      <span
+        role="link"
+        tabIndex={0}
+        aria-label={`Back to footnote ${marker} in the text`}
+        {...onActivate((el) => revealFootnoteRef({ from: el, marker }))}
+        className="cursor-pointer rounded-sm text-accent outline-none transition-colors duration-press hover:text-ink focus-visible:ring-2 focus-visible:ring-accent"
+      >
+        ({printed})
+      </span>{" "}
+    </>
+  ) : (
+    `(${printed}) `
+  );
 
 /** A heading that opens a chapter, set off with space and a small ornament above it. */
 const ChapterOrnament = () => (
@@ -779,6 +864,7 @@ export const PageView = ({
     noteMarks: { dim: dimNoteMarks, tinted, handlers: noteMarkHandlers },
   });
   const footnotes = footnotesByMarker(page.hashiya.map((f) => ({ marker: f.marker, text: t(f.text) })));
+  const referenced = new Set(page.matn.flatMap((b) => [...b.text.matchAll(new RegExp(FOOTNOTE_REF.source, "g"))].map((m) => toArabicIndic(m[1] ?? ""))));
   const folio = arabicNumber(stored.number ?? stored.position);
   // A marker removed from the page (or never on it) has nowhere to glide from when it comes back.
   useLayoutEffect(() => {
@@ -826,8 +912,14 @@ export const PageView = ({
             <h3 className="sr-only">الحاشية</h3>
             <span aria-hidden className="mb-2 h-px w-1/3 bg-ink-3/40" />
             {page.hashiya.map((f, i) => (
-              <MarkableLine key={`${f.marker ?? "u"}-${i}`} as="p" {...markable("hashiya", i + 1)} className="ar text-justify text-ar-small text-ink-2 [text-align-last:start]">
-                {f.marker && `(${f.marker}) `}
+              <MarkableLine
+                key={`${f.marker ?? "u"}-${i}`}
+                as="p"
+                {...markable("hashiya", i + 1)}
+                footnote={f.marker ? toArabicIndic(f.marker) : undefined}
+                className="ar text-justify text-ar-small text-ink-2 [text-align-last:start]"
+              >
+                {f.marker && <FootnoteBack marker={toArabicIndic(f.marker)} printed={f.marker} linked={display.hashiyaMarkers && referenced.has(toArabicIndic(f.marker))} />}
                 <Line part="hashiya" line={i + 1} text={f.text} {...lineProps} />
               </MarkableLine>
             ))}
