@@ -273,6 +273,24 @@ body {
   }
 }
 
+/*
+ * Footnote refs and gloss rings inside a selection (see useSelectionBoxes in page-view.tsx):
+ * their full-height box takes the selection colour, stretched by shadows to the height the
+ * browser paints a text selection at (padding would move a highlight band drawn from the box),
+ * and the ref's own small selection box is dropped so it doesn't double up.
+ */
+[data-sel-box]::selection,
+[data-sel-box] *::selection {
+  background-color: transparent;
+}
+[data-sel-box][data-in-selection] {
+  --selection: color-mix(in oklab, var(--color-accent) 28%, transparent);
+  background-color: var(--selection);
+  box-shadow:
+    0 -0.135em 0 var(--selection),
+    0 0.2em 0 var(--selection);
+}
+
 /* Only the line's own rows hang; the margin controls inside it don't. */
 .page-line * {
   text-indent: 0;

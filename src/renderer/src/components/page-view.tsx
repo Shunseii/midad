@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { type CSSProperties, createContext, Fragment, type ReactNode, type MouseEvent as ReactMouseEvent, useContext, useId, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, createContext, Fragment, type ReactNode, type MouseEvent as ReactMouseEvent, type RefObject, useContext, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -50,17 +50,40 @@ const Footnotes = createContext<Map<string, string>>(new Map());
 const FootnoteRef = ({ marker }: { marker: string }) => {
   const footnote = useContext(Footnotes).get(marker);
   const sup = <sup className="mx-px inline-block cursor-default align-super text-[0.6em] font-bold text-accent transition-colors duration-press hover:text-ink">{marker}</sup>;
-  if (!footnote) return sup;
+  if (!footnote) return <span data-sel-box>{sup}</span>;
   return (
-    <Tooltip>
-      <TooltipTrigger render={sup} />
-      <TooltipContent side="bottom" sideOffset={6} arrow={false} className="block w-max max-w-96 rounded-xl bg-surface-3 px-3.5 py-2.5 text-ink shadow-float">
-        <span dir="rtl" className="ar block text-right text-ar-small text-ink-2">
-          ({marker}) {footnote}
-        </span>
-      </TooltipContent>
-    </Tooltip>
+    <span data-sel-box>
+      <Tooltip>
+        <TooltipTrigger render={sup} />
+        <TooltipContent side="bottom" sideOffset={6} arrow={false} className="block w-max max-w-96 rounded-xl bg-surface-3 px-3.5 py-2.5 text-ink shadow-float">
+          <span dir="rtl" className="ar block text-right text-ar-small text-ink-2">
+            ({marker}) {footnote}
+          </span>
+        </TooltipContent>
+      </Tooltip>
+    </span>
   );
+};
+
+/**
+ * The browser paints a selection only behind text at the text's own size, which leaves holes
+ * at the small inline-block footnote refs and at the gloss rings. Their full-height boxes
+ * (data-sel-box) take the selection colour instead while the selection covers them.
+ */
+const useSelectionBoxes = (root: RefObject<HTMLElement | null>) => {
+  useEffect(() => {
+    const update = () => {
+      const el = root.current;
+      if (!el) return;
+      const selection = window.getSelection();
+      const range = selection && !selection.isCollapsed && selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+      for (const box of el.querySelectorAll<HTMLElement>("[data-sel-box]")) {
+        box.toggleAttribute("data-in-selection", !!range && range.intersectsNode(box));
+      }
+    };
+    document.addEventListener("selectionchange", update);
+    return () => document.removeEventListener("selectionchange", update);
+  }, [root]);
 };
 
 /** Plain word text with any footnote reference in it raised as a superscript. */
@@ -96,7 +119,7 @@ const GlossMarker = ({ texts, showHarakat, band }: { texts: string[]; showHaraka
   const [open, setOpen] = useState(false);
   const shown = texts.map((t) => (showHarakat ? t : stripHarakat(t))).join("\n");
   return (
-    <span className={band?.className} style={band?.style}>
+    <span data-sel-box className={band?.className} style={band?.style}>
       <Popover
         open={open}
         onOpenChange={(next, details) => {
@@ -548,6 +571,8 @@ export const PageView = ({
   onWordClick: LineProps["onWordClick"];
 }) => {
   const { page } = stored;
+  const articleRef = useRef<HTMLElement>(null);
+  useSelectionBoxes(articleRef);
   const fresh = freshHighlight ? annotations.highlights.find((h) => h.id === freshHighlight) : undefined;
   const sweep = fresh ? sweepOrder({ page, highlight: fresh }) : null;
   const lineProps = { glosses: page.glosses, annotations, sweep, display, onWordHover, onWordClick };
@@ -566,6 +591,7 @@ export const PageView = ({
     <MarkPage value={stored.position}>
     <Footnotes value={footnotes}>
       <article
+        ref={articleRef}
         style={{ "--text-scale": display.textScale } as CSSProperties}
         className={cx(
           "reader-text mx-auto flex w-full flex-col pb-24",
