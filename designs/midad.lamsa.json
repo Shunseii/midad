@@ -1900,6 +1900,17 @@
       },
       "type": "instance"
     },
+    "13vKQFp6": {
+      "index": "a000",
+      "name": "Meta",
+      "parentId": "Byq9aXsT",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 8
+      },
+      "type": "frame"
+    },
     "14ErN88Q": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ المفيدُ بالوضعِ",
       "index": "a001",
@@ -7497,6 +7508,22 @@
         "width": 168
       },
       "type": "frame"
+    },
+    "4RxjZygD": {
+      "componentId": "RV1DOgzp",
+      "index": "a002",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "x"
+        }
+      },
+      "parentId": "SDNpsk2q",
+      "props": {
+        "label": "Close panel",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "4S1xEEAJ": {
       "index": "Za000",
@@ -20601,6 +20628,21 @@
       },
       "type": "frame"
     },
+    "Byq9aXsT": {
+      "index": "a01",
+      "name": "Card",
+      "parentId": "gUUnp3bB",
+      "style": {
+        "background": "{color.bg}",
+        "border": "1px solid {color.line}",
+        "border-radius": 12,
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "padding": 14
+      },
+      "type": "frame"
+    },
     "BzKdljYq": {
       "index": "a0",
       "name": "Row · Text size",
@@ -24745,6 +24787,17 @@
       "x": 7880,
       "y": 0
     },
+    "EUIcQsIA": {
+      "componentId": "46QiZLNZ",
+      "index": "a01",
+      "name": "Segment",
+      "parentId": "IpcvMjFR",
+      "props": {
+        "label": "Notes",
+        "state": "selected"
+      },
+      "type": "instance"
+    },
     "EYPSZltg": {
       "content": "12",
       "index": "a000",
@@ -24878,6 +24931,17 @@
         "padding": "4px 10px"
       },
       "type": "frame"
+    },
+    "EhfaxFPH": {
+      "componentId": "46QiZLNZ",
+      "index": "a00",
+      "name": "Segment",
+      "parentId": "IpcvMjFR",
+      "props": {
+        "label": "Highlights",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "EhvqyNMK": {
       "index": "a1",
@@ -31194,6 +31258,17 @@
       },
       "type": "frame"
     },
+    "IGczdupk": {
+      "index": "a00",
+      "name": "Heading",
+      "parentId": "gUUnp3bB",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 8
+      },
+      "type": "frame"
+    },
     "IJFZymYW": {
       "index": "a3",
       "name": "Dot",
@@ -32125,6 +32200,20 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "IpcvMjFR": {
+      "index": "a000",
+      "name": "Segmented control",
+      "parentId": "SDNpsk2q",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
     },
     "IpfsEzi4": {
       "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: bottom center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}",
@@ -34190,6 +34279,21 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "JxhEZWHr": {
+      "index": "a02",
+      "name": "Card",
+      "parentId": "gUUnp3bB",
+      "style": {
+        "background": "{color.bg}",
+        "border": "1px solid {color.line}",
+        "border-radius": 12,
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "padding": 14
       },
       "type": "frame"
     },
@@ -39839,6 +39943,22 @@
       },
       "type": "text"
     },
+    "NPEFhZX4": {
+      "componentId": "RV1DOgzp",
+      "index": "a003",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "qSVZxqh6",
+      "props": {
+        "label": "Delete note",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "NPZrIsSQ": {
       "index": "a006",
       "name": "TOC · بابُ مرفوعاتِ الأسماءِ",
@@ -40914,6 +41034,22 @@
         "text-align": "justify",
         "text-align-last": "right",
         "text-indent": "-1.5em"
+      },
+      "type": "frame"
+    },
+    "O4qqwC1l": {
+      "css": "/* Click the text to edit; Ctrl/Cmd+Enter or clicking away saves, Esc cancels. */\ntransition: opacity 160ms var(--ease-out);\n\n@starting-style {\n  opacity: 0;\n}",
+      "index": "a002",
+      "name": "Note textarea",
+      "parentId": "Byq9aXsT",
+      "style": {
+        "background": "{color.surface}",
+        "border": "1px solid {color.accent}",
+        "border-radius": 8,
+        "box-shadow": "0 0 0 3px {color.accent-soft}",
+        "display": "flex",
+        "min-height": 80,
+        "padding": "8px 12px"
       },
       "type": "frame"
     },
@@ -44940,6 +45076,20 @@
       },
       "type": "frame"
     },
+    "QMUJWtzo": {
+      "content": "Notes belong to this page. Click a note's text to edit it here, or open it from the page.",
+      "index": "a03",
+      "name": "Notes belong to this page. Hover a dotte",
+      "parentId": "gUUnp3bB",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "font-weight": 400,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "QMxHvr1M": {
       "index": "a1",
       "name": "Card",
@@ -46761,6 +46911,20 @@
       },
       "type": "text"
     },
+    "RZq8mC5m": {
+      "content": "Line 2 · 2 days ago",
+      "index": "a000",
+      "name": "Line 2 · 2 days ago",
+      "parentId": "13vKQFp6",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "font-weight": 400,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "Ra5CKIRN": {
       "content": "بابُ معرفةِ علاماتِ الإعرابِ",
       "index": "a002",
@@ -47654,6 +47818,19 @@
         "right": "87.69%",
         "translate": "50% 0",
         "width": 5
+      },
+      "type": "frame"
+    },
+    "SDNpsk2q": {
+      "index": "a000",
+      "name": "Panel header",
+      "parentId": "n7aWpSn6",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 8,
+        "padding": "12px 16px"
       },
       "type": "frame"
     },
@@ -50370,6 +50547,19 @@
         "withDot": "no"
       },
       "type": "instance"
+    },
+    "ThBArBOx": {
+      "index": "a001",
+      "name": "Quote",
+      "parentId": "JxhEZWHr",
+      "style": {
+        "border-right": "3px solid {color.accent}",
+        "direction": "rtl",
+        "display": "block",
+        "padding-right": 12,
+        "text-align": "right"
+      },
+      "type": "frame"
     },
     "ThFKNAEA": {
       "content": "Footnote numbers in the main text; the hashiya below stays",
@@ -54591,6 +54781,15 @@
       },
       "type": "text"
     },
+    "WApcpPyd": {
+      "index": "a001",
+      "name": "Spacer",
+      "parentId": "SDNpsk2q",
+      "style": {
+        "flex": 1
+      },
+      "type": "frame"
+    },
     "WB805oLd": {
       "index": "a7",
       "name": "Chapter opening",
@@ -55512,6 +55711,7 @@
     },
     "WiJ1yjs8": {
       "content": "Yaṣluḥu here means “admits”: a ḥarf takes none of the signs of the ism or the fiʿl.",
+      "css": "cursor: text;\nborder-radius: 6px;\ntransition:\n  background-color 120ms var(--ease-out),\n  opacity 160ms var(--ease-out);\n\n@starting-style {\n  opacity: 0;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 4%, transparent);\n}",
       "index": "a002",
       "name": "Yaṣluḥu here means “admits”: a ḥarf take",
       "parentId": "2E5oou3E",
@@ -55675,6 +55875,19 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "WnFQmYXE": {
+      "index": "a001",
+      "name": "Quote",
+      "parentId": "Byq9aXsT",
+      "style": {
+        "border-right": "3px solid {color.accent}",
+        "direction": "rtl",
+        "display": "block",
+        "padding-right": 12,
+        "text-align": "right"
+      },
+      "type": "frame"
     },
     "WnoDKr7h": {
       "index": "a0",
@@ -56836,6 +57049,18 @@
         "display": "inline"
       },
       "type": "text"
+    },
+    "XU9Oe5qV": {
+      "componentId": "uJd03iQq",
+      "index": "a000",
+      "name": "Badge",
+      "parentId": "qSVZxqh6",
+      "props": {
+        "label": "Claude",
+        "tone": "accent",
+        "withDot": "yes"
+      },
+      "type": "instance"
     },
     "XUJKoMIs": {
       "index": "a000",
@@ -58072,7 +58297,7 @@
       "type": "text"
     },
     "YCCgiJpb": {
-      "content": "Notes belong to this page. Hover the note mark in the margin to edit its note in place.",
+      "content": "Notes belong to this page. Click a note's text to edit it here, or open it from the page.",
       "index": "a03",
       "name": "Notes belong to this page. Hover a dotte",
       "parentId": "ZGGZhv1S",
@@ -65358,6 +65583,20 @@
       },
       "type": "frame"
     },
+    "cfPZvExx": {
+      "content": "Line 5 · today",
+      "index": "a001",
+      "name": "Line 5 · today",
+      "parentId": "qSVZxqh6",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "font-weight": 400,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "cftWLGd8": {
       "content": "مقدمة",
       "index": "a002",
@@ -66555,7 +66794,7 @@
       "type": "frame"
     },
     "dPmUYsiE": {
-      "content": "Notes belong to this page. Hover the note mark in the margin to edit its note in place.",
+      "content": "Notes belong to this page. Click a note's text to edit it here, or open it from the page.",
       "index": "a03",
       "name": "Notes belong to this page. Hover a dotte",
       "parentId": "fiTB5Nrv",
@@ -70395,6 +70634,15 @@
       },
       "type": "frame"
     },
+    "fVHIMjzQ": {
+      "index": "a002",
+      "name": "Spacer",
+      "parentId": "qSVZxqh6",
+      "style": {
+        "flex": 1
+      },
+      "type": "frame"
+    },
     "fVIs1DNS": {
       "index": "a2",
       "name": "Line 2",
@@ -72177,6 +72425,20 @@
       },
       "style": {},
       "type": "instance"
+    },
+    "gUUnp3bB": {
+      "index": "a001",
+      "name": "Panel body",
+      "parentId": "n7aWpSn6",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 16,
+        "overflow": "hidden",
+        "padding": 20
+      },
+      "type": "frame"
     },
     "gUYucViD": {
       "content": "1",
@@ -78667,6 +78929,20 @@
       },
       "type": "frame"
     },
+    "kLAqo6ul": {
+      "content": "Ism, fiʿl, ḥarf: every word in the matn is one of three|",
+      "index": "a0",
+      "name": "Draft",
+      "parentId": "O4qqwC1l",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 15,
+        "font-weight": 400,
+        "line-height": "24px"
+      },
+      "type": "text"
+    },
     "kLiotBWc": {
       "index": "ai",
       "name": "Highlight dot",
@@ -80058,6 +80334,27 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "l1Ihq3CV": {
+      "content": "يصلحُ",
+      "index": "a000",
+      "name": "يصلحُ",
+      "parentId": "ThBArBOx",
+      "style": {
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 400,
+        "line-height": "36px",
+        "text-decoration-color": "{color.accent}",
+        "text-decoration-line": "underline",
+        "text-decoration-style": "dotted",
+        "text-decoration-thickness": "2px",
+        "text-underline-offset": "14px"
+      },
+      "type": "text"
     },
     "l2MYuKxD": {
       "componentId": "RV1DOgzp",
@@ -81855,6 +82152,7 @@
     },
     "m1Z6Wx5M": {
       "content": "Ism, fiʿl, ḥarf: every word in the matn is one of these three. Compare Qaṭr al-Nadā p. 11.",
+      "css": "cursor: text;\nborder-radius: 6px;\ntransition:\n  background-color 120ms var(--ease-out),\n  opacity 160ms var(--ease-out);\n\n@starting-style {\n  opacity: 0;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 4%, transparent);\n}",
       "index": "a002",
       "name": "Ism, fiʿl, ḥarf: every word in the matn ",
       "parentId": "sWY2Bzn0",
@@ -83617,6 +83915,23 @@
       },
       "type": "instance"
     },
+    "n7aWpSn6": {
+      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "name": "Notes panel · Editing",
+      "style": {
+        "background": "{color.surface}",
+        "border-left": "1px solid {color.line}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "height": 900,
+        "overflow": "hidden",
+        "width": 420
+      },
+      "type": "frame",
+      "x": 29200,
+      "y": 1060
+    },
     "n7dTqZb1": {
       "icon": "chevron-right",
       "index": "a2",
@@ -84281,6 +84596,22 @@
         "gap": 0
       },
       "type": "frame"
+    },
+    "nXLch8EE": {
+      "componentId": "RV1DOgzp",
+      "index": "a002",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "13vKQFp6",
+      "props": {
+        "label": "Delete note",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "nXin1oQc": {
       "content": "الحاشية",
@@ -89147,6 +89478,17 @@
       },
       "type": "frame"
     },
+    "qSVZxqh6": {
+      "index": "a000",
+      "name": "Meta",
+      "parentId": "JxhEZWHr",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 8
+      },
+      "type": "frame"
+    },
     "qTyNH12v": {
       "index": "a006",
       "name": "TOC · بابُ مرفوعاتِ الأسماءِ",
@@ -91507,6 +91849,18 @@
         "padding": "40px 48px"
       },
       "type": "frame"
+    },
+    "rh8jLX8w": {
+      "componentId": "uJd03iQq",
+      "index": "a001",
+      "name": "Badge",
+      "parentId": "IGczdupk",
+      "props": {
+        "label": "2",
+        "tone": "neutral",
+        "withDot": "no"
+      },
+      "type": "instance"
     },
     "rhq6Xbga": {
       "index": "a000",
@@ -93950,6 +94304,20 @@
         "font-weight": 400,
         "line-height": "28px",
         "text-align": "right"
+      },
+      "type": "text"
+    },
+    "tCAoGYqB": {
+      "content": "Notes on this page",
+      "index": "a000",
+      "name": "Notes on this page",
+      "parentId": "IGczdupk",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600,
+        "line-height": "24px"
       },
       "type": "text"
     },
@@ -97511,6 +97879,15 @@
       },
       "type": "frame"
     },
+    "vDTnyqyH": {
+      "index": "a001",
+      "name": "Spacer",
+      "parentId": "13vKQFp6",
+      "style": {
+        "flex": 1
+      },
+      "type": "frame"
+    },
     "vE9sKPb7": {
       "content": "بابُ الفاعلِ",
       "index": "a002",
@@ -98957,6 +99334,27 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "wKDzAf0p": {
+      "content": "اسمٌ",
+      "index": "a000",
+      "name": "اسمٌ",
+      "parentId": "WnFQmYXE",
+      "style": {
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 400,
+        "line-height": "36px",
+        "text-decoration-color": "{color.accent}",
+        "text-decoration-line": "underline",
+        "text-decoration-style": "dotted",
+        "text-decoration-thickness": "2px",
+        "text-underline-offset": "14px"
+      },
+      "type": "text"
     },
     "wKg60xjv": {
       "index": "a001",
@@ -103557,6 +103955,21 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "z89thyuC": {
+      "content": "Yaṣluḥu here means “admits”: a ḥarf takes none of the signs of the ism or the fiʿl.",
+      "css": "cursor: text;\nborder-radius: 6px;\ntransition:\n  background-color 120ms var(--ease-out),\n  opacity 160ms var(--ease-out);\n\n@starting-style {\n  opacity: 0;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 4%, transparent);\n}",
+      "index": "a002",
+      "name": "Yaṣluḥu here means “admits”: a ḥarf take",
+      "parentId": "JxhEZWHr",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 15,
+        "font-weight": 400,
+        "line-height": "24px"
+      },
+      "type": "text"
     },
     "z8S1nm6G": {
       "content": "بابُ الإعرابِ",

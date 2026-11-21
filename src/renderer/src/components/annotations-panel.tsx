@@ -1,9 +1,11 @@
 import { Highlighter, NotebookPen, Sparkles, Trash2, X } from "lucide-react";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { Highlight, Note, PageAnnotations, Span } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
+import { noteEditOutcome } from "../lib/note-edit";
 import { MARK_BG } from "./page-view";
 import { Badge, IconButton, Segmented, cx } from "./ui";
+import { Textarea } from "./ui/textarea";
 
 export type PanelTab = "highlights" | "notes" | "ask";
 
@@ -45,6 +47,87 @@ const Card = ({ children, onClick }: { children: ReactNode; onClick: () => void 
   </div>
 );
 
+/**
+ * A note's text in the panel. Clicking it edits it in place: Ctrl/Cmd+Enter or
+ * clicking away saves, Esc cancels, and a blank or unchanged note stays as it was.
+ */
+const NoteBody = ({
+  note,
+  onSave,
+  onEditing,
+}: {
+  note: Note;
+  onSave: (input: { id: string; body: string }) => void;
+  onEditing: (id: string | null) => void;
+}) => {
+  const [draft, setDraft] = useState<string | null>(null);
+  // Shows a saved edit until the refetched note catches up with it.
+  const [saved, setSaved] = useState<string | null>(null);
+  useEffect(() => setSaved(null), [note.body]);
+  const finished = useRef(false);
+
+  const start = () => {
+    finished.current = false;
+    setDraft(saved ?? note.body);
+    onEditing(note.id);
+  };
+  const finish = (save: boolean) => {
+    if (finished.current || draft === null) return;
+    finished.current = true;
+    const outcome = noteEditOutcome({ before: saved ?? note.body, draft });
+    if (save && outcome.kind === "save") {
+      setSaved(outcome.body);
+      onSave({ id: note.id, body: outcome.body });
+    }
+    setDraft(null);
+    onEditing(null);
+  };
+
+  const enter = "transition-opacity duration-pop ease-out starting:opacity-0";
+  if (draft === null)
+    return (
+      <button
+        type="button"
+        dir="auto"
+        aria-label="Edit note"
+        onClick={(e) => {
+          e.stopPropagation();
+          start();
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+        className={cx(
+          "-mx-1.5 -my-1 cursor-text rounded-md px-1.5 py-1 text-left text-body whitespace-pre-wrap text-ink-2 [unicode-bidi:plaintext] hover:bg-ink/4 focus-visible:outline-2 focus-visible:outline-accent",
+          enter,
+        )}
+      >
+        {saved ?? note.body}
+      </button>
+    );
+  return (
+    <Textarea
+      autoFocus
+      dir="auto"
+      aria-label="Note"
+      value={draft}
+      onChange={(e) => setDraft(e.target.value)}
+      onFocus={(e) => e.currentTarget.setSelectionRange(e.currentTarget.value.length, e.currentTarget.value.length)}
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => {
+        e.stopPropagation();
+        if (e.key === "Escape") {
+          e.preventDefault();
+          finish(false);
+        } else if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          finish(true);
+        }
+      }}
+      onBlur={() => finish(true)}
+      className={cx("min-h-20 resize-none text-body", enter)}
+    />
+  );
+};
+
 export const AnnotationsPanel = ({
   tab,
   onTab,
@@ -53,6 +136,8 @@ export const AnnotationsPanel = ({
   onGoTo,
   onRemoveHighlight,
   onDeleteNote,
+  onUpdateNote,
+  onEditingNote,
   askPanel,
   width,
   onResize,
@@ -70,6 +155,9 @@ export const AnnotationsPanel = ({
   onGoTo: (span: Span) => void;
   onRemoveHighlight: (id: string) => void;
   onDeleteNote: (id: string) => void;
+  onUpdateNote: (input: { id: string; body: string }) => void;
+  /** The note being edited in the panel, so the page can keep its words tinted. */
+  onEditingNote: (id: string | null) => void;
 }) => {
   const items = tab === "highlights" ? (annotations?.highlights ?? []) : (annotations?.notes ?? []);
   return (
@@ -134,9 +222,7 @@ export const AnnotationsPanel = ({
               <p className="ar border-r-2 border-accent pr-3 text-right text-ar-body">
                 <span className="underline decoration-accent decoration-dotted decoration-2 underline-offset-8">{n.quote}</span>
               </p>
-              <p dir="auto" className="whitespace-pre-wrap text-body text-ink-2 [unicode-bidi:plaintext]">
-                {n.body}
-              </p>
+              <NoteBody note={n} onSave={onUpdateNote} onEditing={onEditingNote} />
             </Card>
           ))}
         {annotations && items.length === 0 ? (
@@ -153,7 +239,7 @@ export const AnnotationsPanel = ({
           <p className="text-xs text-ink-3">
             {tab === "highlights"
               ? "Select text and pick a colour to highlight it."
-              : "Notes belong to this page. Hover the note mark in the margin to edit its note in place."}
+              : "Notes belong to this page. Click a note's text to edit it here, or open it from the page."}
           </p>
         )}
       </div>

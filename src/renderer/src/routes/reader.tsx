@@ -392,6 +392,7 @@ export const ReaderRoute = () => {
   if (noteEditor) lastNote.current = noteEditor;
   const [entryTint, setEntryTint] = useState<string | null>(null);
   const [markTint, setMarkTint] = useState<readonly string[]>([]);
+  const [panelEditTint, setPanelEditTint] = useState<string | null>(null);
   const tinted = useMemo<ReadonlySet<string>>(() => {
     const fromLayer = !noteEditor
       ? []
@@ -402,8 +403,8 @@ export const ReaderRoute = () => {
         : noteEditor.note
           ? [noteEditor.note.id]
           : [];
-    return new Set([...fromLayer, ...markTint]);
-  }, [noteEditor, entryTint, markTint]);
+    return new Set([...fromLayer, ...markTint, ...(panelEditTint ? [panelEditTint] : [])]);
+  }, [noteEditor, entryTint, markTint, panelEditTint]);
   const pageRoot = useRef<HTMLDivElement>(null);
   const pointerInNote = useRef(false);
   const leftNote = useRef(false);
@@ -1153,6 +1154,8 @@ export const ReaderRoute = () => {
       }}
       onRemoveHighlight={removeHighlight}
       onDeleteNote={(id) => void noteWrites.remove(id)}
+      onUpdateNote={(input) => void noteWrites.update(input)}
+      onEditingNote={setPanelEditTint}
       width={sideWidth}
       onResize={(w) => setSideWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
       onResetSize={() => (asking ? setAskWidth(null) : setPanelWidth(PANEL_WIDTH))}
