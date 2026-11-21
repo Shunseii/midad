@@ -4995,7 +4995,7 @@
       "type": "text"
     },
     "WE6Reiw7": {
-      "css": "cursor: pointer;\n\n&:focus-visible {\n  outline: 2px solid {color.accent};\n  outline-offset: 4px;\n}",
+      "css": "cursor: pointer;\n\n&:focus-visible {\n  outline: 2px solid {color.accent};\n  outline-offset: 4px;\n}\ntransition: width {transition.duration-slide} {ease.move};\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a1",
       "name": "Scrubber",
       "parentId": "v8FmfBf5",
@@ -5005,7 +5005,7 @@
         "left": "50%",
         "position": "absolute",
         "translate": "-50% 0",
-        "width": "min(760px, calc(100% - 48px))"
+        "width": "min(640px, calc(100% - 48px))"
       },
       "type": "frame"
     },
@@ -9020,6 +9020,23 @@
                   "style": {
                     "opacity": 1,
                     "scale": 1
+                  }
+                }
+              }
+            },
+            "type": "enum"
+          },
+          "width": {
+            "default": "narrow",
+            "options": [
+              "narrow",
+              "wide"
+            ],
+            "overrides": {
+              "wide": {
+                "WE6Reiw7": {
+                  "style": {
+                    "width": "min(760px, calc(100% - 48px))"
                   }
                 }
               }

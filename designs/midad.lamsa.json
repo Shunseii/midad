@@ -2483,7 +2483,7 @@
         "outline-offset": "4px",
         "position": "absolute",
         "translate": "-50% 0",
-        "width": 760
+        "width": 640
       },
       "type": "frame"
     },
@@ -4996,7 +4996,7 @@
         "left": "50%",
         "position": "absolute",
         "translate": "-50% 0",
-        "width": 760
+        "width": 640
       },
       "type": "frame"
     },
@@ -23922,7 +23922,7 @@
         "left": "50%",
         "position": "absolute",
         "translate": "-50% 0",
-        "width": 760
+        "width": 640
       },
       "type": "frame"
     },
@@ -26757,7 +26757,7 @@
         "left": "50%",
         "position": "absolute",
         "translate": "-50% 0",
-        "width": 760
+        "width": 640
       },
       "type": "frame"
     },
@@ -32991,7 +32991,7 @@
         "left": "50%",
         "position": "absolute",
         "translate": "-50% 0",
-        "width": 760
+        "width": 640
       },
       "type": "frame"
     },
@@ -71148,7 +71148,7 @@
         "left": "50%",
         "position": "absolute",
         "translate": "-50% 0",
-        "width": 760
+        "width": 640
       },
       "type": "frame"
     },
