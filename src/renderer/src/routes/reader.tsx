@@ -360,11 +360,19 @@ export const ReaderRoute = () => {
   const lastNote = useRef<NoteState | null>(null);
   if (noteEditor) lastNote.current = noteEditor;
   const [entryTint, setEntryTint] = useState<string | null>(null);
+  const [markTint, setMarkTint] = useState<readonly string[]>([]);
   const tinted = useMemo<ReadonlySet<string>>(() => {
-    if (!noteEditor) return new Set();
-    if (noteEditor.mode === "row") return new Set(entryTint ? [entryTint] : (noteEditor.row ?? []).map((n) => n.id));
-    return new Set(noteEditor.note ? [noteEditor.note.id] : []);
-  }, [noteEditor, entryTint]);
+    const fromLayer = !noteEditor
+      ? []
+      : noteEditor.mode === "row"
+        ? entryTint
+          ? [entryTint]
+          : (noteEditor.row ?? []).map((n) => n.id)
+        : noteEditor.note
+          ? [noteEditor.note.id]
+          : [];
+    return new Set([...fromLayer, ...markTint]);
+  }, [noteEditor, entryTint, markTint]);
   const pageRoot = useRef<HTMLDivElement>(null);
   const pointerInNote = useRef(false);
   const leftNote = useRef(false);
@@ -548,19 +556,8 @@ export const ReaderRoute = () => {
     a?.mode === b.mode && a.note?.id === b.note?.id && (a.row ?? []).map((n) => n.id).join() === (b.row ?? []).map((n) => n.id).join();
 
   const noteMarkHandlers = {
-    onHover: (target: NoteMarkTarget | null) => {
-      if (!target) {
-        if (noteEditor) scheduleNoteClose();
-        return;
-      }
-      clearTimeout(closeTimer.current);
-      if (toolbar || focusInNoteEditor()) return;
-      if (noteEditor?.mode === "edit" && pointerInNote.current) return;
-      const next = noteMarkState(target, "peek");
-      if (!next || sameNotes(noteEditor, next)) return;
-      setEntryTint(null);
-      setNoteEditor(next);
-    },
+    /** Hovering a margin mark only tints its notes' words; clicking opens them. */
+    onHover: (target: NoteMarkTarget | null) => setMarkTint(target ? target.notes.map((n) => n.id) : []),
     onOpen: (target: NoteMarkTarget) => {
       clearTimeout(closeTimer.current);
       setToolbar(null);
