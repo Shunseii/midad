@@ -1,9 +1,10 @@
-import { Check, Copy, Eraser, Highlighter, NotebookPen, Sparkles, Trash2 } from "lucide-react";
+import { Check, Copy, Eraser, NotebookPen, Sparkles, Trash2 } from "lucide-react";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { HIGHLIGHT_COLORS, type HighlightColor, type Note } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
 import { MARK_BG } from "./page-view";
+import { HighlighterOff } from "./icons";
 import { Popover, PopoverArrow, PopoverContent } from "./ui/popover";
 import { Button, IconButton, Kbd, cx } from "./ui";
 
@@ -82,11 +83,7 @@ export const SelectionToolbar = ({
             Ask
           </Button>
         )}
-        {onClearHighlights && (
-          <Button variant="ghost" size="sm" icon={Highlighter} onClick={onClearHighlights}>
-            Unhighlight
-          </Button>
-        )}
+        {onClearHighlights && <IconButton icon={HighlighterOff} label="Remove highlights" onClick={onClearHighlights} />}
         {onClearHarakat && <IconButton icon={Eraser} label="Clear my harakat" onClick={onClearHarakat} />}
         {mode === "selection" && <IconButton icon={Copy} label="Copy" onClick={onCopy} />}
       </PopoverContent>
