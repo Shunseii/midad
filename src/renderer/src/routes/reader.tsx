@@ -532,7 +532,7 @@ export const ReaderRoute = () => {
     closeTimer.current = setTimeout(() => {
       if (pointerInNote.current) return;
       if (leftNote.current || !focusInNoteEditor()) setNoteEditor(null);
-    }, 300);
+    }, 120);
   };
 
   const onWordHover = (target: WordTarget, note: Note | null) => {
