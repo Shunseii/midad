@@ -928,6 +928,7 @@ export const ReaderRoute = () => {
   keyHandler.current = (e: KeyboardEvent) => {
     if (zoomKeys(e)) return;
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    if (e.target instanceof HTMLElement && e.target.isContentEditable) return;
     if (e.target instanceof Element && e.target.closest(".sheet")) return;
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
       e.preventDefault();

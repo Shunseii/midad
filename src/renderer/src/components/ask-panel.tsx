@@ -368,7 +368,7 @@ export const AskPanel = ({
     if (!root) return;
     for (const [id, pill] of pills.current) if (!root.contains(pill.host)) pills.current.delete(id);
     const parts = readComposer({ root, quotes: new Map([...pills.current].map(([id, p]) => [id, p.quote])) });
-    const empty = parts.every((p) => p.kind === "text" && p.text === "");
+    const empty = parts.every((p) => p.kind === "text" && p.text.trim() === "");
     setDraft({ ...serializeComposer(parts), empty });
   };
 
