@@ -185,6 +185,11 @@ body {
   text-indent: 0;
 }
 
+/* See markDragging in routes/reader.tsx. */
+[data-dragging] [data-margin] {
+  pointer-events: none;
+}
+
 /* Arabic runs set their own direction per line so mixed text lays out correctly. */
 .ar {
   font-family: var(--font-ar);

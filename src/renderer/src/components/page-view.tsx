@@ -300,6 +300,7 @@ const LastReadMark = ({ row, onClear }: { row: ScreenRow; onClear: () => void })
       <button
         ref={glide(0)}
         type="button"
+        data-margin
         onClick={onClear}
         onMouseDown={(e) => e.stopPropagation()}
         aria-label="Clear the last-read marker"
@@ -313,7 +314,7 @@ const LastReadMark = ({ row, onClear }: { row: ScreenRow; onClear: () => void })
         </span>
       </button>
       {/* Without room for the margin, the marked row gets a bar beside it. */}
-      <span ref={glide(1)} aria-hidden style={rowStyle(row)} className="absolute -right-3 w-0.5 rounded-full bg-accent @3xl:hidden" />
+      <span ref={glide(1)} aria-hidden style={rowStyle(row)} className="pointer-events-none absolute -right-3 w-0.5 rounded-full bg-accent @3xl:hidden" />
     </>
   );
 };
@@ -372,7 +373,10 @@ const MarkableLine = ({
       {/* The margin beside the line: the mark button shows only while the pointer is here. */}
       <span
         aria-hidden
+        data-margin
         onMouseMove={(e) => {
+          // A text selection being dragged across the margin isn't a reach for the mark button.
+          if (e.buttons !== 0) return;
           const row = rowAt(e.clientY);
           if (row?.word !== hover?.word) setHover(row);
         }}
@@ -382,6 +386,7 @@ const MarkableLine = ({
       {marked && <LastReadMark row={marked} onClear={onClearMark} />}
       {hover && hover.word !== marked?.word && (
         <span
+          data-margin
           style={rowStyle(hover)}
           onMouseEnter={() => setHover(hover)}
           onMouseLeave={() => setHover(null)}

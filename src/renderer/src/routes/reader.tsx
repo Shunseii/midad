@@ -518,9 +518,21 @@ export const ReaderRoute = () => {
     window.addEventListener("mouseup", up, { once: true });
   };
 
+  /**
+   * While the button is down, the margin controls inside each line stop taking
+   * the pointer. Otherwise a drag that runs into the margin past a line's start
+   * lands on them, and the browser reads that as the end of the line, so the
+   * selection flips to the other way.
+   */
+  const markDragging = (root: HTMLElement) => {
+    root.dataset.dragging = "";
+    window.addEventListener("mouseup", () => delete root.dataset.dragging, { once: true, capture: true });
+  };
+
   const onMouseDown = (e: React.MouseEvent<HTMLElement>) => {
     setMenuOpen(false);
     dismiss();
+    if (e.button === 0 && pageRoot.current) markDragging(pageRoot.current);
     const offText = e.target instanceof Element && !e.target.closest("[data-w], button, a, input, textarea");
     if (e.button === 0 && e.detail === 1 && offText) return startDragSelection(e);
     const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
