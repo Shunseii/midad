@@ -291,7 +291,7 @@ const NoteIcon = ({ active, dim }: { active: boolean; dim: boolean }) => (
     data-overlay
     aria-hidden
     className={cx(
-      "pointer-events-none absolute left-0 top-0 size-2.5 -translate-x-3/4 -translate-y-1/4 select-none transition-[color,opacity] duration-press ease-out",
+      "pointer-events-none absolute -right-0.5 top-0 size-2.5 translate-x-full -translate-y-1/2 select-none transition-[color,opacity] duration-press ease-out",
       active ? "text-accent" : "text-accent/55",
       dim && !active && "opacity-30",
     )}
@@ -331,7 +331,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const highlight = highlightAt(annotations.highlights, part, ref);
     const note = noteAt(annotations.notes, part, ref);
     const tint = tintOf(ref).length > 0;
-    const endingHere = annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line && n.span.end.word === token.word);
+    const startingHere = annotations.notes.filter((n) => n.span.part === part && n.span.start.line === line && n.span.start.word === token.word);
     const target = (e: ReactMouseEvent<HTMLElement>): WordTarget => ({
       part,
       ref,
@@ -347,7 +347,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const at = sweepAt(highlight, ref);
     const targetLetter = t && t.part === part && t.line === line && t.word === token.word ? t.letter : null;
     return (
-      <span key={i} className={endingHere.length > 0 ? "relative" : undefined}>
+      <span key={i} className={startingHere.length > 0 ? "relative" : undefined}>
         <span
           data-part={part}
           data-line={line}
@@ -379,7 +379,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
               }}
             />
           ))}
-        {endingHere.length > 0 && <NoteIcon active={endingHere.some((n) => tinted.has(n.id))} dim={dimNoteIcons} />}
+        {startingHere.length > 0 && <NoteIcon active={startingHere.some((n) => tinted.has(n.id))} dim={dimNoteIcons} />}
       </span>
     );
   });
