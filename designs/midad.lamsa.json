@@ -585,21 +585,6 @@
       },
       "type": "frame"
     },
-    "0Lwd5gBK": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a04",
-      "name": "Bookmark · ص ١٤",
-      "parentId": "iayUAFZv",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "0NFeML8q": {
       "index": "ak",
       "name": "Highlight dot",
@@ -995,6 +980,25 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "0Y0FkzNO": {
+      "content": "ص ٣",
+      "index": "a00",
+      "name": "ص ٣",
+      "parentId": "8EEZfm0d",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
     },
     "0YCeKUiQ": {
       "index": "a001",
@@ -1588,6 +1592,22 @@
       },
       "type": "frame"
     },
+    "0t9o1BLF": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "AcstDYqj",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "0tqGPuyB": {
       "icon": "notebook-pen",
       "index": "a7",
@@ -1921,6 +1941,21 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "16hc7vFh": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "7DGXRzWd",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
+      },
+      "type": "frame"
     },
     "16of3RJ3": {
       "index": "a005",
@@ -2829,19 +2864,6 @@
       },
       "type": "text"
     },
-    "1iBjOWRn": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "EvzlTxkM",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "1kBKNUqi": {
       "index": "a6",
       "name": "Edge zone · Bottom",
@@ -3445,23 +3467,6 @@
       },
       "type": "frame"
     },
-    "25Ody7DN": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "8Xr5BmTk",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "25P36cuy": {
       "content": "ص ٩",
       "index": "a0",
@@ -3974,20 +3979,6 @@
         "text-align": "right"
       },
       "type": "text"
-    },
-    "2TBHBqbo": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "jutm3Lon",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
     },
     "2TEBjYuz": {
       "componentId": "RV1DOgzp",
@@ -5099,20 +5090,6 @@
       },
       "type": "instance"
     },
-    "331t5k8N": {
-      "content": "Last week",
-      "index": "a02",
-      "name": "Last week",
-      "parentId": "2TBHBqbo",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "33T7oFO8": {
       "content": "والحرفُ ما لا ",
       "index": "a1",
@@ -5128,20 +5105,22 @@
       },
       "type": "text"
     },
-    "346zJeOq": {
-      "content": "مقدمة",
+    "34BGlvjX": {
+      "content": "ص ١٢",
       "index": "a00",
-      "name": "مقدمة",
-      "parentId": "aezazZm2",
+      "name": "ص ١٢",
+      "parentId": "zeh733Wu",
       "style": {
+        "align-self": "flex-start",
         "color": "{color.ink-2}",
         "direction": "rtl",
+        "flex-shrink": 0,
         "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
+        "font-size": 15,
         "line-height": "28px",
+        "min-width": 32,
         "text-align": "right",
-        "width": "100%"
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -5309,28 +5288,6 @@
       },
       "type": "frame"
     },
-    "3AGMWiwI": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "G6Rww711",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "3AQoQY7H": {
       "content": "َ",
       "index": "a00001",
@@ -5385,6 +5342,21 @@
         "gap": 4,
         "height": 48,
         "padding": "0 16px"
+      },
+      "type": "frame"
+    },
+    "3BPudObr": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "IzVa8hDb",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
       },
       "type": "frame"
     },
@@ -5688,21 +5660,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "3P91PluN": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a04",
-      "name": "Bookmark · ص ١٤",
-      "parentId": "6wztJW2H",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
     },
     "3PSMdQ5E": {
       "content": "3 of 24",
@@ -6512,6 +6469,21 @@
       },
       "type": "text"
     },
+    "3z1kFmKv": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "F73lXhX3",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
+      },
+      "type": "frame"
+    },
     "3zgvwJaP": {
       "componentId": "RV1DOgzp",
       "index": "a006",
@@ -6825,21 +6797,6 @@
         "width": 28
       },
       "type": "frame"
-    },
-    "4AXiPifw": {
-      "content": "Enter saves · Esc cancels",
-      "index": "a00",
-      "name": "Enter saves · Esc cancels",
-      "parentId": "Y4IqmgqP",
-      "style": {
-        "color": "{color.ink-3}",
-        "flex-shrink": 0,
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "4AwfUmSx": {
       "content": "بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
@@ -9110,21 +9067,6 @@
       },
       "type": "frame"
     },
-    "5Lg57Eeh": {
-      "content": "ص ١٤",
-      "index": "a00",
-      "name": "ص ١٤",
-      "parentId": "bEHtim6X",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "5M22OLMu": {
       "componentId": "HicNahFA",
       "index": "a001",
@@ -9174,23 +9116,6 @@
         "text-align": "right"
       },
       "type": "text"
-    },
-    "5NFGrZsU": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "0Lwd5gBK",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
     },
     "5NGymJCa": {
       "componentId": "RV1DOgzp",
@@ -10130,20 +10055,6 @@
       },
       "type": "frame"
     },
-    "5sGbc52B": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "wCv2lcO8",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
-    },
     "5t589TLi": {
       "content": "ْ",
       "index": "a00003",
@@ -10437,20 +10348,6 @@
         "font-family": "{font.body}",
         "font-size": 17,
         "font-weight": 600
-      },
-      "type": "text"
-    },
-    "65twvDDe": {
-      "content": "Yesterday",
-      "index": "a02",
-      "name": "Yesterday",
-      "parentId": "hFJklJwk",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -11589,28 +11486,6 @@
       },
       "type": "icon"
     },
-    "6scZorNY": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "vEYiC2l6",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "6suMskhz": {
       "index": "an",
       "name": "Highlight dot",
@@ -11688,6 +11563,22 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "6vS3yavb": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "mKMoYH3n",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "6vw9hJI8": {
       "content": "الحاشية",
@@ -12177,6 +12068,21 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "7DGXRzWd": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a00",
+      "name": "Bookmark · ص ١",
+      "parentId": "6wztJW2H",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
+      },
+      "type": "frame"
     },
     "7FDMEXgY": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
@@ -12747,26 +12653,6 @@
         "padding": 3
       },
       "type": "frame"
-    },
-    "7cOpxEBG": {
-      "content": "الأفعالُ ثلاثةٌ: ماضٍ، ومضارعٌ، وأمرٌ، نحو",
-      "index": "a01",
-      "name": "الأفعالُ ثلاثةٌ: ماضٍ، ومضارعٌ، وأمرٌ، ن",
-      "parentId": "7yyONGkj",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "7cXq7paD": {
       "index": "a001",
@@ -13391,17 +13277,6 @@
       },
       "type": "frame"
     },
-    "7yyONGkj": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "jAksNUM6",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
-    },
     "7zBt7eoE": {
       "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "icon": "message-square-text",
@@ -13445,37 +13320,6 @@
         "line-height": "20px"
       },
       "type": "text"
-    },
-    "80lPu6As": {
-      "componentId": "mUTXOEWB",
-      "index": "a00",
-      "name": "Input",
-      "overrides": {
-        "35wyGt1m": {
-          "style": {
-            "color": "{color.ink}",
-            "direction": "rtl",
-            "font-family": "{font.ar}",
-            "font-size": 15,
-            "text-align": "right"
-          }
-        },
-        "mUTXOEWB": {
-          "style": {
-            "width": "100%"
-          }
-        }
-      },
-      "parentId": "PozKrBWq",
-      "props": {
-        "label": "Name",
-        "state": "focus",
-        "value": "الفاعل الظاهر والمضمر",
-        "withHelper": "no",
-        "withIcon": "no",
-        "withLabel": "no"
-      },
-      "type": "instance"
     },
     "81JAxiZ3": {
       "content": "Last read",
@@ -13739,23 +13583,6 @@
       },
       "type": "text"
     },
-    "8DKCFGHK": {
-      "content": "بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
-      "index": "a00",
-      "name": "بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
-      "parentId": "3P91PluN",
-      "style": {
-        "color": "{color.ink-2}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
-    },
     "8DYqyaVo": {
       "content": "Contents",
       "index": "a000",
@@ -13772,6 +13599,20 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "8EEZfm0d": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "ctKfPSzz",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
     },
     "8EoKvLzR": {
       "content": ": an utterance only counts as كلام if the speaker meant to convey it. Your page's ḥāshiya says exactly this ",
@@ -14204,20 +14045,6 @@
       },
       "type": "frame"
     },
-    "8R2yrpAi": {
-      "content": "Last week",
-      "index": "a02",
-      "name": "Last week",
-      "parentId": "bEHtim6X",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "8RVS1jOp": {
       "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: bottom center;\n/* Opens 150ms after the pointer settles on the ring, closes 200ms after it leaves both ring and popup. */\ntransition-delay: 0ms;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}",
       "index": "a4",
@@ -14236,6 +14063,22 @@
         "z-index": 5
       },
       "type": "frame"
+    },
+    "8TgUkKMU": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "Ll13kAsc",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "8UJnJbGY": {
       "content": "فالاسمُ يُعرَفُ: ",
@@ -14417,21 +14260,6 @@
       },
       "type": "frame"
     },
-    "8Xr5BmTk": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a02",
-      "name": "Bookmark · ص ٩",
-      "parentId": "6wztJW2H",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "8Y3y2xzE": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
       "index": "a000",
@@ -14548,6 +14376,25 @@
       },
       "type": "frame"
     },
+    "8bDUN3h3": {
+      "content": "ص ١٢",
+      "index": "a00",
+      "name": "ص ١٢",
+      "parentId": "GuBgZGzD",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "8bFa73L9": {
       "content": "6",
       "index": "a000",
@@ -14595,6 +14442,22 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "8cofI5Lh": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "kQGzGdl5",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "8cyvvfwk": {
       "index": "a004",
@@ -14785,29 +14648,27 @@
       "x": 4840,
       "y": 9880
     },
-    "8lhMA0So": {
-      "content": "مقدمة",
-      "index": "a00",
-      "name": "مقدمة",
-      "parentId": "cJXk5teA",
-      "style": {
-        "color": "{color.ink-2}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
-    },
     "8lqyr7QK": {
       "index": "a001",
       "name": "Spacer",
       "parentId": "WzpJik4B",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "8mAndcqT": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a02",
+      "name": "Bookmark · ص ٩",
+      "parentId": "6wztJW2H",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
       },
       "type": "frame"
     },
@@ -15481,6 +15342,22 @@
       },
       "type": "frame"
     },
+    "99V2F1Wx": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "LrlfazZd",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "99pnvxFZ": {
       "index": "a004",
       "name": "TOC · بابُ معرفةِ علاماتِ الإعرابِ",
@@ -15603,21 +15480,6 @@
       },
       "type": "frame"
     },
-    "9CFqapSx": {
-      "content": "ص ٣",
-      "index": "a00",
-      "name": "ص ٣",
-      "parentId": "f84JvHGR",
-      "style": {
-        "color": "{color.accent}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "9CZxCiGb": {
       "index": "a003",
       "name": "TOC · بابُ الإعرابِ",
@@ -15629,17 +15491,6 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
-      },
-      "type": "frame"
-    },
-    "9D5ujeUT": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "SpIJyIKs",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
       },
       "type": "frame"
     },
@@ -15674,6 +15525,19 @@
         "padding": 12
       },
       "type": "frame"
+    },
+    "9FHIwFHZ": {
+      "content": "Added 3 days ago",
+      "index": "a02",
+      "name": "Added 3 days ago",
+      "parentId": "h4G70Gs2",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
     },
     "9FHMLCEm": {
       "content": "3",
@@ -15771,6 +15635,21 @@
         "position": "absolute",
         "top": 8,
         "width": 28
+      },
+      "type": "frame"
+    },
+    "9HjLU3ip": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "rjBiAxk0",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
       },
       "type": "frame"
     },
@@ -16325,17 +16204,6 @@
       },
       "type": "frame"
     },
-    "9j2c1wLr": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "lLrc2SqY",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
-    },
     "9j31fh4s": {
       "content": "بابُ الأفعالِ",
       "index": "a002",
@@ -16478,6 +16346,25 @@
         "gap": 0
       },
       "type": "frame"
+    },
+    "9p7cpmhe": {
+      "content": "ص ٩",
+      "index": "a00",
+      "name": "ص ٩",
+      "parentId": "bDPf8ARx",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
     },
     "9pULbnb7": {
       "content": "Matn al-Ājurrūmiyya",
@@ -16815,21 +16702,6 @@
       },
       "type": "text"
     },
-    "A1p76Q2G": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a04",
-      "name": "Bookmark · ص ١٤",
-      "parentId": "lfnla6Tb",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "A1rUuRyL": {
       "index": "a000",
       "name": "Sidebar · Bookmarks",
@@ -16986,6 +16858,25 @@
         "font-weight": 400,
         "line-height": "28px",
         "text-align": "right"
+      },
+      "type": "text"
+    },
+    "A6EZ54B6": {
+      "content": "ص ١",
+      "index": "a00",
+      "name": "ص ١",
+      "parentId": "utoUnmxU",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -17522,20 +17413,6 @@
       },
       "type": "text"
     },
-    "AW0Ac6TM": {
-      "content": "Mar 2",
-      "index": "a02",
-      "name": "Mar 2",
-      "parentId": "KYRvSA0v",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "AWB3ItlN": {
       "index": "au",
       "name": "Highlight dot",
@@ -17740,6 +17617,21 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "AcstDYqj": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "zK8qDuKh",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
       },
       "type": "frame"
     },
@@ -17963,6 +17855,20 @@
       },
       "type": "frame"
     },
+    "AlmudwbK": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "LvHbcxb1",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
+    },
     "AmonxVxg": {
       "content": "11",
       "index": "a000",
@@ -18171,17 +18077,6 @@
         "border-radius": 999,
         "transform-origin": "top",
         "width": 2
-      },
-      "type": "frame"
-    },
-    "AvG7vQuk": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "wScRbbnt",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
       },
       "type": "frame"
     },
@@ -18812,6 +18707,22 @@
       },
       "type": "frame"
     },
+    "BIGoG41G": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "exiMn0fu",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "BIyu4FVg": {
       "index": "a002",
       "name": "TOC · بابُ الكلامِ",
@@ -19221,6 +19132,22 @@
       },
       "type": "instance"
     },
+    "BStRXbv2": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "9HjLU3ip",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "BT7AO2sC": {
       "index": "a000",
       "name": "Running header",
@@ -19483,28 +19410,6 @@
       },
       "type": "frame"
     },
-    "Bai69V63": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "wnumcUja",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "Bb5NfWkb": {
       "content": "بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
       "index": "a002",
@@ -19682,23 +19587,6 @@
         "gap": 2
       },
       "type": "frame"
-    },
-    "BhRg4CgA": {
-      "content": "بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
-      "index": "a00",
-      "name": "بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
-      "parentId": "A1p76Q2G",
-      "style": {
-        "color": "{color.ink-2}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
     },
     "BhelVlfz": {
       "content": "بابُ الكلامِ",
@@ -20226,23 +20114,6 @@
         "justify-content": "center",
         "overflow": "hidden",
         "padding": "40px 0 72px"
-      },
-      "type": "frame"
-    },
-    "BuGsJncV": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "aIYyjCDq",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
       },
       "type": "frame"
     },
@@ -21247,19 +21118,6 @@
       },
       "type": "instance"
     },
-    "CTJRo2M4": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "FVULSsQH",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "CTNlt8PN": {
       "index": "a0",
       "name": "Page area",
@@ -22077,6 +21935,22 @@
       },
       "type": "frame"
     },
+    "CyRBT4r8": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "Md0bTLju",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "Cz5Otcjp": {
       "index": "a001",
       "name": "Body",
@@ -22703,20 +22577,6 @@
       },
       "type": "frame"
     },
-    "DKv6J0I2": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "AvG7vQuk",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
-    },
     "DLmFG95p": {
       "componentId": "tkp520KP",
       "index": "a000",
@@ -22749,20 +22609,6 @@
         "position": "absolute",
         "top": -30,
         "width": 10
-      },
-      "type": "icon"
-    },
-    "DMg2EIIT": {
-      "icon": "map-pin",
-      "index": "a0005",
-      "name": "Icon bookmark",
-      "parentId": "GZ2Nlwh3",
-      "set": "lucide",
-      "style": {
-        "color": "{color.accent}",
-        "flex-shrink": 0,
-        "height": 12,
-        "width": 12
       },
       "type": "icon"
     },
@@ -23032,21 +22878,6 @@
       },
       "type": "text"
     },
-    "DVBWhi9B": {
-      "content": "ص ٩",
-      "index": "a00",
-      "name": "ص ٩",
-      "parentId": "hFJklJwk",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "DVnw7yQj": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a6",
@@ -23269,21 +23100,6 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "DfVswsNx": {
-      "content": "ص ٣",
-      "index": "a00",
-      "name": "ص ٣",
-      "parentId": "wIU5wQb5",
-      "style": {
-        "color": "{color.accent}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -24211,23 +24027,6 @@
       },
       "type": "text"
     },
-    "EE97QItJ": {
-      "content": "بابُ الأفعالِ",
-      "index": "a00",
-      "name": "بابُ الأفعالِ",
-      "parentId": "8Xr5BmTk",
-      "style": {
-        "color": "{color.ink-2}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
-    },
     "EEF7rKxg": {
       "index": "a0",
       "name": "Sidebar",
@@ -24390,6 +24189,21 @@
         "gap": 12,
         "height": 60,
         "padding": "0 16px"
+      },
+      "type": "frame"
+    },
+    "EKCCnmDc": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a02",
+      "name": "Bookmark · ص ٩",
+      "parentId": "iayUAFZv",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
       },
       "type": "frame"
     },
@@ -24661,21 +24475,6 @@
       },
       "type": "instance"
     },
-    "EczzW7er": {
-      "content": "ص ١٢",
-      "index": "a00",
-      "name": "ص ١٢",
-      "parentId": "neBbojUS",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "EdX1OlwE": {
       "content": "والسين",
       "index": "a00005",
@@ -24690,17 +24489,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "EfRdT2Zm": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "cJXk5teA",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
     },
     "EgnPMm2a": {
       "content": "د",
@@ -25187,6 +24975,29 @@
       },
       "type": "frame"
     },
+    "EunByPWh": {
+      "content": "تعريف الكلام وأقسامه",
+      "index": "a01",
+      "name": "تعريف الكلام وأقسامه",
+      "parentId": "8EEZfm0d",
+      "style": {
+        "-webkit-box-orient": "vertical",
+        "-webkit-line-clamp": 2,
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "display": "-webkit-box",
+        "flex": 1,
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "font-weight": 500,
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "2px 0",
+        "text-align": "right"
+      },
+      "type": "text"
+    },
     "EuxqyhxE": {
       "content": "والفعلُ يُعرَفُ: بقد، والسينِ، وسوف، وتاءِ التأنيثِ الساكنةِ.",
       "index": "a1",
@@ -25224,20 +25035,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "EvzlTxkM": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "7yyONGkj",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
     },
     "ExDmGOAf": {
       "icon": "settings-2",
@@ -25511,6 +25308,22 @@
       },
       "style": {},
       "type": "instance"
+    },
+    "F73lXhX3": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a01",
+      "name": "Bookmark · ص ٣",
+      "parentId": "6wztJW2H",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
+      },
+      "type": "frame"
     },
     "F7OsEsni": {
       "index": "a007",
@@ -25972,20 +25785,6 @@
       },
       "type": "instance"
     },
-    "FMmguEpl": {
-      "icon": "map-pin",
-      "index": "a0005",
-      "name": "Icon bookmark",
-      "parentId": "kRiCmOVN",
-      "set": "lucide",
-      "style": {
-        "color": "{color.accent}",
-        "flex-shrink": 0,
-        "height": 12,
-        "width": 12
-      },
-      "type": "icon"
-    },
     "FODat1fi": {
       "css": "view-transition-name: reader-header;",
       "index": "a000",
@@ -26187,20 +25986,6 @@
         "right": "15.43%",
         "translate": "50% 0",
         "width": 5
-      },
-      "type": "frame"
-    },
-    "FVULSsQH": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "EfRdT2Zm",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
       },
       "type": "frame"
     },
@@ -26920,28 +26705,6 @@
       },
       "type": "text"
     },
-    "FvNPRwP4": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "c9fMizoG",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "FvclmgEg": {
       "index": "Za000",
       "name": "Line number",
@@ -27325,23 +27088,6 @@
       },
       "type": "text"
     },
-    "G6Rww711": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "SpIJyIKs",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "G6yWVtpv": {
       "content": "Ibn Ājurrūm · Bāb al-Kalām",
       "index": "a001",
@@ -27424,6 +27170,22 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "G9RLt2P9": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "exiMn0fu",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "G9i5FBQy": {
       "index": "a000",
@@ -27726,28 +27488,6 @@
       },
       "type": "text"
     },
-    "GNHIPXUd": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "vEYiC2l6",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "GNot4SjF": {
       "index": "a002",
       "name": "TOC · بابُ الكلامِ",
@@ -27904,20 +27644,6 @@
         "variant": "ghost"
       },
       "type": "instance"
-    },
-    "GRtybkb8": {
-      "content": "Today",
-      "index": "a02",
-      "name": "Today",
-      "parentId": "f84JvHGR",
-      "style": {
-        "color": "{color.accent}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "GRu6sIZ3": {
       "index": "ar",
@@ -28500,6 +28226,20 @@
       },
       "type": "instance"
     },
+    "GoXjtfeG": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "bZZGF7lG",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
+    },
     "GoYRTSw0": {
       "content": "(١) المرادُ بالوضعِ: القصدُ، فلا يُسمّى كلامًا ما صدرَ من النائمِ والساهي ونحوِهما.",
       "index": "a001",
@@ -28632,6 +28372,20 @@
         "position": "absolute",
         "top": 0,
         "width": 28
+      },
+      "type": "frame"
+    },
+    "GuBgZGzD": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "zQcSGx7L",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
       },
       "type": "frame"
     },
@@ -29305,26 +29059,6 @@
         "width": 5
       },
       "type": "frame"
-    },
-    "HDaWZ5IU": {
-      "content": "الأفعالُ ثلاثةٌ: ماضٍ، ومضارعٌ، وأمرٌ، نحو",
-      "index": "a01",
-      "name": "الأفعالُ ثلاثةٌ: ماضٍ، ومضارعٌ، وأمرٌ، ن",
-      "parentId": "Y2o7zaz3",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "HEZQaMar": {
       "index": "a5",
@@ -30079,6 +29813,22 @@
       },
       "type": "instance"
     },
+    "HeibWt4U": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "PcJ9EXsK",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "HgC5a1mA": {
       "index": "a001",
       "name": "Spacer",
@@ -30276,28 +30026,6 @@
         "flex": 1
       },
       "type": "frame"
-    },
-    "HoZ6HOEz": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "BuGsJncV",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "HpLZfK9J": {
       "componentId": "ua9C67i7",
@@ -32178,6 +31906,21 @@
       },
       "type": "text"
     },
+    "IzVa8hDb": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a04",
+      "name": "Bookmark · ص ١٤",
+      "parentId": "lfnla6Tb",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
+      },
+      "type": "frame"
+    },
     "IzoJQW3t": {
       "componentId": "RV1DOgzp",
       "index": "a006",
@@ -33227,20 +32970,6 @@
       },
       "type": "text"
     },
-    "JWqavg7f": {
-      "icon": "map-pin",
-      "index": "a0005",
-      "name": "Icon bookmark",
-      "parentId": "aeOnKHfd",
-      "set": "lucide",
-      "style": {
-        "color": "{color.accent}",
-        "flex-shrink": 0,
-        "height": 12,
-        "width": 12
-      },
-      "type": "icon"
-    },
     "JWu3a9m8": {
       "css": "cursor: pointer;",
       "index": "b000",
@@ -33624,6 +33353,24 @@
       },
       "type": "frame"
     },
+    "JnOl3dSU": {
+      "content": "الفاعل الظاهر والمضمر",
+      "index": "a01",
+      "name": "الفاعل الظاهر والمضمر",
+      "parentId": "nnPYeQAu",
+      "style": {
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "font-weight": 500,
+        "line-height": "28px",
+        "overflow": "hidden",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "JnSDboQq": {
       "index": "a000",
       "name": "Meta",
@@ -33895,6 +33642,25 @@
       "type": "frame",
       "x": 1800,
       "y": 3180
+    },
+    "JvG0hViQ": {
+      "content": "ص ١٤",
+      "index": "a00",
+      "name": "ص ١٤",
+      "parentId": "AlmudwbK",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
     },
     "JvrVOmTh": {
       "index": "a003",
@@ -34940,20 +34706,6 @@
       },
       "type": "frame"
     },
-    "KYRvSA0v": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "qQOSsEJ2",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
-    },
     "KZ6FDQDw": {
       "componentId": "v8FmfBf5",
       "index": "a1",
@@ -35811,20 +35563,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "L6oISOtO": {
-      "icon": "map-pin",
-      "index": "a0005",
-      "name": "Icon bookmark",
-      "parentId": "rp9HQbsr",
-      "set": "lucide",
-      "style": {
-        "color": "{color.accent}",
-        "flex-shrink": 0,
-        "height": 12,
-        "width": 12
-      },
-      "type": "icon"
     },
     "L9I9O7vf": {
       "content": "بابُ الكلامِ",
@@ -36725,6 +36463,21 @@
       },
       "type": "frame"
     },
+    "Ll13kAsc": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "8mAndcqT",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
+      },
+      "type": "frame"
+    },
     "Ll16tyXg": {
       "content": "بابُ الكلامِ",
       "index": "a001V",
@@ -36911,12 +36664,46 @@
       },
       "type": "text"
     },
+    "LqEhalps": {
+      "content": "ص ١٤",
+      "index": "a00",
+      "name": "ص ١٤",
+      "parentId": "qdvMNdYU",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "LqaG7hii": {
       "index": "a001",
       "name": "Spacer",
       "parentId": "MRbvwbPI",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "LrlfazZd": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "EKCCnmDc",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
       },
       "type": "frame"
     },
@@ -36961,6 +36748,21 @@
         "border-radius": 2,
         "inset": 8.96,
         "position": "absolute"
+      },
+      "type": "frame"
+    },
+    "LvHbcxb1": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a04",
+      "name": "Bookmark · ص ١٤",
+      "parentId": "iayUAFZv",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
       },
       "type": "frame"
     },
@@ -37012,6 +36814,22 @@
         "width": 0
       },
       "type": "frame"
+    },
+    "LzX9PXFy": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "mKMoYH3n",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "LzvYr1Oh": {
       "index": "a001",
@@ -38033,6 +37851,21 @@
         "text-align": "center"
       },
       "type": "text"
+    },
+    "Md0bTLju": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "LvHbcxb1",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
+      },
+      "type": "frame"
     },
     "MdkQwAKV": {
       "index": "a001",
@@ -39472,6 +39305,22 @@
       },
       "type": "frame"
     },
+    "NRkqFuFd": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "3BPudObr",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "NRrJalvL": {
       "index": "a4",
       "name": "Note bar",
@@ -39723,26 +39572,6 @@
       },
       "type": "text"
     },
-    "NYHHkNzx": {
-      "content": "الحمدُ للهِ ربِّ العالمينَ، والصلاةُ والسلامُ على",
-      "index": "a01",
-      "name": "الحمدُ للهِ ربِّ العالمينَ، والصلاةُ وال",
-      "parentId": "AvG7vQuk",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "NYVL1zkd": {
       "content": "ِ",
       "index": "a00007",
@@ -39893,21 +39722,6 @@
         "variant": "ghost"
       },
       "type": "instance"
-    },
-    "NfyDwG0p": {
-      "content": "ص ٩",
-      "index": "a00",
-      "name": "ص ٩",
-      "parentId": "ZOjBqb9S",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "NgAm1lFK": {
       "index": "a001",
@@ -40540,6 +40354,22 @@
       },
       "type": "frame"
     },
+    "O5cAmDl8": {
+      "content": "ص ١٢",
+      "index": "a00",
+      "name": "ص ١٢",
+      "parentId": "nnPYeQAu",
+      "style": {
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700,
+        "line-height": "28px",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "O6jQ3qTh": {
       "content": "Harakat",
       "index": "a0",
@@ -40774,17 +40604,6 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
-      },
-      "type": "frame"
-    },
-    "OG6vLk4g": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "3P91PluN",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
       },
       "type": "frame"
     },
@@ -41565,23 +41384,6 @@
       },
       "type": "frame"
     },
-    "Og2bs5Kq": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "A1p76Q2G",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "OgyGRFqm": {
       "index": "a0",
       "name": "Text",
@@ -41630,6 +41432,21 @@
         "font-size": 15
       },
       "type": "text"
+    },
+    "OjJkF8Mq": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "ctKfPSzz",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
+      },
+      "type": "frame"
     },
     "OjxcoBR5": {
       "content": "والسين",
@@ -42250,28 +42067,6 @@
       },
       "type": "frame"
     },
-    "P2drbxGd": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "ceCDXgKU",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "P2kcMn61": {
       "content": "9",
       "index": "a000",
@@ -42410,28 +42205,6 @@
         "gap": 8
       },
       "type": "frame"
-    },
-    "P6fY2CMO": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "wnumcUja",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "P6gffaiS": {
       "content": "7",
@@ -42650,6 +42423,22 @@
         "align-items": "center",
         "display": "flex",
         "gap": 4
+      },
+      "type": "frame"
+    },
+    "PCfEZoIG": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a03",
+      "name": "Bookmark · ص ١٢",
+      "parentId": "lfnla6Tb",
+      "style": {
+        "align-items": "center",
+        "background": "color-mix(in oklab, {color.ink} 5%, transparent)",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
       },
       "type": "frame"
     },
@@ -43216,6 +43005,21 @@
       },
       "type": "frame"
     },
+    "PcJ9EXsK": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "bZZGF7lG",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
+      },
+      "type": "frame"
+    },
     "PdCHNR5c": {
       "index": "a1",
       "name": "Card",
@@ -43574,23 +43378,6 @@
       },
       "type": "text"
     },
-    "PozKrBWq": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a03",
-      "name": "Bookmark · ص ١٢ · Renaming",
-      "parentId": "6wztJW2H",
-      "style": {
-        "background": "{color.surface}",
-        "border-radius": 8,
-        "box-shadow": "inset 0 0 0 1px {color.line}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 2,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "PpGINa4r": {
       "content": "Page 9 · Last week",
       "index": "a1",
@@ -43792,26 +43579,6 @@
         "font-size": 26,
         "font-weight": 700,
         "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "Q0ZzeJMk": {
-      "content": "الحمدُ للهِ ربِّ العالمينَ، والصلاةُ والسلامُ على",
-      "index": "a01",
-      "name": "الحمدُ للهِ ربِّ العالمينَ، والصلاةُ وال",
-      "parentId": "qQOSsEJ2",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -44678,20 +44445,6 @@
       },
       "type": "frame"
     },
-    "QUeyu8Ft": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "yglszfPH",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
-    },
     "QVJsDeiM": {
       "index": "a008",
       "name": "TOC · بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
@@ -44801,26 +44554,6 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "QZMuktwX": {
-      "content": "الحمدُ للهِ ربِّ العالمينَ، والصلاةُ والسلامُ على",
-      "index": "a01",
-      "name": "الحمدُ للهِ ربِّ العالمينَ، والصلاةُ وال",
-      "parentId": "EfRdT2Zm",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -45311,23 +45044,6 @@
         "gap": 8
       },
       "type": "frame"
-    },
-    "QutKuegn": {
-      "content": "تعريف الكلام وأقسامه",
-      "index": "a00",
-      "name": "تعريف الكلام وأقسامه",
-      "parentId": "SpIJyIKs",
-      "style": {
-        "color": "{color.accent}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 500,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
     },
     "QwiRmNN2": {
       "content": "5",
@@ -46220,28 +45936,6 @@
         "display": "block"
       },
       "type": "frame"
-    },
-    "RVzzwZxQ": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "x9iQVlR0",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "RWPxc39m": {
       "content": "11",
@@ -47364,23 +47058,6 @@
       },
       "type": "frame"
     },
-    "SJha339C": {
-      "content": "تعريف الكلام وأقسامه",
-      "index": "a00",
-      "name": "تعريف الكلام وأقسامه",
-      "parentId": "g2rzpgBR",
-      "style": {
-        "color": "{color.accent}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 500,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
-    },
     "SKXGO5Vt": {
       "content": "7",
       "index": "a000",
@@ -48237,22 +47914,6 @@
       },
       "type": "frame"
     },
-    "SpIJyIKs": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a01",
-      "name": "Bookmark · ص ٣",
-      "parentId": "lfnla6Tb",
-      "style": {
-        "background": "{color.accent-soft}",
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "SqAAgWqI": {
       "content": "Matn al-Ājurrūmiyya",
       "index": "a000",
@@ -48497,6 +48158,22 @@
       },
       "type": "text"
     },
+    "T0fBI2cC": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "qw6YrPLh",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "T0ljz7lY": {
       "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "icon": "message-square-text",
@@ -48732,6 +48409,21 @@
         "gap": 24,
         "min-height": 64,
         "padding": "12px 20px"
+      },
+      "type": "frame"
+    },
+    "T6mVsAbw": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a00",
+      "name": "Bookmark · ص ١",
+      "parentId": "iayUAFZv",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
       },
       "type": "frame"
     },
@@ -49264,6 +48956,22 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "TOOgcIEZ": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "Ll13kAsc",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "TObq6yjh": {
       "content": "3 of 24",
@@ -50411,28 +50119,6 @@
       },
       "type": "instance"
     },
-    "TyqHgmnH": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "5NFGrZsU",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "TywEPLCc": {
       "content": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
       "index": "a1",
@@ -50706,26 +50392,6 @@
       },
       "type": "frame"
     },
-    "U8XffE0f": {
-      "content": "بابُ الفاعلِ",
-      "index": "a01",
-      "name": "بابُ الفاعلِ",
-      "parentId": "9j2c1wLr",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "U8dkFRLM": {
       "icon": "file-image",
       "index": "a6",
@@ -50956,6 +50622,25 @@
         "translate": "-50% 0"
       },
       "type": "frame"
+    },
+    "UKb9gzJ7": {
+      "content": "ص ٣",
+      "index": "a00",
+      "name": "ص ٣",
+      "parentId": "qwF8dVwj",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
     },
     "UL9jNUEt": {
       "content": "ابن هشام الأنصاري",
@@ -51364,21 +51049,6 @@
         "position": "relative"
       },
       "type": "frame"
-    },
-    "UaDMUgDa": {
-      "content": "ص ٣",
-      "index": "a00",
-      "name": "ص ٣",
-      "parentId": "5sGbc52B",
-      "style": {
-        "color": "{color.accent}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "UaNr0tEl": {
       "componentId": "46QiZLNZ",
@@ -51901,28 +51571,6 @@
         "padding": 3
       },
       "type": "frame"
-    },
-    "Up0PDovo": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "25Ody7DN",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "Ur0s0z2x": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -53620,6 +53268,20 @@
       },
       "type": "text"
     },
+    "Vt3MNwbZ": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "EKCCnmDc",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
+    },
     "Vt9apWG7": {
       "index": "a000V",
       "name": "Heading line",
@@ -54245,6 +53907,25 @@
       "x": 7880,
       "y": 1060
     },
+    "WJVRSLyG": {
+      "content": "ص ١",
+      "index": "a00",
+      "name": "ص ١",
+      "parentId": "eoH7v98J",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "WJqZNvkK": {
       "content": "Harakat",
       "index": "a0",
@@ -54421,21 +54102,6 @@
         "display": "flex",
         "flex-direction": "column",
         "gap": 0
-      },
-      "type": "frame"
-    },
-    "WQdGdiGb": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a02",
-      "name": "Bookmark · ص ٩",
-      "parentId": "iayUAFZv",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
       },
       "type": "frame"
     },
@@ -54725,6 +54391,20 @@
         "line-height": "24px"
       },
       "type": "text"
+    },
+    "WZCL8HCv": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "rjBiAxk0",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
     },
     "WZdxhKT1": {
       "componentId": "RV1DOgzp",
@@ -56630,6 +56310,22 @@
       },
       "type": "frame"
     },
+    "XhlaFvAF": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "16hc7vFh",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "XhqL24fg": {
       "index": "a000V",
       "name": "Heading line",
@@ -57087,17 +56783,6 @@
       },
       "type": "frame"
     },
-    "Y2o7zaz3": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "WQdGdiGb",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
-    },
     "Y2qbxZye": {
       "index": "a0",
       "name": "Text",
@@ -57120,17 +56805,6 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
-      },
-      "type": "frame"
-    },
-    "Y4IqmgqP": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "PozKrBWq",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
       },
       "type": "frame"
     },
@@ -57993,28 +57667,6 @@
         "text-align": "right"
       },
       "type": "text"
-    },
-    "YXLGleTu": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "c9fMizoG",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "YXZdaTV1": {
       "content": "، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
@@ -58931,26 +58583,6 @@
       },
       "type": "frame"
     },
-    "ZHHp5hxl": {
-      "content": "وهو الاسمُ المرفوعُ الذي لم يُذكرْ معه",
-      "index": "a01",
-      "name": "وهو الاسمُ المرفوعُ الذي لم يُذكرْ معه",
-      "parentId": "yglszfPH",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "ZIDeEru9": {
       "content": "The corpus's marks and yours",
       "index": "a1",
@@ -59048,20 +58680,6 @@
         "align-self": "stretch",
         "background": "{color.line}",
         "width": 1
-      },
-      "type": "frame"
-    },
-    "ZOjBqb9S": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "Y2o7zaz3",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
       },
       "type": "frame"
     },
@@ -59332,6 +58950,25 @@
       },
       "type": "text"
     },
+    "ZU3UcP3N": {
+      "content": "ص ٩",
+      "index": "a00",
+      "name": "ص ٩",
+      "parentId": "GoXjtfeG",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "ZUMWhemd": {
       "componentId": "uJd03iQq",
       "index": "a001",
@@ -59559,19 +59196,6 @@
       },
       "type": "text"
     },
-    "ZbB7zJE5": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "hFJklJwk",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "ZbY3diCe": {
       "index": "a001",
       "name": "TOC · مقدمة",
@@ -59677,20 +59301,6 @@
         "position": "absolute",
         "width": 420,
         "z-index": 5
-      },
-      "type": "text"
-    },
-    "ZfGI8Mij": {
-      "content": "Mar 2",
-      "index": "a02",
-      "name": "Mar 2",
-      "parentId": "FVULSsQH",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -60751,22 +60361,6 @@
       "x": 9400,
       "y": 2120
     },
-    "aIYyjCDq": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a01",
-      "name": "Bookmark · ص ٣",
-      "parentId": "iayUAFZv",
-      "style": {
-        "background": "{color.accent-soft}",
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "aJ7vDJfW": {
       "index": "a007",
       "name": "Corpus status",
@@ -60810,6 +60404,22 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "aLGQe7Iw": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "kQGzGdl5",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "aLJwuyUP": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -61381,21 +60991,6 @@
       },
       "type": "frame"
     },
-    "aezazZm2": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a00",
-      "name": "Bookmark · ص ١",
-      "parentId": "iayUAFZv",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "afeU2C4T": {
       "componentId": "RV1DOgzp",
       "index": "a008",
@@ -61938,20 +61533,6 @@
       },
       "type": "text"
     },
-    "b2Rh4fvW": {
-      "icon": "map-pin",
-      "index": "a0005",
-      "name": "Icon bookmark",
-      "parentId": "VMNyaj1I",
-      "set": "lucide",
-      "style": {
-        "color": "{color.accent}",
-        "flex-shrink": 0,
-        "height": 12,
-        "width": 12
-      },
-      "type": "icon"
-    },
     "b2uqTdPR": {
       "content": "1",
       "index": "a000",
@@ -62150,6 +61731,29 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "b7crRwr8": {
+      "content": "تعريف الكلام وأقسامه",
+      "index": "a01",
+      "name": "تعريف الكلام وأقسامه",
+      "parentId": "qwF8dVwj",
+      "style": {
+        "-webkit-box-orient": "vertical",
+        "-webkit-line-clamp": 2,
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "display": "-webkit-box",
+        "flex": 1,
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "font-weight": 500,
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "2px 0",
+        "text-align": "right"
       },
       "type": "text"
     },
@@ -62424,6 +62028,20 @@
       },
       "type": "text"
     },
+    "bDPf8ARx": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "8mAndcqT",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
+    },
     "bDzzTBzK": {
       "index": "a0",
       "name": "Back bar",
@@ -62456,20 +62074,6 @@
         "variant": "ghost"
       },
       "type": "instance"
-    },
-    "bEHtim6X": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "OG6vLk4g",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
     },
     "bEQ1L42x": {
       "css": "animation: pulse 1s ease-in-out infinite;",
@@ -62914,6 +62518,21 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "bZZGF7lG": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a02",
+      "name": "Bookmark · ص ٩",
+      "parentId": "lfnla6Tb",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
+      },
+      "type": "frame"
     },
     "baKaApAz": {
       "index": "a2",
@@ -63901,23 +63520,6 @@
       },
       "type": "frame"
     },
-    "c9fMizoG": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "wScRbbnt",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "c9ytg3II": {
       "index": "a0",
       "name": "Page area",
@@ -64182,21 +63784,6 @@
       },
       "type": "frame"
     },
-    "cJXk5teA": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a00",
-      "name": "Bookmark · ص ١",
-      "parentId": "6wztJW2H",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "cJviO90E": {
       "index": "a001",
       "name": "Spacer",
@@ -64221,26 +63808,6 @@
         "line-height": 1,
         "padding": "0 2px",
         "vertical-align": "super"
-      },
-      "type": "text"
-    },
-    "cKP126Nb": {
-      "content": "الأفعالُ ثلاثةٌ: ماضٍ، ومضارعٌ، وأمرٌ، نحو",
-      "index": "a01",
-      "name": "الأفعالُ ثلاثةٌ: ماضٍ، ومضارعٌ، وأمرٌ، ن",
-      "parentId": "i9cAD1U2",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -64683,23 +64250,6 @@
       },
       "type": "frame"
     },
-    "ceCDXgKU": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "jAksNUM6",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "cfBAepfJ": {
       "index": "a0",
       "name": "Top bar",
@@ -65078,22 +64628,21 @@
       },
       "type": "text"
     },
-    "cvRya8J6": {
-      "content": "بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
-      "index": "a00",
-      "name": "بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
-      "parentId": "0Lwd5gBK",
+    "ctKfPSzz": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a01",
+      "name": "Bookmark · ص ٣",
+      "parentId": "iayUAFZv",
       "style": {
-        "color": "{color.ink-2}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
       },
-      "type": "text"
+      "type": "frame"
     },
     "cvmlyfbd": {
       "content": "المفيدُ بالوضعِ",
@@ -65290,6 +64839,25 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "d5paGujn": {
+      "content": "الفاعلُ: هو الاسمُ المرفوعُ المذكورُ قبلَه فعلُه، وهو على قسمين: ظاهرٌ، ومُضمَرٌ. فالظاهرُ نحو قولِك: قامَ زيدٌ، ويقومُ زيدٌ، وقامَ الزيدانِ…",
+      "index": "a01",
+      "name": "الفاعلُ: هو الاسمُ المرفوعُ المذكورُ قبل",
+      "parentId": "h4G70Gs2",
+      "style": {
+        "-webkit-box-orient": "vertical",
+        "-webkit-line-clamp": 3,
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "display": "-webkit-box",
+        "font-family": "{font.ar}",
+        "font-size": 17,
+        "line-height": "30px",
+        "overflow": "hidden",
+        "text-align": "right"
+      },
+      "type": "text"
     },
     "d6KLgTT0": {
       "content": "11",
@@ -66740,6 +66308,41 @@
       },
       "type": "frame"
     },
+    "dxzyEzJc": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "OjJkF8Mq",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
+    "dy1YBgQE": {
+      "content": "ص ١",
+      "index": "a00",
+      "name": "ص ١",
+      "parentId": "hciFVOzH",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "dy4QV9JK": {
       "index": "a001",
       "name": "Spacer",
@@ -68015,6 +67618,22 @@
       },
       "type": "frame"
     },
+    "ein5aSNu": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "OjJkF8Mq",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "ej2ZUwtD": {
       "index": "a001V",
       "name": "Spacer",
@@ -68171,6 +67790,20 @@
         "vertical-align": "super"
       },
       "type": "text"
+    },
+    "eoH7v98J": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "T6mVsAbw",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
     },
     "eoz8jmBL": {
       "content": "5",
@@ -68477,6 +68110,21 @@
       "parentId": "AHQrhHDo",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "exiMn0fu": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "zQcSGx7L",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 1,
+        "width": 66
       },
       "type": "frame"
     },
@@ -68877,20 +68525,6 @@
         "width": 18
       },
       "type": "icon"
-    },
-    "f84JvHGR": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "xSo22ACZ",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
     },
     "f8y3Lv1O": {
       "icon": "settings-2",
@@ -70563,22 +70197,6 @@
       },
       "type": "text"
     },
-    "g2rzpgBR": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a01",
-      "name": "Bookmark · ص ٣",
-      "parentId": "6wztJW2H",
-      "style": {
-        "background": "{color.accent-soft}",
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
-    },
     "g3cfJGQV": {
       "componentId": "v8FmfBf5",
       "index": "a1",
@@ -71155,21 +70773,6 @@
       },
       "type": "frame"
     },
-    "gOuWZ95a": {
-      "content": "ص ١",
-      "index": "a00",
-      "name": "ص ١",
-      "parentId": "KYRvSA0v",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "gPOtiRMr": {
       "content": "اسمٌ",
       "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
@@ -71294,6 +70897,29 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "gTKKDrkJ": {
+      "content": "تعريف الكلام وأقسامه",
+      "index": "a01",
+      "name": "تعريف الكلام وأقسامه",
+      "parentId": "rWG0q1u7",
+      "style": {
+        "-webkit-box-orient": "vertical",
+        "-webkit-line-clamp": 2,
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "display": "-webkit-box",
+        "flex": 1,
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "font-weight": 500,
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "2px 0",
+        "text-align": "right"
       },
       "type": "text"
     },
@@ -72178,6 +71804,27 @@
       },
       "type": "icon"
     },
+    "h4G70Gs2": {
+      "css": "transform-origin: left center;\ntransition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransition-delay: 350ms;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.96;\n  translate: -4px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.96;\n  transition-delay: 0ms;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n\n  @starting-style {\n    scale: 1;\n    translate: none;\n  }\n}",
+      "index": "z9",
+      "name": "Bookmark preview",
+      "parentId": "626qY5jf",
+      "style": {
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 8,
+        "left": 256,
+        "padding": "12px 16px",
+        "position": "absolute",
+        "top": 264,
+        "width": 340,
+        "z-index": 20
+      },
+      "type": "frame"
+    },
     "h4JKMmC9": {
       "index": "a0",
       "name": "Page area",
@@ -72370,19 +72017,6 @@
       "x": 6360,
       "y": 0
     },
-    "hAaJnzRs": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "bEHtim6X",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "hAbht2Hq": {
       "content": "5",
       "index": "a000",
@@ -72513,20 +72147,6 @@
         "variant": "ghost"
       },
       "type": "instance"
-    },
-    "hFJklJwk": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "i9cAD1U2",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
-      },
-      "type": "frame"
     },
     "hFVB5rlu": {
       "content": "، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
@@ -72704,28 +72324,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "hLjafnEt": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "qZJFHD09",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "hM5ftAml": {
       "index": "a002",
@@ -73132,6 +72730,20 @@
         "label": "line 1"
       },
       "type": "instance"
+    },
+    "hciFVOzH": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "7DGXRzWd",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
     },
     "hcuHD2rd": {
       "componentId": "46QiZLNZ",
@@ -73992,7 +73604,7 @@
       },
       "parentId": "IDcPs6lL",
       "props": {
-        "helper": "Optional. Without a name, the list shows the chapter heading.",
+        "helper": "Optional.",
         "label": "Name",
         "state": "focus",
         "value": "تعريف الكلام وأقسامه",
@@ -74048,6 +73660,41 @@
         "state": "selected"
       },
       "style": {},
+      "type": "instance"
+    },
+    "i5LOA1Lg": {
+      "componentId": "mUTXOEWB",
+      "index": "a01",
+      "name": "Input",
+      "overrides": {
+        "35wyGt1m": {
+          "style": {
+            "color": "{color.ink}",
+            "direction": "rtl",
+            "font-family": "{font.ar}",
+            "font-size": 15,
+            "text-align": "right"
+          }
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": "100%"
+          }
+        }
+      },
+      "parentId": "GuBgZGzD",
+      "props": {
+        "label": "Name",
+        "state": "focus",
+        "value": "الفاعل الظاهر والمضمر",
+        "withHelper": "no",
+        "withIcon": "no",
+        "withLabel": "no"
+      },
+      "style": {
+        "flex": 1,
+        "min-width": 0
+      },
       "type": "instance"
     },
     "i5YQWyGk": {
@@ -74148,17 +73795,6 @@
         "right": 0,
         "top": 0,
         "z-index": 50
-      },
-      "type": "frame"
-    },
-    "i9cAD1U2": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "8Xr5BmTk",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
       },
       "type": "frame"
     },
@@ -74333,42 +73969,6 @@
         "width": 540
       },
       "type": "frame"
-    },
-    "iDfYnDZl": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "x9iQVlR0",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
-    "iDtwubOC": {
-      "content": "3 days ago",
-      "index": "a02",
-      "name": "3 days ago",
-      "parentId": "neBbojUS",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "iEm7umwv": {
       "index": "a001",
@@ -74699,6 +74299,22 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "iSy5GQ0B": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "PcJ9EXsK",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "iT7rx5ry": {
       "componentId": "RV1DOgzp",
@@ -75757,19 +75373,6 @@
       },
       "type": "text"
     },
-    "j7ERHSIG": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "QUeyu8Ft",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "j8DhWD9m": {
       "componentId": "RV1DOgzp",
       "index": "a003",
@@ -75782,28 +75385,6 @@
       "parentId": "ewx3Vypq",
       "props": {
         "label": "Delete note",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
-    "j8OIz94n": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "sEoBSBl4",
-      "props": {
-        "label": "Delete bookmark",
         "variant": "ghost"
       },
       "type": "instance"
@@ -75842,21 +75423,6 @@
         "display": "flex",
         "gap": 8,
         "padding": "12px 16px"
-      },
-      "type": "frame"
-    },
-    "jAksNUM6": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a02",
-      "name": "Bookmark · ص ٩",
-      "parentId": "lfnla6Tb",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
       },
       "type": "frame"
     },
@@ -76384,6 +75950,22 @@
       },
       "type": "text"
     },
+    "jUNgnQ0B": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "LrlfazZd",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "jUX12JJx": {
       "componentId": "RV1DOgzp",
       "index": "a002",
@@ -76517,28 +76099,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "jceu5CXI": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "Og2bs5Kq",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "jdlRNqSt": {
       "index": "a001",
@@ -76767,23 +76327,6 @@
         "font-weight": 400,
         "line-height": "28px",
         "text-align": "right"
-      },
-      "type": "text"
-    },
-    "jl0eV7Jl": {
-      "content": "مقدمة",
-      "index": "a00",
-      "name": "مقدمة",
-      "parentId": "wScRbbnt",
-      "style": {
-        "color": "{color.ink-2}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
       },
       "type": "text"
     },
@@ -77123,17 +76666,6 @@
       },
       "type": "text"
     },
-    "jutm3Lon": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "A1p76Q2G",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
-    },
     "jvc1XuAB": {
       "content": "5",
       "index": "a000",
@@ -77241,28 +76773,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "k26SWNkN": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "5NFGrZsU",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "k37YnRRX": {
       "content": "5",
@@ -77922,6 +77432,25 @@
       },
       "type": "text"
     },
+    "kMgQvwbr": {
+      "content": "ص ١٤",
+      "index": "a00",
+      "name": "ص ١٤",
+      "parentId": "WZCL8HCv",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "kMkOQNAZ": {
       "content": "Last read",
       "index": "a001V",
@@ -78071,6 +77600,21 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "kQGzGdl5": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "PCfEZoIG",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 1,
+        "width": 66
+      },
+      "type": "frame"
     },
     "kRZu6NGp": {
       "index": "a001",
@@ -79064,21 +78608,6 @@
       },
       "type": "frame"
     },
-    "kyTYTq2h": {
-      "content": "ص ١",
-      "index": "a00",
-      "name": "ص ١",
-      "parentId": "DKv6J0I2",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "kyuw7S8J": {
       "content": "Ibn Ājurrūm · Bāb al-Kalām",
       "index": "a001",
@@ -79636,23 +79165,6 @@
       },
       "type": "frame"
     },
-    "lIWmgGX0": {
-      "content": "بابُ الأفعالِ",
-      "index": "a00",
-      "name": "بابُ الأفعالِ",
-      "parentId": "WQdGdiGb",
-      "style": {
-        "color": "{color.ink-2}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
-    },
     "lJeATy0U": {
       "componentId": "RV1DOgzp",
       "index": "a009",
@@ -79725,6 +79237,22 @@
       },
       "type": "frame"
     },
+    "lKpfGL1p": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "Md0bTLju",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "lL7vb004": {
       "index": "a001",
       "name": "Spacer",
@@ -79749,22 +79277,6 @@
       },
       "style": {},
       "type": "instance"
-    },
-    "lLrc2SqY": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a03",
-      "name": "Bookmark · ص ١٢",
-      "parentId": "lfnla6Tb",
-      "style": {
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
-      },
-      "type": "frame"
     },
     "lLzJ1nfx": {
       "index": "a001",
@@ -80238,21 +79750,6 @@
       },
       "type": "frame"
     },
-    "lfO8XfSI": {
-      "content": "ص ١",
-      "index": "a00",
-      "name": "ص ١",
-      "parentId": "FVULSsQH",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "lfSpalol": {
       "icon": "chevron-left",
       "index": "a0",
@@ -80547,20 +80044,6 @@
         "flex": 1
       },
       "type": "frame"
-    },
-    "loQQ5B2w": {
-      "content": "Today",
-      "index": "a02",
-      "name": "Today",
-      "parentId": "5sGbc52B",
-      "style": {
-        "color": "{color.accent}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "loRIjOVI": {
       "icon": "chevron-right",
@@ -81443,28 +80926,6 @@
       },
       "type": "frame"
     },
-    "mHegpGXc": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "25Ody7DN",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "mI7ozugy": {
       "content": "المفيدُ بالوضعِ",
       "index": "a001",
@@ -81493,6 +80954,21 @@
         "flex-direction": "column",
         "height": "100%",
         "min-width": 0
+      },
+      "type": "frame"
+    },
+    "mKMoYH3n": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "s8O5dsH8",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
       },
       "type": "frame"
     },
@@ -82299,21 +81775,6 @@
       },
       "type": "text"
     },
-    "mtaDcrgd": {
-      "content": "ص ٩",
-      "index": "a00",
-      "name": "ص ٩",
-      "parentId": "EvzlTxkM",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "mthnvQmu": {
       "mode": "light",
       "name": "Bookmarks · Rename",
@@ -82778,28 +82239,6 @@
       },
       "type": "text"
     },
-    "n8TifK7N": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "oSaCCDGg",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "n8zxxOdn": {
       "index": "a00001",
       "name": "Anchor",
@@ -82809,20 +82248,6 @@
         "position": "relative"
       },
       "type": "frame"
-    },
-    "n934jNhi": {
-      "content": "Last week",
-      "index": "a02",
-      "name": "Last week",
-      "parentId": "QUeyu8Ft",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "n9LRRr2n": {
       "index": "a1",
@@ -83142,26 +82567,6 @@
       },
       "type": "text"
     },
-    "nK7sM6q9": {
-      "content": "بابُ الكلامِ",
-      "index": "a01",
-      "name": "بابُ الكلامِ",
-      "parentId": "xSo22ACZ",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "nKCjaA7O": {
       "icon": "sparkles",
       "index": "a0",
@@ -83200,28 +82605,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "nKilPCOe": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "G6Rww711",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "nLT8mQ0L": {
       "content": "5",
@@ -83285,26 +82668,6 @@
         "padding": "4px 10px"
       },
       "type": "frame"
-    },
-    "nNEZsMzA": {
-      "content": "وهو الاسمُ المرفوعُ الذي لم يُذكرْ معه",
-      "index": "a01",
-      "name": "وهو الاسمُ المرفوعُ الذي لم يُذكرْ معه",
-      "parentId": "jutm3Lon",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "nNbJCafT": {
       "componentId": "HZhkp90k",
@@ -83468,6 +82831,22 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "nTGk2Cxb": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "AcstDYqj",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "nVTmD8Jw": {
       "index": "aj",
@@ -83696,20 +83075,6 @@
       },
       "type": "instance"
     },
-    "neBbojUS": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "9j2c1wLr",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 0
-      },
-      "type": "frame"
-    },
     "neL2Lx9L": {
       "icon": "notebook-pen",
       "index": "a7",
@@ -83915,6 +83280,18 @@
       },
       "type": "text"
     },
+    "nnPYeQAu": {
+      "index": "a00",
+      "name": "Head",
+      "parentId": "h4G70Gs2",
+      "style": {
+        "align-items": "baseline",
+        "direction": "rtl",
+        "display": "flex",
+        "gap": 10
+      },
+      "type": "frame"
+    },
     "nnbWxv3c": {
       "content": "Ibn Ājurrūm · Bāb al-Kalām",
       "index": "a001",
@@ -83973,28 +83350,6 @@
         "width": 18
       },
       "type": "icon"
-    },
-    "np7ubXRJ": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "BuGsJncV",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "npCSL5nu": {
       "componentId": "RV1DOgzp",
@@ -85205,23 +84560,6 @@
       },
       "type": "text"
     },
-    "oSaCCDGg": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "cJXk5teA",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "oSceyLTA": {
       "content": "فالاسمُ يُعرَفُ: ",
       "index": "a000",
@@ -85643,26 +84981,6 @@
       },
       "type": "text"
     },
-    "okJ9P38e": {
-      "content": "بابُ الفاعلِ",
-      "index": "a01",
-      "name": "بابُ الفاعلِ",
-      "parentId": "Y4IqmgqP",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "olPP4M4X": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
       "index": "a1",
@@ -86013,20 +85331,6 @@
       },
       "type": "text"
     },
-    "p0X4MkIe": {
-      "content": "Today",
-      "index": "a02",
-      "name": "Today",
-      "parentId": "wIU5wQb5",
-      "style": {
-        "color": "{color.accent}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "p1DFp7mm": {
       "content": "بالخفضِ، والتنوينِ، ودخولِ الألفِ واللامِ",
       "index": "a001",
@@ -86099,19 +85403,6 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "p2o1h02V": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "2TBHBqbo",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
       },
       "type": "text"
     },
@@ -86274,28 +85565,6 @@
         "text-align": "right"
       },
       "type": "text"
-    },
-    "p7txvpSV": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "oSaCCDGg",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "p7zI6kH5": {
       "content": "ِ",
@@ -88345,17 +87614,6 @@
       },
       "type": "text"
     },
-    "qQOSsEJ2": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "aezazZm2",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
-    },
     "qQeaEmGT": {
       "content": "وحرفٌ جاءَ لمعنًى",
       "index": "a2",
@@ -88585,45 +87843,6 @@
       },
       "type": "text"
     },
-    "qY7XRdiu": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "Og2bs5Kq",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
-    "qZJFHD09": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "aezazZm2",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "qZQGoCu2": {
       "content": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
       "index": "a1",
@@ -88675,26 +87894,6 @@
         "shape": "line"
       },
       "type": "instance"
-    },
-    "qbLV8Vu6": {
-      "content": "بابُ الكلامِ",
-      "index": "a01",
-      "name": "بابُ الكلامِ",
-      "parentId": "9D5ujeUT",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "qbMjOFIV": {
       "content": "بابُ الإعرابِ",
@@ -88849,6 +88048,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "qdvMNdYU": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "IzVa8hDb",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
     },
     "qfM2oeq3": {
       "content": ".",
@@ -89111,20 +88324,6 @@
       },
       "type": "frame"
     },
-    "qlFaXxLD": {
-      "content": "Yesterday",
-      "index": "a02",
-      "name": "Yesterday",
-      "parentId": "ZOjBqb9S",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "qlGaOPZG": {
       "index": "a0",
       "name": "Frame",
@@ -89381,6 +88580,35 @@
       },
       "type": "frame"
     },
+    "qw6YrPLh": {
+      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a00",
+      "name": "Actions",
+      "parentId": "T6mVsAbw",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 2,
+        "opacity": 0,
+        "width": 66
+      },
+      "type": "frame"
+    },
+    "qwF8dVwj": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "zK8qDuKh",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
+    },
     "qwKKHL9i": {
       "content": "متن الآجرومية",
       "index": "a0",
@@ -89547,6 +88775,25 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "r4ll2cF4": {
+      "content": "ص ٩",
+      "index": "a00",
+      "name": "ص ٩",
+      "parentId": "Vt3MNwbZ",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -90425,6 +89672,20 @@
       },
       "type": "text"
     },
+    "rWG0q1u7": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "F73lXhX3",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
+    },
     "rWGzaf1u": {
       "index": "a2",
       "name": "Row · My harakat",
@@ -90698,6 +89959,21 @@
         "flex": 1,
         "flex-direction": "column",
         "height": "100%"
+      },
+      "type": "frame"
+    },
+    "rjBiAxk0": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a04",
+      "name": "Bookmark · ص ١٤",
+      "parentId": "6wztJW2H",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
       },
       "type": "frame"
     },
@@ -91525,6 +90801,21 @@
       },
       "type": "text"
     },
+    "s8O5dsH8": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a00",
+      "name": "Bookmark · ص ١",
+      "parentId": "lfnla6Tb",
+      "style": {
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
+      },
+      "type": "frame"
+    },
     "s8T3k04D": {
       "componentId": "KLaQXYk7",
       "index": "a001",
@@ -91564,6 +90855,22 @@
         "padding-bottom": 12
       },
       "type": "frame"
+    },
+    "s9OzzuPt": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "3z1kFmKv",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "s9vyKJlu": {
       "content": "Midad",
@@ -91714,23 +91021,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "sEoBSBl4": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "WQdGdiGb",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
     },
     "sFMNl2X1": {
       "content": "Dark mode",
@@ -91900,6 +91190,25 @@
         "padding": "4px 10px"
       },
       "type": "frame"
+    },
+    "sJijN2OB": {
+      "content": "ص ٣",
+      "index": "a00",
+      "name": "ص ٣",
+      "parentId": "rWG0q1u7",
+      "style": {
+        "align-self": "flex-start",
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "flex-shrink": 0,
+        "font-family": "{font.ar}",
+        "font-size": 15,
+        "line-height": "28px",
+        "min-width": 32,
+        "text-align": "right",
+        "white-space": "nowrap"
+      },
+      "type": "text"
     },
     "sK0d02n6": {
       "content": ".",
@@ -92354,20 +91663,6 @@
       },
       "type": "text"
     },
-    "sfKbRFb9": {
-      "icon": "map-pin",
-      "index": "a0005",
-      "name": "Icon bookmark",
-      "parentId": "Fyk1F6DZ",
-      "set": "lucide",
-      "style": {
-        "color": "{color.accent}",
-        "flex-shrink": 0,
-        "height": 12,
-        "width": 12
-      },
-      "type": "icon"
-    },
     "sfegmQMz": {
       "index": "a004",
       "name": "Spacer",
@@ -92557,6 +91852,22 @@
       },
       "type": "text"
     },
+    "snJGvlu8": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "16hc7vFh",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "snQdr3Zp": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "aI",
@@ -92621,20 +91932,6 @@
       },
       "type": "text"
     },
-    "spG8Qy2f": {
-      "content": "Mar 2",
-      "index": "a02",
-      "name": "Mar 2",
-      "parentId": "DKv6J0I2",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "spnS0WYB": {
       "componentId": "RV1DOgzp",
       "index": "a006V",
@@ -92688,19 +91985,6 @@
         "font-family": "{font.body}",
         "font-size": 14,
         "font-weight": 500,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "srtJM36Y": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "DKv6J0I2",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
         "line-height": "20px"
       },
       "type": "text"
@@ -93318,32 +92602,6 @@
       },
       "type": "frame"
     },
-    "tHvyFUvZ": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "f84JvHGR",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "tIHWSLM1": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "ZOjBqb9S",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "tIUA0zgn": {
       "content": "، وحروفِ الخفضِ، وهي: مِن، وإلى، وعن، وعلى، وفي، ورُبَّ، والباءُ، والكافُ، واللامُ، وحروفِ القسمِ، وهي: الواوُ، والباءُ، والتاءُ.",
       "index": "a003",
@@ -93356,26 +92614,6 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "tJ0AxyV8": {
-      "content": "بابُ الكلامِ",
-      "index": "a01",
-      "name": "بابُ الكلامِ",
-      "parentId": "wCv2lcO8",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -94457,23 +93695,6 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "txIRZ5wq": {
-      "content": "بابُ الأفعالِ",
-      "index": "a00",
-      "name": "بابُ الأفعالِ",
-      "parentId": "jAksNUM6",
-      "style": {
-        "color": "{color.ink-2}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 400,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
       },
       "type": "text"
     },
@@ -95579,6 +94800,29 @@
       },
       "type": "frame"
     },
+    "ucw7XH4e": {
+      "content": "الفاعل الظاهر والمضمر",
+      "index": "a01",
+      "name": "الفاعل الظاهر والمضمر",
+      "parentId": "zeh733Wu",
+      "style": {
+        "-webkit-box-orient": "vertical",
+        "-webkit-line-clamp": 2,
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "-webkit-box",
+        "flex": 1,
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "font-weight": 500,
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "2px 0",
+        "text-align": "right"
+      },
+      "type": "text"
+    },
     "udrKLcgc": {
       "componentId": "RV1DOgzp",
       "index": "a006",
@@ -96125,6 +95369,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "utoUnmxU": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "s8O5dsH8",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
     },
     "uuqvhvTE": {
       "content": "5",
@@ -96684,23 +95942,6 @@
       },
       "type": "text"
     },
-    "vEYiC2l6": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "3P91PluN",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "vEhJcEvC": {
       "index": "a001",
       "name": "Page column",
@@ -96839,28 +96080,6 @@
       },
       "type": "frame"
     },
-    "vNnT3tB8": {
-      "componentId": "RV1DOgzp",
-      "index": "a00",
-      "name": "Rename",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "pencil"
-        }
-      },
-      "parentId": "sEoBSBl4",
-      "props": {
-        "label": "Rename",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "vOV6LaNA": {
       "content": "متن الآجرومية",
       "index": "a0",
@@ -96885,21 +96104,6 @@
         "height": 1
       },
       "type": "frame"
-    },
-    "vPngoqMI": {
-      "content": "ص ١٤",
-      "index": "a00",
-      "name": "ص ١٤",
-      "parentId": "2TBHBqbo",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "vQ16azx3": {
       "icon": "notebook-pen",
@@ -97777,19 +96981,6 @@
       "x": 12440,
       "y": 10940
     },
-    "w4ozijKc": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "wIU5wQb5",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "w5lXIoVh": {
       "content": "Matn al-Ājurrūmiyya",
       "index": "a000",
@@ -97943,17 +97134,6 @@
       },
       "type": "frame"
     },
-    "wCv2lcO8": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "aIYyjCDq",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
-    },
     "wD71daLD": {
       "index": "a000",
       "name": "Mark",
@@ -98077,20 +97257,6 @@
         "height": 36,
         "padding": "0 10px",
         "position": "relative"
-      },
-      "type": "frame"
-    },
-    "wIU5wQb5": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 0;\n}",
-      "index": "a00",
-      "name": "Place",
-      "parentId": "9D5ujeUT",
-      "style": {
-        "align-items": "baseline",
-        "display": "flex",
-        "flex-shrink": 0,
-        "gap": 6,
-        "opacity": 1
       },
       "type": "frame"
     },
@@ -98272,26 +97438,6 @@
       },
       "type": "text"
     },
-    "wOui0ETm": {
-      "content": "وهو الاسمُ المرفوعُ الذي لم يُذكرْ معه",
-      "index": "a01",
-      "name": "وهو الاسمُ المرفوعُ الذي لم يُذكرْ معه",
-      "parentId": "OG6vLk4g",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "flex": 1,
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "min-width": 0,
-        "overflow": "hidden",
-        "text-align": "right",
-        "text-overflow": "ellipsis",
-        "white-space": "nowrap"
-      },
-      "type": "text"
-    },
     "wPsJQ4nX": {
       "index": "a004",
       "name": "Passage",
@@ -98373,21 +97519,6 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
-      },
-      "type": "frame"
-    },
-    "wScRbbnt": {
-      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
-      "index": "a00",
-      "name": "Bookmark · ص ١",
-      "parentId": "lfnla6Tb",
-      "style": {
-        "border-radius": 8,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 0,
-        "padding": "6px 10px",
-        "position": "relative"
       },
       "type": "frame"
     },
@@ -98901,23 +98032,6 @@
       },
       "type": "text"
     },
-    "wnumcUja": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "g2rzpgBR",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 0,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
     "wnuuVZtI": {
       "index": "a1",
       "name": "Line 2",
@@ -99008,21 +98122,6 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "wpzCL4Qb": {
-      "content": "ص ١٤",
-      "index": "a00",
-      "name": "ص ١٤",
-      "parentId": "QUeyu8Ft",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 13,
-        "line-height": "20px",
-        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -99549,6 +98648,22 @@
       },
       "type": "text"
     },
+    "x8PHqvp7": {
+      "componentId": "RV1DOgzp",
+      "index": "a00",
+      "name": "Rename",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "3z1kFmKv",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "x8k1xqH8": {
       "index": "a0023",
       "name": "Answer · RTL block",
@@ -99585,37 +98700,6 @@
         "flex": 1
       },
       "type": "frame"
-    },
-    "x9iQVlR0": {
-      "css": "transition: opacity {transition.duration-press} {ease.out};\n\n*:hover > &, *:focus-within > & {\n  opacity: 1;\n}",
-      "index": "a02",
-      "name": "Row actions",
-      "parentId": "lLrc2SqY",
-      "style": {
-        "align-items": "center",
-        "background": "color-mix(in oklab, {color.ink} 5%, {color.surface-2})",
-        "border-radius": 6,
-        "bottom": 4,
-        "display": "flex",
-        "left": 6,
-        "opacity": 1,
-        "position": "absolute"
-      },
-      "type": "frame"
-    },
-    "xArgKOVq": {
-      "content": "Yesterday",
-      "index": "a02",
-      "name": "Yesterday",
-      "parentId": "EvzlTxkM",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px",
-        "white-space": "nowrap"
-      },
-      "type": "text"
     },
     "xBTAi6qN": {
       "componentId": "RV1DOgzp",
@@ -100135,17 +99219,6 @@
       },
       "type": "frame"
     },
-    "xSo22ACZ": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "g2rzpgBR",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
-    },
     "xSp1Ah1s": {
       "content": "Library",
       "index": "a000",
@@ -100394,28 +99467,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "xXqI0wEg": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "ceCDXgKU",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "xYNjna8j": {
       "componentId": "RV1DOgzp",
@@ -101000,19 +100051,6 @@
         "text-align": "right"
       },
       "type": "frame"
-    },
-    "xtdOEfgD": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "KYRvSA0v",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
     },
     "xtoWDjvj": {
       "componentId": "RV1DOgzp",
@@ -102156,17 +101194,6 @@
       "style": {},
       "type": "instance"
     },
-    "yglszfPH": {
-      "index": "a01",
-      "name": "Meta line",
-      "parentId": "0Lwd5gBK",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 10
-      },
-      "type": "frame"
-    },
     "yhPzLof4": {
       "index": "a000",
       "name": "Contents",
@@ -102284,23 +101311,6 @@
         "variant": "ghost"
       },
       "type": "instance"
-    },
-    "ymWFowVN": {
-      "content": "تعريف الكلام وأقسامه",
-      "index": "a00",
-      "name": "تعريف الكلام وأقسامه",
-      "parentId": "aIYyjCDq",
-      "style": {
-        "color": "{color.accent}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 500,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
     },
     "ymr5nYQY": {
       "index": "a1",
@@ -102458,6 +101468,22 @@
       "props": {
         "label": "All",
         "state": "selected"
+      },
+      "type": "instance"
+    },
+    "yrgEvV7h": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "qw6YrPLh",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
       },
       "type": "instance"
     },
@@ -103057,6 +102083,22 @@
       },
       "type": "text"
     },
+    "zK8qDuKh": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a01",
+      "name": "Bookmark · ص ٣",
+      "parentId": "lfnla6Tb",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
+      },
+      "type": "frame"
+    },
     "zKMEMajB": {
       "index": "a0",
       "name": "Line number",
@@ -103240,6 +102282,22 @@
       },
       "type": "text"
     },
+    "zQ0fDU2u": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "9HjLU3ip",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "zQ5MKlV9": {
       "icon": "chevron-right",
       "index": "a2",
@@ -103254,18 +102312,20 @@
       },
       "type": "icon"
     },
-    "zQXpD6UE": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "neBbojUS",
+    "zQcSGx7L": {
+      "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
+      "index": "a03",
+      "name": "Bookmark · ص ١٢ · Renaming",
+      "parentId": "6wztJW2H",
       "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
+        "align-items": "center",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 6,
+        "min-height": 36,
+        "padding": "2px 10px 2px 2px"
       },
-      "type": "text"
+      "type": "frame"
     },
     "zQgFUBZG": {
       "css": "transition: transform {transition.duration-panel} {ease.out};",
@@ -103591,19 +102651,6 @@
       },
       "type": "frame"
     },
-    "zaTeMB9N": {
-      "content": "·",
-      "index": "a01",
-      "name": "·",
-      "parentId": "5sGbc52B",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
     "zaxGTPsn": {
       "index": "a004",
       "name": "Passage",
@@ -103799,6 +102846,20 @@
       },
       "type": "text"
     },
+    "zeh733Wu": {
+      "index": "a01",
+      "name": "Label",
+      "parentId": "PCfEZoIG",
+      "style": {
+        "align-items": "center",
+        "direction": "rtl",
+        "display": "flex",
+        "flex": 1,
+        "gap": 10,
+        "min-width": 0
+      },
+      "type": "frame"
+    },
     "zf82t63c": {
       "content": "والسين",
       "index": "a00005",
@@ -103813,6 +102874,22 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "zfXFKPzy": {
+      "componentId": "RV1DOgzp",
+      "index": "a01",
+      "name": "Delete",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "3BPudObr",
+      "props": {
+        "label": "Delete bookmark",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "zg5Gk1VL": {
       "content": "9",
@@ -103986,23 +103063,6 @@
       },
       "type": "frame"
     },
-    "znpunjiV": {
-      "content": "الفاعل الظاهر والمضمر",
-      "index": "a00",
-      "name": "الفاعل الظاهر والمضمر",
-      "parentId": "lLrc2SqY",
-      "style": {
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 16,
-        "font-weight": 500,
-        "line-height": "28px",
-        "text-align": "right",
-        "width": "100%"
-      },
-      "type": "text"
-    },
     "zpVBI2vA": {
       "index": "Za000",
       "name": "Line number",
@@ -104053,28 +103113,6 @@
       "parentId": "i4ZxqMMk",
       "props": {
         "label": "ḥāshiya ١"
-      },
-      "type": "instance"
-    },
-    "zrp8WrgQ": {
-      "componentId": "RV1DOgzp",
-      "index": "a01",
-      "name": "Delete",
-      "overrides": {
-        "RV1DOgzp": {
-          "style": {
-            "height": 28,
-            "width": 28
-          }
-        },
-        "YmvmyXk9": {
-          "icon": "trash-2"
-        }
-      },
-      "parentId": "qZJFHD09",
-      "props": {
-        "label": "Delete bookmark",
-        "variant": "ghost"
       },
       "type": "instance"
     },
