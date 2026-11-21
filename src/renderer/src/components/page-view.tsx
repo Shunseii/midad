@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { type CSSProperties, createContext, type ReactNode, type MouseEvent as ReactMouseEvent, useContext, useId, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, createContext, Fragment, type ReactNode, type MouseEvent as ReactMouseEvent, useContext, useId, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -201,6 +201,10 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
 
   const nodes: ReactNode[] = [];
   let run = "";
+  const flush = (key: string) => {
+    if (run) nodes.push(<Fragment key={key}>{withFootnoteRefs(run)}</Fragment>);
+    run = "";
+  };
   const letters = lettersOf(text);
   letters.forEach((l, i) => {
     const letter = i + 1;
@@ -209,8 +213,7 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
       run += l.base + marks.corpus;
       return;
     }
-    if (run) nodes.push(run);
-    run = "";
+    flush(`run-${letter}`);
     // Chromium paints a mark in its letter's colour, so the reader's marks are drawn
     // on a red copy of the letter underneath; the letter itself covers the red base.
     const { before, after } = inContext({ letters, index: i });
@@ -231,7 +234,7 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
       </span>,
     );
   });
-  if (run) nodes.push(run);
+  flush("run-end");
   return nodes;
 };
 
