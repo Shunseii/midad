@@ -343,6 +343,13 @@ export const ReaderRoute = () => {
   const [annotationsTab, setAnnotationsTab] = usePref<Exclude<PanelTab, "ask">>({ key: "reader.annotationsTab", fallback: "highlights" });
   const [askWidth, setAskWidth] = usePref<number | null>({ key: "reader.askWidth", fallback: null });
   const asking = panelTab === "ask";
+  // Ask AI only opens when asked for: a book opens with it closed, even if it was open last time.
+  const askOpenAtLoad = useRef({ asking, panelPref, setPanelPref });
+  askOpenAtLoad.current = { asking, panelPref, setPanelPref };
+  useEffect(() => {
+    const { asking: wasAsking, panelPref: wasOpen, setPanelPref: close } = askOpenAtLoad.current;
+    if (wasAsking && wasOpen) close(false);
+  }, [bookId]);
   const sideWidth = asking ? (askWidth ?? Math.max(ASK_WIDTH, panelWidth + ASK_EXTRA)) : panelWidth;
   const setSideWidth = asking ? setAskWidth : setPanelWidth;
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
