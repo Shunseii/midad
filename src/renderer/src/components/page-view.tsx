@@ -40,10 +40,14 @@ export const MARK_BAND: Record<HighlightColor, string> = {
 /** The page's footnotes by marker, for the superscript references in the text to peek at. */
 const Footnotes = createContext<Map<string, string>>(new Map());
 
-/** A footnote reference such as (١), set as a superscript that shows the footnote on hover. */
+/**
+ * A footnote reference such as (١), set as a superscript that shows the footnote on hover.
+ * Inline-block: as a plain inline child it lifts the word's own box above its neighbours',
+ * and the highlight band and reveal tint drawn from that box would step out of line.
+ */
 const FootnoteRef = ({ marker }: { marker: string }) => {
   const footnote = useContext(Footnotes).get(marker);
-  const sup = <sup className="mx-px cursor-default align-super text-[0.6em] font-bold text-accent transition-colors duration-press hover:text-ink">{marker}</sup>;
+  const sup = <sup className="mx-px inline-block cursor-default align-super text-[0.6em] font-bold text-accent transition-colors duration-press hover:text-ink">{marker}</sup>;
   if (!footnote) return sup;
   return (
     <Tooltip>
