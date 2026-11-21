@@ -151,24 +151,14 @@ const revealCitation = ({ root, cite }: { root: HTMLElement | null; cite: Citati
   revealSpan({ root, span: { part: cite.part, start: { line: cite.from, word: cite.words.from }, end: { line: cite.from, word: cite.words.to } } });
 };
 
-/** Scrolls to some lines and tints them for a moment. */
+/** Scrolls to some lines and tints their words for a moment, the same band a cited phrase gets. */
 const revealLines = ({ root, part, from, to }: LineRange & { root: HTMLElement | null }) => {
-  const blocks: HTMLElement[] = [];
-  for (let line = from; line <= to; line += 1) {
-    const el = root?.querySelector<HTMLElement>(`[data-line-block="${part}-${line}"]`);
-    if (el) blocks.push(el);
-  }
-  blocks[0]?.scrollIntoView({ block: "center" });
-  for (const el of blocks) {
-    el.animate(
-      [
-        { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)" },
-        { backgroundColor: "var(--color-accent-soft)", boxShadow: "0 0 0 0.75rem var(--color-accent-soft)", offset: 0.6 },
-        { backgroundColor: "transparent", boxShadow: "0 0 0 0.75rem transparent" },
-      ],
-      { duration: 3000, easing: "ease-out" },
-    );
-  }
+  const words = [...(root?.querySelectorAll<HTMLElement>(`[data-part="${part}"][data-w]`) ?? [])].filter((el) => {
+    const line = Number(el.dataset.line);
+    return line >= from && line <= to;
+  });
+  words[0]?.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+  tintWords(words);
 };
 
 /** Scrolls to the screen row a word is on and tints that row for a moment. */
