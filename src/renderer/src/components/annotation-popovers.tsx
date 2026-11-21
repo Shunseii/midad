@@ -158,9 +158,7 @@ export const NotePeek = ({ note, lineLabel, onEdit }: { note: Note; lineLabel: s
       {note.body}
     </span>
     <span className="flex items-center gap-2 text-xs text-ink-3">
-      <span className="flex-1 first-letter:uppercase">
-        {lineLabel} · {timeAgo(note.updatedAt)}
-      </span>
+      <span className="flex-1 first-letter:uppercase">{timeAgo(note.updatedAt)}</span>
       <span className="group-hover:text-accent">Click to edit</span>
     </span>
   </button>
