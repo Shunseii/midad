@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS conversations (
   book_id TEXT NOT NULL REFERENCES books(book_id) ON DELETE CASCADE,
   session_id TEXT,
   title TEXT NOT NULL,
+  position INTEGER,
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
@@ -32,6 +33,21 @@ CREATE INDEX IF NOT EXISTS turns_by_conversation ON turns (conversation_id, crea
 `;
 
 const TITLE_MAX = 80;
+
+const defaultTitle = (turn: { question: string; quotes: { text: string }[] }) =>
+  (turn.question.trim() || turn.quotes[0]?.text.trim() || "Explain this passage.").slice(0, TITLE_MAX);
+
+/** Conversations saved before they kept their page take the page of their first question. */
+const addPositionColumn = (db: DatabaseSync) => {
+  const columns = db.prepare("PRAGMA table_info(conversations)").all() as { name: string }[];
+  if (columns.some((c) => c.name === "position")) return;
+  db.exec("ALTER TABLE conversations ADD COLUMN position INTEGER");
+  db.exec(
+    `UPDATE conversations SET position = (
+       SELECT position FROM turns WHERE conversation_id = conversations.id ORDER BY created_at, rowid LIMIT 1
+     )`,
+  );
+};
 
 interface TurnRow {
   id: string;
@@ -59,6 +75,7 @@ const toTurn = (row: TurnRow): StoredTurn => ({
 
 export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; now?: () => number }) => {
   db.exec(SCHEMA);
+  addPositionColumn(db);
   // Nothing streams across a restart: an answer cut off by closing the app can be asked again.
   db.prepare("UPDATE turns SET status = 'interrupted' WHERE status = 'streaming'").run();
 
@@ -77,12 +94,30 @@ export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; 
     async list({ bookId }: { bookId: string }): Promise<ConversationSummary[]> {
       const rows = db
         .prepare(
-          `SELECT c.id, c.title, c.created_at, c.updated_at, COUNT(t.id) AS turn_count FROM conversations c
+          `SELECT c.id, c.title, c.position, c.created_at, c.updated_at, COUNT(t.id) AS turn_count,
+             (SELECT number FROM pages WHERE book_id = c.book_id AND position = c.position LIMIT 1) AS page_number
+           FROM conversations c
            LEFT JOIN turns t ON t.conversation_id = c.id
            WHERE c.book_id = ? GROUP BY c.id ORDER BY c.updated_at DESC, c.rowid DESC`,
         )
-        .all(bookId) as { id: string; title: string; created_at: number; updated_at: number; turn_count: number }[];
-      return rows.map((r) => ({ id: r.id, title: r.title, createdAt: r.created_at, updatedAt: r.updated_at, turnCount: r.turn_count }));
+        .all(bookId) as {
+        id: string;
+        title: string;
+        position: number | null;
+        page_number: number | null;
+        created_at: number;
+        updated_at: number;
+        turn_count: number;
+      }[];
+      return rows.map((r) => ({
+        id: r.id,
+        title: r.title,
+        position: r.position,
+        pageNumber: r.page_number,
+        createdAt: r.created_at,
+        updatedAt: r.updated_at,
+        turnCount: r.turn_count,
+      }));
     },
 
     async latest({ bookId }: { bookId: string }): Promise<Conversation | null> {
@@ -92,7 +127,59 @@ export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; 
       return row ? get({ id: row.id }) : null;
     },
 
-    /** Saves a question as it's asked, starting its conversation (titled by it) if this is the first. */
+    /** Saves a conversation kept only in memory until now, with every turn asked so far. */
+    async save({
+      id,
+      bookId,
+      sessionId,
+      turns,
+    }: {
+      id: string;
+      bookId: string;
+      sessionId: string | null;
+      turns: Omit<StoredTurn, "createdAt">[];
+    }): Promise<void> {
+      const first = turns[0];
+      if (!first) return;
+      const at = now();
+      const insertTurn = db.prepare(
+        `INSERT INTO turns (id, conversation_id, question, quotes, position, selection, answer, status, error, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO NOTHING`,
+      );
+      db.exec("BEGIN");
+      try {
+        db.prepare(
+          `INSERT INTO conversations (id, book_id, session_id, title, position, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT (id) DO NOTHING`,
+        ).run(id, bookId, sessionId, defaultTitle(first), first.position, at, at);
+        for (const turn of turns) {
+          insertTurn.run(
+            turn.id,
+            id,
+            turn.question,
+            JSON.stringify(turn.quotes),
+            turn.position,
+            turn.selection ? JSON.stringify(turn.selection) : null,
+            turn.answer,
+            turn.status,
+            turn.error,
+            at,
+          );
+        }
+        db.exec("COMMIT");
+      } catch (err) {
+        db.exec("ROLLBACK");
+        throw err;
+      }
+    },
+
+    /** Renames a conversation; a blank title keeps the old one. */
+    async rename({ id, title }: { id: string; title: string }): Promise<void> {
+      const trimmed = title.trim().slice(0, TITLE_MAX);
+      if (trimmed) db.prepare("UPDATE conversations SET title = ? WHERE id = ?").run(trimmed, id);
+    },
+
+    /** Adds a question to a saved conversation as it's asked, starting the conversation (titled by it) if this is the first. */
     async addTurn({
       conversationId,
       bookId,
@@ -104,9 +191,9 @@ export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; 
     }): Promise<void> {
       const at = now();
       db.prepare(
-        `INSERT INTO conversations (id, book_id, session_id, title, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, ?)
+        `INSERT INTO conversations (id, book_id, session_id, title, position, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, ?, ?)
          ON CONFLICT (id) DO UPDATE SET updated_at = excluded.updated_at`,
-      ).run(conversationId, bookId, (turn.question.trim() || turn.quotes[0]?.text.trim() || "Explain this passage.").slice(0, TITLE_MAX), at, at);
+      ).run(conversationId, bookId, defaultTitle(turn), turn.position, at, at);
       db.prepare(
         `INSERT INTO turns (id, conversation_id, question, quotes, position, selection, answer, status, error, created_at)
          VALUES (?, ?, ?, ?, ?, ?, '', 'streaming', NULL, ?)`,

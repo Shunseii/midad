@@ -34,6 +34,10 @@ export interface StoredTurn {
 export interface ConversationSummary {
   id: string;
   title: string;
+  /** The page the conversation started on; null for one saved before pages were kept. */
+  position: number | null;
+  /** That page's printed number, when it has one. */
+  pageNumber: number | null;
   createdAt: number;
   updatedAt: number;
   turnCount: number;

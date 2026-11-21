@@ -82,8 +82,8 @@ describe("Ask AI conversations", () => {
     await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question("t3", "third") });
 
     expect(await conversations.list({ bookId: "b1" })).toEqual([
-      { id: "c1", title: "first", createdAt: 1000, updatedAt: 3000, turnCount: 2 },
-      { id: "c2", title: "second", createdAt: 2000, updatedAt: 2000, turnCount: 1 },
+      { id: "c1", title: "first", position: 1, pageNumber: 1, createdAt: 1000, updatedAt: 3000, turnCount: 2 },
+      { id: "c2", title: "second", position: 1, pageNumber: 1, createdAt: 2000, updatedAt: 2000, turnCount: 1 },
     ]);
     expect((await conversations.latest({ bookId: "b1" }))?.id).toBe("c1");
   });
@@ -113,5 +113,64 @@ describe("Ask AI conversations", () => {
     db.prepare("DELETE FROM books WHERE book_id = ?").run("b1");
     expect(await conversations.list({ bookId: "b1" })).toEqual([]);
     expect(db.prepare("SELECT COUNT(*) AS n FROM turns").get()).toEqual({ n: 0 });
+  });
+});
+
+describe("saving a conversation", () => {
+  const answered = (id: string, text: string) => ({ ...question(id, text), answer: `answer ${id}`, status: "done" as const, error: null });
+
+  it("writes nothing for an answer to a conversation that was never saved", async () => {
+    await conversations.finishTurn({ id: "t1", answer: "It is [[line 1]].", sessionId: "s1" });
+    expect(db.prepare("SELECT COUNT(*) AS n FROM conversations").get()).toEqual({ n: 0 });
+    expect(db.prepare("SELECT COUNT(*) AS n FROM turns").get()).toEqual({ n: 0 });
+  });
+
+  it("writes the conversation with every turn so far, its session and the page it started on", async () => {
+    await conversations.save({ id: "c1", bookId: "b1", sessionId: "s1", turns: [answered("t1", "first"), answered("t2", "second")] });
+    expect(await conversations.get({ id: "c1" })).toEqual({
+      id: "c1",
+      bookId: "b1",
+      sessionId: "s1",
+      title: "first",
+      turns: [
+        { ...answered("t1", "first"), createdAt: 1000 },
+        { ...answered("t2", "second"), createdAt: 1000 },
+      ],
+    });
+    expect((await conversations.list({ bookId: "b1" }))[0]).toMatchObject({ position: 1, pageNumber: 1, turnCount: 2 });
+  });
+
+  it("keeps later questions once saved, and finishes an answer that was streaming when it was saved", async () => {
+    await conversations.save({ id: "c1", bookId: "b1", sessionId: null, turns: [{ ...question("t1"), answer: "par", status: "streaming", error: null }] });
+    await conversations.finishTurn({ id: "t1", answer: "partial and done", sessionId: "s1" });
+    await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question("t2") });
+    const c = await conversations.get({ id: "c1" });
+    expect(c?.sessionId).toBe("s1");
+    expect(c?.turns.map((t) => [t.id, t.answer, t.status])).toEqual([
+      ["t1", "partial and done", "done"],
+      ["t2", "", "streaming"],
+    ]);
+  });
+
+  it("renames a conversation, ignoring a blank title", async () => {
+    await conversations.save({ id: "c1", bookId: "b1", sessionId: null, turns: [answered("t1", "first")] });
+    await conversations.rename({ id: "c1", title: "  Kalām and lafẓ  " });
+    expect((await conversations.get({ id: "c1" }))?.title).toBe("Kalām and lafẓ");
+    await conversations.rename({ id: "c1", title: "   " });
+    expect((await conversations.get({ id: "c1" }))?.title).toBe("Kalām and lafẓ");
+  });
+
+  it("gives a conversation saved before pages were kept the page of its first question", async () => {
+    const old = new DatabaseSync(":memory:");
+    await createLibrary({ db: old, corpus, now: () => clock }).importBook({ corpusBookId: "b1" });
+    old.exec(`CREATE TABLE conversations (id TEXT PRIMARY KEY, book_id TEXT NOT NULL, session_id TEXT, title TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL);
+      CREATE TABLE turns (id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, question TEXT NOT NULL, quotes TEXT NOT NULL, position INTEGER NOT NULL, selection TEXT, answer TEXT NOT NULL DEFAULT '', status TEXT NOT NULL, error TEXT, created_at INTEGER NOT NULL);
+      INSERT INTO conversations VALUES ('c1', 'b1', NULL, 'old', 1, 1), ('c2', 'b1', NULL, 'empty', 2, 2);
+      INSERT INTO turns VALUES ('t1', 'c1', 'q', '[]', 1, NULL, '', 'done', NULL, 1);`);
+    const migrated = createConversations({ db: old });
+    expect((await migrated.list({ bookId: "b1" })).map((c) => [c.id, c.position, c.pageNumber])).toEqual([
+      ["c2", null, null],
+      ["c1", 1, 1],
+    ]);
   });
 });

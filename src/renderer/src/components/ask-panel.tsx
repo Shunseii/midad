@@ -1,4 +1,4 @@
-import { ArrowUp, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowUp, Bookmark, BookmarkCheck, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
@@ -10,7 +10,6 @@ import { copiedPassage } from "../lib/copied";
 import { arabicNumber, timeAgo } from "../lib/format";
 import { keys, midad, usePage } from "../lib/midad";
 import { Button, IconButton, Toast, cx } from "./ui";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export type { AskSelection, Quote };
@@ -29,12 +28,15 @@ const fromStored = ({ createdAt: _, ...turn }: StoredTurn): Turn => ({ ...turn, 
 
 /**
  * One Ask AI conversation for a book: a Claude session continued across questions.
- * Saved as it goes; opening the book brings back its most recent one.
+ * A new one lives only in memory until it's saved; once saved, each question is saved as it's asked.
+ * Opening the book brings back its most recently used saved one.
  */
 export const useAskConversation = (bookId: string) => {
   const client = useQueryClient();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+  const isSaved = useRef(false);
   const current = useRef<string | null>(null);
   const sessionId = useRef<string | null>(null);
   // Bumped whenever another conversation is shown, so a late load or answer can't revive the old one.
@@ -51,6 +53,8 @@ export const useAskConversation = (bookId: string) => {
     generation.current += 1;
     current.current = conversation?.id ?? null;
     setConversationId(current.current);
+    isSaved.current = conversation !== null;
+    setSaved(isSaved.current);
     sessionId.current = conversation?.sessionId ?? null;
     setTurns(conversation?.turns.map(fromStored) ?? []);
   }, []);
@@ -86,13 +90,15 @@ export const useAskConversation = (bookId: string) => {
     const conversation = current.current;
     const started = generation.current;
     setTurns((all) => [...all, { id, question, quotes, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }]);
-    try {
-      await midad["conversations.addTurn"]({ conversationId: conversation, bookId, turn: { id, question, quotes, position, selection } });
-    } catch (err) {
-      update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) }));
-      return;
+    if (isSaved.current) {
+      try {
+        await midad["conversations.addTurn"]({ conversationId: conversation, bookId, turn: { id, question, quotes, position, selection } });
+      } catch (err) {
+        update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) }));
+        return;
+      }
+      void refreshHistory();
     }
-    void refreshHistory();
     midad["ai.ask"]({
       requestId: id,
       bookId,
@@ -109,7 +115,9 @@ export const useAskConversation = (bookId: string) => {
         },
         (err: unknown) => update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) })),
       )
-      .finally(() => void refreshHistory());
+      .finally(() => {
+        if (isSaved.current) void refreshHistory();
+      });
   };
 
   const busy = turns.some((t) => t.status === "streaming");
@@ -128,6 +136,28 @@ export const useAskConversation = (bookId: string) => {
     stop();
     load(() => midad["conversations.get"]({ id }));
   };
+  /** Saves the open conversation with everything asked so far; later questions save as they're asked. */
+  const save = async () => {
+    const id = current.current;
+    if (!id || isSaved.current || turns.length === 0) return;
+    isSaved.current = true;
+    setSaved(true);
+    try {
+      await midad["conversations.save"]({ id, bookId, sessionId: sessionId.current, turns: turns.map(({ activity: _, restarted: __, ...turn }) => turn) });
+    } catch {
+      if (current.current === id) {
+        isSaved.current = false;
+        setSaved(false);
+      }
+    } finally {
+      void refreshHistory();
+    }
+  };
+  const rename = async ({ id, title }: { id: string; title: string }) => {
+    await midad["conversations.rename"]({ id, title });
+    void refreshHistory();
+  };
+
   /** Deletes the conversation for good once the chance to undo has passed. */
   const commitDelete = useCallback(() => {
     const pending = deleting.current;
@@ -164,6 +194,9 @@ export const useAskConversation = (bookId: string) => {
     reset,
     open,
     conversationId,
+    saved,
+    save,
+    rename,
     history: (history.data ?? []).filter((c) => c.id !== deleted?.id),
     remove,
     undoDelete,
@@ -262,447 +295,547 @@ const CiteChip = ({
       {missing ? (
         <span className="block text-xs text-ink-2">{text}</span>
       ) : (
-        <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
-          {text}
-        </span>
-      )}
-    </TooltipContent>
-  </Tooltip>
-);
-
-/** An answer's citation: its words come from the page the question was asked on. */
-const AnswerCite = ({ bookId, cite, position, onCite }: { bookId: string; cite: Cite; position: number; onCite: (c: Citation) => void }) => {
-  const page = usePage({ bookId, position });
-  const span = page.data ? citeSpan({ cite, page: page.data.page }) : null;
-  const { kind: _, ...where } = cite;
-  const label = citeLabel(cite);
-  if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} missing />;
-  return <CiteChip label={label} text={span && page.data ? quoteSpan({ page: page.data.page, span }) : null} onClick={() => onCite({ ...where, position })} />;
-};
-
-/** An answer, one element per line so each line takes its own direction. Citations become chips. */
-const Answer = ({ text, cite }: { text: string; cite: (c: Cite, key: number) => ReactNode }) => (
-  <div className="flex flex-col gap-3">
-    {text
-      .trim()
-      .split(/\n{2,}/)
-      .map((paragraph, p) => (
-        <div key={p} className="flex flex-col gap-1">
-          {paragraph.split("\n").map((line, l) => (
-            <p
-              key={l}
-              dir="auto"
-              className={cx("[unicode-bidi:plaintext]", ARABIC_START.test(line) ? "ar text-ar-body" : "text-body leading-relaxed")}
-            >
-              {parseCitations(line).map((s, i) => (s.kind === "text" ? <span key={i}>{s.text}</span> : cite(s, i)))}
-            </p>
-          ))}
-        </div>
-      ))}
-  </div>
-);
-
-const plainAnswer = (text: string) =>
-  parseCitations(text)
-    .map((s) => (s.kind === "text" ? s.text : citeLabel(s)))
-    .join("")
-    .trim();
-
-const quoteLabel = (q: Quote) => (q.span ? citeLabel(quoteCitation(q.span)) : "Pasted");
-
-const QuoteChip = ({ quote, onCite, onRemove, onBubble }: { quote: Quote; onCite: (c: Citation) => void; onRemove?: () => void; onBubble?: boolean }) => {
-  const { span } = quote;
-  return (
-    <CiteChip
-      label={quoteLabel(quote)}
-      text={quote.text}
-      quoted
-      onBubble={onBubble}
-      onClick={span ? () => onCite({ ...quoteCitation(span), position: quote.position }) : undefined}
-      onRemove={onRemove}
-    />
-  );
-};
-
-const PILL_ATTR = "data-quote-id";
-
-/** The composer's text and pills, in order. A pill's own label isn't part of the text. */
-const readComposer = ({ root, quotes }: { root: HTMLElement; quotes: Map<string, Quote> }): ComposerPart[] => {
-  const parts: ComposerPart[] = [];
-  const walk = (node: Node) => {
-    for (const child of node.childNodes) {
-      if (child.nodeType === Node.TEXT_NODE) parts.push({ kind: "text", text: child.textContent ?? "" });
-      if (!(child instanceof HTMLElement)) continue;
-      const id = child.getAttribute(PILL_ATTR);
-      const quote = id ? quotes.get(id) : undefined;
-      if (quote) parts.push({ kind: "quote", quote });
-      else if (child.tagName === "BR") parts.push({ kind: "text", text: "\n" });
-      else if (!id) walk(child);
-    }
-  };
-  walk(root);
-  return parts;
-};
-
-const caretAtEnd = (root: HTMLElement) => {
-  const range = document.createRange();
-  range.selectNodeContents(root);
-  range.collapse(false);
-  const selection = window.getSelection();
-  selection?.removeAllRanges();
-  selection?.addRange(range);
-};
-
-/** The node just before a collapsed caret, if the caret sits right after it. */
-const nodeBeforeCaret = (range: Range): Node | null => {
-  const { startContainer, startOffset } = range;
-  if (startContainer.nodeType === Node.TEXT_NODE) return startOffset === 0 ? startContainer.previousSibling : null;
-  return startOffset > 0 ? startContainer.childNodes[startOffset - 1] ?? null : null;
-};
-
-/** The book's saved conversations, most recent first; opening one continues its Claude session. */
-const ConversationHistory = ({
-  history,
-  currentId,
-  onOpen,
-  onDelete,
-}: {
-  history: ConversationSummary[];
-  currentId: string | null;
-  onOpen: (id: string) => void;
-  onDelete: (id: string) => void;
-}) => {
-  const [open, setOpen] = useState(false);
-  // A deleted row folds away before it leaves the list.
-  const [leaving, setLeaving] = useState<string | null>(null);
-  const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger render={<IconButton icon={History} label="Past conversations" selected={open} />} />
-      <PopoverContent align="end" className="w-80 gap-0 p-1.5">
-        <p className="px-2.5 pt-1.5 pb-1 text-xs font-medium text-ink-3">Past conversations</p>
-        <div className="flex max-h-80 flex-col overflow-y-auto">
-          {history.map((c) => (
-            <div
-              key={c.id}
-              data-state={leaving === c.id ? "leaving" : undefined}
-              onTransitionEnd={(e) => {
-                if (e.target !== e.currentTarget || e.propertyName !== "grid-template-rows" || leaving !== c.id) return;
-                setLeaving(null);
-                onDelete(c.id);
-              }}
-              className="grid grid-rows-[1fr] transition-[grid-template-rows,opacity] duration-pop ease-out data-[state=leaving]:grid-rows-[0fr] data-[state=leaving]:opacity-0 motion-reduce:transition-none"
-            >
-              <div className="group/row relative min-h-0 overflow-hidden">
-                <button
-                  type="button"
-                  aria-current={c.id === currentId || undefined}
-                  onClick={() => {
-                    onOpen(c.id);
-                    setOpen(false);
-                  }}
-                  className="flex w-full flex-col gap-0.5 rounded-lg py-2 pr-10 pl-2.5 text-left transition-colors duration-press hover:bg-ink/6 aria-[current]:bg-accent-soft"
-                >
-                  <span dir="auto" className="truncate text-sm [unicode-bidi:plaintext]">
-                    {c.title || "Untitled"}
-                  </span>
-                  <span className="text-xs text-ink-3">
-                    {timeAgo(c.updatedAt)} · {c.turnCount} {c.turnCount === 1 ? "question" : "questions"}
-                  </span>
-                </button>
-                <IconButton
-                  icon={Trash2}
-                  label="Delete conversation"
-                  onClick={() => (reduceMotion() ? onDelete(c.id) : setLeaving(c.id))}
-                  className="absolute top-1/2 right-1 -translate-y-1/2 opacity-0 transition-opacity duration-press group-hover/row:opacity-100 focus-visible:opacity-100"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-};
-
-export const AskPanel = ({
-  bookId,
-  conversation,
-  position,
-  pageNumber,
-  selection,
-  onClearSelection,
-  onCite,
-  onSaveNote,
-}: {
-  bookId: string;
-  conversation: ReturnType<typeof useAskConversation>;
-  position: number;
-  pageNumber: number;
-  selection: AskSelection | null;
-  onClearSelection: () => void;
-  onCite: (cite: Citation) => void;
-  onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
-}) => {
-  const { turns, ask, busy, stop, retry, reset, open, conversationId, history, remove, undoDelete, commitDelete, deleted } = conversation;
-  const [draft, setDraft] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
-  const editor = useRef<HTMLDivElement>(null);
-  // Each pill's quote and the span it renders into, kept in the editor's text flow.
-  const pills = useRef(new Map<string, { quote: Quote; host: HTMLElement }>());
-  const [saved, setSaved] = useState<Set<string>>(new Set());
-  const end = useRef<HTMLDivElement>(null);
-  const activeSelection = selection && selection.position === position ? selection : null;
-
-  const lastAnswer = turns.at(-1)?.answer;
-  useEffect(() => {
-    if (lastAnswer !== undefined || turns.length) end.current?.scrollIntoView({ block: "end" });
-  }, [lastAnswer, turns.length]);
-
-  const sync = () => {
-    const root = editor.current;
-    if (!root) return;
-    for (const [id, pill] of pills.current) if (!root.contains(pill.host)) pills.current.delete(id);
-    const parts = readComposer({ root, quotes: new Map([...pills.current].map(([id, p]) => [id, p.quote])) });
-    const empty = parts.every((p) => p.kind === "text" && p.text.trim() === "");
-    setDraft({ ...serializeComposer(parts), empty });
-  };
-
-  const clear = () => {
-    if (editor.current) editor.current.textContent = "";
-    pills.current.clear();
-    setDraft({ question: "", quotes: [], empty: true });
-  };
-
-  const send = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
-    if ((!question && quotes.length === 0) || busy) return;
-    void ask({ question, position, selection: activeSelection, quotes });
-    clear();
-  };
-
-  const insertQuote = (quote: Quote) => {
-    const root = editor.current;
-    if (!root) return;
-    const host = document.createElement("span");
-    host.contentEditable = "false";
-    host.setAttribute(PILL_ATTR, quote.id);
-    const selection = window.getSelection();
-    const atCaret = document.activeElement === root && selection?.rangeCount && root.contains(selection.getRangeAt(0).startContainer);
-    if (!atCaret) caretAtEnd(root);
-    const range = window.getSelection()?.getRangeAt(0);
-    if (!range) return;
-    range.deleteContents();
-    range.insertNode(host);
-    range.setStartAfter(host);
-    range.collapse(true);
-    window.getSelection()?.removeAllRanges();
-    window.getSelection()?.addRange(range);
-    pills.current.set(quote.id, { quote, host });
-    sync();
-  };
-
-  const removeQuote = (id: string) => {
-    pills.current.get(id)?.host.remove();
-    sync();
-  };
-
-  // Text copied from the page becomes a quote with its lines; Arabic from elsewhere becomes a plain quote.
-  // Anything else goes in as plain text.
-  const onPaste = (e: ClipboardEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const text = e.clipboardData.getData("text/plain");
-    const fromPage = copiedPassage(text);
-    const arabicOnly = /\p{Script=Arabic}/u.test(text) && !/[A-Za-z]/.test(text);
-    if (!fromPage && !arabicOnly) {
-      document.execCommand("insertText", false, text);
-      return;
-    }
-    insertQuote({ id: crypto.randomUUID(), text: fromPage?.text ?? text.trim(), span: fromPage?.span ?? null, position: fromPage?.position ?? position });
-  };
-
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      send(draft);
-      return;
-    }
-    const range = window.getSelection()?.rangeCount ? window.getSelection()?.getRangeAt(0) : null;
-    if (e.key !== "Backspace" || !range?.collapsed) return;
-    const before = nodeBeforeCaret(range);
-    if (before instanceof HTMLElement && before.hasAttribute(PILL_ATTR)) {
-      e.preventDefault();
-      before.remove();
-      sync();
-    }
-  };
-
-  // A click anywhere in the composer box, outside its buttons and pills, types into it.
-  const focusComposer = (e: MouseEvent<HTMLDivElement>) => {
-    const root = editor.current;
-    if (!root || !(e.target instanceof Element) || e.target.closest("button, [contenteditable]")) return;
-    e.preventDefault();
-    root.focus();
-    caretAtEnd(root);
-  };
-
-  const firstWord = activeSelection?.text.split(/\s+/)[0];
-  const suggestions = activeSelection
-    ? [
-        { icon: Languages, label: "Translate", question: "Translate the selected words into English." },
-        { icon: ListTree, label: "Parse it (iʿrāb)", question: "Give the iʿrāb of the selected words." },
-        { icon: Lightbulb, label: `Explain ${firstWord}`, question: `What does ${firstWord} mean here?` },
-      ]
-    : [
-        { icon: TextQuote, label: "Summarise this page", question: "Summarise this page in a few sentences." },
-        { icon: Languages, label: "Translate the first lines", question: "Translate the first few lines of this page." },
-        { icon: Lightbulb, label: "Explain the hardest line", question: "Which line on this page is hardest, and what does it mean?" },
-      ];
-
-  return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      {deleted && (
-        <Toast onDone={commitDelete}>
-          <span className="flex items-center gap-3">
-            Conversation deleted
-            <button type="button" onClick={undoDelete} className="-my-1 rounded-md px-2 py-1 font-semibold hover:bg-bg/15">
-              Undo
-            </button>
+          <span dir="rtl" className="ar line-clamp-4 block text-right text-ar-body text-ink">
+            {text}
           </span>
-        </Toast>
-      )}
-      {(turns.length > 0 || history.length > 0) && (
-        <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-5">
+        )}
+      </TooltipContent>
+    </Tooltip>
+  );
+
+  /** An answer's citation: its words come from the page the question was asked on. */
+  const AnswerCite = ({ bookId, cite, position, onCite }: { bookId: string; cite: Cite; position: number; onCite: (c: Citation) => void }) => {
+    const page = usePage({ bookId, position });
+    const span = page.data ? citeSpan({ cite, page: page.data.page }) : null;
+    const { kind: _, ...where } = cite;
+    const label = citeLabel(cite);
+    if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} missing />;
+    return <CiteChip label={label} text={span && page.data ? quoteSpan({ page: page.data.page, span }) : null} onClick={() => onCite({ ...where, position })} />;
+  };
+
+  /** An answer, one element per line so each line takes its own direction. Citations become chips. */
+  const Answer = ({ text, cite }: { text: string; cite: (c: Cite, key: number) => ReactNode }) => (
+    <div className="flex flex-col gap-3">
+      {text
+        .trim()
+        .split(/\n{2,}/)
+        .map((paragraph, p) => (
+          <div key={p} className="flex flex-col gap-1">
+            {paragraph.split("\n").map((line, l) => (
+              <p
+                key={l}
+                dir="auto"
+                className={cx("[unicode-bidi:plaintext]", ARABIC_START.test(line) ? "ar text-ar-body" : "text-body leading-relaxed")}
+              >
+                {parseCitations(line).map((s, i) => (s.kind === "text" ? <span key={i}>{s.text}</span> : cite(s, i)))}
+              </p>
+            ))}
+          </div>
+        ))}
+    </div>
+  );
+
+  const plainAnswer = (text: string) =>
+    parseCitations(text)
+      .map((s) => (s.kind === "text" ? s.text : citeLabel(s)))
+      .join("")
+      .trim();
+
+  const quoteLabel = (q: Quote) => (q.span ? citeLabel(quoteCitation(q.span)) : "Pasted");
+
+  const QuoteChip = ({ quote, onCite, onRemove, onBubble }: { quote: Quote; onCite: (c: Citation) => void; onRemove?: () => void; onBubble?: boolean }) => {
+    const { span } = quote;
+    return (
+      <CiteChip
+        label={quoteLabel(quote)}
+        text={quote.text}
+        quoted
+        onBubble={onBubble}
+        onClick={span ? () => onCite({ ...quoteCitation(span), position: quote.position }) : undefined}
+        onRemove={onRemove}
+      />
+    );
+  };
+
+  const PILL_ATTR = "data-quote-id";
+
+  /** The composer's text and pills, in order. A pill's own label isn't part of the text. */
+  const readComposer = ({ root, quotes }: { root: HTMLElement; quotes: Map<string, Quote> }): ComposerPart[] => {
+    const parts: ComposerPart[] = [];
+    const walk = (node: Node) => {
+      for (const child of node.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) parts.push({ kind: "text", text: child.textContent ?? "" });
+        if (!(child instanceof HTMLElement)) continue;
+        const id = child.getAttribute(PILL_ATTR);
+        const quote = id ? quotes.get(id) : undefined;
+        if (quote) parts.push({ kind: "quote", quote });
+        else if (child.tagName === "BR") parts.push({ kind: "text", text: "\n" });
+        else if (!id) walk(child);
+      }
+    };
+    walk(root);
+    return parts;
+  };
+
+  const caretAtEnd = (root: HTMLElement) => {
+    const range = document.createRange();
+    range.selectNodeContents(root);
+    range.collapse(false);
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  };
+
+  /** The node just before a collapsed caret, if the caret sits right after it. */
+  const nodeBeforeCaret = (range: Range): Node | null => {
+    const { startContainer, startOffset } = range;
+    if (startContainer.nodeType === Node.TEXT_NODE) return startOffset === 0 ? startContainer.previousSibling : null;
+    return startOffset > 0 ? startContainer.childNodes[startOffset - 1] ?? null : null;
+  };
+
+  /** The page a conversation started on: its printed number when it has one, else its place in the book. */
+  const conversationPage = (c: ConversationSummary): string | null => {
+    if (c.pageNumber !== null) return `ص ${arabicNumber(c.pageNumber)}`;
+    return c.position === null ? null : `Page ${c.position}`;
+  };
+
+  /** A conversation's title edited in place: Enter or leaving the field saves, Esc cancels. */
+  const TitleField = ({ title, onDone }: { title: string; onDone: (title: string | null) => void }) => {
+    const cancelled = useRef(false);
+    return (
+      <input
+        autoFocus
+        defaultValue={title}
+        aria-label="Conversation title"
+        dir="auto"
+        maxLength={80}
+        onFocus={(e) => e.currentTarget.select()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e.currentTarget.blur();
+          if (e.key === "Escape") {
+            e.stopPropagation();
+            cancelled.current = true;
+            e.currentTarget.blur();
+          }
+        }}
+        onBlur={(e) => onDone(cancelled.current ? null : e.currentTarget.value)}
+        className="-mx-1.5 rounded-md border border-ink-3 bg-surface px-1.5 text-sm outline-hidden [unicode-bidi:plaintext]"
+      />
+    );
+  };
+
+  /** The book's saved conversations, most recent first; opening one continues its Claude session. */
+  const ConversationList = ({
+    history,
+    currentId,
+    onOpen,
+    onRename,
+    onDelete,
+    onBack,
+  }: {
+    history: ConversationSummary[];
+    currentId: string | null;
+    onOpen: (id: string) => void;
+    onRename: (input: { id: string; title: string }) => void;
+    onDelete: (id: string) => void;
+    onBack: () => void;
+  }) => {
+    const [editing, setEditing] = useState<string | null>(null);
+    // A deleted row folds away before it leaves the list.
+    const [leaving, setLeaving] = useState<string | null>(null);
+    const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+    return (
+      <>
+        <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-3">
+          <IconButton icon={ArrowLeft} label="Back to conversation" onClick={onBack} />
+          <h2 className="text-sm font-medium">Saved conversations</h2>
+        </div>
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-2">
+          {history.length === 0 && (
+            <div className="flex flex-col items-center gap-1 px-6 py-16 text-center">
+              <Bookmark aria-hidden className="mb-2 size-5 text-ink-3" />
+              <p className="text-sm font-medium">No saved conversations</p>
+              <p className="text-sm text-ink-3">Save a conversation to come back to it here.</p>
+            </div>
+          )}
+          {history.map((c) => {
+            const page = conversationPage(c);
+            const meta = (
+              <span className="text-xs text-ink-3">
+                {page && (
+                  <>
+                    <span dir="auto" className="[unicode-bidi:isolate]">
+                      {page}
+                    </span>
+                    {" · "}
+                  </>
+                )}
+                {timeAgo(c.updatedAt)}
+              </span>
+            );
+            return (
+              <div
+                key={c.id}
+                data-state={leaving === c.id ? "leaving" : undefined}
+                onTransitionEnd={(e) => {
+                  if (e.target !== e.currentTarget || e.propertyName !== "grid-template-rows" || leaving !== c.id) return;
+                  setLeaving(null);
+                  onDelete(c.id);
+                }}
+                className="grid shrink-0 grid-rows-[1fr] transition-[grid-template-rows,opacity] duration-pop ease-out data-[state=leaving]:grid-rows-[0fr] data-[state=leaving]:opacity-0 motion-reduce:transition-none"
+              >
+                <div className="group/row relative min-h-0 overflow-hidden">
+                  {editing === c.id ? (
+                    <div className="flex flex-col gap-0.5 rounded-lg bg-ink/6 py-2 pr-2.5 pl-2.5">
+                      <TitleField
+                        title={c.title}
+                        onDone={(title) => {
+                          setEditing(null);
+                          if (title !== null && title.trim() && title.trim() !== c.title) onRename({ id: c.id, title });
+                        }}
+                      />
+                      {meta}
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        aria-current={c.id === currentId || undefined}
+                        onClick={() => onOpen(c.id)}
+                        className="flex w-full flex-col gap-0.5 rounded-lg py-2 pr-20 pl-2.5 text-left transition-colors duration-press hover:bg-ink/6 aria-[current]:bg-accent-soft"
+                      >
+                        <span dir="auto" className="truncate text-sm [unicode-bidi:plaintext]">
+                          {c.title || "Untitled"}
+                        </span>
+                        {meta}
+                      </button>
+                      <div className="absolute top-1/2 right-1 flex -translate-y-1/2 items-center opacity-0 transition-opacity duration-press group-hover/row:opacity-100 has-focus-visible:opacity-100">
+                        <IconButton icon={Pencil} label="Rename" onClick={() => setEditing(c.id)} />
+                        <IconButton icon={Trash2} label="Delete conversation" onClick={() => (reduceMotion() ? onDelete(c.id) : setLeaving(c.id))} />
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </>
+    );
+  };
+
+  export const AskPanel = ({
+    bookId,
+    conversation,
+    position,
+    pageNumber,
+    selection,
+    onClearSelection,
+    onCite,
+    onSaveNote,
+  }: {
+    bookId: string;
+    conversation: ReturnType<typeof useAskConversation>;
+    position: number;
+    pageNumber: number;
+    selection: AskSelection | null;
+    onClearSelection: () => void;
+    onCite: (cite: Citation) => void;
+    onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
+  }) => {
+    const { turns, ask, busy, stop, retry, reset, open, conversationId, saved: conversationSaved, save, rename, history, remove, undoDelete, commitDelete, deleted } =
+      conversation;
+    // `moved` stays false until the first switch, so the panel doesn't slide in when it opens.
+    const [screen, setScreen] = useState<{ name: "chat" | "history"; moved: boolean }>({ name: "chat", moved: false });
+    const showScreen = (name: "chat" | "history") => setScreen({ name, moved: true });
+    const [draft, setDraft] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
+    const editor = useRef<HTMLDivElement>(null);
+    // Each pill's quote and the span it renders into, kept in the editor's text flow.
+    const pills = useRef(new Map<string, { quote: Quote; host: HTMLElement }>());
+    const [saved, setSaved] = useState<Set<string>>(new Set());
+    const end = useRef<HTMLDivElement>(null);
+    const activeSelection = selection && selection.position === position ? selection : null;
+
+    const lastAnswer = turns.at(-1)?.answer;
+    useEffect(() => {
+      if (lastAnswer !== undefined || turns.length) end.current?.scrollIntoView({ block: "end" });
+    }, [lastAnswer, turns.length]);
+
+    const sync = () => {
+      const root = editor.current;
+      if (!root) return;
+      for (const [id, pill] of pills.current) if (!root.contains(pill.host)) pills.current.delete(id);
+      const parts = readComposer({ root, quotes: new Map([...pills.current].map(([id, p]) => [id, p.quote])) });
+      const empty = parts.every((p) => p.kind === "text" && p.text.trim() === "");
+      setDraft({ ...serializeComposer(parts), empty });
+    };
+
+    const clear = () => {
+      if (editor.current) editor.current.textContent = "";
+      pills.current.clear();
+      setDraft({ question: "", quotes: [], empty: true });
+    };
+
+    const send = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
+      if ((!question && quotes.length === 0) || busy) return;
+      void ask({ question, position, selection: activeSelection, quotes });
+      clear();
+    };
+
+    const insertQuote = (quote: Quote) => {
+      const root = editor.current;
+      if (!root) return;
+      const host = document.createElement("span");
+      host.contentEditable = "false";
+      host.setAttribute(PILL_ATTR, quote.id);
+      const selection = window.getSelection();
+      const atCaret = document.activeElement === root && selection?.rangeCount && root.contains(selection.getRangeAt(0).startContainer);
+      if (!atCaret) caretAtEnd(root);
+      const range = window.getSelection()?.getRangeAt(0);
+      if (!range) return;
+      range.deleteContents();
+      range.insertNode(host);
+      range.setStartAfter(host);
+      range.collapse(true);
+      window.getSelection()?.removeAllRanges();
+      window.getSelection()?.addRange(range);
+      pills.current.set(quote.id, { quote, host });
+      sync();
+    };
+
+    const removeQuote = (id: string) => {
+      pills.current.get(id)?.host.remove();
+      sync();
+    };
+
+    // Text copied from the page becomes a quote with its lines; Arabic from elsewhere becomes a plain quote.
+    // Anything else goes in as plain text.
+    const onPaste = (e: ClipboardEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      const text = e.clipboardData.getData("text/plain");
+      const fromPage = copiedPassage(text);
+      const arabicOnly = /\p{Script=Arabic}/u.test(text) && !/[A-Za-z]/.test(text);
+      if (!fromPage && !arabicOnly) {
+        document.execCommand("insertText", false, text);
+        return;
+      }
+      insertQuote({ id: crypto.randomUUID(), text: fromPage?.text ?? text.trim(), span: fromPage?.span ?? null, position: fromPage?.position ?? position });
+    };
+
+    const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        send(draft);
+        return;
+      }
+      const range = window.getSelection()?.rangeCount ? window.getSelection()?.getRangeAt(0) : null;
+      if (e.key !== "Backspace" || !range?.collapsed) return;
+      const before = nodeBeforeCaret(range);
+      if (before instanceof HTMLElement && before.hasAttribute(PILL_ATTR)) {
+        e.preventDefault();
+        before.remove();
+        sync();
+      }
+    };
+
+    // A click anywhere in the composer box, outside its buttons and pills, types into it.
+    const focusComposer = (e: MouseEvent<HTMLDivElement>) => {
+      const root = editor.current;
+      if (!root || !(e.target instanceof Element) || e.target.closest("button, [contenteditable]")) return;
+      e.preventDefault();
+      root.focus();
+      caretAtEnd(root);
+    };
+
+    const firstWord = activeSelection?.text.split(/\s+/)[0];
+    const suggestions = activeSelection
+      ? [
+          { icon: Languages, label: "Translate", question: "Translate the selected words into English." },
+          { icon: ListTree, label: "Parse it (iʿrāb)", question: "Give the iʿrāb of the selected words." },
+          { icon: Lightbulb, label: `Explain ${firstWord}`, question: `What does ${firstWord} mean here?` },
+        ]
+      : [
+          { icon: TextQuote, label: "Summarise this page", question: "Summarise this page in a few sentences." },
+          { icon: Languages, label: "Translate the first lines", question: "Translate the first few lines of this page." },
+          { icon: Lightbulb, label: "Explain the hardest line", question: "Which line on this page is hardest, and what does it mean?" },
+        ];
+
+    return (
+      <div className="flex min-h-0 flex-1 flex-col">
+        {deleted && (
+          <Toast onDone={commitDelete}>
+            <span className="flex items-center gap-3">
+              Conversation deleted
+              <button type="button" onClick={undoDelete} className="-my-1 rounded-md px-2 py-1 font-semibold hover:bg-bg/15">
+                Undo
+              </button>
+            </span>
+          </Toast>
+        )}
+        {screen.name === "history" ? (
+          <div
+            key="history"
+            className={cx("flex min-h-0 flex-1 flex-col", screen.moved && "animate-in fade-in slide-in-from-right-6 duration-slide ease-move motion-reduce:slide-in-from-right-0")}
+          >
+            <ConversationList
+              history={history}
+              currentId={conversationId}
+              onOpen={(id) => {
+                open(id);
+                showScreen("chat");
+              }}
+              onRename={(input) => void rename(input)}
+              onDelete={remove}
+              onBack={() => showScreen("chat")}
+            />
+          </div>
+        ) : (
+        <div
+          key="chat"
+          className={cx("flex min-h-0 flex-1 flex-col", screen.moved && "animate-in fade-in slide-in-from-left-6 duration-slide ease-move motion-reduce:slide-in-from-left-0")}
+        >
+        <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-3">
+          <IconButton icon={History} label="Saved conversations" onClick={() => showScreen("history")} />
           <span className="flex-1" />
-          {history.length > 0 && <ConversationHistory history={history} currentId={conversationId} onOpen={open} onDelete={remove} />}
+          {turns.length > 0 && (
+            <IconButton
+              icon={conversationSaved ? BookmarkCheck : Bookmark}
+              label={conversationSaved ? "Saved" : "Save conversation"}
+              selected={conversationSaved}
+              onClick={() => void save()}
+            />
+          )}
           {turns.length > 0 && (
             <Button variant="ghost" size="sm" icon={SquarePen} onClick={reset}>
               New conversation
             </Button>
           )}
         </div>
-      )}
-      <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-5">
-        {activeSelection && (
-          <div className="flex flex-col gap-2 rounded-xl bg-surface-2 px-4 py-3">
-            <div className="flex items-center gap-1.5 text-xs text-ink-3">
-              <TextQuote aria-hidden className="size-3.5" />
-              Selected on page {arabicNumber(pageNumber)}
-              <span className="flex-1" />
-              <IconButton icon={X} label="Clear selection" onClick={onClearSelection} />
-            </div>
-            <p className="ar border-r-2 border-accent pr-3 text-right text-ar-body">{activeSelection.text}</p>
-          </div>
-        )}
-
-        {turns.length === 0 && (
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <h2 className="text-heading font-semibold">{activeSelection ? "Ask about this passage" : "Ask about this page"}</h2>
-              <p className="text-sm text-ink-3">Claude answers from this page and links to the lines it uses.</p>
-            </div>
-            <div className="flex flex-col items-start gap-2">
-              {suggestions.map((s) => (
-                <Button key={s.label} variant="secondary" icon={s.icon} onClick={() => send({ question: s.question, quotes: draft.quotes.map(({ offset: _, ...q }) => q) })}>
-                  <span dir="auto">{s.label}</span>
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {turns.map((turn) => (
-          <div key={turn.id} className="flex flex-col gap-3">
-            <p
-              dir={turn.question ? (ARABIC_START.test(turn.question) ? "rtl" : "ltr") : "auto"}
-              className={cx("max-w-[85%] self-end rounded-xl bg-accent-soft px-3.5 py-2.5", ARABIC_START.test(turn.question) ? "ar text-ar-body" : "text-body")}
-            >
-              {parseComposer(turn).map((part, i) =>
-                part.kind === "quote" ? (
-                  <QuoteChip key={part.quote.id} quote={part.quote} onCite={onCite} onBubble />
-                ) : (
-                  <span key={i}>{part.text}</span>
-                ),
-              )}
-            </p>
-            {turn.answer && (
-              <Answer text={turn.answer} cite={(c, key) => <AnswerCite key={key} bookId={bookId} cite={c} position={turn.position} onCite={onCite} />} />
-            )}
-            {turn.status === "streaming" && (
-              <p className="flex items-center gap-2 text-xs text-ink-3">
-                <span className="size-1.5 animate-pulse rounded-full bg-accent" />
-                {turn.activity ?? "Writing…"}
-              </p>
-            )}
-            {turn.status === "error" && <p className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">{turn.error}</p>}
-            {turn.status === "interrupted" && <p className="text-xs text-ink-3">Interrupted when Midad closed.</p>}
-            {turn.restarted && <p className="text-xs text-ink-3">Claude no longer had this conversation, so it picked up in a new session from what was said so far.</p>}
-            {turn.status !== "streaming" && (
-              <div className="flex items-center gap-1">
-                {turn.status === "done" && turn.selection && (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    icon={NotebookPen}
-                    disabled={saved.has(turn.id)}
-                    onClick={() => {
-                      if (!turn.selection) return;
-                      onSaveNote({ ...turn, selection: turn.selection }, plainAnswer(turn.answer));
-                      setSaved((s) => new Set(s).add(turn.id));
-                    }}
-                  >
-                    {saved.has(turn.id) ? "Saved as note" : "Save as note"}
-                  </Button>
-                )}
-                {turn.status === "done" && <IconButton icon={Copy} label="Copy answer" onClick={() => void navigator.clipboard.writeText(plainAnswer(turn.answer))} />}
-                <IconButton icon={RotateCcw} label="Ask again" onClick={() => retry(turn)} />
+        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-5">
+          {activeSelection && (
+            <div className="flex flex-col gap-2 rounded-xl bg-surface-2 px-4 py-3">
+              <div className="flex items-center gap-1.5 text-xs text-ink-3">
+                <TextQuote aria-hidden className="size-3.5" />
+                Selected on page {arabicNumber(pageNumber)}
+                <span className="flex-1" />
+                <IconButton icon={X} label="Clear selection" onClick={onClearSelection} />
               </div>
-            )}
-          </div>
-        ))}
-        <div ref={end} />
-      </div>
+              <p className="ar border-r-2 border-accent pr-3 text-right text-ar-body">{activeSelection.text}</p>
+            </div>
+          )}
 
-      <div className="shrink-0 p-4 pt-0">
-        <div
-          onMouseDown={focusComposer}
-          className="flex cursor-text flex-col gap-3 rounded-xl border border-line bg-surface p-3 focus-within:border-ink-3"
-        >
-          <div className="relative">
-            {draft.empty && (
-              <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 text-body text-ink-3">
-                {activeSelection ? "Ask about this passage…" : "Ask about this page…"}
-              </span>
-            )}
-            <div
-              ref={editor}
-              role="textbox"
-              aria-multiline
-              aria-label={activeSelection ? "Ask about this passage" : "Ask about this page"}
-              contentEditable="plaintext-only"
-              suppressContentEditableWarning
-              dir="auto"
-              onInput={sync}
-              onKeyDown={onKeyDown}
-              onPaste={onPaste}
-              className="max-h-40 min-h-12 overflow-y-auto break-words whitespace-pre-wrap text-body outline-hidden [unicode-bidi:plaintext]"
-            />
-            {[...pills.current.values()].map(({ quote, host }) =>
-              createPortal(<QuoteChip quote={quote} onCite={onCite} onRemove={() => removeQuote(quote.id)} />, host, quote.id),
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="flex-1" />
-            {busy ? (
-              <Button variant="secondary" size="sm" icon={Square} onClick={stop}>
-                Stop
-              </Button>
-            ) : (
-              <Button size="sm" icon={ArrowUp} disabled={!draft.question && draft.quotes.length === 0} onClick={() => send(draft)}>
-                Ask
-              </Button>
-            )}
+          {turns.length === 0 && (
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <h2 className="text-heading font-semibold">{activeSelection ? "Ask about this passage" : "Ask about this page"}</h2>
+                <p className="text-sm text-ink-3">Claude answers from this page and links to the lines it uses.</p>
+              </div>
+              <div className="flex flex-col items-start gap-2">
+                {suggestions.map((s) => (
+                  <Button key={s.label} variant="secondary" icon={s.icon} onClick={() => send({ question: s.question, quotes: draft.quotes.map(({ offset: _, ...q }) => q) })}>
+                    <span dir="auto">{s.label}</span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {turns.map((turn) => (
+            <div key={turn.id} className="flex flex-col gap-3">
+              <p
+                dir={turn.question ? (ARABIC_START.test(turn.question) ? "rtl" : "ltr") : "auto"}
+                className={cx("max-w-[85%] self-end rounded-xl bg-accent-soft px-3.5 py-2.5", ARABIC_START.test(turn.question) ? "ar text-ar-body" : "text-body")}
+              >
+                {parseComposer(turn).map((part, i) =>
+                  part.kind === "quote" ? (
+                    <QuoteChip key={part.quote.id} quote={part.quote} onCite={onCite} onBubble />
+                  ) : (
+                    <span key={i}>{part.text}</span>
+                  ),
+                )}
+              </p>
+              {turn.answer && (
+                <Answer text={turn.answer} cite={(c, key) => <AnswerCite key={key} bookId={bookId} cite={c} position={turn.position} onCite={onCite} />} />
+              )}
+              {turn.status === "streaming" && (
+                <p className="flex items-center gap-2 text-xs text-ink-3">
+                  <span className="size-1.5 animate-pulse rounded-full bg-accent" />
+                  {turn.activity ?? "Writing…"}
+                </p>
+              )}
+              {turn.status === "error" && <p className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">{turn.error}</p>}
+              {turn.status === "interrupted" && <p className="text-xs text-ink-3">Interrupted when Midad closed.</p>}
+              {turn.restarted && <p className="text-xs text-ink-3">Claude no longer had this conversation, so it picked up in a new session from what was said so far.</p>}
+              {turn.status !== "streaming" && (
+                <div className="flex items-center gap-1">
+                  {turn.status === "done" && turn.selection && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={NotebookPen}
+                      disabled={saved.has(turn.id)}
+                      onClick={() => {
+                        if (!turn.selection) return;
+                        onSaveNote({ ...turn, selection: turn.selection }, plainAnswer(turn.answer));
+                        setSaved((s) => new Set(s).add(turn.id));
+                      }}
+                    >
+                      {saved.has(turn.id) ? "Saved as note" : "Save as note"}
+                    </Button>
+                  )}
+                  {turn.status === "done" && <IconButton icon={Copy} label="Copy answer" onClick={() => void navigator.clipboard.writeText(plainAnswer(turn.answer))} />}
+                  <IconButton icon={RotateCcw} label="Ask again" onClick={() => retry(turn)} />
+                </div>
+              )}
+            </div>
+          ))}
+          <div ref={end} />
+        </div>
+
+        <div className="shrink-0 p-4 pt-0">
+          <div
+            onMouseDown={focusComposer}
+            className="flex cursor-text flex-col gap-3 rounded-xl border border-line bg-surface p-3 focus-within:border-ink-3"
+          >
+            <div className="relative">
+              {draft.empty && (
+                <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 text-body text-ink-3">
+                  {activeSelection ? "Ask about this passage…" : "Ask about this page…"}
+                </span>
+              )}
+              <div
+                ref={editor}
+                role="textbox"
+                aria-multiline
+                aria-label={activeSelection ? "Ask about this passage" : "Ask about this page"}
+                contentEditable="plaintext-only"
+                suppressContentEditableWarning
+                dir="auto"
+                onInput={sync}
+                onKeyDown={onKeyDown}
+                onPaste={onPaste}
+                className="max-h-40 min-h-12 overflow-y-auto break-words whitespace-pre-wrap text-body outline-hidden [unicode-bidi:plaintext]"
+              />
+              {[...pills.current.values()].map(({ quote, host }) =>
+                createPortal(<QuoteChip quote={quote} onCite={onCite} onRemove={() => removeQuote(quote.id)} />, host, quote.id),
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="flex-1" />
+              {busy ? (
+                <Button variant="secondary" size="sm" icon={Square} onClick={stop}>
+                  Stop
+                </Button>
+              ) : (
+                <Button size="sm" icon={ArrowUp} disabled={!draft.question && draft.quotes.length === 0} onClick={() => send(draft)}>
+                  Ask
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

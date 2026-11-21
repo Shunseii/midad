@@ -1,6 +1,6 @@
 {
   "$schema": "https://lamsa.dev/schema/v1.json",
-  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%, 60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n@keyframes marker-sweep {\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes marker-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes page-out {\n  to {\n    opacity: 0;\n  }\n}\n\n@keyframes page-in-forward {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes page-in-back {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes cover-content-in {\n  0%, 40% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-old(reader-page) {\n  animation-name: page-out;\n  animation-duration: 90ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-forward;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-back;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n::view-transition-group(page-counter) {\n  animation-duration: 0s;\n}\n\n::view-transition-old(page-counter) {\n  display: none;\n}\n\n::view-transition-new(page-counter) {\n  animation: none;\n}\n\n::view-transition-group(book-cover) {\n  animation-duration: 420ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n}\n\n::view-transition-new(book-cover) {\n  animation-name: cover-content-in;\n  animation-duration: 420ms;\n}\n\n@keyframes reflow-fade-in {\n  0%, 15% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(page-column) {\n  animation-duration: 240ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n  overflow: clip;\n  overflow-clip-margin: 3rem;\n}\n\n::view-transition-old(page-column) {\n  animation-name: page-out;\n  animation-duration: 120ms;\n  animation-fill-mode: both;\n  inline-size: auto;\n  left: 50%;\n  translate: -50% 0;\n}\n\n::view-transition-new(page-column) {\n  animation-name: reflow-fade-in;\n  animation-fill-mode: both;\n  inline-size: auto;\n  left: 50%;\n  translate: -50% 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  :active-view-transition-type(forward)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  :active-view-transition-type(back)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  ::view-transition-group(book-cover) {\n    animation-duration: 0s;\n  }\n\n  ::view-transition-group(page-column) {\n    overflow: visible;\n  }\n}\n\n@property --fade-top {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@property --fade-bottom {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@keyframes gloss-fade {\n  from {\n    --fade-top: 0px;\n    --fade-bottom: 1.5rem;\n  }\n\n  to {\n    --fade-top: 1.5rem;\n    --fade-bottom: 0px;\n  }\n}\n\n@keyframes footnote-reveal {\n  0%, 60% {\n    background-color: var(--color-accent-soft);\n  }\n\n  100% {\n    background-color: transparent;\n  }\n}",
+  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%, 60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n@keyframes marker-sweep {\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes marker-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes page-out {\n  to {\n    opacity: 0;\n  }\n}\n\n@keyframes page-in-forward {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes page-in-back {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes cover-content-in {\n  0%, 40% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-old(reader-page) {\n  animation-name: page-out;\n  animation-duration: 90ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-forward;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-back;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n::view-transition-group(page-counter) {\n  animation-duration: 0s;\n}\n\n::view-transition-old(page-counter) {\n  display: none;\n}\n\n::view-transition-new(page-counter) {\n  animation: none;\n}\n\n::view-transition-group(book-cover) {\n  animation-duration: 420ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n}\n\n::view-transition-new(book-cover) {\n  animation-name: cover-content-in;\n  animation-duration: 420ms;\n}\n\n@keyframes reflow-fade-in {\n  0%, 15% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(page-column) {\n  animation-duration: 240ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n  overflow: clip;\n  overflow-clip-margin: 3rem;\n}\n\n::view-transition-old(page-column) {\n  animation-name: page-out;\n  animation-duration: 120ms;\n  animation-fill-mode: both;\n  inline-size: auto;\n  left: 50%;\n  translate: -50% 0;\n}\n\n::view-transition-new(page-column) {\n  animation-name: reflow-fade-in;\n  animation-fill-mode: both;\n  inline-size: auto;\n  left: 50%;\n  translate: -50% 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  :active-view-transition-type(forward)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  :active-view-transition-type(back)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  ::view-transition-group(book-cover) {\n    animation-duration: 0s;\n  }\n\n  ::view-transition-group(page-column) {\n    overflow: visible;\n  }\n}\n\n@property --fade-top {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@property --fade-bottom {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@keyframes gloss-fade {\n  from {\n    --fade-top: 0px;\n    --fade-bottom: 1.5rem;\n  }\n\n  to {\n    --fade-top: 1.5rem;\n    --fade-bottom: 0px;\n  }\n}\n\n@keyframes footnote-reveal {\n  0%, 60% {\n    background-color: var(--color-accent-soft);\n  }\n\n  100% {\n    background-color: transparent;\n  }\n}\n\n@keyframes screen-in-forward {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes screen-in-back {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes screen-fade-in {\n  from {\n    opacity: 0;\n  }\n}",
   "nodes": {
     "01SU8sPl": {
       "index": "a3",
@@ -1708,6 +1708,20 @@
       },
       "type": "text"
     },
+    "14H8Kh0t": {
+      "icon": "bookmark",
+      "index": "a0",
+      "name": "Icon bookmark",
+      "parentId": "u69ZR70A",
+      "set": "lucide",
+      "style": {
+        "color": "{color.ink-3}",
+        "height": 20,
+        "margin-bottom": 8,
+        "width": 20
+      },
+      "type": "icon"
+    },
     "15HeECAa": {
       "content": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
       "index": "a1",
@@ -2380,6 +2394,19 @@
       },
       "type": "frame"
     },
+    "1YQBL9G5": {
+      "css": "animation: screen-in-forward {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}",
+      "index": "a000V",
+      "name": "History screen",
+      "parentId": "NdLa0SYF",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "min-height": 0
+      },
+      "type": "frame"
+    },
     "1ZTh7tkP": {
       "content": "قطر الندى وبل الصدى",
       "index": "a2",
@@ -2750,33 +2777,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "1uttmOtA": {
-      "content": "فلا يُسمّى كلامًا ما صدرَ من النائمِ والساهي ونحوِهما.",
-      "index": "a000",
-      "name": "RTL line",
-      "parentId": "kO4itRqH",
-      "style": {
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 18,
-        "font-weight": 400,
-        "line-height": "32px",
-        "text-align": "right",
-        "unicode-bidi": "plaintext"
-      },
-      "type": "text"
-    },
-    "1uz16TUu": {
-      "componentId": "wTNsBmCc",
-      "index": "a001V",
-      "name": "Citation · line 1",
-      "parentId": "c47Cheds",
-      "props": {
-        "label": "line 1"
-      },
-      "type": "instance"
     },
     "1vMCGY5P": {
       "componentId": "v8FmfBf5",
@@ -3151,22 +3151,6 @@
       },
       "type": "text"
     },
-    "2C2rMKsO": {
-      "componentId": "RV1DOgzp",
-      "index": "a001VV",
-      "name": "IconButton",
-      "overrides": {
-        "YmvmyXk9": {
-          "icon": "x"
-        }
-      },
-      "parentId": "9lIgktsv",
-      "props": {
-        "label": "Clear selection",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "2DEocY59": {
       "componentId": "RV1DOgzp",
       "index": "a008",
@@ -3466,20 +3450,6 @@
         "padding": "4px 10px"
       },
       "type": "frame"
-    },
-    "2RFmpSul": {
-      "content": "Selected on page 3",
-      "index": "a001",
-      "name": "Selected on page 3",
-      "parentId": "9lIgktsv",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "font-weight": 400,
-        "line-height": "16px"
-      },
-      "type": "text"
     },
     "2SUDy75F": {
       "content": "Ibn Ājurrūm · Bāb al-Kalām",
@@ -4045,6 +4015,19 @@
         "position": "absolute",
         "text-indent": 0,
         "top": 0
+      },
+      "type": "text"
+    },
+    "2nUvdxOF": {
+      "content": "Kalām and lafẓ",
+      "index": "a0",
+      "name": "Value",
+      "parentId": "KnN0Uwtj",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "line-height": "20px"
       },
       "type": "text"
     },
@@ -5281,21 +5264,6 @@
       },
       "type": "text"
     },
-    "3ZZXiqvi": {
-      "content": "Others read it as by Arabic convention (الوضع العربي). Either way, every كلام is built from the three parts listed in ",
-      "index": "a000",
-      "name": "Others read it as by Arabic convention (",
-      "parentId": "wO0ZO0lZ",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline",
-        "font-family": "{font.body}",
-        "font-size": 15,
-        "font-weight": 400,
-        "line-height": "24px"
-      },
-      "type": "text"
-    },
     "3ZyrY7CX": {
       "index": "Za000",
       "name": "Line number",
@@ -6348,24 +6316,6 @@
       },
       "type": "frame"
     },
-    "4JbCkfPv": {
-      "componentId": "ua9C67i7",
-      "index": "a000",
-      "name": "Button",
-      "overrides": {
-        "O46dZG6P": {
-          "icon": "notebook-pen"
-        }
-      },
-      "parentId": "rSdUoHbr",
-      "props": {
-        "label": "Save as note",
-        "size": "sm",
-        "variant": "secondary",
-        "withIcon": "yes"
-      },
-      "type": "instance"
-    },
     "4JgWMR1A": {
       "index": "a1",
       "name": "Ornament",
@@ -7335,15 +7285,6 @@
         "flex": 1,
         "flex-direction": "column",
         "min-width": 0
-      },
-      "type": "frame"
-    },
-    "4ujfT5IX": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "rvNxyrBb",
-      "style": {
-        "flex": 1
       },
       "type": "frame"
     },
@@ -9019,17 +8960,16 @@
     },
     "5z7c4VbX": {
       "componentId": "RV1DOgzp",
-      "index": "a001",
+      "index": "a0",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
-          "icon": "history"
+          "icon": "arrow-left"
         }
       },
       "parentId": "suGB5MeT",
       "props": {
-        "label": "Past conversations",
-        "state": "selected",
+        "label": "Back to conversation",
         "variant": "ghost"
       },
       "type": "instance"
@@ -9531,16 +9471,6 @@
         "justify-content": "flex-end"
       },
       "type": "frame"
-    },
-    "6LSKaKrF": {
-      "componentId": "wTNsBmCc",
-      "index": "a001V",
-      "name": "Citation · line 2",
-      "parentId": "wO0ZO0lZ",
-      "props": {
-        "label": "line 2"
-      },
-      "type": "instance"
     },
     "6MbT95Su": {
       "content": "3",
@@ -11494,20 +11424,6 @@
       },
       "type": "frame"
     },
-    "7mzBYxKT": {
-      "index": "a001",
-      "name": "Panel body",
-      "parentId": "NdLa0SYF",
-      "style": {
-        "display": "flex",
-        "flex": 1,
-        "flex-direction": "column",
-        "gap": 16,
-        "overflow": "hidden",
-        "padding": 20
-      },
-      "type": "frame"
-    },
     "7nX8vH4D": {
       "content": "مقدمة",
       "index": "a002",
@@ -13388,18 +13304,18 @@
       },
       "type": "frame"
     },
-    "95BGcuKt": {
+    "94i61Wwo": {
       "componentId": "RV1DOgzp",
-      "index": "a001",
+      "index": "a0",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
-          "icon": "copy"
+          "icon": "history"
         }
       },
-      "parentId": "rSdUoHbr",
+      "parentId": "GTSktRca",
       "props": {
-        "label": "Copy answer",
+        "label": "Saved conversations",
         "variant": "ghost"
       },
       "type": "instance"
@@ -13562,6 +13478,15 @@
         "display": "inline"
       },
       "type": "text"
+    },
+    "99ATur9u": {
+      "index": "a1",
+      "name": "Spacer",
+      "parentId": "GTSktRca",
+      "style": {
+        "flex": 1
+      },
+      "type": "frame"
     },
     "99pnvxFZ": {
       "index": "a004",
@@ -14362,17 +14287,6 @@
       },
       "type": "frame"
     },
-    "9lIgktsv": {
-      "index": "a000",
-      "name": "Meta",
-      "parentId": "cU1f1v1b",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 6
-      },
-      "type": "frame"
-    },
     "9lQxvLtI": {
       "css": "transition:\n  color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "icon": "message-square-text",
@@ -15060,17 +14974,6 @@
         "text-align": "justify",
         "text-align-last": "right",
         "text-indent": "-1.5em"
-      },
-      "type": "frame"
-    },
-    "AFJczH5C": {
-      "index": "a001",
-      "name": "User message",
-      "parentId": "7mzBYxKT",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "justify-content": "flex-end"
       },
       "type": "frame"
     },
@@ -19727,6 +19630,22 @@
       },
       "type": "frame"
     },
+    "D8QReurG": {
+      "componentId": "RV1DOgzp",
+      "index": "a0",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "arrow-left"
+        }
+      },
+      "parentId": "hh1omiDp",
+      "props": {
+        "label": "Back to conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "D8Ty2iY5": {
       "content": "بابُ مرفوعاتِ الأسماءِ",
       "index": "a002",
@@ -21987,6 +21906,20 @@
       },
       "type": "icon"
     },
+    "ExT3O2DT": {
+      "content": "Saved conversations",
+      "index": "a1",
+      "name": "Title",
+      "parentId": "suGB5MeT",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "EyeI8Znx": {
       "content": "بابُ الكلامِ",
       "index": "a001V",
@@ -23450,23 +23383,6 @@
       },
       "type": "text"
     },
-    "FwPDlmVo": {
-      "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
-      "overrides": {
-        "O46dZG6P": {
-          "icon": "square-pen"
-        }
-      },
-      "parentId": "suGB5MeT",
-      "props": {
-        "label": "New conversation",
-        "size": "sm",
-        "variant": "ghost"
-      },
-      "type": "instance"
-    },
     "FwaPcyPH": {
       "index": "a001",
       "name": "Spacer",
@@ -24322,6 +24238,20 @@
       "parentId": "eQCnfbyo",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "GTSktRca": {
+      "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}",
+      "index": "a000V",
+      "name": "Conversation bar",
+      "parentId": "fW337xCU",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 4,
+        "padding": "8px 12px"
       },
       "type": "frame"
     },
@@ -29250,21 +29180,6 @@
       },
       "type": "text"
     },
-    "JikgFgij": {
-      "content": ".",
-      "index": "a002",
-      "name": ".",
-      "parentId": "wO0ZO0lZ",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline",
-        "font-family": "{font.body}",
-        "font-size": 15,
-        "font-weight": 400,
-        "line-height": "24px"
-      },
-      "type": "text"
-    },
     "JirJYFHN": {
       "index": "a008",
       "name": "TOC · بابُ المفعولِ الذي لم يُسمَّ فاعلُه",
@@ -30029,6 +29944,23 @@
         "font-weight": 600
       },
       "type": "text"
+    },
+    "KDpOg7EI": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "GTSktRca",
+      "props": {
+        "label": "New conversation",
+        "size": "sm",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "KE09IaWa": {
       "icon": "message-square-text",
@@ -30834,6 +30766,23 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "KnN0Uwtj": {
+      "css": "&:focus-within {\n  border-color: {color.ink-3};\n}",
+      "index": "a0",
+      "name": "Title field",
+      "parentId": "uazvgn8I",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.ink-3}",
+        "border-radius": 6,
+        "display": "flex",
+        "gap": 1,
+        "margin": "0 -6px",
+        "padding": "0 6px"
       },
       "type": "frame"
     },
@@ -32194,6 +32143,20 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "LmP9T4F4": {
+      "content": "No saved conversations",
+      "index": "a1",
+      "name": "Heading",
+      "parentId": "u69ZR70A",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
       },
       "type": "text"
     },
@@ -36187,6 +36150,21 @@
       },
       "type": "frame"
     },
+    "ObSvuElj": {
+      "index": "a7",
+      "name": "Ask AI · Saved conversations · Empty",
+      "style": {
+        "background": "{color.surface}",
+        "border-left": "1px solid {color.line}",
+        "display": "flex",
+        "flex-direction": "column",
+        "height": 900,
+        "width": 540
+      },
+      "type": "frame",
+      "x": 13960,
+      "y": 2120
+    },
     "OcFiT95i": {
       "index": "a001",
       "name": "Spacer",
@@ -36404,6 +36382,19 @@
         "align-items": "center",
         "display": "flex",
         "gap": 8
+      },
+      "type": "frame"
+    },
+    "OmByzNzN": {
+      "index": "a0",
+      "name": "Panel header",
+      "parentId": "ObSvuElj",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 8,
+        "padding": "12px 16px"
       },
       "type": "frame"
     },
@@ -38113,6 +38104,19 @@
       },
       "type": "text"
     },
+    "PpGINa4r": {
+      "content": "Page 9 · Last week",
+      "index": "a1",
+      "name": "Meta",
+      "parentId": "uazvgn8I",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "PpdjOkXl": {
       "index": "a2",
       "name": "Note icon",
@@ -38215,22 +38219,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "Px0jEi94": {
-      "componentId": "RV1DOgzp",
-      "index": "a002",
-      "name": "IconButton",
-      "overrides": {
-        "YmvmyXk9": {
-          "icon": "rotate-ccw"
-        }
-      },
-      "parentId": "rSdUoHbr",
-      "props": {
-        "label": "Ask again",
-        "variant": "ghost"
-      },
-      "type": "instance"
     },
     "Px6ljek7": {
       "index": "a006",
@@ -39847,17 +39835,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "R4faPKLd": {
-      "componentId": "46VX0CV6",
-      "index": "a000",
-      "name": "Message",
-      "parentId": "AFJczH5C",
-      "props": {
-        "text": "What does بالوضع mean here?",
-        "variant": "user"
-      },
-      "type": "instance"
     },
     "R5spPXtz": {
       "index": "a001",
@@ -44382,6 +44359,18 @@
       },
       "type": "frame"
     },
+    "U3TIJA06": {
+      "css": "animation: blink 1s steps(1) infinite;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: none;\n}",
+      "index": "a1",
+      "name": "Caret",
+      "parentId": "KnN0Uwtj",
+      "style": {
+        "background": "{color.ink}",
+        "height": 16,
+        "width": 1
+      },
+      "type": "frame"
+    },
     "U4SsNTLM": {
       "componentId": "RV1DOgzp",
       "index": "a004V",
@@ -47267,7 +47256,7 @@
     "W9znBuqB": {
       "componentId": "RV1DOgzp",
       "css": "transition: opacity {transition.duration-press} {ease.out};",
-      "index": "a001",
+      "index": "a002",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -48090,6 +48079,26 @@
         "gap": 0
       },
       "type": "frame"
+    },
+    "WhoRjpZx": {
+      "componentId": "RV1DOgzp",
+      "css": "transition: opacity {transition.duration-press} {ease.out};",
+      "index": "a001",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "6NAJFInd",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "style": {
+        "opacity": 1
+      },
+      "type": "instance"
     },
     "WiJ1yjs8": {
       "content": "Yaṣluḥu here means “admits”: a ḥarf takes none of the signs of the ism or the fiʿl.",
@@ -50592,16 +50601,6 @@
       },
       "type": "frame"
     },
-    "YMzTnyPM": {
-      "componentId": "wTNsBmCc",
-      "index": "a003V",
-      "name": "Citation · ḥāshiya ١",
-      "parentId": "c47Cheds",
-      "props": {
-        "label": "ḥāshiya ١"
-      },
-      "type": "instance"
-    },
     "YN7HIBEH": {
       "content": "5",
       "index": "a000",
@@ -50614,21 +50613,6 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "YN9MnL3E": {
-      "content": ": an utterance only counts as كلام if the speaker meant to convey it. Your page's ḥāshiya says exactly this ",
-      "index": "a002",
-      "name": ": an utterance only counts as كلام if th",
-      "parentId": "c47Cheds",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline",
-        "font-family": "{font.body}",
-        "font-size": 15,
-        "font-weight": 400,
-        "line-height": "24px"
       },
       "type": "text"
     },
@@ -51179,7 +51163,7 @@
     },
     "YtkdQLIt": {
       "mode": "light",
-      "name": "Ask AI · Past conversations",
+      "name": "Ask AI · Saved conversations",
       "style": {
         "background": "{color.bg}",
         "color": "{color.ink}",
@@ -51878,7 +51862,7 @@
       "type": "frame"
     },
     "ZQyjKEPq": {
-      "content": "2 hours ago · 4 questions",
+      "content": "⁨ص ٣⁩ · 2 hours ago",
       "index": "a001",
       "name": "Meta",
       "parentId": "Xj9g5eT8",
@@ -52361,6 +52345,26 @@
         "tone": "ok"
       },
       "style": {},
+      "type": "instance"
+    },
+    "ZhSdSI1G": {
+      "componentId": "RV1DOgzp",
+      "css": "transition: opacity {transition.duration-press} {ease.out};",
+      "index": "a001",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "LZcsDxc3",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "style": {
+        "opacity": 0
+      },
       "type": "instance"
     },
     "Zhct8oPQ": {
@@ -52969,6 +52973,26 @@
         "padding": "4px 10px"
       },
       "type": "frame"
+    },
+    "a5ttJIQp": {
+      "componentId": "RV1DOgzp",
+      "css": "transition: opacity {transition.duration-press} {ease.out};",
+      "index": "a001",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pencil"
+        }
+      },
+      "parentId": "H6Fp3pf0",
+      "props": {
+        "label": "Rename",
+        "variant": "ghost"
+      },
+      "style": {
+        "opacity": 0
+      },
+      "type": "instance"
     },
     "a74KD8kq": {
       "index": "a001",
@@ -53626,22 +53650,6 @@
         "gap": 12,
         "height": 60,
         "padding": "0 16px"
-      },
-      "type": "frame"
-    },
-    "aaBJ0WcE": {
-      "index": "a002",
-      "name": "Composer",
-      "parentId": "NdLa0SYF",
-      "style": {
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": 12,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
-        "margin": "0 16px 16px",
-        "padding": 12
       },
       "type": "frame"
     },
@@ -55902,15 +55910,6 @@
       },
       "type": "icon"
     },
-    "c47Cheds": {
-      "index": "a002",
-      "name": "Answer paragraph",
-      "parentId": "7mzBYxKT",
-      "style": {
-        "display": "block"
-      },
-      "type": "frame"
-    },
     "c5Yz3xgD": {
       "index": "a4",
       "name": "Note bar",
@@ -56474,20 +56473,6 @@
         "top": 2,
         "translate": "50% 0",
         "width": 5
-      },
-      "type": "frame"
-    },
-    "cU1f1v1b": {
-      "index": "a000",
-      "name": "Context",
-      "parentId": "7mzBYxKT",
-      "style": {
-        "background": "{color.surface-2}",
-        "border-radius": 12,
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 8,
-        "padding": "12px 16px"
       },
       "type": "frame"
     },
@@ -60289,21 +60274,6 @@
       },
       "type": "frame"
     },
-    "f3wfApBg": {
-      "content": ".",
-      "index": "a004",
-      "name": ".",
-      "parentId": "c47Cheds",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline",
-        "font-family": "{font.body}",
-        "font-size": 15,
-        "font-weight": 400,
-        "line-height": "24px"
-      },
-      "type": "text"
-    },
     "f54IJDVc": {
       "content": "المفيدُ بالوضعِ",
       "index": "a2",
@@ -60416,6 +60386,19 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "f9lq1h5B": {
+      "content": "Save a conversation to come back to it here.",
+      "index": "a2",
+      "name": "Hint",
+      "parentId": "u69ZR70A",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "line-height": "20px"
       },
       "type": "text"
     },
@@ -62066,6 +62049,20 @@
         "transform": "scaleX(0.125)",
         "transform-origin": "left",
         "width": "100%"
+      },
+      "type": "frame"
+    },
+    "gA64kR4A": {
+      "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}",
+      "index": "a000V",
+      "name": "Conversation bar",
+      "parentId": "zYwp1AEE",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 4,
+        "padding": "8px 12px"
       },
       "type": "frame"
     },
@@ -63944,6 +63941,23 @@
       },
       "type": "frame"
     },
+    "hWOUvC8K": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "gA64kR4A",
+      "props": {
+        "label": "New conversation",
+        "size": "sm",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "hYF1dJ6x": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
       "index": "a5",
@@ -64154,6 +64168,19 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "hh1omiDp": {
+      "index": "a0",
+      "name": "Screen bar",
+      "parentId": "xzREwFh2",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 4,
+        "padding": "8px 12px"
+      },
+      "type": "frame"
     },
     "hh9FiHBa": {
       "content": "4 of 24",
@@ -64925,7 +64952,7 @@
       "type": "frame"
     },
     "iAgeRuR1": {
-      "content": "Yesterday · 1 question",
+      "content": "⁨ص ١٢⁩ · Yesterday",
       "index": "a001",
       "name": "Meta",
       "parentId": "ZgEXEiDs",
@@ -66958,7 +66985,7 @@
       "type": "instance"
     },
     "jg4IF9q7": {
-      "content": "The history button opens the book's past conversations, newest first (popover pops in from its corner, 160ms; out 100ms). The open one is tinted. Hovering a row shows its delete button; deleting folds the row away (160ms ease-out) and shows \"Conversation deleted · Undo\" for a few seconds before it is gone for good. Deleting the open conversation starts a new one; Undo brings it back. Reduced motion: fades only, no fold.",
+      "content": "The history button swaps the panel to the book's saved conversations, newest first: the screen slides in from the right (duration-slide, ease-move) and Back slides the conversation in from the left; reduced motion fades only. Each row shows the title, the page it started on (ص N when the page has a printed number, else Page N) and when it was last used. Click a row to open it. Hovering shows Rename and Delete. Rename edits the title in place: Enter or clicking away saves, Esc cancels. Deleting folds the row away (duration-pop) with \"Conversation deleted · Undo\". Only saved conversations are listed; empty: \"No saved conversations\".",
       "index": "z001",
       "name": "Spec note",
       "parentId": "YtkdQLIt",
@@ -67812,15 +67839,6 @@
       },
       "type": "icon"
     },
-    "kDtQ8pgu": {
-      "index": "a000",
-      "name": "Spacer",
-      "parentId": "suGB5MeT",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
     "kEfNYlRD": {
       "content": "والفعلُ يُعرَفُ: بق",
       "index": "a000",
@@ -67915,6 +67933,23 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "kIVXTb3x": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "bookmark-check"
+        }
+      },
+      "parentId": "gA64kR4A",
+      "props": {
+        "label": "Saved",
+        "state": "selected",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "kIqiL5gl": {
       "content": "بابُ الكلامِ",
@@ -68089,17 +68124,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "kO4itRqH": {
-      "index": "a0023",
-      "name": "Answer · RTL block",
-      "parentId": "7mzBYxKT",
-      "style": {
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 4
-      },
-      "type": "frame"
     },
     "kOdi8UwW": {
       "content": "8",
@@ -68495,6 +68519,19 @@
         "min-width": 0
       },
       "type": "frame"
+    },
+    "kbCTdDWV": {
+      "content": "Ask AI",
+      "index": "a1",
+      "name": "Title",
+      "parentId": "OmByzNzN",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 15,
+        "font-weight": 600
+      },
+      "type": "text"
     },
     "kbWeLybf": {
       "content": "، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
@@ -70026,15 +70063,6 @@
       },
       "type": "text"
     },
-    "lbWYUpqu": {
-      "index": "a001V",
-      "name": "Spacer",
-      "parentId": "9lIgktsv",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
     "lbxRZQSw": {
       "content": "3",
       "index": "a0",
@@ -70303,7 +70331,7 @@
     "llBaqHd9": {
       "componentId": "RV1DOgzp",
       "css": "transition: opacity {transition.duration-press} {ease.out};",
-      "index": "a001",
+      "index": "a002",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -70907,6 +70935,20 @@
       },
       "type": "frame"
     },
+    "m7NogrcH": {
+      "content": "Saved conversations",
+      "index": "a1",
+      "name": "Title",
+      "parentId": "hh1omiDp",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "m7kMcnFR": {
       "index": "a001",
       "name": "Spacer",
@@ -71064,20 +71106,6 @@
         "width": 5
       },
       "type": "frame"
-    },
-    "mEJdLC0g": {
-      "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
-      "parentId": "aaBJ0WcE",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 15,
-        "font-weight": 400,
-        "line-height": "24px"
-      },
-      "type": "text"
     },
     "mGPzlxkd": {
       "content": "الحاشية",
@@ -71805,6 +71833,22 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "mqgPyzo0": {
+      "componentId": "RV1DOgzp",
+      "index": "a0",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "gA64kR4A",
+      "props": {
+        "label": "Saved conversations",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "mrgPDh8g": {
       "index": "a003",
@@ -72554,6 +72598,19 @@
       },
       "type": "text"
     },
+    "nKCjaA7O": {
+      "icon": "sparkles",
+      "index": "a0",
+      "name": "Icon sparkles",
+      "parentId": "OmByzNzN",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "height": 18,
+        "width": 18
+      },
+      "type": "icon"
+    },
     "nKN3972y": {
       "content": "Resume reading",
       "index": "a1",
@@ -73273,21 +73330,6 @@
         "width": 12
       },
       "type": "frame"
-    },
-    "nqGbn8Ec": {
-      "content": "Here بالوضع most likely means by intent (القصد) ",
-      "index": "a000",
-      "name": "Here بالوضع most likely means by intent ",
-      "parentId": "c47Cheds",
-      "style": {
-        "color": "{color.ink}",
-        "display": "inline",
-        "font-family": "{font.body}",
-        "font-size": 15,
-        "font-weight": 400,
-        "line-height": "24px"
-      },
-      "type": "text"
     },
     "nr8fRVpn": {
       "content": "َ",
@@ -74963,6 +75005,22 @@
       },
       "type": "text"
     },
+    "ouozpgfP": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "bookmark"
+        }
+      },
+      "parentId": "GTSktRca",
+      "props": {
+        "label": "Save conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "ovISXRJu": {
       "index": "a005",
       "name": "Passage",
@@ -75071,21 +75129,6 @@
         "padding-top": 12
       },
       "type": "frame"
-    },
-    "p08wJ8aj": {
-      "content": "“So what comes from someone asleep or absent-minded is not called kalām.”",
-      "index": "a001",
-      "name": "LTR line",
-      "parentId": "kO4itRqH",
-      "style": {
-        "color": "{color.ink-2}",
-        "font-family": "{font.body}",
-        "font-size": 15,
-        "font-weight": 400,
-        "line-height": "24px",
-        "unicode-bidi": "plaintext"
-      },
-      "type": "text"
     },
     "p0Aw4jcu": {
       "content": "(١) المرادُ بالوضعِ: القصدُ، فلا يُسمّى كلامًا ما صدرَ من النائمِ والساهي ونحوِهما.",
@@ -78945,17 +78988,6 @@
       },
       "type": "frame"
     },
-    "rSdUoHbr": {
-      "index": "a005",
-      "name": "Actions",
-      "parentId": "7mzBYxKT",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 6
-      },
-      "type": "frame"
-    },
     "rSy3x6BW": {
       "componentId": "RV1DOgzp",
       "index": "a004V",
@@ -79596,17 +79628,6 @@
         "right": "87.69%",
         "translate": "50% 0",
         "width": 5
-      },
-      "type": "frame"
-    },
-    "rvNxyrBb": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "aaBJ0WcE",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
       },
       "type": "frame"
     },
@@ -80788,7 +80809,7 @@
       "type": "frame"
     },
     "sj7eMdvR": {
-      "content": "Just now · 2 questions",
+      "content": "⁨ص ٣⁩ · Just now",
       "index": "a001",
       "name": "Meta",
       "parentId": "b9cfaXjR",
@@ -80974,24 +80995,6 @@
       },
       "type": "text"
     },
-    "soyyAUzs": {
-      "content": "الكلامُ: هو اللفظُ المركَّبُ المفيدُ بالوضعِ",
-      "index": "a001",
-      "name": "الكلامُ: هو اللفظُ المركَّبُ المفيدُ بال",
-      "parentId": "cU1f1v1b",
-      "style": {
-        "border-right": "2px solid {color.accent}",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "font-family": "{font.ar}",
-        "font-size": 20,
-        "font-weight": 400,
-        "line-height": "36px",
-        "padding-right": 12,
-        "text-align": "right"
-      },
-      "type": "text"
-    },
     "spnS0WYB": {
       "componentId": "RV1DOgzp",
       "index": "a006V",
@@ -81084,15 +81087,15 @@
       "type": "frame"
     },
     "suGB5MeT": {
-      "index": "a000V",
-      "name": "Conversation bar",
-      "parentId": "NdLa0SYF",
+      "index": "a0",
+      "name": "Screen bar",
+      "parentId": "1YQBL9G5",
       "style": {
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
         "gap": 4,
-        "padding": "8px 12px 8px 20px"
+        "padding": "8px 12px"
       },
       "type": "frame"
     },
@@ -81196,20 +81199,6 @@
         "line-height": "20px"
       },
       "type": "text"
-    },
-    "t0t3qM5h": {
-      "icon": "text-quote",
-      "index": "a000",
-      "name": "Icon text-quote",
-      "parentId": "9lIgktsv",
-      "set": "lucide",
-      "style": {
-        "color": "{color.ink-3}",
-        "flex-shrink": 0,
-        "height": 14,
-        "width": 14
-      },
-      "type": "icon"
     },
     "t1VSiAIm": {
       "content": "4",
@@ -81455,22 +81444,15 @@
       "type": "text"
     },
     "tCu0uXw9": {
-      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: top right;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.96;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.96;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}",
-      "index": "z000",
-      "name": "Past conversations popover",
-      "parentId": "NdLa0SYF",
+      "index": "a1",
+      "name": "Conversation list",
+      "parentId": "1YQBL9G5",
       "style": {
-        "background": "{color.surface-3}",
-        "border-radius": 12,
-        "box-shadow": "var(--elevation-float)",
         "display": "flex",
+        "flex": 1,
         "flex-direction": "column",
-        "padding": 6,
-        "position": "absolute",
-        "right": 12,
-        "top": 104,
-        "width": 320,
-        "z-index": 30
+        "overflow": "hidden",
+        "padding": 8
       },
       "type": "frame"
     },
@@ -81797,6 +81779,15 @@
         "display": "inline"
       },
       "type": "text"
+    },
+    "tQuvX3Tc": {
+      "index": "a1",
+      "name": "Spacer",
+      "parentId": "gA64kR4A",
+      "style": {
+        "flex": 1
+      },
+      "type": "frame"
     },
     "tRbZhj6a": {
       "index": "a0",
@@ -82796,6 +82787,20 @@
       },
       "type": "text"
     },
+    "u69ZR70A": {
+      "index": "a1",
+      "name": "Empty state",
+      "parentId": "xzREwFh2",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 4,
+        "padding": "64px 24px",
+        "text-align": "center"
+      },
+      "type": "frame"
+    },
     "u6hSNlZh": {
       "content": "متن الآجرومية",
       "index": "a2",
@@ -83508,6 +83513,19 @@
         "text-align": "center"
       },
       "type": "text"
+    },
+    "uazvgn8I": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "zLTlCrgW",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2,
+        "min-width": 0
+      },
+      "type": "frame"
     },
     "ub2gd36S": {
       "content": "ِ",
@@ -85932,7 +85950,7 @@
     "wN4qvZyR": {
       "componentId": "RV1DOgzp",
       "css": "transition: opacity {transition.duration-press} {ease.out};",
-      "index": "a001",
+      "index": "a002",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -85964,15 +85982,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "wO0ZO0lZ": {
-      "index": "a0025",
-      "name": "Answer paragraph",
-      "parentId": "7mzBYxKT",
-      "style": {
-        "display": "block"
-      },
-      "type": "frame"
     },
     "wOmGArfa": {
       "content": "Books show up here once their pages finish OCR in the digitization app. Upload scans there, then refresh.",
@@ -88328,20 +88337,6 @@
       },
       "type": "text"
     },
-    "xwNqgXvA": {
-      "content": "Past conversations",
-      "index": "a000",
-      "name": "Label",
-      "parentId": "tCu0uXw9",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "font-weight": 500,
-        "padding": "6px 10px 4px"
-      },
-      "type": "text"
-    },
     "xxKrQg5V": {
       "content": "4",
       "index": "a000",
@@ -88400,6 +88395,19 @@
         "width": 10
       },
       "type": "icon"
+    },
+    "xzREwFh2": {
+      "css": "animation: screen-in-forward {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}",
+      "index": "a1",
+      "name": "History screen",
+      "parentId": "ObSvuElj",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "min-height": 0
+      },
+      "type": "frame"
     },
     "xzlmzEu9": {
       "index": "Za000",
@@ -88891,24 +88899,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "yRjMnXpu": {
-      "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
-      "overrides": {
-        "O46dZG6P": {
-          "icon": "arrow-up"
-        }
-      },
-      "parentId": "rvNxyrBb",
-      "props": {
-        "label": "Ask",
-        "size": "sm",
-        "variant": "primary",
-        "withIcon": "yes"
-      },
-      "type": "instance"
     },
     "ySZxPG2b": {
       "index": "as",
@@ -90234,6 +90224,21 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "zLTlCrgW": {
+      "index": "a004",
+      "name": "Conversation · renaming",
+      "parentId": "tCu0uXw9",
+      "style": {
+        "align-items": "center",
+        "background": "color-mix(in oklab, {color.ink} 6%, transparent)",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 4,
+        "overflow": "hidden",
+        "padding": "8px 10px"
+      },
+      "type": "frame"
     },
     "zM6un3dP": {
       "content": "فالاسمُ يُعرَفُ: بالخفضِ، والتنوينِ، ودخولِ الألفِ واللامِ، وحروفِ الخفضِ، وهي: مِن، وإلى، وعن، وعلى، وفي، ورُبَّ، والباءُ، والكافُ، واللامُ، وحروفِ القسمِ، وهي: الواوُ، والباءُ، والتاءُ.",

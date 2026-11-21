@@ -147,6 +147,8 @@ const handlers: MidadApi = {
   "conversations.get": (input) => conversations.get(input),
   "conversations.addTurn": (input) => conversations.addTurn(input),
   "conversations.remove": (input) => conversations.remove(input),
+  "conversations.save": (input) => conversations.save(input),
+  "conversations.rename": (input) => conversations.rename(input),
   "app.setTheme": async ({ theme }) => {
     settings.saveTheme(theme);
     applyTheme(theme);
