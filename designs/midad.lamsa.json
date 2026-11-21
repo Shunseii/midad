@@ -6082,6 +6082,26 @@
       },
       "type": "instance"
     },
+    "4moSKqKm": {
+      "css": "/* Inline-block inside the line, so a highlight band under the base runs on level. */\ntransition:\n  border-color {transition.duration-press} {ease.out},\n  background-color {transition.duration-press} {ease.out};\n/* A hit area wider than the ring, mostly above and below, that doesn't move the line. */\n\n&::after {\n  content: \"\";\n  position: absolute;\n  inset: -0.6em -0.25em;\n}\n\n&:hover, &:focus-visible, &[data-state=\"open\"] {\n  border-color: {color.accent};\n}\n\n&[data-state=\"open\"] {\n  background-color: {color.accent-soft};\n}",
+      "index": "a2V",
+      "name": "Gloss marker",
+      "parentId": "4J5LWfPA",
+      "style": {
+        "background": "{color.accent-soft}",
+        "border": "1.5px solid {color.ink-3}",
+        "border-color": "{color.accent}",
+        "border-radius": "9999px",
+        "cursor": "pointer",
+        "display": "inline-block",
+        "height": "0.32em",
+        "margin-inline": "0.08em",
+        "position": "relative",
+        "vertical-align": "0.55em",
+        "width": "0.32em"
+      },
+      "type": "frame"
+    },
     "4nKGiYva": {
       "content": "8",
       "index": "a0",
@@ -10705,7 +10725,7 @@
       "type": "frame"
     },
     "8RVS1jOp": {
-      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: bottom center;\n/* Opens 250ms after the pointer settles on the words, closes 200ms after it leaves both. */\ntransition-delay: 0ms;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: bottom center;\n/* Opens 150ms after the pointer settles on the ring, closes 200ms after it leaves both ring and popup. */\ntransition-delay: 0ms;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}",
       "index": "a4",
       "name": "Gloss popup",
       "parentId": "4J5LWfPA",
@@ -10714,7 +10734,7 @@
         "border-radius": "{radius.xl}",
         "bottom": "calc(100% - 4px)",
         "box-shadow": "var(--elevation-float)",
-        "left": 96,
+        "left": 170,
         "max-width": 384,
         "position": "absolute",
         "text-indent": 0,
@@ -13510,6 +13530,24 @@
         "align-items": "center",
         "display": "flex",
         "gap": 4
+      },
+      "type": "frame"
+    },
+    "Ai9B84ya": {
+      "css": "/* Inline-block inside the line, so a highlight band under the base runs on level. */\ntransition:\n  border-color {transition.duration-press} {ease.out},\n  background-color {transition.duration-press} {ease.out};\n/* A hit area wider than the ring, mostly above and below, that doesn't move the line. */\n\n&::after {\n  content: \"\";\n  position: absolute;\n  inset: -0.6em -0.25em;\n}\n\n&:hover, &:focus-visible, &[data-state=\"open\"] {\n  border-color: {color.accent};\n}\n\n&[data-state=\"open\"] {\n  background-color: {color.accent-soft};\n}",
+      "index": "a2V",
+      "name": "Gloss marker",
+      "parentId": "Eu9jYAI9",
+      "style": {
+        "border": "1.5px solid {color.ink-3}",
+        "border-radius": "9999px",
+        "cursor": "pointer",
+        "display": "inline-block",
+        "height": "0.32em",
+        "margin-inline": "0.08em",
+        "position": "relative",
+        "vertical-align": "0.55em",
+        "width": "0.32em"
       },
       "type": "frame"
     },
@@ -19593,9 +19631,8 @@
     },
     "FJXNAowk": {
       "content": "بقد",
-      "css": "text-decoration-line: underline;\ntext-decoration-style: dotted;\ntext-decoration-thickness: 1.5px;\ntext-underline-offset: 0.55em;\ntext-decoration-color: color-mix(in oklab, {color.accent} 45%, transparent);\n/* Vertical padding widens the hover target without moving the line. */\npadding-block: 0.3em;\ncursor: help;\ntransition: text-decoration-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"open\"] {\n  text-decoration-color: {color.accent};\n}",
       "index": "a2",
-      "name": "Gloss mark",
+      "name": "Gloss base",
       "parentId": "BB9V6Me4",
       "style": {
         "display": "inline"
@@ -28602,6 +28639,26 @@
       },
       "type": "text"
     },
+    "MFZX5n1Y": {
+      "css": "/* Inline-block inside the line, so a highlight band under the base runs on level. */\ntransition:\n  border-color {transition.duration-press} {ease.out},\n  background-color {transition.duration-press} {ease.out};\n/* A hit area wider than the ring, mostly above and below, that doesn't move the line. */\n\n&::after {\n  content: \"\";\n  position: absolute;\n  inset: -0.6em -0.25em;\n}\n\n&:hover, &:focus-visible, &[data-state=\"open\"] {\n  border-color: {color.accent};\n}\n\n&[data-state=\"open\"] {\n  background-color: {color.accent-soft};\n}",
+      "index": "a2V",
+      "name": "Gloss marker",
+      "parentId": "xVi9tF3C",
+      "style": {
+        "background": "{color.accent-soft}",
+        "border": "1.5px solid {color.ink-3}",
+        "border-color": "{color.accent}",
+        "border-radius": "9999px",
+        "cursor": "pointer",
+        "display": "inline-block",
+        "height": "0.32em",
+        "margin-inline": "0.08em",
+        "position": "relative",
+        "vertical-align": "0.55em",
+        "width": "0.32em"
+      },
+      "type": "frame"
+    },
     "MGmSrCGI": {
       "content": "3 of 24",
       "index": "a1",
@@ -29392,7 +29449,7 @@
       "type": "text"
     },
     "MoeliUea": {
-      "content": "Long gloss: the popup caps at 192px and scrolls inside; scrolling it never scrolls the page and the popup stays open while the pointer is in it. The cut edge fades over 24px, and the fade moves from the bottom to the top as it scrolls (a scroll-driven animation on the scroller).",
+      "content": "Long gloss: the popup caps at 192px and scrolls inside; scrolling it never scrolls the page and the popup stays open while the pointer is in it. The cut edge fades over 24px, and the fade moves from the bottom to the top as it scrolls (a scroll-driven animation on the scroller). With no room above the ring, it opens below.",
       "index": "a2",
       "name": "Spec note",
       "parentId": "JJP3y9zX",
@@ -31381,13 +31438,11 @@
     },
     "OOoNR8uN": {
       "content": "وحرفٌ جاءَ لمعنًى",
-      "css": "text-decoration-line: underline;\ntext-decoration-style: dotted;\ntext-decoration-thickness: 1.5px;\ntext-underline-offset: 0.55em;\ntext-decoration-color: color-mix(in oklab, {color.accent} 45%, transparent);\n/* Vertical padding widens the hover target without moving the line. */\npadding-block: 0.3em;\ncursor: help;\ntransition: text-decoration-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"open\"] {\n  text-decoration-color: {color.accent};\n}",
       "index": "a2",
-      "name": "Gloss mark",
+      "name": "Gloss base",
       "parentId": "xVi9tF3C",
       "style": {
-        "display": "inline",
-        "text-decoration-color": "{color.accent}"
+        "display": "inline"
       },
       "type": "text"
     },
@@ -33564,6 +33619,24 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "QBfoPuMV": {
+      "css": "/* Inline-block inside the line, so a highlight band under the base runs on level. */\ntransition:\n  border-color {transition.duration-press} {ease.out},\n  background-color {transition.duration-press} {ease.out};\n/* A hit area wider than the ring, mostly above and below, that doesn't move the line. */\n\n&::after {\n  content: \"\";\n  position: absolute;\n  inset: -0.6em -0.25em;\n}\n\n&:hover, &:focus-visible, &[data-state=\"open\"] {\n  border-color: {color.accent};\n}\n\n&[data-state=\"open\"] {\n  background-color: {color.accent-soft};\n}",
+      "index": "a2V",
+      "name": "Gloss marker",
+      "parentId": "BB9V6Me4",
+      "style": {
+        "border": "1.5px solid {color.ink-3}",
+        "border-radius": "9999px",
+        "cursor": "pointer",
+        "display": "inline-block",
+        "height": "0.32em",
+        "margin-inline": "0.08em",
+        "position": "relative",
+        "vertical-align": "0.55em",
+        "width": "0.32em"
+      },
+      "type": "frame"
     },
     "QCD6opfD": {
       "content": "ِ",
@@ -55678,7 +55751,7 @@
       "type": "instance"
     },
     "hK7qy3Hq": {
-      "css": "transition: color var(--transition-duration-press) ease, background-color var(--transition-duration-press) ease;\n&:hover { background: color-mix(in oklab, var(--color-ink) 4%, transparent); color: var(--color-ink); }\n&:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }",
+      "css": "transition:\n  color var(--transition-duration-press) ease,\n  background-color var(--transition-duration-press) ease;\n\n&:hover {\n  background: color-mix(in oklab, var(--color-ink) 4%, transparent);\n  color: var(--color-ink);\n}\n\n&:focus-visible {\n  outline: 2px solid var(--color-accent);\n  outline-offset: 2px;\n}",
       "index": "a0",
       "name": "Back to book",
       "parentId": "2HHyNAun",
@@ -63954,7 +64027,7 @@
       "type": "frame"
     },
     "nyLp3LV3": {
-      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n/* No room above, so it flips below the words. */\ntransform-origin: top center;\n/* Opens 250ms after the pointer settles on the words, closes 200ms after it leaves both. */\ntransition-delay: 0ms;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 -8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n/* No room above, so it flips below the words. */\ntransform-origin: top center;\n/* Opens 150ms after the pointer settles on the ring, closes 200ms after it leaves both ring and popup. */\ntransition-delay: 0ms;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 -8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}",
       "index": "a4",
       "name": "Gloss popup",
       "parentId": "xVi9tF3C",
@@ -63962,13 +64035,13 @@
         "background": "{color.surface-3}",
         "border-radius": "{radius.xl}",
         "box-shadow": "var(--elevation-float)",
-        "left": 96,
+        "left": 170,
         "max-width": 384,
         "position": "absolute",
         "text-indent": 0,
+        "top": "calc(100% - 4px)",
         "width": "max-content",
-        "z-index": 5,
-        "top": "calc(100% - 4px)"
+        "z-index": 5
       },
       "type": "frame"
     },
@@ -65736,7 +65809,7 @@
       "type": "frame"
     },
     "pB64sk5N": {
-      "content": "Interlinear gloss: the OCR's <ruby> gloss stays off the line. Its base words keep a quiet dotted underline (accent at 45%, 1.5px, 0.55em below; a note's is solid accent, 2px). Hover (250ms), click or Enter opens the gloss above the words in the footnote peek's card (160ms ease-out from scale 0.95 and 8px; closes in 100ms); the underline firms to full accent while open.",
+      "content": "Interlinear gloss: the OCR's <ruby> gloss stays off the line and its base words stay undecorated, so notes (dotted underline) and highlights keep the text to themselves. A small drawn ring after the base (ink-3, 1.5px, raised like a superscript, unlike the bold footnote numerals) marks it. Only the ring opens the gloss: hover (150ms), click or Enter; its hit area reaches past the ring. Hovering the words still opens their note peek. The gloss opens above the ring in the footnote peek's card (160ms ease-out from scale 0.95 and 8px; closes in 100ms); the ring turns accent with an accent-soft fill while open. A highlight runs on level under the ring.",
       "index": "a2",
       "name": "Spec note",
       "parentId": "W4MDpiRX",
@@ -67281,13 +67354,11 @@
     },
     "qQeaEmGT": {
       "content": "وحرفٌ جاءَ لمعنًى",
-      "css": "text-decoration-line: underline;\ntext-decoration-style: dotted;\ntext-decoration-thickness: 1.5px;\ntext-underline-offset: 0.55em;\ntext-decoration-color: color-mix(in oklab, {color.accent} 45%, transparent);\n/* Vertical padding widens the hover target without moving the line. */\npadding-block: 0.3em;\ncursor: help;\ntransition: text-decoration-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"open\"] {\n  text-decoration-color: {color.accent};\n}",
       "index": "a2",
-      "name": "Gloss mark",
+      "name": "Gloss base",
       "parentId": "4J5LWfPA",
       "style": {
-        "display": "inline",
-        "text-decoration-color": "{color.accent}"
+        "display": "inline"
       },
       "type": "text"
     },
@@ -76944,9 +77015,8 @@
     },
     "y25l1GJ2": {
       "content": "بقد",
-      "css": "text-decoration-line: underline;\ntext-decoration-style: dotted;\ntext-decoration-thickness: 1.5px;\ntext-underline-offset: 0.55em;\ntext-decoration-color: color-mix(in oklab, {color.accent} 45%, transparent);\n/* Vertical padding widens the hover target without moving the line. */\npadding-block: 0.3em;\ncursor: help;\ntransition: text-decoration-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"open\"] {\n  text-decoration-color: {color.accent};\n}",
       "index": "a2",
-      "name": "Gloss mark",
+      "name": "Gloss base",
       "parentId": "Eu9jYAI9",
       "style": {
         "display": "inline"
