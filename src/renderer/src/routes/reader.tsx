@@ -1166,7 +1166,7 @@ export const ReaderRoute = () => {
             data-page-area
             data-balance={balanced ? "" : undefined}
             style={{ "--balance": `${CONTENTS_WIDTH / 2}px` } as CSSProperties}
-            className="px-6 pt-10 pb-28 [view-transition-name:reader-page] @3xl:px-30"
+            className="px-6 pt-10 pb-34 [view-transition-name:reader-page] @3xl:px-30"
           >
           {page.isPending && (
             <div className="mx-auto flex w-full max-w-160 flex-col gap-4">
@@ -1204,7 +1204,7 @@ export const ReaderRoute = () => {
           <div
             {...chromeHover}
             data-focus={focused ? "hidden" : undefined}
-            className="absolute inset-x-0 bottom-0 z-10 h-18 bg-bg px-6 transition-[translate,opacity] [view-transition-name:page-scrubber] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
+            className="absolute inset-x-0 bottom-0 z-10 h-24 bg-bg px-6 transition-[translate,opacity] [view-transition-name:page-scrubber] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
           >
             <div className="mx-auto h-full max-w-190">
               <PageScrubber
