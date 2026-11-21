@@ -2,6 +2,23 @@
   "$schema": "https://lamsa.dev/schema/v1.json",
   "css": "@keyframes highlight-sweep {\n  from {\n    background-size: 0% 100%;\n  }\n\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes highlight-fade {\n  from {\n    opacity: 0;\n  }\n}",
   "nodes": {
+    "0ELUQceS": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aP",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "61.24%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
     "0F854f9p": {
       "content": "danger",
       "index": "a024",
@@ -18,6 +35,22 @@
       },
       "type": "text"
     },
+    "0HiFuGG9": {
+      "index": "a0",
+      "name": "Icon well",
+      "parentId": "IYi8ydDA",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 999,
+        "display": "flex",
+        "height": 40,
+        "justify-content": "center",
+        "margin-bottom": 4,
+        "width": 40
+      },
+      "type": "frame"
+    },
     "0fjuuwzx": {
       "icon": "search",
       "index": "a000",
@@ -31,6 +64,22 @@
         "width": 16
       },
       "type": "icon"
+    },
+    "0nFgw1F4": {
+      "index": "b00",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-4}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "82.89%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "11Ac2xVm": {
       "icon": "circle-check",
@@ -91,6 +140,22 @@
       },
       "type": "text"
     },
+    "1PCQaY9U": {
+      "content": "removable",
+      "index": "a000VVVVVV",
+      "name": "Axis · removable",
+      "parentId": "CfM9SIRh",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
     "1lq7vclo": {
       "content": "Button",
       "index": "a001",
@@ -98,6 +163,22 @@
       "parentId": "ua9C67i7",
       "style": {},
       "type": "text"
+    },
+    "1r6yiKKJ": {
+      "index": "ap",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-1}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "34.18%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "1tyvsSRB": {
       "componentId": "ua9C67i7",
@@ -159,6 +240,20 @@
         "width": 168
       },
       "type": "frame"
+    },
+    "2VEnzVjm": {
+      "icon": "type",
+      "index": "a0",
+      "name": "Icon type",
+      "parentId": "roHkeXtS",
+      "set": "lucide",
+      "style": {
+        "color": "{color.ink-3}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
     },
     "2exG2r0t": {
       "content": "Synced 2 min ago",
@@ -239,6 +334,23 @@
         "flex-direction": "column",
         "gap": 8,
         "width": 168
+      },
+      "type": "frame"
+    },
+    "3Dv2ZqkC": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aa",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "91.35%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
       },
       "type": "frame"
     },
@@ -497,6 +609,22 @@
       },
       "type": "frame"
     },
+    "4CjDbeaa": {
+      "index": "b06",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "41.81%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "4aJZW1V7": {
       "component": {
         "props": {
@@ -523,6 +651,52 @@
       "type": "frame",
       "x": 280,
       "y": 5364
+    },
+    "4aT9AkX4": {
+      "content": "undo",
+      "index": "z0",
+      "name": "Axis · undo",
+      "parentId": "YHkogDES",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
+    "4djLM0MK": {
+      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "b0B",
+      "name": "Thumb layer",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "bottom": 0,
+        "left": 0,
+        "pointer-events": "none",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "translate": "-31.36% 0"
+      },
+      "type": "frame"
+    },
+    "4evPTL1h": {
+      "content": "Notes on this page",
+      "index": "a0",
+      "name": "Heading",
+      "parentId": "OL0k24Wt",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600,
+        "line-height": "24px"
+      },
+      "type": "text"
     },
     "4vrAWQyH": {
       "content": "surface-2",
@@ -576,6 +750,22 @@
       },
       "type": "instance"
     },
+    "5CN6h6ZA": {
+      "index": "b05",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "30.30%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "5Sv1TIGF": {
       "componentId": "ua9C67i7",
       "index": "a021",
@@ -588,6 +778,20 @@
         "withIcon": "no"
       },
       "type": "instance"
+    },
+    "5TetOMDZ": {
+      "content": "variant ↓ / state →",
+      "index": "a000",
+      "name": "Axis corner",
+      "parentId": "CfM9SIRh",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "font-weight": 400,
+        "line-height": "16px"
+      },
+      "type": "text"
     },
     "5fnQdLt8": {
       "content": "no icon",
@@ -628,6 +832,22 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "5xIOPZHa": {
+      "content": "surface",
+      "index": "a001V",
+      "name": "Axis · surface",
+      "parentId": "jEFHMczC",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
       },
       "type": "text"
     },
@@ -712,6 +932,50 @@
       },
       "type": "text"
     },
+    "6RRMcCJb": {
+      "content": "Panels",
+      "name": "Row Label · Panels",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.display}",
+        "font-size": 32,
+        "font-weight": 600,
+        "line-height": "40px",
+        "width": 200
+      },
+      "type": "text",
+      "x": 0,
+      "y": 6400
+    },
+    "6YV4aFzd": {
+      "content": "25 of 25 pages transcribed",
+      "index": "b0",
+      "name": "Meta",
+      "parentId": "FZy7IGqI",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "6ZAGXcQz": {
+      "index": "b04",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "18.64%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "6dA59xdP": {
       "content": "short",
       "index": "a002",
@@ -786,6 +1050,22 @@
       },
       "type": "text"
     },
+    "7ZtLl4qs": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Under · Pink",
+      "parentId": "na29ZmAC",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-3} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
     "7knT7ZGO": {
       "index": "a000",
       "name": "Chip",
@@ -811,6 +1091,16 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "7rKyCtEC": {
+      "componentId": "K2A7iETC",
+      "index": "a000VVVVV",
+      "name": "Toast",
+      "parentId": "YHkogDES",
+      "props": {
+        "label": "Synced 24 pages"
+      },
+      "type": "instance"
     },
     "7uTBO0VO": {
       "content": "default",
@@ -857,6 +1147,17 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "7z1GNnhd": {
+      "index": "aB",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
     },
     "86ktJUxv": {
       "name": "Color palette",
@@ -912,6 +1213,53 @@
       },
       "type": "text"
     },
+    "8THc84PU": {
+      "name": "Import row · States",
+      "style": {
+        "align-items": "flex-start",
+        "background": "{color.surface-2}",
+        "border-radius": 20,
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 0,
+        "padding": 32,
+        "width": 580
+      },
+      "type": "frame",
+      "x": 1200,
+      "y": 6400
+    },
+    "8tsoyg6d": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Behind · Green",
+      "parentId": "lobkWsZD",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-2} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "9747YV0V": {
+      "content": "تفسير السعدي",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "w5r8sTNc",
+      "style": {
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700,
+        "line-height": "36px"
+      },
+      "type": "text"
+    },
     "9UYKPjHl": {
       "content": "Tokens",
       "name": "Row Label · Tokens",
@@ -938,6 +1286,22 @@
       },
       "type": "frame"
     },
+    "9XS2IqxP": {
+      "index": "a0",
+      "name": "Icon well",
+      "parentId": "AdTEoN3j",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 999,
+        "display": "flex",
+        "height": 40,
+        "justify-content": "center",
+        "margin-bottom": 4,
+        "width": 40
+      },
+      "type": "frame"
+    },
     "9iUsjzL6": {
       "content": "accent",
       "index": "a001",
@@ -953,6 +1317,23 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "9mnkwcQi": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a1",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "2.02%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
     },
     "9nfVLI9R": {
       "content": "focus",
@@ -1050,6 +1431,20 @@
       },
       "type": "frame"
     },
+    "AJ3OBkMb": {
+      "icon": "bookmark",
+      "index": "a0",
+      "name": "Icon bookmark",
+      "parentId": "xLpH6kg2",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 12,
+        "width": 12
+      },
+      "type": "icon"
+    },
     "AWVvX0wR": {
       "content": "default",
       "index": "a004",
@@ -1074,6 +1469,20 @@
         "display": "flex",
         "flex-direction": "column",
         "gap": 8
+      },
+      "type": "frame"
+    },
+    "AdTEoN3j": {
+      "index": "b0",
+      "name": "Empty state",
+      "parentId": "YI7LxYqq",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 8,
+        "padding": "48px 24px",
+        "text-align": "center"
       },
       "type": "frame"
     },
@@ -1112,8 +1521,8 @@
         "display": "grid",
         "grid-template-columns": "140px repeat(5, max-content)",
         "padding": 32,
-        "row-gap": 44,
-        "padding-top": 48
+        "padding-top": 48,
+        "row-gap": 44
       },
       "type": "frame",
       "x": 392,
@@ -1231,6 +1640,23 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "Bt5IEDjH": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aG",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "32.20%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
     },
     "BuXjOKZ4": {
       "content": "tone ↓ / state →",
@@ -1351,6 +1777,51 @@
       },
       "type": "instance"
     },
+    "CXEYuSQn": {
+      "index": "b08",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "87.69%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
+    "CXvlcQFw": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "HhcHEM20",
+      "style": {
+        "align-items": "flex-end",
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "min-width": 0,
+        "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "CZ362jXO": {
+      "content": "مبادئ الأصول",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "CXvlcQFw",
+      "style": {
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700,
+        "line-height": "36px"
+      },
+      "type": "text"
+    },
     "CccQ5rCC": {
       "content": "Light #F7E39A\nDark #5A4C1C",
       "index": "a002",
@@ -1381,6 +1852,22 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "CfM9SIRh": {
+      "name": "Chip · States",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 20,
+        "column-gap": 32,
+        "display": "grid",
+        "grid-template-columns": "140px repeat(2, max-content)",
+        "padding": 32,
+        "row-gap": 20
+      },
+      "type": "frame",
+      "x": 440,
+      "y": 5848
     },
     "CntyMcZB": {
       "name": "Message · States",
@@ -1452,6 +1939,22 @@
       },
       "type": "frame"
     },
+    "D7QM18Bp": {
+      "content": "error",
+      "index": "a000VVV",
+      "name": "Axis · error",
+      "parentId": "YHkogDES",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
     "DWPdSGS3": {
       "content": "ink",
       "index": "a001",
@@ -1520,6 +2023,20 @@
       },
       "type": "instance"
     },
+    "DwOwwfxu": {
+      "content": "Behind text",
+      "index": "a2",
+      "name": "Column",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 13,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "DydV7il8": {
       "content": "12",
       "index": "a002",
@@ -1579,15 +2096,32 @@
       },
       "type": "text"
     },
+    "Ee2eGhYn": {
+      "css": "transform-origin: right center;\ntransition: transform {transition.duration-slide} {ease.move};\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a0",
+      "name": "Read",
+      "parentId": "zDfnnuzt",
+      "style": {
+        "background": "color-mix(in oklab, {color.accent} 35%, transparent)",
+        "border-radius": 999,
+        "bottom": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "transform": "scaleX(0.3140)",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "EgoYA7eY": {
       "componentId": "RV1DOgzp",
       "index": "a008",
       "name": "IconButton",
       "parentId": "AoC4KJ99",
       "props": {
+        "label": "Ask AI",
         "state": "hover",
-        "tooltip": "on",
-        "label": "Ask AI"
+        "tooltip": "on"
       },
       "type": "instance"
     },
@@ -1604,6 +2138,23 @@
       },
       "type": "instance"
     },
+    "Eq5yksa3": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aW",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "82.20%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
     "EqWxBzJI": {
       "content": "Supporting text for the card.",
       "index": "a002",
@@ -1615,6 +2166,22 @@
         "font-size": 13,
         "font-weight": 400,
         "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "F2kWwNWv": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Under · Blue",
+      "parentId": "z6WY07Cc",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-4} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
       },
       "type": "text"
     },
@@ -1639,6 +2206,23 @@
         "state": "default"
       },
       "type": "instance"
+    },
+    "FWdltvgs": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a9",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "21.38%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
     },
     "FXmcGn3y": {
       "name": "Kbd · States",
@@ -1680,6 +2264,20 @@
         "state": "selected"
       },
       "type": "instance"
+    },
+    "FZy7IGqI": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "KAcNvPFn",
+      "style": {
+        "align-items": "flex-end",
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "min-width": 0,
+        "text-align": "right"
+      },
+      "type": "frame"
     },
     "FcK4Azn1": {
       "content": "accent",
@@ -1839,6 +2437,21 @@
       },
       "type": "text"
     },
+    "Gajc91bQ": {
+      "content": "Under: a band 0.55em high under the letters, so harakat above stay clear. Behind: a fill from 0.15em below the top of the line box to 0.05em above its bottom; the letters and harakat sit on it. Set in the display menu and Settings (Highlight style). A new highlight draws in right to left in both: 80ms plus 25ms a word, capped at 220ms, ease-out across the words (these two words take 130ms). Reduced motion fades it in.",
+      "index": "aI",
+      "name": "Spec note",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "grid-column": "1 / -1",
+        "line-height": "18px",
+        "width": 560
+      },
+      "type": "text"
+    },
     "Ge6BBkaX": {
       "componentId": "mUTXOEWB",
       "index": "a007",
@@ -1851,6 +2464,24 @@
         "value": "Search the corpus…"
       },
       "type": "instance"
+    },
+    "Grbg0UeQ": {
+      "content": "الفاعلُ: هو الاسمُ المرفوعُ المذكورُ قبلَه فعلُه.",
+      "index": "a2",
+      "name": "First line",
+      "parentId": "xTeGNees",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": "{text.base}",
+        "line-height": "28px",
+        "overflow": "hidden",
+        "text-align": "right",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
+      },
+      "type": "text"
     },
     "GtIt2EfO": {
       "componentId": "NpoaMS1Y",
@@ -1973,6 +2604,38 @@
       "x": 280,
       "y": 5604
     },
+    "HefJiPhW": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aX",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "83.65%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "HhcHEM20": {
+      "index": "a2",
+      "name": "Row · not transcribed",
+      "parentId": "8THc84PU",
+      "style": {
+        "align-items": "center",
+        "align-self": "stretch",
+        "border-bottom": "none",
+        "display": "flex",
+        "gap": 16,
+        "opacity": 0.6,
+        "padding": "12px 0"
+      },
+      "type": "frame"
+    },
     "HicNahFA": {
       "component": {
         "props": {
@@ -2060,6 +2723,39 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "HphJqgm3": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aZ",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "85.56%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "Hr0IzJwN": {
+      "index": "aq",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-3}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "41.12%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "I6HYAjBz": {
       "content": "active",
@@ -2155,6 +2851,33 @@
       },
       "type": "text"
     },
+    "IWKsRbnO": {
+      "content": "640 of 1,312",
+      "index": "a1",
+      "name": "Position",
+      "parentId": "yLnDtZzG",
+      "style": {
+        "color": "{color.ink-3}",
+        "direction": "ltr",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
+    "IYi8ydDA": {
+      "index": "b0",
+      "name": "Empty state",
+      "parentId": "OL0k24Wt",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 8,
+        "padding": "48px 24px",
+        "text-align": "center"
+      },
+      "type": "frame"
+    },
     "Ib2nXVDE": {
       "componentId": "uJd03iQq",
       "index": "a008",
@@ -2173,6 +2896,20 @@
       "parentId": "xATcRgsd",
       "style": {
         "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "IsxViaPH": {
+      "content": "No notes yet",
+      "index": "b0",
+      "name": "Line",
+      "parentId": "IYi8ydDA",
+      "style": {
+        "color": "{color.ink-2}",
         "font-family": "{font.body}",
         "font-size": 14,
         "font-weight": 500,
@@ -2220,16 +2957,49 @@
       },
       "type": "frame"
     },
+    "J9CHSCr7": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aO",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "57.05%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "JFh2OVT7": {
+      "index": "an",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-2}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "32.43%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "JLRuU6ZH": {
       "componentId": "RV1DOgzp",
       "index": "a014",
       "name": "IconButton",
       "parentId": "AoC4KJ99",
       "props": {
+        "label": "Ask AI",
         "state": "hover",
-        "variant": "outline",
         "tooltip": "on",
-        "label": "Ask AI"
+        "variant": "outline"
       },
       "type": "instance"
     },
@@ -2256,6 +3026,19 @@
         "withHint": "no"
       },
       "type": "instance"
+    },
+    "JVzTrBAS": {
+      "icon": "notebook-pen",
+      "index": "a0",
+      "name": "Icon notebook-pen",
+      "parentId": "0HiFuGG9",
+      "set": "lucide",
+      "style": {
+        "color": "{color.ink-3}",
+        "height": 20,
+        "width": 20
+      },
+      "type": "icon"
     },
     "JavS8H3D": {
       "componentId": "tkp520KP",
@@ -2305,39 +3088,12 @@
     "K2A7iETC": {
       "component": {
         "props": {
-          "label": {
-            "default": "Toast message",
-            "target": "fXIUzN3t",
-            "type": "text"
-          },
-          "tone": {
-            "type": "enum",
-            "options": [
-              "neutral",
-              "success",
-              "error"
-            ],
-            "default": "neutral",
-            "overrides": {
-              "neutral": {
-                "11Ac2xVm": {
-                  "hidden": true
-                }
-              },
-              "error": {
-                "11Ac2xVm": {
-                  "icon": "octagon-x"
-                }
-              }
-            }
-          },
           "action": {
-            "type": "enum",
+            "default": "none",
             "options": [
               "none",
               "undo"
             ],
-            "default": "none",
             "overrides": {
               "undo": {
                 "a7Ngne03": {
@@ -2347,11 +3103,38 @@
                   "hidden": false
                 }
               }
-            }
+            },
+            "type": "enum"
+          },
+          "label": {
+            "default": "Toast message",
+            "target": "fXIUzN3t",
+            "type": "text"
+          },
+          "tone": {
+            "default": "neutral",
+            "options": [
+              "neutral",
+              "success",
+              "error"
+            ],
+            "overrides": {
+              "error": {
+                "11Ac2xVm": {
+                  "icon": "octagon-x"
+                }
+              },
+              "neutral": {
+                "11Ac2xVm": {
+                  "hidden": true
+                }
+              }
+            },
+            "type": "enum"
           }
         }
       },
-      "css": "transition:\n  opacity 400ms ease,\n  translate 400ms ease;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 100%;\n}",
+      "css": "transition: opacity 400ms ease, translate 400ms ease;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 100%;\n}",
       "name": "Toast",
       "style": {
         "align-items": "center",
@@ -2371,6 +3154,20 @@
       "x": 280,
       "y": 4448
     },
+    "KAcNvPFn": {
+      "index": "a1",
+      "name": "Row · in library",
+      "parentId": "8THc84PU",
+      "style": {
+        "align-items": "center",
+        "align-self": "stretch",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 16,
+        "padding": "12px 0"
+      },
+      "type": "frame"
+    },
     "KDMh7S35": {
       "componentId": "uJd03iQq",
       "index": "a014",
@@ -2383,16 +3180,32 @@
       },
       "type": "instance"
     },
+    "KKAAh17t": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aN",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "53.39%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
     "KLaQXYk7": {
       "component": {
         "props": {
           "state": {
-            "type": "enum",
+            "default": "default",
             "options": [
               "default",
               "hover"
             ],
-            "default": "default",
             "overrides": {
               "hover": {
                 "D4ahOU1n": {
@@ -2401,7 +3214,8 @@
                   }
                 }
               }
-            }
+            },
+            "type": "enum"
           },
           "tone": {
             "default": "mark-1",
@@ -2438,19 +3252,35 @@
           }
         }
       },
-      "css": "cursor: pointer;\n\n& > * {\n  transition: box-shadow {transition.duration-pop} {ease.out};\n}\n\n&:hover > * {\n  box-shadow: 0 0 0 2px {color.surface-3}, 0 0 0 4px {color.ink-3};\n}\n\n&:focus-visible {\n  outline: none;\n}\n\n&:focus-visible > * {\n  box-shadow: 0 0 0 2px {color.surface-3}, 0 0 0 4px {color.accent};\n}",
+      "css": "cursor: pointer;\n\n& > * {\n  transition: box-shadow {transition.duration-pop} {ease.out};\n}\n\n&:hover > * {\n  box-shadow:\n    0 0 0 2px {color.surface-3},\n    0 0 0 4px {color.ink-3};\n}\n\n&:focus-visible {\n  outline: none;\n}\n\n&:focus-visible > * {\n  box-shadow:\n    0 0 0 2px {color.surface-3},\n    0 0 0 4px {color.accent};\n}",
       "name": "Swatch",
       "style": {
-        "display": "flex",
-        "width": 20,
-        "height": 20,
         "border-radius": 999,
+        "display": "flex",
+        "flex-shrink": 0,
+        "height": 20,
         "margin": "0 2px",
-        "flex-shrink": 0
+        "width": 20
       },
       "type": "frame",
       "x": 280,
       "y": 3004
+    },
+    "KQskOceD": {
+      "index": "ay",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-2}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "68.48%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "KTho4cll": {
       "name": "Input · States",
@@ -2492,6 +3322,17 @@
       },
       "type": "instance"
     },
+    "LAcLrCrY": {
+      "index": "aH",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
     "LJeXqpIE": {
       "content": "شرح ابن عقيل على ألفية ابن مالك",
       "index": "a002",
@@ -2507,6 +3348,18 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "LPqXMLlR": {
+      "index": "b0",
+      "name": "Action column",
+      "parentId": "HhcHEM20",
+      "style": {
+        "display": "flex",
+        "flex-shrink": 0,
+        "justify-content": "flex-end",
+        "width": 112
+      },
+      "type": "frame"
     },
     "LpxqKuDF": {
       "content": "Can't reach the corpus",
@@ -2617,6 +3470,20 @@
         "letter-spacing": "0.08em",
         "line-height": "16px",
         "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
+    "MlUjQ988": {
+      "content": "Nothing highlighted yet",
+      "index": "b0",
+      "name": "Line",
+      "parentId": "AdTEoN3j",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
       },
       "type": "text"
     },
@@ -2905,6 +3772,23 @@
       },
       "type": "frame"
     },
+    "OL0k24Wt": {
+      "index": "b0",
+      "name": "Panel · Notes on this page",
+      "parentId": "q3SM3YTO",
+      "style": {
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 16,
+        "height": 320,
+        "padding": 20,
+        "width": 360
+      },
+      "type": "frame"
+    },
     "OO4rweIb": {
       "content": "variant ↓ / state →",
       "index": "a000",
@@ -2934,6 +3818,23 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "OX54SneB": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aR",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "63.00%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
     },
     "OY1JIHmG": {
       "content": "outline",
@@ -3015,6 +3916,21 @@
       },
       "type": "frame"
     },
+    "PCqlQccz": {
+      "content": "٦٤٠",
+      "index": "a0",
+      "name": "Folio",
+      "parentId": "yLnDtZzG",
+      "style": {
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": "{text.3xl}",
+        "font-weight": 700,
+        "line-height": "32px"
+      },
+      "type": "text"
+    },
     "PNUlxUVo": {
       "content": "line",
       "index": "a001",
@@ -3029,6 +3945,17 @@
       },
       "type": "text"
     },
+    "PdUEnLtv": {
+      "componentId": "wTNsBmCc",
+      "index": "a000VVVVV",
+      "name": "Chip",
+      "parentId": "CfM9SIRh",
+      "props": {
+        "label": "line 4",
+        "state": "hover"
+      },
+      "type": "instance"
+    },
     "PlI5W31s": {
       "componentId": "ua9C67i7",
       "index": "a031",
@@ -3042,6 +3969,20 @@
         "withIcon": "no"
       },
       "type": "instance"
+    },
+    "PrWmeHLA": {
+      "icon": "quote",
+      "index": "a000",
+      "name": "Icon quote",
+      "parentId": "wTNsBmCc",
+      "set": "lucide",
+      "style": {
+        "color": "currentColor",
+        "flex-shrink": 0,
+        "height": 12,
+        "width": 12
+      },
+      "type": "icon"
     },
     "PtpkJXQR": {
       "index": "a000",
@@ -3159,6 +4100,37 @@
       },
       "type": "text"
     },
+    "QEmmV8EM": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aE",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "31.06%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "QGJJn9PA": {
+      "content": "Select text, then pick a colour.",
+      "index": "c0",
+      "name": "Hint",
+      "parentId": "AdTEoN3j",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px",
+        "max-width": 240
+      },
+      "type": "text"
+    },
     "QMcaI0hP": {
       "content": "key",
       "index": "a004",
@@ -3217,6 +4189,45 @@
       },
       "type": "text"
     },
+    "QgAQm9Bt": {
+      "componentId": "wTNsBmCc",
+      "index": "a000VVVVVVVVVVV",
+      "name": "Chip",
+      "parentId": "CfM9SIRh",
+      "props": {
+        "label": "Pasted",
+        "state": "hover",
+        "surface": "bubble"
+      },
+      "type": "instance"
+    },
+    "QgzgikCA": {
+      "componentId": "wTNsBmCc",
+      "index": "a000VVVVVVVVVV",
+      "name": "Chip",
+      "parentId": "CfM9SIRh",
+      "props": {
+        "label": "Pasted",
+        "surface": "bubble"
+      },
+      "type": "instance"
+    },
+    "RC9497tl": {
+      "content": "default",
+      "index": "a000VVVV",
+      "name": "Axis · default",
+      "parentId": "YHkogDES",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
     "RD8VVNv1": {
       "content": "ok-soft",
       "index": "a001",
@@ -3243,9 +4254,24 @@
       },
       "type": "instance"
     },
+    "RQoIbNPg": {
+      "componentId": "wTNsBmCc",
+      "index": "a000VVVV",
+      "name": "Chip",
+      "parentId": "CfM9SIRh",
+      "props": {
+        "label": "line 4"
+      },
+      "type": "instance"
+    },
     "RV1DOgzp": {
       "component": {
         "props": {
+          "label": {
+            "default": "Label",
+            "target": "puNiiYCy",
+            "type": "text"
+          },
           "state": {
             "default": "default",
             "options": [
@@ -3290,6 +4316,24 @@
             },
             "type": "enum"
           },
+          "tooltip": {
+            "default": "off",
+            "options": [
+              "off",
+              "on"
+            ],
+            "overrides": {
+              "on": {
+                "ycDBBi1R": {
+                  "style": {
+                    "opacity": 1,
+                    "scale": 1
+                  }
+                }
+              }
+            },
+            "type": "enum"
+          },
           "variant": {
             "default": "ghost",
             "options": [
@@ -3307,29 +4351,6 @@
               }
             },
             "type": "enum"
-          },
-          "label": {
-            "type": "text",
-            "default": "Label",
-            "target": "puNiiYCy"
-          },
-          "tooltip": {
-            "type": "enum",
-            "options": [
-              "off",
-              "on"
-            ],
-            "default": "off",
-            "overrides": {
-              "on": {
-                "ycDBBi1R": {
-                  "style": {
-                    "opacity": 1,
-                    "scale": 1
-                  }
-                }
-              }
-            }
           }
         }
       },
@@ -3344,12 +4365,28 @@
         "display": "inline-flex",
         "height": 32,
         "justify-content": "center",
-        "width": 32,
-        "position": "relative"
+        "position": "relative",
+        "width": 32
       },
       "type": "frame",
       "x": 280,
       "y": 1578
+    },
+    "RjMVQH7R": {
+      "index": "ar",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-1}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "45.77%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "RkE8FpYg": {
       "content": "Small",
@@ -3411,6 +4448,19 @@
       },
       "type": "text"
     },
+    "RvmbHqxA": {
+      "content": "Green",
+      "index": "a6",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "RyWvZilG": {
       "content": "variant ↓ / tone →",
       "index": "a000",
@@ -3424,6 +4474,23 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "S4Pzb1JQ": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aI",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "33.96%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
     },
     "SHTZU5Id": {
       "componentId": "ua9C67i7",
@@ -3466,6 +4533,18 @@
       },
       "type": "text"
     },
+    "SbZGQNFQ": {
+      "content": "Text size",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "roHkeXtS",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 14
+      },
+      "type": "text"
+    },
     "SbjyFT4V": {
       "componentId": "46QiZLNZ",
       "index": "a006",
@@ -3488,6 +4567,38 @@
         "tone": "warn"
       },
       "type": "instance"
+    },
+    "Sqgqbvm6": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Under · Green",
+      "parentId": "xYGKUhnB",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-2} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "Ss6aybdu": {
+      "index": "al",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-3}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "30.22%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "T06vih68": {
       "componentId": "ua9C67i7",
@@ -3561,6 +4672,17 @@
       },
       "type": "instance"
     },
+    "UDZsQhuA": {
+      "index": "a5",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
     "UL5c7IAs": {
       "index": "a000",
       "name": "Chip",
@@ -3572,6 +4694,22 @@
         "height": 56
       },
       "type": "frame"
+    },
+    "USQFgNmZ": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Behind · Blue",
+      "parentId": "XZ0ItKY0",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-4} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
     },
     "Ur9X4tmp": {
       "content": "selected",
@@ -3588,6 +4726,22 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "VARkXvKY": {
+      "index": "at",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-3}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "52.48%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "VAwZGELY": {
       "componentId": "rBDgEEOC",
@@ -3640,6 +4794,22 @@
       },
       "type": "instance"
     },
+    "VdnRpQaV": {
+      "index": "b02",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "15.43%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "VqbL0RyQ": {
       "componentId": "ua9C67i7",
       "index": "a014",
@@ -3683,6 +4853,21 @@
       },
       "type": "text"
     },
+    "WE6Reiw7": {
+      "css": "cursor: pointer;\n\n&:focus-visible {\n  outline: 2px solid {color.accent};\n  outline-offset: 4px;\n}",
+      "index": "a1",
+      "name": "Scrubber",
+      "parentId": "v8FmfBf5",
+      "style": {
+        "bottom": 20,
+        "height": 32,
+        "left": "50%",
+        "position": "absolute",
+        "translate": "-50% 0",
+        "width": "min(760px, calc(100% - 48px))"
+      },
+      "type": "frame"
+    },
     "WFXxXoPN": {
       "content": "Light #FFFDF8\nDark #1C1A16",
       "index": "a002",
@@ -3698,6 +4883,23 @@
       },
       "type": "text"
     },
+    "WRvDdh1M": {
+      "index": "a0",
+      "name": "Highlight · Styles",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 20,
+        "column-gap": 40,
+        "display": "grid",
+        "grid-template-columns": "100px repeat(2, max-content)",
+        "padding": 32,
+        "row-gap": 12
+      },
+      "type": "frame",
+      "x": 1900,
+      "y": 6400
+    },
     "WeEfFep9": {
       "componentId": "RV1DOgzp",
       "index": "a009",
@@ -3707,6 +4909,34 @@
         "state": "active"
       },
       "type": "instance"
+    },
+    "WjPIFUz7": {
+      "index": "b0",
+      "name": "Action column",
+      "parentId": "xRIjn0qV",
+      "style": {
+        "display": "flex",
+        "flex-shrink": 0,
+        "justify-content": "flex-end",
+        "width": 112
+      },
+      "type": "frame"
+    },
+    "WmZQU2Vq": {
+      "content": "default",
+      "index": "a000V",
+      "name": "Axis · default",
+      "parentId": "CfM9SIRh",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
     },
     "WovceyH2": {
       "content": "ink-3",
@@ -3722,6 +4952,41 @@
       },
       "type": "text"
     },
+    "WvPazdW7": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aJ",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "36.17%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "X0hsFtEy": {
+      "index": "a000V",
+      "name": "Arrow",
+      "parentId": "ycDBBi1R",
+      "style": {
+        "background": "{color.ink}",
+        "border-radius": 2,
+        "height": 10,
+        "left": "50%",
+        "position": "absolute",
+        "rotate": "45deg",
+        "top": "100%",
+        "translate": "-50% -7px",
+        "width": 10,
+        "z-index": -1
+      },
+      "type": "frame"
+    },
     "X8XzSKem": {
       "index": "a007",
       "name": "Style · Caption",
@@ -3733,6 +4998,23 @@
         "display": "grid",
         "grid-template-columns": "140px 240px 1fr",
         "padding": "12px 0"
+      },
+      "type": "frame"
+    },
+    "XGHoc22J": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a4",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "6.82%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
       },
       "type": "frame"
     },
@@ -3808,6 +5090,17 @@
       },
       "type": "frame"
     },
+    "XZ0ItKY0": {
+      "index": "aE",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
     "XbrJ83NO": {
       "content": "mark-4",
       "index": "a001",
@@ -3852,6 +5145,19 @@
       },
       "type": "text"
     },
+    "XkNAVhXB": {
+      "content": "Blue",
+      "index": "aC",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "Xkf4Qdzz": {
       "content": "Noto Naskh Arabic — النصُّ العربيُّ",
       "index": "a001",
@@ -3874,6 +5180,17 @@
       },
       "type": "instance"
     },
+    "XmhvxAFn": {
+      "index": "a4",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
     "XoQDR4IY": {
       "index": "a000",
       "name": "Chip",
@@ -3883,6 +5200,22 @@
         "border": "1px solid {color.line}",
         "border-radius": 10,
         "height": 56
+      },
+      "type": "frame"
+    },
+    "XpMkVJZy": {
+      "index": "as",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-4}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "51.64%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
       },
       "type": "frame"
     },
@@ -3902,6 +5235,23 @@
       "x": 560,
       "y": 4448
     },
+    "YI7LxYqq": {
+      "index": "a0",
+      "name": "Panel · Highlights on this page",
+      "parentId": "q3SM3YTO",
+      "style": {
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 16,
+        "height": 320,
+        "padding": 20,
+        "width": 360
+      },
+      "type": "frame"
+    },
     "YM2PSd5L": {
       "content": "accent",
       "index": "a002",
@@ -3917,6 +5267,18 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "YQDSG12f": {
+      "componentId": "uJd03iQq",
+      "index": "a0",
+      "name": "Badge",
+      "parentId": "p9wtLsIY",
+      "props": {
+        "label": "In library",
+        "tone": "accent",
+        "withDot": "no"
+      },
+      "type": "instance"
     },
     "YWf8ANAa": {
       "content": "Caption",
@@ -4030,6 +5392,17 @@
       },
       "type": "text"
     },
+    "ZOfBsppH": {
+      "componentId": "rBDgEEOC",
+      "index": "a003V",
+      "name": "Tooltip",
+      "parentId": "jEFHMczC",
+      "props": {
+        "label": "المفيدُ بالوضعِ",
+        "variant": "surface"
+      },
+      "type": "instance"
+    },
     "ZTry91Mo": {
       "icon": "info",
       "index": "a000",
@@ -4044,6 +5417,20 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "ZU5KjXWp": {
+      "content": "125%",
+      "index": "a2",
+      "name": "Value",
+      "parentId": "roHkeXtS",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-variant-numeric": "tabular-nums",
+        "font-weight": 500
+      },
+      "type": "text"
     },
     "ZXCJfsVZ": {
       "index": "a000",
@@ -4116,6 +5503,21 @@
       },
       "type": "text"
     },
+    "a7Ngne03": {
+      "content": "Undo",
+      "css": "cursor: pointer;\n\n&:hover {\n  background: color-mix(in oklab, {color.bg} 15%, transparent);\n}",
+      "hidden": true,
+      "index": "b0",
+      "name": "Action",
+      "parentId": "K2A7iETC",
+      "style": {
+        "border-radius": "{radius.md}",
+        "font-weight": 600,
+        "margin": "-4px 0 -4px 4px",
+        "padding": "4px 8px"
+      },
+      "type": "text"
+    },
     "aAV2uW1A": {
       "content": "no dot",
       "index": "a012",
@@ -4141,6 +5543,23 @@
         "border": "1px solid {color.line}",
         "border-radius": 10,
         "height": 56
+      },
+      "type": "frame"
+    },
+    "aGHmpPwF": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a2",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "3.24%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
       },
       "type": "frame"
     },
@@ -4199,6 +5618,22 @@
       },
       "type": "text"
     },
+    "arfQSzhv": {
+      "index": "b09",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "99.43%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "asrOQU40": {
       "componentId": "46VX0CV6",
       "index": "a004",
@@ -4233,6 +5668,23 @@
         "label": "Highlight in yellow · H"
       },
       "type": "instance"
+    },
+    "bLln9BcP": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a5",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "9.57%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
     },
     "bXPUkHKh": {
       "componentId": "3j9EZY72",
@@ -4303,6 +5755,30 @@
       },
       "type": "instance"
     },
+    "bsCAcC2j": {
+      "content": "Not transcribed yet",
+      "index": "b0",
+      "name": "Meta",
+      "parentId": "CXvlcQFw",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "c8t7sRa2": {
+      "index": "aG",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
     "cFZx4GtR": {
       "content": "Library",
       "index": "a002",
@@ -4342,6 +5818,22 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "cNNo9UB4": {
+      "content": "neutral",
+      "index": "a000V",
+      "name": "Axis · neutral",
+      "parentId": "YHkogDES",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
       },
       "type": "text"
     },
@@ -4416,6 +5908,22 @@
         "flex": 1,
         "flex-direction": "column",
         "gap": 2
+      },
+      "type": "frame"
+    },
+    "cngSM58R": {
+      "index": "au",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-3}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "55.53%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
       },
       "type": "frame"
     },
@@ -4511,6 +6019,19 @@
       },
       "type": "text"
     },
+    "dbJbwzwd": {
+      "content": "Pink",
+      "index": "a9",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "dbbsaFvd": {
       "componentId": "3j9EZY72",
       "index": "a006",
@@ -4548,6 +6069,22 @@
       },
       "type": "frame"
     },
+    "dg5GNN9R": {
+      "index": "af",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-4}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "8.04%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "ePE4Mhxl": {
       "componentId": "mUTXOEWB",
       "index": "a017",
@@ -4578,6 +6115,23 @@
       },
       "type": "text"
     },
+    "ebOoTm0X": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aL",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "38.53%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
     "emxOYKTZ": {
       "content": "Light #FFFFFF\nDark #0E1E1B",
       "index": "a002",
@@ -4590,6 +6144,50 @@
         "font-weight": 400,
         "line-height": "16px",
         "white-space": "pre-line"
+      },
+      "type": "text"
+    },
+    "fHs9qiLf": {
+      "content": "Under text (default)",
+      "index": "a1",
+      "name": "Column",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 13,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "fIUm57eQ": {
+      "content": "on bubble",
+      "index": "a000VVVVVVVVV",
+      "name": "Axis · on bubble",
+      "parentId": "CfM9SIRh",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
+    "fNRpx6vX": {
+      "content": "بابُ الفاعلِ",
+      "index": "a1",
+      "name": "Chapter",
+      "parentId": "xTeGNees",
+      "style": {
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": "{text.base}",
+        "text-align": "right"
       },
       "type": "text"
     },
@@ -4615,6 +6213,19 @@
       "name": "Label",
       "parentId": "K2A7iETC",
       "style": {},
+      "type": "text"
+    },
+    "fYmVFofH": {
+      "content": "Ctrl+Z",
+      "hidden": true,
+      "index": "c0",
+      "name": "Shortcut",
+      "parentId": "K2A7iETC",
+      "style": {
+        "font-size": 12,
+        "line-height": "16px",
+        "opacity": 0.6
+      },
       "type": "text"
     },
     "fepOGjYm": {
@@ -4669,6 +6280,19 @@
       },
       "type": "text"
     },
+    "gEHMqGLB": {
+      "content": "",
+      "index": "a0",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "gHmOLAQw": {
       "content": "active",
       "index": "a003",
@@ -4694,6 +6318,39 @@
         "flex-direction": "column",
         "gap": 8,
         "width": 168
+      },
+      "type": "frame"
+    },
+    "gex6U4vN": {
+      "index": "b01",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "7.58%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
+    "ghY9kgOm": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aU",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "69.93%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
       },
       "type": "frame"
     },
@@ -4737,6 +6394,35 @@
       },
       "type": "text"
     },
+    "hIkHzsvx": {
+      "content": "Yellow",
+      "index": "a3",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "hQ8EUxDj": {
+      "content": "citation",
+      "index": "a000VVV",
+      "name": "Axis · citation",
+      "parentId": "CfM9SIRh",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
     "hYkzSmkS": {
       "componentId": "mUTXOEWB",
       "index": "a009",
@@ -4749,6 +6435,24 @@
         "value": "المفيد بالوضع"
       },
       "type": "instance"
+    },
+    "hamxOr8b": {
+      "index": "a000V",
+      "name": "Arrow",
+      "parentId": "rBDgEEOC",
+      "style": {
+        "background": "{color.ink}",
+        "border-radius": 2,
+        "height": 10,
+        "left": "50%",
+        "position": "absolute",
+        "rotate": "45deg",
+        "top": "100%",
+        "translate": "-50% -7px",
+        "width": 10,
+        "z-index": -1
+      },
+      "type": "frame"
     },
     "hdSF1xhU": {
       "content": "Inter · 14/20 · 500",
@@ -4789,6 +6493,38 @@
       },
       "type": "text"
     },
+    "huxPdumT": {
+      "index": "ax",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-4}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "67.49%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
+    "i28KNAlk": {
+      "index": "aw",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-1}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "58.73%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "ilVP06cZ": {
       "content": "surface",
       "index": "a001",
@@ -4802,6 +6538,57 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "iyRbm7xH": {
+      "content": "المفيدُ بالوضعِ",
+      "css": "background-repeat: no-repeat;\nbackground-position: right center;\nanimation: highlight-sweep 130ms {ease.out} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: highlight-fade {transition.duration-pop} ease both;\n}",
+      "index": "a0",
+      "name": "Highlight · Under · Sweep",
+      "parentId": "c8t7sRa2",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-1} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "izPTE4ia": {
+      "index": "ae",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-4}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "6.44%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
+    "j4mF9gzn": {
+      "css": "transition: scale {transition.duration-pop-exit} {ease.out};\n\n*:hover > * > &, [data-dragging] > * > & {\n  scale: 1.15;\n  transition-duration: {transition.duration-pop};\n}",
+      "index": "a0",
+      "name": "Thumb",
+      "parentId": "4djLM0MK",
+      "style": {
+        "background": "{color.accent}",
+        "border-radius": 999,
+        "box-shadow": "0 0 0 2px {color.bg}",
+        "height": 12,
+        "position": "absolute",
+        "right": 0,
+        "top": 10,
+        "translate": "50% 0",
+        "width": 12
+      },
+      "type": "frame"
     },
     "j4xflF6Q": {
       "index": "a0075",
@@ -4831,6 +6618,22 @@
       "x": 414,
       "y": 3592
     },
+    "jG3Jx3K5": {
+      "content": "success",
+      "index": "a000VV",
+      "name": "Axis · success",
+      "parentId": "YHkogDES",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
     "jRqKEuRO": {
       "componentId": "RV1DOgzp",
       "index": "a007",
@@ -4840,6 +6643,22 @@
         "state": "default"
       },
       "type": "instance"
+    },
+    "jSToZxll": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Behind · Pink",
+      "parentId": "7z1GNnhd",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-3} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
+      },
+      "type": "text"
     },
     "jTrbO6It": {
       "content": "Light #F6F3EC\nDark #13120F",
@@ -4914,6 +6733,22 @@
       },
       "type": "text"
     },
+    "k282uadZ": {
+      "index": "az",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-3}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "75.27%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "k3bCDtmy": {
       "content": "focus",
       "index": "a004",
@@ -4952,6 +6787,21 @@
       "style": {},
       "type": "text"
     },
+    "kOVmfwQy": {
+      "hidden": true,
+      "icon": "x",
+      "index": "a000VV",
+      "name": "Remove",
+      "parentId": "wTNsBmCc",
+      "set": "lucide",
+      "style": {
+        "color": "currentColor",
+        "flex-shrink": 0,
+        "height": 12,
+        "width": 12
+      },
+      "type": "icon"
+    },
     "kbYjDKam": {
       "content": "Segment",
       "index": "a000",
@@ -4959,6 +6809,38 @@
       "parentId": "46QiZLNZ",
       "style": {},
       "type": "text"
+    },
+    "kc4IwSzv": {
+      "index": "am",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-1}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "31.82%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
+    "kgKLm2JQ": {
+      "index": "ag",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-3}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "9.34%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "kujlkEEq": {
       "componentId": "KLaQXYk7",
@@ -4982,6 +6864,22 @@
         "width": 168
       },
       "type": "frame"
+    },
+    "kzNqj49J": {
+      "content": "hover",
+      "index": "a000VV",
+      "name": "Axis · hover",
+      "parentId": "CfM9SIRh",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
     },
     "l23Gt34i": {
       "icon": "copy",
@@ -5010,6 +6908,34 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "lCNKGpYo": {
+      "index": "ai",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-1}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "21.00%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
+    "lDUBkwYK": {
+      "componentId": "wTNsBmCc",
+      "index": "a000VVVVVVVV",
+      "name": "Chip",
+      "parentId": "CfM9SIRh",
+      "props": {
+        "label": "line 3",
+        "state": "hover",
+        "withRemove": "yes"
+      },
+      "type": "instance"
     },
     "lF5zRyyC": {
       "content": "Source Serif 4 — titles",
@@ -5081,6 +7007,17 @@
       },
       "type": "text"
     },
+    "lT488qky": {
+      "componentId": "wTNsBmCc",
+      "index": "a000VVVVVVV",
+      "name": "Chip",
+      "parentId": "CfM9SIRh",
+      "props": {
+        "label": "line 3",
+        "withRemove": "yes"
+      },
+      "type": "instance"
+    },
     "lhW70FDN": {
       "componentId": "ua9C67i7",
       "index": "a020",
@@ -5109,6 +7046,32 @@
       "type": "frame",
       "x": 443,
       "y": 2794
+    },
+    "lkwI4T1N": {
+      "content": "شرح العقيدة الطحاوية لابرتي",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "FZy7IGqI",
+      "style": {
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700,
+        "line-height": "36px"
+      },
+      "type": "text"
+    },
+    "lobkWsZD": {
+      "index": "a8",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
     },
     "lqIhOkFS": {
       "content": "danger",
@@ -5329,6 +7292,19 @@
       "x": 424,
       "y": 1906
     },
+    "n0VJGGr3": {
+      "content": "Drawing in",
+      "index": "aF",
+      "name": "Label",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "n11dAikO": {
       "content": "Inter · 11/16 · 600 · caps",
       "index": "a001",
@@ -5340,6 +7316,23 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "n4TAHd6A": {
+      "content": "المفيدُ بالوضعِ",
+      "css": "background-repeat: no-repeat;\nbackground-position: right center;\nanimation: highlight-sweep 130ms {ease.out} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: highlight-fade {transition.duration-pop} ease both;\n}",
+      "index": "a0",
+      "name": "Highlight · Behind · Sweep",
+      "parentId": "LAcLrCrY",
+      "style": {
+        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-1} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
       },
       "type": "text"
     },
@@ -5385,6 +7378,17 @@
       },
       "type": "text"
     },
+    "nPC5t4CD": {
+      "componentId": "K2A7iETC",
+      "index": "a000VVVVVVV",
+      "name": "Toast",
+      "parentId": "YHkogDES",
+      "props": {
+        "label": "Couldn't reach the corpus",
+        "tone": "error"
+      },
+      "type": "instance"
+    },
     "nPVbmPAw": {
       "name": "Type scale",
       "style": {
@@ -5415,6 +7419,17 @@
       },
       "type": "text"
     },
+    "na29ZmAC": {
+      "index": "aA",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
     "nd5yQz1s": {
       "content": "ink-2",
       "index": "a001",
@@ -5441,6 +7456,22 @@
       },
       "type": "frame"
     },
+    "ntHg7X5w": {
+      "index": "ad",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-3}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "4.76%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "o8utSKQp": {
       "componentId": "ua9C67i7",
       "index": "a007",
@@ -5464,6 +7495,18 @@
         "font-size": 14,
         "font-weight": 500,
         "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "oAsjqf7d": {
+      "content": "← → a page · PgUp PgDn ten · Home End",
+      "index": "a0",
+      "name": "Hint",
+      "parentId": "zeWgtqSi",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
       },
       "type": "text"
     },
@@ -5568,6 +7611,18 @@
       },
       "type": "text"
     },
+    "p9wtLsIY": {
+      "index": "b0",
+      "name": "Action column",
+      "parentId": "KAcNvPFn",
+      "style": {
+        "display": "flex",
+        "flex-shrink": 0,
+        "justify-content": "flex-end",
+        "width": 112
+      },
+      "type": "frame"
+    },
     "pVAKlyWM": {
       "componentId": "ua9C67i7",
       "index": "a027",
@@ -5595,6 +7650,28 @@
         "line-height": "16px",
         "text-transform": "uppercase"
       },
+      "type": "text"
+    },
+    "pimSRcKt": {
+      "content": "content ↓ / tone →",
+      "index": "a000",
+      "name": "Axis corner",
+      "parentId": "YHkogDES",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "font-weight": 400,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "puNiiYCy": {
+      "content": "Label",
+      "index": "a000",
+      "name": "Label",
+      "parentId": "ycDBBi1R",
+      "style": {},
       "type": "text"
     },
     "pyfn5DyG": {
@@ -5627,6 +7704,20 @@
       },
       "type": "text"
     },
+    "q3SM3YTO": {
+      "name": "Panel empty state · States",
+      "style": {
+        "align-items": "flex-start",
+        "background": "{color.surface-2}",
+        "border-radius": 20,
+        "display": "flex",
+        "gap": 32,
+        "padding": 32
+      },
+      "type": "frame",
+      "x": 280,
+      "y": 6400
+    },
     "qCOGPcYq": {
       "name": "NavItem · States",
       "style": {
@@ -5642,6 +7733,22 @@
       "type": "frame",
       "x": 576,
       "y": 2522
+    },
+    "qF2fn9VS": {
+      "index": "ao",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-2}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "34.11%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "qR08l6Sz": {
       "content": "accent-soft",
@@ -5732,6 +7839,17 @@
       "x": 280,
       "y": 3916
     },
+    "qb8VMay3": {
+      "componentId": "rBDgEEOC",
+      "index": "a005V",
+      "name": "Tooltip",
+      "parentId": "jEFHMczC",
+      "props": {
+        "label": "الكلامُ: هو اللفظُ المركَّبُ المفيدُ بالوضعِ",
+        "variant": "surface"
+      },
+      "type": "instance"
+    },
     "qkWMFvMn": {
       "index": "a002",
       "name": "Styles",
@@ -5778,43 +7896,44 @@
             "type": "text"
           },
           "variant": {
-            "type": "enum",
+            "default": "default",
             "options": [
               "default",
               "surface"
             ],
-            "default": "default",
             "overrides": {
               "surface": {
-                "rBDgEEOC": {
-                  "style": {
-                    "background": "{color.surface}",
-                    "color": "{color.ink}",
-                    "border": "1px solid {color.line}",
-                    "border-radius": 8,
-                    "padding": "8px 12px",
-                    "box-shadow": "{shadow.md}",
-                    "white-space": "normal",
-                    "width": "max-content"
-                  }
-                },
                 "GFcymjmE": {
                   "style": {
+                    "direction": "rtl",
                     "font-family": "{font.ar}",
                     "font-size": 20,
                     "line-height": "36px",
-                    "direction": "rtl",
                     "text-align": "right"
                   }
                 },
                 "hamxOr8b": {
                   "hidden": true
+                },
+                "rBDgEEOC": {
+                  "style": {
+                    "background": "{color.surface}",
+                    "border": "1px solid {color.line}",
+                    "border-radius": 8,
+                    "box-shadow": "{shadow.md}",
+                    "color": "{color.ink}",
+                    "padding": "8px 12px",
+                    "white-space": "normal",
+                    "width": "max-content"
+                  }
                 }
               }
-            }
+            },
+            "type": "enum"
           }
         }
       },
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out};\ntransform-origin: bottom center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
       "name": "Tooltip",
       "style": {
         "background": "{color.ink}",
@@ -5824,19 +7943,18 @@
         "font-family": "{font.body}",
         "font-size": 12,
         "font-weight": 400,
-        "line-height": "16px",
-        "padding": "4px 8px",
-        "white-space": "nowrap",
-        "position": "relative",
-        "max-width": 320,
         "isolation": "isolate",
         "justify-self": "start",
+        "line-height": "16px",
+        "max-width": 320,
+        "padding": "4px 8px",
+        "position": "relative",
+        "white-space": "nowrap",
         "width": "max-content"
       },
       "type": "frame",
       "x": 280,
-      "y": 3592,
-      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out};\ntransform-origin: bottom center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 8px;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}"
+      "y": 3592
     },
     "rDbYAkNt": {
       "content": "Overline",
@@ -5863,6 +7981,23 @@
         "height": 56
       },
       "type": "frame"
+    },
+    "roHkeXtS": {
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  translate: 0 -4px;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
+      "name": "Text size indicator",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
+        "display": "inline-flex",
+        "font-size": 14,
+        "gap": 8,
+        "padding": "6px 12px"
+      },
+      "type": "frame",
+      "x": 280,
+      "y": 6092
     },
     "rx1zK3OS": {
       "index": "a002",
@@ -5984,7 +8119,71 @@
       },
       "type": "text"
     },
+    "ssBEXWfi": {
+      "index": "av",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-2}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "57.36%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
+    "ssI0OjpA": {
+      "componentId": "ua9C67i7",
+      "index": "a0",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "WjPIFUz7",
+      "props": {
+        "label": "Import",
+        "size": "sm",
+        "variant": "secondary",
+        "withIcon": "yes"
+      },
+      "type": "instance"
+    },
+    "st78lXY4": {
+      "content": "1,148 of 1,150 pages transcribed",
+      "index": "b0",
+      "name": "Meta",
+      "parentId": "w5r8sTNc",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "t3WWAgk9": {
+      "index": "ak",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-2}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "28.09%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "tBUqOQk8": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
       "index": "a000",
       "name": "Fill",
       "parentId": "3sdowoQk",
@@ -5992,12 +8191,11 @@
         "background": "{color.accent}",
         "border-radius": 999,
         "height": "100%",
-        "width": "100%",
         "transform": "scaleX(0.4)",
-        "transform-origin": "left"
+        "transform-origin": "left",
+        "width": "100%"
       },
-      "type": "frame",
-      "css": "transition: transform {transition.duration-panel} {ease.out};"
+      "type": "frame"
     },
     "tF0kx75k": {
       "content": "Color palette",
@@ -6129,6 +8327,40 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "tokDDKHY": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a3",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "5.22%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "tptzjeEx": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "ab",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "92.64%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
     },
     "twQggQtK": {
       "index": "a000",
@@ -6423,11 +8655,11 @@
         "font-size": 14,
         "font-weight": 500,
         "gap": 6,
+        "height": 36,
         "justify-content": "center",
         "line-height": "20px",
         "padding": "0 14px",
-        "white-space": "nowrap",
-        "height": 36
+        "white-space": "nowrap"
       },
       "type": "frame",
       "x": 280,
@@ -6444,6 +8676,20 @@
         "font-size": 14,
         "font-weight": 500,
         "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "uu0wsJSE": {
+      "content": "Select text and choose Note. Notes stay with the page they're on.",
+      "index": "c0",
+      "name": "Hint",
+      "parentId": "IYi8ydDA",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px",
+        "max-width": 240
       },
       "type": "text"
     },
@@ -6474,6 +8720,23 @@
       },
       "type": "frame"
     },
+    "v8FmfBf5": {
+      "component": {
+        "props": {}
+      },
+      "css": "transition:\n  translate {transition.duration-panel} {ease.sheet},\n  opacity {transition.duration-panel} {ease.sheet};\n\n&[data-focus=\"hidden\"] {\n  translate: 0 100%;\n  opacity: 0;\n  pointer-events: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
+      "name": "Page scrubber",
+      "style": {
+        "background": "{color.bg}",
+        "flex-shrink": 0,
+        "height": 72,
+        "position": "relative",
+        "width": 900
+      },
+      "type": "frame",
+      "x": 280,
+      "y": 6900
+    },
     "v9u1JKGp": {
       "content": "Inter · 15/24 · 600",
       "index": "a001",
@@ -6487,6 +8750,39 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "vI3y2ie8": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aM",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "51.64%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "vJbITtlR": {
+      "index": "ah",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-2}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "13.45%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "vOKua2d6": {
       "content": "Title",
@@ -6583,6 +8879,20 @@
       },
       "type": "text"
     },
+    "w5r8sTNc": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "xRIjn0qV",
+      "style": {
+        "align-items": "flex-end",
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "min-width": 0,
+        "text-align": "right"
+      },
+      "type": "frame"
+    },
     "w6JGQTB3": {
       "index": "a000",
       "name": "Swatch · bg",
@@ -6595,6 +8905,17 @@
       },
       "type": "frame"
     },
+    "wAyMdlG3": {
+      "componentId": "K2A7iETC",
+      "index": "a000VVVVVV",
+      "name": "Toast",
+      "parentId": "YHkogDES",
+      "props": {
+        "label": "Book imported",
+        "tone": "success"
+      },
+      "type": "instance"
+    },
     "wRFJGBOD": {
       "content": "variant ↓ / state →",
       "index": "a000",
@@ -6606,6 +8927,105 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "wTNsBmCc": {
+      "component": {
+        "props": {
+          "label": {
+            "default": "line 1",
+            "target": "zoSQRonB",
+            "type": "text"
+          },
+          "state": {
+            "default": "default",
+            "options": [
+              "default",
+              "hover"
+            ],
+            "overrides": {
+              "hover": {
+                "zoSQRonB": {
+                  "style": {
+                    "text-decoration": "underline"
+                  }
+                }
+              }
+            },
+            "type": "enum"
+          },
+          "surface": {
+            "default": "tint",
+            "options": [
+              "tint",
+              "bubble"
+            ],
+            "overrides": {
+              "bubble": {
+                "wTNsBmCc": {
+                  "style": {
+                    "background": "{color.surface}"
+                  }
+                }
+              }
+            },
+            "type": "enum"
+          },
+          "withRemove": {
+            "default": "no",
+            "options": [
+              "no",
+              "yes"
+            ],
+            "overrides": {
+              "yes": {
+                "kOVmfwQy": {
+                  "hidden": false
+                },
+                "wTNsBmCc": {
+                  "style": {
+                    "padding": "2px 4px 2px 6px"
+                  }
+                }
+              }
+            },
+            "type": "enum"
+          }
+        }
+      },
+      "css": "cursor: pointer;\n\n&:hover > :nth-child(2) {\n  text-decoration: underline;\n}",
+      "name": "Chip",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": 6,
+        "color": "{color.accent}",
+        "display": "inline-flex",
+        "gap": 4,
+        "justify-self": "start",
+        "margin": "0 2px",
+        "padding": "2px 6px",
+        "translate": "0 1px",
+        "vertical-align": "baseline"
+      },
+      "type": "frame",
+      "x": 280,
+      "y": 5848
+    },
+    "wVc42TnH": {
+      "content": "المفيدُ بالوضعِ",
+      "index": "a0",
+      "name": "Highlight · Under · Yellow",
+      "parentId": "XmhvxAFn",
+      "style": {
+        "background": "linear-gradient(to top, {color.mark-1} 0 0.55em, transparent 0.55em)",
+        "color": "{color.ink}",
+        "direction": "rtl",
+        "display": "inline",
+        "font-family": "{font.ar}",
+        "font-size": 26,
+        "line-height": "52px"
       },
       "type": "text"
     },
@@ -6624,6 +9044,33 @@
       "x": 0,
       "y": 1136
     },
+    "wq7L5Z51": {
+      "componentId": "K2A7iETC",
+      "index": "z1",
+      "name": "Toast",
+      "parentId": "YHkogDES",
+      "props": {
+        "action": "undo",
+        "label": "Highlight removed"
+      },
+      "type": "instance"
+    },
+    "x6ZJ3eh7": {
+      "index": "b07",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "62.92%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "xATcRgsd": {
       "index": "a005",
       "name": "Style · Label",
@@ -6635,6 +9082,18 @@
         "display": "grid",
         "grid-template-columns": "140px 240px 1fr",
         "padding": "12px 0"
+      },
+      "type": "frame"
+    },
+    "xLpH6kg2": {
+      "index": "b0A",
+      "name": "Last read",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "position": "absolute",
+        "right": "30.14%",
+        "top": -14,
+        "translate": "50% 0"
       },
       "type": "frame"
     },
@@ -6652,6 +9111,72 @@
       },
       "type": "instance"
     },
+    "xRIjn0qV": {
+      "index": "a0",
+      "name": "Row · ready",
+      "parentId": "8THc84PU",
+      "style": {
+        "align-items": "center",
+        "align-self": "stretch",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 16,
+        "padding": "12px 0"
+      },
+      "type": "frame"
+    },
+    "xTeGNees": {
+      "css": "transform-origin: bottom center;\ntransition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n  scale: 0.96;\n}\n\n&[data-state=\"open\"] {\n  opacity: 1;\n  scale: 1;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  scale: 0.96;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
+      "index": "a0",
+      "name": "Preview card",
+      "parentId": "v8FmfBf5",
+      "style": {
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "bottom": 68,
+        "box-shadow": "var(--elevation-float)",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 6,
+        "left": "50%",
+        "opacity": 0,
+        "padding": "12px 14px",
+        "position": "absolute",
+        "scale": 0.96,
+        "translate": "-50% 0",
+        "width": 280,
+        "z-index": 5
+      },
+      "type": "frame"
+    },
+    "xYGKUhnB": {
+      "index": "a7",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "xj6igeKA": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a6",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "14.60%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
     "xjgAXuxY": {
       "content": "hover",
       "index": "a002",
@@ -6667,6 +9192,22 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "y0H980V8": {
+      "index": "aj",
+      "name": "Highlight dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.mark-3}",
+        "border-radius": 999,
+        "height": 5,
+        "position": "absolute",
+        "right": "23.06%",
+        "top": 2,
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
     },
     "yABDoCri": {
       "content": "secondary",
@@ -6696,6 +9237,48 @@
         "withIcon": "no"
       },
       "type": "instance"
+    },
+    "yIONfrSq": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aV",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "73.36%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "yLHsqFJV": {
+      "icon": "highlighter",
+      "index": "a0",
+      "name": "Icon highlighter",
+      "parentId": "9XS2IqxP",
+      "set": "lucide",
+      "style": {
+        "color": "{color.ink-3}",
+        "height": 20,
+        "width": 20
+      },
+      "type": "icon"
+    },
+    "yLnDtZzG": {
+      "index": "a0",
+      "name": "Head",
+      "parentId": "xTeGNees",
+      "style": {
+        "align-items": "baseline",
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "space-between"
+      },
+      "type": "frame"
     },
     "yNRUzMm0": {
       "content": "Heading",
@@ -6754,6 +9337,65 @@
       },
       "type": "text"
     },
+    "yaQI7K9e": {
+      "content": "Highlights on this page",
+      "index": "a0",
+      "name": "Heading",
+      "parentId": "YI7LxYqq",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600,
+        "line-height": "24px"
+      },
+      "type": "text"
+    },
+    "ycDBBi1R": {
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out};\ntransform-origin: bottom center;\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
+      "index": "a000V",
+      "name": "Tooltip",
+      "parentId": "RV1DOgzp",
+      "style": {
+        "align-items": "center",
+        "background": "{color.ink}",
+        "border-radius": 6,
+        "bottom": "calc(100% + 4px)",
+        "color": "{color.bg}",
+        "display": "inline-flex",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "font-weight": 400,
+        "left": "50%",
+        "line-height": "16px",
+        "opacity": 0,
+        "padding": "4px 8px",
+        "pointer-events": "none",
+        "position": "absolute",
+        "scale": 0.95,
+        "translate": "-50% 0",
+        "white-space": "nowrap",
+        "width": "max-content",
+        "z-index": 10
+      },
+      "type": "frame"
+    },
+    "yr0YQIoZ": {
+      "index": "b03",
+      "name": "Note dot",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "border": "1.5px solid {color.accent}",
+        "border-radius": 999,
+        "bottom": 0,
+        "height": 5,
+        "position": "absolute",
+        "right": "18.41%",
+        "translate": "50% 0",
+        "width": 5
+      },
+      "type": "frame"
+    },
     "yunsttib": {
       "componentId": "mUTXOEWB",
       "index": "a013",
@@ -6783,6 +9425,51 @@
       },
       "type": "text"
     },
+    "z6WY07Cc": {
+      "index": "aD",
+      "name": "Line",
+      "parentId": "WRvDdh1M",
+      "style": {
+        "direction": "rtl",
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
+    "z8bG6cho": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aD",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "23.06%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
+    "z9ASP49r": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a7",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "17.64%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
+      },
+      "type": "frame"
+    },
     "zD5KhVSZ": {
       "componentId": "KLaQXYk7",
       "index": "a009",
@@ -6793,6 +9480,22 @@
         "tone": "mark-2"
       },
       "type": "instance"
+    },
+    "zDfnnuzt": {
+      "css": "transform-origin: center;\ntransition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > &, [data-dragging] > & {\n  transform: scaleY(2);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "a0",
+      "name": "Track",
+      "parentId": "WE6Reiw7",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 14
+      },
+      "type": "frame"
     },
     "zOLlvlgf": {
       "content": "mark-2",
@@ -6822,339 +9525,31 @@
       },
       "type": "instance"
     },
-    "zzV2OIXv": {
-      "componentId": "HZhkp90k",
-      "index": "a006",
-      "name": "Switch",
-      "parentId": "TDMFYChr",
-      "props": {
-        "checked": "off",
-        "state": "hover"
-      },
-      "type": "instance"
-    },
-    "ycDBBi1R": {
-      "type": "frame",
-      "name": "Tooltip",
-      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out};\ntransform-origin: bottom center;\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
+    "zeWgtqSi": {
+      "css": "transition: opacity {transition.duration-pop-exit} {ease.out};\n\n:focus-visible ~ & {\n  opacity: 1;\n  transition-duration: {transition.duration-pop};\n}",
+      "index": "a2",
+      "name": "Keyboard hint",
+      "parentId": "v8FmfBf5",
       "style": {
-        "position": "absolute",
-        "bottom": "calc(100% + 4px)",
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 999,
+        "bottom": 68,
+        "display": "flex",
+        "gap": 8,
         "left": "50%",
-        "translate": "-50% 0",
         "opacity": 0,
-        "scale": 0.95,
-        "pointer-events": "none",
-        "z-index": 10,
-        "display": "inline-flex",
-        "align-items": "center",
-        "background": "{color.ink}",
-        "color": "{color.bg}",
-        "border-radius": 6,
-        "padding": "4px 8px",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "font-weight": 400,
-        "line-height": "16px",
-        "white-space": "nowrap",
-        "width": "max-content"
-      },
-      "parentId": "RV1DOgzp",
-      "index": "a000V"
-    },
-    "puNiiYCy": {
-      "type": "text",
-      "name": "Label",
-      "content": "Label",
-      "style": {},
-      "parentId": "ycDBBi1R",
-      "index": "a000"
-    },
-    "X0hsFtEy": {
-      "type": "frame",
-      "name": "Arrow",
-      "style": {
+        "padding": "4px 10px",
         "position": "absolute",
-        "left": "50%",
-        "top": "100%",
-        "width": 10,
-        "height": 10,
-        "translate": "-50% -7px",
-        "rotate": "45deg",
-        "border-radius": 2,
-        "background": "{color.ink}",
-        "z-index": -1
+        "translate": "-50% 0"
       },
-      "parentId": "ycDBBi1R",
-      "index": "a000V"
-    },
-    "hamxOr8b": {
-      "type": "frame",
-      "name": "Arrow",
-      "style": {
-        "position": "absolute",
-        "left": "50%",
-        "top": "100%",
-        "width": 10,
-        "height": 10,
-        "translate": "-50% -7px",
-        "rotate": "45deg",
-        "border-radius": 2,
-        "background": "{color.ink}",
-        "z-index": -1
-      },
-      "parentId": "rBDgEEOC",
-      "index": "a000V"
-    },
-    "5xIOPZHa": {
-      "type": "text",
-      "name": "Axis · surface",
-      "content": "surface",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "jEFHMczC",
-      "index": "a001V"
-    },
-    "ZOfBsppH": {
-      "type": "instance",
-      "name": "Tooltip",
-      "componentId": "rBDgEEOC",
-      "props": {
-        "label": "المفيدُ بالوضعِ",
-        "variant": "surface"
-      },
-      "parentId": "jEFHMczC",
-      "index": "a003V"
-    },
-    "qb8VMay3": {
-      "type": "instance",
-      "name": "Tooltip",
-      "componentId": "rBDgEEOC",
-      "props": {
-        "label": "الكلامُ: هو اللفظُ المركَّبُ المفيدُ بالوضعِ",
-        "variant": "surface"
-      },
-      "parentId": "jEFHMczC",
-      "index": "a005V"
-    },
-    "pimSRcKt": {
-      "type": "text",
-      "name": "Axis corner",
-      "content": "content ↓ / tone →",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "font-weight": 400,
-        "line-height": "16px"
-      },
-      "parentId": "YHkogDES",
-      "index": "a000"
-    },
-    "cNNo9UB4": {
-      "type": "text",
-      "name": "Axis · neutral",
-      "content": "neutral",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "YHkogDES",
-      "index": "a000V"
-    },
-    "jG3Jx3K5": {
-      "type": "text",
-      "name": "Axis · success",
-      "content": "success",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "YHkogDES",
-      "index": "a000VV"
-    },
-    "D7QM18Bp": {
-      "type": "text",
-      "name": "Axis · error",
-      "content": "error",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "YHkogDES",
-      "index": "a000VVV"
-    },
-    "RC9497tl": {
-      "type": "text",
-      "name": "Axis · default",
-      "content": "default",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "YHkogDES",
-      "index": "a000VVVV"
-    },
-    "7rKyCtEC": {
-      "type": "instance",
-      "name": "Toast",
-      "componentId": "K2A7iETC",
-      "props": {
-        "label": "Synced 24 pages"
-      },
-      "parentId": "YHkogDES",
-      "index": "a000VVVVV"
-    },
-    "wAyMdlG3": {
-      "type": "instance",
-      "name": "Toast",
-      "componentId": "K2A7iETC",
-      "props": {
-        "label": "Book imported",
-        "tone": "success"
-      },
-      "parentId": "YHkogDES",
-      "index": "a000VVVVVV"
-    },
-    "nPC5t4CD": {
-      "type": "instance",
-      "name": "Toast",
-      "componentId": "K2A7iETC",
-      "props": {
-        "label": "Couldn't reach the corpus",
-        "tone": "error"
-      },
-      "parentId": "YHkogDES",
-      "index": "a000VVVVVVV"
-    },
-    "wTNsBmCc": {
-      "type": "frame",
-      "name": "Chip",
-      "x": 280,
-      "y": 5848,
-      "css": "cursor: pointer;\n\n&:hover > :nth-child(2) {\n  text-decoration: underline;\n}",
-      "style": {
-        "display": "inline-flex",
-        "align-items": "center",
-        "gap": 4,
-        "padding": "2px 6px",
-        "border-radius": 6,
-        "background": "{color.accent-soft}",
-        "color": "{color.accent}",
-        "vertical-align": "baseline",
-        "translate": "0 1px",
-        "justify-self": "start",
-        "margin": "0 2px"
-      },
-      "component": {
-        "props": {
-          "label": {
-            "type": "text",
-            "default": "line 1",
-            "target": "zoSQRonB"
-          },
-          "surface": {
-            "type": "enum",
-            "options": [
-              "tint",
-              "bubble"
-            ],
-            "default": "tint",
-            "overrides": {
-              "bubble": {
-                "wTNsBmCc": {
-                  "style": {
-                    "background": "{color.surface}"
-                  }
-                }
-              }
-            }
-          },
-          "withRemove": {
-            "type": "enum",
-            "options": [
-              "no",
-              "yes"
-            ],
-            "default": "no",
-            "overrides": {
-              "yes": {
-                "wTNsBmCc": {
-                  "style": {
-                    "padding": "2px 4px 2px 6px"
-                  }
-                },
-                "kOVmfwQy": {
-                  "hidden": false
-                }
-              }
-            }
-          },
-          "state": {
-            "type": "enum",
-            "options": [
-              "default",
-              "hover"
-            ],
-            "default": "default",
-            "overrides": {
-              "hover": {
-                "zoSQRonB": {
-                  "style": {
-                    "text-decoration": "underline"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "PrWmeHLA": {
-      "type": "icon",
-      "name": "Icon quote",
-      "set": "lucide",
-      "icon": "quote",
-      "style": {
-        "width": 12,
-        "height": 12,
-        "color": "currentColor",
-        "flex-shrink": 0
-      },
-      "parentId": "wTNsBmCc",
-      "index": "a000"
+      "type": "frame"
     },
     "zoSQRonB": {
-      "type": "text",
-      "name": "Label",
       "content": "line 1",
+      "index": "a000V",
+      "name": "Label",
+      "parentId": "wTNsBmCc",
       "style": {
         "font-family": "{font.body}",
         "font-size": 12,
@@ -7162,1188 +9557,22 @@
         "line-height": "16px",
         "white-space": "nowrap"
       },
-      "parentId": "wTNsBmCc",
-      "index": "a000V"
-    },
-    "kOVmfwQy": {
-      "type": "icon",
-      "name": "Remove",
-      "set": "lucide",
-      "icon": "x",
-      "hidden": true,
-      "style": {
-        "width": 12,
-        "height": 12,
-        "color": "currentColor",
-        "flex-shrink": 0
-      },
-      "parentId": "wTNsBmCc",
-      "index": "a000VV"
-    },
-    "CfM9SIRh": {
-      "type": "frame",
-      "name": "Chip · States",
-      "x": 440,
-      "y": 5848,
-      "style": {
-        "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 20,
-        "column-gap": 32,
-        "display": "grid",
-        "grid-template-columns": "140px repeat(2, max-content)",
-        "padding": 32,
-        "row-gap": 20
-      }
-    },
-    "5TetOMDZ": {
-      "type": "text",
-      "name": "Axis corner",
-      "content": "variant ↓ / state →",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "font-weight": 400,
-        "line-height": "16px"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000"
-    },
-    "WmZQU2Vq": {
-      "type": "text",
-      "name": "Axis · default",
-      "content": "default",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000V"
-    },
-    "kzNqj49J": {
-      "type": "text",
-      "name": "Axis · hover",
-      "content": "hover",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VV"
-    },
-    "hQ8EUxDj": {
-      "type": "text",
-      "name": "Axis · citation",
-      "content": "citation",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVV"
-    },
-    "RQoIbNPg": {
-      "type": "instance",
-      "name": "Chip",
-      "componentId": "wTNsBmCc",
-      "props": {
-        "label": "line 4"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVVV"
-    },
-    "PdUEnLtv": {
-      "type": "instance",
-      "name": "Chip",
-      "componentId": "wTNsBmCc",
-      "props": {
-        "label": "line 4",
-        "state": "hover"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVVVV"
-    },
-    "1PCQaY9U": {
-      "type": "text",
-      "name": "Axis · removable",
-      "content": "removable",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVVVVV"
-    },
-    "lT488qky": {
-      "type": "instance",
-      "name": "Chip",
-      "componentId": "wTNsBmCc",
-      "props": {
-        "label": "line 3",
-        "withRemove": "yes"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVVVVVV"
-    },
-    "lDUBkwYK": {
-      "type": "instance",
-      "name": "Chip",
-      "componentId": "wTNsBmCc",
-      "props": {
-        "label": "line 3",
-        "withRemove": "yes",
-        "state": "hover"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVVVVVVV"
-    },
-    "fIUm57eQ": {
-      "type": "text",
-      "name": "Axis · on bubble",
-      "content": "on bubble",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVVVVVVVV"
-    },
-    "QgzgikCA": {
-      "type": "instance",
-      "name": "Chip",
-      "componentId": "wTNsBmCc",
-      "props": {
-        "label": "Pasted",
-        "surface": "bubble"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVVVVVVVVV"
-    },
-    "QgAQm9Bt": {
-      "type": "instance",
-      "name": "Chip",
-      "componentId": "wTNsBmCc",
-      "props": {
-        "label": "Pasted",
-        "surface": "bubble",
-        "state": "hover"
-      },
-      "parentId": "CfM9SIRh",
-      "index": "a000VVVVVVVVVVV"
-    },
-    "roHkeXtS": {
-      "type": "frame",
-      "name": "Text size indicator",
-      "x": 280,
-      "y": 6092,
-      "style": {
-        "align-items": "center",
-        "background": "{color.surface-3}",
-        "border-radius": "{radius.xl}",
-        "box-shadow": "var(--elevation-float)",
-        "display": "inline-flex",
-        "gap": 8,
-        "padding": "6px 12px",
-        "font-size": 14
-      },
-      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  translate: 0 -4px;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}"
-    },
-    "2VEnzVjm": {
-      "type": "icon",
-      "parentId": "roHkeXtS",
-      "index": "a0",
-      "name": "Icon type",
-      "set": "lucide",
-      "icon": "type",
-      "style": {
-        "color": "{color.ink-3}",
-        "height": 16,
-        "width": 16,
-        "flex-shrink": 0
-      }
-    },
-    "SbZGQNFQ": {
-      "type": "text",
-      "parentId": "roHkeXtS",
-      "index": "a1",
-      "name": "Label",
-      "content": "Text size",
-      "style": {
-        "color": "{color.ink-2}",
-        "font-family": "{font.body}",
-        "font-size": 14
-      }
-    },
-    "ZU5KjXWp": {
-      "type": "text",
-      "parentId": "roHkeXtS",
-      "index": "a2",
-      "name": "Value",
-      "content": "125%",
-      "style": {
-        "color": "{color.ink}",
-        "font-family": "{font.body}",
-        "font-size": 14,
-        "font-weight": 500,
-        "font-variant-numeric": "tabular-nums"
-      }
-    },
-    "a7Ngne03": {
-      "type": "text",
-      "parentId": "K2A7iETC",
-      "index": "b0",
-      "name": "Action",
-      "content": "Undo",
-      "hidden": true,
-      "style": {
-        "font-weight": 600,
-        "padding": "4px 8px",
-        "margin": "-4px 0 -4px 4px",
-        "border-radius": "{radius.md}"
-      },
-      "css": "cursor: pointer;\n\n&:hover {\n  background: color-mix(in oklab, {color.bg} 15%, transparent);\n}"
-    },
-    "fYmVFofH": {
-      "type": "text",
-      "parentId": "K2A7iETC",
-      "index": "c0",
-      "name": "Shortcut",
-      "content": "Ctrl+Z",
-      "hidden": true,
-      "style": {
-        "font-size": 12,
-        "line-height": "16px",
-        "opacity": 0.6
-      }
-    },
-    "4aT9AkX4": {
-      "type": "text",
-      "parentId": "YHkogDES",
-      "index": "z0",
-      "name": "Axis · undo",
-      "content": "undo",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 11,
-        "font-weight": 600,
-        "letter-spacing": "0.08em",
-        "line-height": "16px",
-        "text-transform": "uppercase"
-      }
-    },
-    "wq7L5Z51": {
-      "type": "instance",
-      "parentId": "YHkogDES",
-      "index": "z1",
-      "name": "Toast",
-      "componentId": "K2A7iETC",
-      "props": {
-        "label": "Highlight removed",
-        "action": "undo"
-      }
-    },
-    "6RRMcCJb": {
-      "type": "text",
-      "name": "Row Label · Panels",
-      "content": "Panels",
-      "x": 0,
-      "y": 6400,
-      "style": {
-        "color": "{color.ink}",
-        "font-family": "{font.display}",
-        "font-size": 32,
-        "font-weight": 600,
-        "line-height": "40px",
-        "width": 200
-      }
-    },
-    "q3SM3YTO": {
-      "type": "frame",
-      "name": "Panel empty state · States",
-      "x": 280,
-      "y": 6400,
-      "style": {
-        "background": "{color.surface-2}",
-        "border-radius": 20,
-        "display": "flex",
-        "gap": 32,
-        "padding": 32,
-        "align-items": "flex-start"
-      }
-    },
-    "YI7LxYqq": {
-      "type": "frame",
-      "parentId": "q3SM3YTO",
-      "index": "a0",
-      "name": "Panel · Highlights on this page",
-      "style": {
-        "width": 360,
-        "height": 320,
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": "{radius.2xl}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 16,
-        "padding": 20
-      }
-    },
-    "yaQI7K9e": {
-      "type": "text",
-      "parentId": "YI7LxYqq",
-      "index": "a0",
-      "name": "Heading",
-      "content": "Highlights on this page",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 17,
-        "font-weight": 600,
-        "line-height": "24px",
-        "color": "{color.ink}"
-      }
-    },
-    "AdTEoN3j": {
-      "type": "frame",
-      "parentId": "YI7LxYqq",
-      "index": "b0",
-      "name": "Empty state",
-      "style": {
-        "display": "flex",
-        "flex-direction": "column",
-        "align-items": "center",
-        "gap": 8,
-        "padding": "48px 24px",
-        "text-align": "center"
-      }
-    },
-    "9XS2IqxP": {
-      "type": "frame",
-      "parentId": "AdTEoN3j",
-      "index": "a0",
-      "name": "Icon well",
-      "style": {
-        "width": 40,
-        "height": 40,
-        "border-radius": 999,
-        "background": "{color.surface-2}",
-        "display": "flex",
-        "align-items": "center",
-        "justify-content": "center",
-        "margin-bottom": 4
-      }
-    },
-    "yLHsqFJV": {
-      "type": "icon",
-      "parentId": "9XS2IqxP",
-      "index": "a0",
-      "name": "Icon highlighter",
-      "set": "lucide",
-      "icon": "highlighter",
-      "style": {
-        "width": 20,
-        "height": 20,
-        "color": "{color.ink-3}"
-      }
-    },
-    "MlUjQ988": {
-      "type": "text",
-      "parentId": "AdTEoN3j",
-      "index": "b0",
-      "name": "Line",
-      "content": "Nothing highlighted yet",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 14,
-        "font-weight": 500,
-        "line-height": "20px",
-        "color": "{color.ink-2}"
-      }
-    },
-    "QGJJn9PA": {
-      "type": "text",
-      "parentId": "AdTEoN3j",
-      "index": "c0",
-      "name": "Hint",
-      "content": "Select text, then pick a colour.",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px",
-        "color": "{color.ink-3}",
-        "max-width": 240
-      }
-    },
-    "OL0k24Wt": {
-      "type": "frame",
-      "parentId": "q3SM3YTO",
-      "index": "b0",
-      "name": "Panel · Notes on this page",
-      "style": {
-        "width": 360,
-        "height": 320,
-        "background": "{color.surface}",
-        "border": "1px solid {color.line}",
-        "border-radius": "{radius.2xl}",
-        "display": "flex",
-        "flex-direction": "column",
-        "gap": 16,
-        "padding": 20
-      }
-    },
-    "4evPTL1h": {
-      "type": "text",
-      "parentId": "OL0k24Wt",
-      "index": "a0",
-      "name": "Heading",
-      "content": "Notes on this page",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 17,
-        "font-weight": 600,
-        "line-height": "24px",
-        "color": "{color.ink}"
-      }
-    },
-    "IYi8ydDA": {
-      "type": "frame",
-      "parentId": "OL0k24Wt",
-      "index": "b0",
-      "name": "Empty state",
-      "style": {
-        "display": "flex",
-        "flex-direction": "column",
-        "align-items": "center",
-        "gap": 8,
-        "padding": "48px 24px",
-        "text-align": "center"
-      }
-    },
-    "0HiFuGG9": {
-      "type": "frame",
-      "parentId": "IYi8ydDA",
-      "index": "a0",
-      "name": "Icon well",
-      "style": {
-        "width": 40,
-        "height": 40,
-        "border-radius": 999,
-        "background": "{color.surface-2}",
-        "display": "flex",
-        "align-items": "center",
-        "justify-content": "center",
-        "margin-bottom": 4
-      }
-    },
-    "JVzTrBAS": {
-      "type": "icon",
-      "parentId": "0HiFuGG9",
-      "index": "a0",
-      "name": "Icon notebook-pen",
-      "set": "lucide",
-      "icon": "notebook-pen",
-      "style": {
-        "width": 20,
-        "height": 20,
-        "color": "{color.ink-3}"
-      }
-    },
-    "IsxViaPH": {
-      "type": "text",
-      "parentId": "IYi8ydDA",
-      "index": "b0",
-      "name": "Line",
-      "content": "No notes yet",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 14,
-        "font-weight": 500,
-        "line-height": "20px",
-        "color": "{color.ink-2}"
-      }
-    },
-    "uu0wsJSE": {
-      "type": "text",
-      "parentId": "IYi8ydDA",
-      "index": "c0",
-      "name": "Hint",
-      "content": "Select text and choose Note. Notes stay with the page they're on.",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px",
-        "color": "{color.ink-3}",
-        "max-width": 240
-      }
-    },
-    "8THc84PU": {
-      "type": "frame",
-      "name": "Import row · States",
-      "x": 1200,
-      "y": 6400,
-      "style": {
-        "background": "{color.surface-2}",
-        "border-radius": 20,
-        "display": "flex",
-        "gap": 0,
-        "padding": 32,
-        "align-items": "flex-start",
-        "flex-direction": "column",
-        "width": 580
-      }
-    },
-    "xRIjn0qV": {
-      "type": "frame",
-      "parentId": "8THc84PU",
-      "index": "a0",
-      "name": "Row · ready",
-      "style": {
-        "display": "flex",
-        "align-items": "center",
-        "gap": 16,
-        "padding": "12px 0",
-        "border-bottom": "1px solid {color.line}",
-        "align-self": "stretch"
-      }
-    },
-    "w5r8sTNc": {
-      "type": "frame",
-      "parentId": "xRIjn0qV",
-      "index": "a0",
-      "name": "Text",
-      "style": {
-        "display": "flex",
-        "flex-direction": "column",
-        "align-items": "flex-end",
-        "flex": 1,
-        "min-width": 0,
-        "text-align": "right"
-      }
-    },
-    "9747YV0V": {
-      "type": "text",
-      "parentId": "w5r8sTNc",
-      "index": "a0",
-      "name": "Title",
-      "content": "تفسير السعدي",
-      "style": {
-        "font-family": "{font.ar}",
-        "font-size": 20,
-        "font-weight": 700,
-        "line-height": "36px",
-        "direction": "rtl",
-        "color": "{color.ink}"
-      }
-    },
-    "st78lXY4": {
-      "type": "text",
-      "parentId": "w5r8sTNc",
-      "index": "b0",
-      "name": "Meta",
-      "content": "1,148 of 1,150 pages transcribed",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px",
-        "color": "{color.ink-3}"
-      }
-    },
-    "WjPIFUz7": {
-      "type": "frame",
-      "parentId": "xRIjn0qV",
-      "index": "b0",
-      "name": "Action column",
-      "style": {
-        "display": "flex",
-        "justify-content": "flex-end",
-        "width": 112,
-        "flex-shrink": 0
-      }
-    },
-    "ssI0OjpA": {
-      "type": "instance",
-      "parentId": "WjPIFUz7",
-      "index": "a0",
-      "name": "Button",
-      "componentId": "ua9C67i7",
-      "props": {
-        "label": "Import",
-        "size": "sm",
-        "variant": "secondary",
-        "withIcon": "yes"
-      },
-      "overrides": {
-        "O46dZG6P": {
-          "icon": "download"
-        }
-      }
-    },
-    "KAcNvPFn": {
-      "type": "frame",
-      "parentId": "8THc84PU",
-      "index": "a1",
-      "name": "Row · in library",
-      "style": {
-        "display": "flex",
-        "align-items": "center",
-        "gap": 16,
-        "padding": "12px 0",
-        "border-bottom": "1px solid {color.line}",
-        "align-self": "stretch"
-      }
-    },
-    "FZy7IGqI": {
-      "type": "frame",
-      "parentId": "KAcNvPFn",
-      "index": "a0",
-      "name": "Text",
-      "style": {
-        "display": "flex",
-        "flex-direction": "column",
-        "align-items": "flex-end",
-        "flex": 1,
-        "min-width": 0,
-        "text-align": "right"
-      }
-    },
-    "lkwI4T1N": {
-      "type": "text",
-      "parentId": "FZy7IGqI",
-      "index": "a0",
-      "name": "Title",
-      "content": "شرح العقيدة الطحاوية لابرتي",
-      "style": {
-        "font-family": "{font.ar}",
-        "font-size": 20,
-        "font-weight": 700,
-        "line-height": "36px",
-        "direction": "rtl",
-        "color": "{color.ink}"
-      }
-    },
-    "6YV4aFzd": {
-      "type": "text",
-      "parentId": "FZy7IGqI",
-      "index": "b0",
-      "name": "Meta",
-      "content": "25 of 25 pages transcribed",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px",
-        "color": "{color.ink-3}"
-      }
-    },
-    "p9wtLsIY": {
-      "type": "frame",
-      "parentId": "KAcNvPFn",
-      "index": "b0",
-      "name": "Action column",
-      "style": {
-        "display": "flex",
-        "justify-content": "flex-end",
-        "width": 112,
-        "flex-shrink": 0
-      }
-    },
-    "YQDSG12f": {
-      "type": "instance",
-      "parentId": "p9wtLsIY",
-      "index": "a0",
-      "name": "Badge",
-      "componentId": "uJd03iQq",
-      "props": {
-        "label": "In library",
-        "tone": "accent",
-        "withDot": "no"
-      }
-    },
-    "HhcHEM20": {
-      "type": "frame",
-      "parentId": "8THc84PU",
-      "index": "a2",
-      "name": "Row · not transcribed",
-      "style": {
-        "display": "flex",
-        "align-items": "center",
-        "gap": 16,
-        "padding": "12px 0",
-        "border-bottom": "none",
-        "opacity": 0.6,
-        "align-self": "stretch"
-      }
-    },
-    "CXvlcQFw": {
-      "type": "frame",
-      "parentId": "HhcHEM20",
-      "index": "a0",
-      "name": "Text",
-      "style": {
-        "display": "flex",
-        "flex-direction": "column",
-        "align-items": "flex-end",
-        "flex": 1,
-        "min-width": 0,
-        "text-align": "right"
-      }
-    },
-    "CZ362jXO": {
-      "type": "text",
-      "parentId": "CXvlcQFw",
-      "index": "a0",
-      "name": "Title",
-      "content": "مبادئ الأصول",
-      "style": {
-        "font-family": "{font.ar}",
-        "font-size": 20,
-        "font-weight": 700,
-        "line-height": "36px",
-        "direction": "rtl",
-        "color": "{color.ink}"
-      }
-    },
-    "bsCAcC2j": {
-      "type": "text",
-      "parentId": "CXvlcQFw",
-      "index": "b0",
-      "name": "Meta",
-      "content": "Not transcribed yet",
-      "style": {
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px",
-        "color": "{color.ink-3}"
-      }
-    },
-    "LPqXMLlR": {
-      "type": "frame",
-      "parentId": "HhcHEM20",
-      "index": "b0",
-      "name": "Action column",
-      "style": {
-        "display": "flex",
-        "justify-content": "flex-end",
-        "width": 112,
-        "flex-shrink": 0
-      }
-    },
-    "7ZtLl4qs": {
-      "content": "المفيدُ بالوضعِ",
-      "index": "a0",
-      "name": "Highlight · Under · Pink",
-      "parentId": "na29ZmAC",
-      "style": {
-        "background": "linear-gradient(to top, {color.mark-3} 0 0.55em, transparent 0.55em)",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
       "type": "text"
     },
-    "7z1GNnhd": {
-      "index": "aB",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
+    "zv7ce2gL": {
+      "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "aS",
+      "name": "Chapter tick",
+      "parentId": "WE6Reiw7",
       "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "8tsoyg6d": {
-      "content": "المفيدُ بالوضعِ",
-      "index": "a0",
-      "name": "Highlight · Behind · Green",
-      "parentId": "lobkWsZD",
-      "style": {
-        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-2} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "DwOwwfxu": {
-      "content": "Behind text",
-      "index": "a2",
-      "name": "Column",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink}",
-        "font-family": "{font.body}",
-        "font-size": 13,
-        "font-weight": 500,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "F2kWwNWv": {
-      "content": "المفيدُ بالوضعِ",
-      "index": "a0",
-      "name": "Highlight · Under · Blue",
-      "parentId": "z6WY07Cc",
-      "style": {
-        "background": "linear-gradient(to top, {color.mark-4} 0 0.55em, transparent 0.55em)",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "Gajc91bQ": {
-      "content": "Under: a band 0.55em high under the letters, so harakat above stay clear. Behind: a fill from 0.15em below the top of the line box to 0.05em above its bottom; the letters and harakat sit on it. Set in the display menu and Settings (Highlight style). A new highlight draws in right to left in both: 80ms plus 25ms a word, capped at 220ms, ease-out across the words (these two words take 130ms). Reduced motion fades it in.",
-      "index": "aI",
-      "name": "Spec note",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "grid-column": "1 / -1",
-        "line-height": "18px",
-        "width": 560
-      },
-      "type": "text"
-    },
-    "LAcLrCrY": {
-      "index": "aH",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "RvmbHqxA": {
-      "content": "Green",
-      "index": "a6",
-      "name": "Label",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "Sqgqbvm6": {
-      "content": "المفيدُ بالوضعِ",
-      "index": "a0",
-      "name": "Highlight · Under · Green",
-      "parentId": "xYGKUhnB",
-      "style": {
-        "background": "linear-gradient(to top, {color.mark-2} 0 0.55em, transparent 0.55em)",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "UDZsQhuA": {
-      "index": "a5",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "USQFgNmZ": {
-      "content": "المفيدُ بالوضعِ",
-      "index": "a0",
-      "name": "Highlight · Behind · Blue",
-      "parentId": "XZ0ItKY0",
-      "style": {
-        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-4} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "WRvDdh1M": {
-      "index": "a0",
-      "name": "Highlight · Styles",
-      "style": {
-        "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 20,
-        "column-gap": 40,
-        "display": "grid",
-        "grid-template-columns": "100px repeat(2, max-content)",
-        "padding": 32,
-        "row-gap": 12
-      },
-      "type": "frame",
-      "x": 1900,
-      "y": 6400
-    },
-    "XZ0ItKY0": {
-      "index": "aE",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "XkNAVhXB": {
-      "content": "Blue",
-      "index": "aC",
-      "name": "Label",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "XmhvxAFn": {
-      "index": "a4",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "c8t7sRa2": {
-      "index": "aG",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "dbJbwzwd": {
-      "content": "Pink",
-      "index": "a9",
-      "name": "Label",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "fHs9qiLf": {
-      "content": "Under text (default)",
-      "index": "a1",
-      "name": "Column",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink}",
-        "font-family": "{font.body}",
-        "font-size": 13,
-        "font-weight": 500,
-        "line-height": "20px"
-      },
-      "type": "text"
-    },
-    "gEHMqGLB": {
-      "content": "",
-      "index": "a0",
-      "name": "Label",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "hIkHzsvx": {
-      "content": "Yellow",
-      "index": "a3",
-      "name": "Label",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "iyRbm7xH": {
-      "content": "المفيدُ بالوضعِ",
-      "css": "background-repeat: no-repeat;\nbackground-position: right center;\nanimation: highlight-sweep 130ms {ease.out} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: highlight-fade {transition.duration-pop} ease both;\n}",
-      "index": "a0",
-      "name": "Highlight · Under · Sweep",
-      "parentId": "c8t7sRa2",
-      "style": {
-        "background": "linear-gradient(to top, {color.mark-1} 0 0.55em, transparent 0.55em)",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "jSToZxll": {
-      "content": "المفيدُ بالوضعِ",
-      "index": "a0",
-      "name": "Highlight · Behind · Pink",
-      "parentId": "7z1GNnhd",
-      "style": {
-        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-3} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "lobkWsZD": {
-      "index": "a8",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "n0VJGGr3": {
-      "content": "Drawing in",
-      "index": "aF",
-      "name": "Label",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "n4TAHd6A": {
-      "content": "المفيدُ بالوضعِ",
-      "css": "background-repeat: no-repeat;\nbackground-position: right center;\nanimation: highlight-sweep 130ms {ease.out} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: highlight-fade {transition.duration-pop} ease both;\n}",
-      "index": "a0",
-      "name": "Highlight · Behind · Sweep",
-      "parentId": "LAcLrCrY",
-      "style": {
-        "background": "linear-gradient(to top, transparent 0.05em, {color.mark-1} 0.05em calc(100% - 0.15em), transparent calc(100% - 0.15em))",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "na29ZmAC": {
-      "index": "aA",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "wVc42TnH": {
-      "content": "المفيدُ بالوضعِ",
-      "index": "a0",
-      "name": "Highlight · Under · Yellow",
-      "parentId": "XmhvxAFn",
-      "style": {
-        "background": "linear-gradient(to top, {color.mark-1} 0 0.55em, transparent 0.55em)",
-        "color": "{color.ink}",
-        "direction": "rtl",
-        "display": "inline",
-        "font-family": "{font.ar}",
-        "font-size": 26,
-        "line-height": "52px"
-      },
-      "type": "text"
-    },
-    "xYGKUhnB": {
-      "index": "a7",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
-      },
-      "type": "frame"
-    },
-    "z6WY07Cc": {
-      "index": "aD",
-      "name": "Line",
-      "parentId": "WRvDdh1M",
-      "style": {
-        "direction": "rtl",
-        "display": "flex",
-        "justify-content": "flex-end"
+        "background": "{color.ink-3}",
+        "height": 10,
+        "opacity": 0.5,
+        "position": "absolute",
+        "right": "64.44%",
+        "top": 11,
+        "translate": "50% 0",
+        "width": 1
       },
       "type": "frame"
     },
@@ -8362,6 +9591,17 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "zzV2OIXv": {
+      "componentId": "HZhkp90k",
+      "index": "a006",
+      "name": "Switch",
+      "parentId": "TDMFYChr",
+      "props": {
+        "checked": "off",
+        "state": "hover"
+      },
+      "type": "instance"
     }
   },
   "version": 1
