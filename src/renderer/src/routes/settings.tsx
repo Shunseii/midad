@@ -6,6 +6,7 @@ import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
 import { type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
 import type { FocusChoice } from "../lib/focus";
+import { ON_LAUNCH_PREF, type OnLaunch } from "../lib/launch";
 import { midad, useSaveSettings, useSettings } from "../lib/midad";
 import { usePref } from "../lib/prefs";
 import type { ReaderState } from "./reader";
@@ -70,6 +71,16 @@ const FOCUS_HINTS: Record<FocusChoice, string> = {
   locked: "Hides toolbars while you read. Point at the top or bottom edge to show them.",
 };
 
+const ON_LAUNCH_CHOICES: { value: OnLaunch; label: string }[] = [
+  { value: "library", label: "Library" },
+  { value: "continue", label: "Continue reading" },
+];
+
+const ON_LAUNCH_HINTS: Record<OnLaunch, string> = {
+  library: "Midad opens to your library.",
+  continue: "Midad opens the last book you read, where you left off.",
+};
+
 const Appearance = () => {
   const [theme, setTheme] = useTheme();
   const [pageWidth, setPageWidth] = usePageWidth();
@@ -118,8 +129,12 @@ const Reading = () => {
   const [glossMarkers, setGlossMarkers] = usePref({ key: "reader.glossMarkers", fallback: true });
   const [hashiyaMarkers, setHashiyaMarkers] = usePref({ key: "reader.hashiyaMarkers", fallback: true });
   const [noteIcons, setNoteIcons] = useNoteIcons();
+  const [onLaunch, setOnLaunch] = usePref(ON_LAUNCH_PREF);
   return (
-    <Section title="Reading" description="The page's text. Text size and harakat are also in the reader's Display menu.">
+    <Section title="Reading" description="Where Midad opens, and the page's text. Text size and harakat are also in the reader's Display menu.">
+      <Row title="On launch" hint={ON_LAUNCH_HINTS[onLaunch]}>
+        <Segmented<OnLaunch> label="On launch" value={onLaunch} onChange={setOnLaunch} options={ON_LAUNCH_CHOICES} />
+      </Row>
       <Row title="Text size" hint="The page's Arabic text">
         <div className="flex items-center gap-1">
           <IconButton icon={Minus} label="Smaller text" disabled={textScale <= SMALLEST} onClick={() => setTextScale(stepScale({ scale: textScale, by: -1 }))} />

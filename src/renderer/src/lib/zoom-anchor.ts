@@ -55,3 +55,6 @@ export const restoredScrollTop = ({
   offset: number;
   maxScrollTop: number;
 }) => Math.min(Math.max(scrollTop + anchorTop - viewTop - offset, 0), Math.max(maxScrollTop, 0));
+
+export const wordSelector = ({ part, line, word }: { part: string; line: number | string; word: number | string }) =>
+  `[data-part="${part}"][data-line="${line}"][data-w="${word}"]`;

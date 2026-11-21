@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop } from "./zoom-anchor";
+import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop, wordSelector } from "./zoom-anchor";
 
 const box = ({ top, height = 40, left = 0, width = 60 }: { top: number; height?: number; left?: number; width?: number }) => ({
   top,
@@ -65,5 +65,23 @@ describe("restoredScrollTop", () => {
 
   it("stays at the top when the page no longer scrolls", () => {
     expect(restoredScrollTop({ scrollTop: 0, anchorTop: 300, viewTop: 80, offset: 10, maxScrollTop: -4 })).toBe(0);
+  });
+});
+
+describe("saving and restoring a place", () => {
+  it("puts the saved word back at its saved height after the page re-lays out", () => {
+    const view = { top: 100, bottom: 600 };
+    const before = [box({ top: 60 }), box({ top: 140 }), box({ top: 220 })];
+    const saved = firstFullyVisible({ words: before, view });
+    const offset = before[saved]!.top - view.top;
+    // Relaunched at the top of the page, at a larger text size: the word is now 900px further down.
+    const scrollTop = restoredScrollTop({ scrollTop: 0, anchorTop: 140 + 900, viewTop: view.top, offset, maxScrollTop: 5000 });
+    expect(140 + 900 - scrollTop - view.top).toBe(offset);
+  });
+});
+
+describe("wordSelector", () => {
+  it("matches a word by part, line and index", () => {
+    expect(wordSelector({ part: "hashiya", line: 4, word: 2 })).toBe('[data-part="hashiya"][data-line="4"][data-w="2"]');
   });
 });

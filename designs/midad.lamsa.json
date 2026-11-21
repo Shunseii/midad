@@ -25979,6 +25979,19 @@
       },
       "type": "frame"
     },
+    "HYhk3Zrr": {
+      "content": "Midad opens to your library.",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "lCB9H41R",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "HZs2OhqC": {
       "index": "a2",
       "name": "Book · قطر الندى وبل الصدى",
@@ -27880,6 +27893,17 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "It2pWkxv": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "uMEl6zwJ",
+      "props": {
+        "label": "Library",
+        "state": "selected"
+      },
+      "type": "instance"
     },
     "Iuly64RZ": {
       "index": "a003",
@@ -29931,6 +29955,19 @@
         "justify-content": "flex-end"
       },
       "type": "frame"
+    },
+    "KCoNJrS0": {
+      "content": "On launch",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "lCB9H41R",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
     },
     "KDByXDmD": {
       "content": "Ask AI",
@@ -32447,6 +32484,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "M4dPQpYI": {
+      "index": "Zz",
+      "name": "Row · On launch",
+      "parentId": "PdCHNR5c",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
     },
     "M6Gn6dbr": {
       "content": "14",
@@ -37877,6 +37928,17 @@
         "width": "100%"
       },
       "type": "frame"
+    },
+    "PgiguCjW": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "uMEl6zwJ",
+      "props": {
+        "label": "Continue reading",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "Ph5tXbvs": {
       "content": "ْ",
@@ -68827,7 +68889,7 @@
       "type": "frame"
     },
     "kl5jYwOV": {
-      "content": "The page's text. Text size is also in the reader's Display menu.",
+      "content": "Where Midad opens, and the page's text. Text size and harakat are also in the reader's Display menu.",
       "index": "a1",
       "name": "Description",
       "parentId": "xh2BuzAq",
@@ -69495,6 +69557,18 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "lCB9H41R": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "M4dPQpYI",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
     },
     "lCS25qFV": {
       "index": "a004",
@@ -83256,6 +83330,20 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "uMEl6zwJ": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "M4dPQpYI",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
     },
     "uMvANs4p": {
       "index": "a001",

@@ -6,9 +6,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { createHashRouter, RouterProvider } from "react-router";
 import { AppShell } from "./components/app-shell";
 import { ThemeSync } from "./lib/appearance";
+import { launchPlace, ON_LAUNCH_PREF } from "./lib/launch";
+import { getPref } from "./lib/prefs";
+import { keys, midad } from "./lib/midad";
 import { passPressesThroughTransitions } from "./lib/view-transition";
 import { LibraryRoute } from "./routes/library";
-import { ReaderRoute } from "./routes/reader";
+import { ReaderRoute, type ReaderState } from "./routes/reader";
 import { SettingsRoute } from "./routes/settings";
 import "./styles.css";
 
@@ -32,8 +35,25 @@ const router = createHashRouter([
   { path: "read/:bookId", element: <ReaderRoute /> },
 ]);
 
+/** Continue reading opens the last book at its saved place; anything missing, and the library opens as usual. */
+const openLastBook = async () => {
+  const onLaunch = getPref(ON_LAUNCH_PREF);
+  if (onLaunch !== "continue" || router.state.location.pathname !== "/") return;
+  try {
+    const books = await queryClient.fetchQuery({ queryKey: keys.library, queryFn: () => midad["library.list"]() });
+    const place = launchPlace({ onLaunch, books });
+    if (!place) return;
+    const state: ReaderState | null = place.anchor ? { anchor: place.anchor } : null;
+    await router.navigate(`/read/${place.bookId}?p=${place.position}`, { replace: true, state });
+  } catch (err) {
+    console.error("Couldn't reopen the last book:", err);
+  }
+};
+
 const root = document.getElementById("root");
 if (!root) throw new Error("#root is missing from index.html");
+
+await openLastBook();
 
 createRoot(root).render(
   <StrictMode>

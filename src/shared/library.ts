@@ -1,9 +1,18 @@
 import type { Part } from "./annotations";
 import type { Page } from "./page";
 
+/** A word on the page and how far below the top of the reader's view it sat, so the place survives re-layout. */
+export interface ScrollAnchor {
+  part: Part;
+  line: number;
+  word: number;
+  offset: number;
+}
+
 export interface ReadingProgress {
   position: number;
   updatedAt: number;
+  anchor: ScrollAnchor | null;
 }
 
 export interface LibraryBook {

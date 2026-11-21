@@ -7,6 +7,7 @@ import type {
   ImportResult,
   LastRead,
   LibraryBook,
+  ScrollAnchor,
   StoredPage,
   SyncPreview,
   SyncResult,
@@ -36,7 +37,7 @@ export interface MidadApi {
   "library.import": (input: { corpusBookId: string }) => Promise<ImportResult>;
   "library.previewSync": (input: { bookId: string }) => Promise<SyncPreview>;
   "library.sync": (input: SyncInput) => Promise<SyncResult>;
-  "library.setProgress": (input: { bookId: string; position: number }) => Promise<void>;
+  "library.setProgress": (input: { bookId: string; position: number; anchor?: ScrollAnchor }) => Promise<void>;
   "library.firstLine": (input: { bookId: string; position: number }) => Promise<string | null>;
   "annotations.list": (input: { bookId: string; position: number }) => Promise<PageAnnotations>;
   "annotations.bookMarks": (input: { bookId: string }) => Promise<BookMarks>;

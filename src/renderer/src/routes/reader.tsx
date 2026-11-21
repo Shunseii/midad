@@ -5,7 +5,7 @@ import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, u
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
 import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
-import type { BookDetail, StoredPage } from "../../../shared/library";
+import type { BookDetail, ScrollAnchor, StoredPage } from "../../../shared/library";
 import { DisplayMenu, stepScale, WHEEL_STEP, ZOOM_SHOWN_MS, ZoomLevel } from "../components/display-menu";
 import { InlinePanel, SideSheet } from "../components/side-sheet";
 import { useMediaQuery } from "../lib/media";
@@ -30,7 +30,7 @@ import { useFocusMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../
 import { useFocusChrome } from "../lib/use-focus-chrome";
 import { focusKeyAction } from "../lib/focus";
 import { neighbourPages } from "../lib/neighbours";
-import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop } from "../lib/zoom-anchor";
+import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop, wordSelector } from "../lib/zoom-anchor";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -77,10 +77,11 @@ interface Point {
   y: number;
 }
 
-/** What a link into the reader can ask for: where to scroll the page once it has loaded. */
-export interface ReaderState {
-  scrollTop: number;
-}
+/** What a link into the reader can ask for: where to scroll the page once it has loaded, by offset or by a word. */
+export type ReaderState = { scrollTop: number } | { anchor: ScrollAnchor };
+
+/** How long scrolling has to settle before the place on the page is saved. */
+const SAVE_PLACE_MS = 400;
 
 /** A word held in place while the text size changes, and how far below the top of the page's view it was. */
 interface ZoomAnchor {
@@ -374,7 +375,8 @@ export const ReaderRoute = () => {
   const pendingReveal = useRef<(Citation & { position: number }) | null>(null);
   const pendingRow = useRef<{ position: number; part: Part; line: number; word: number } | null>(null);
   const arrivedWith = useLocation().state as ReaderState | null;
-  const pendingScroll = useRef(arrivedWith?.scrollTop ?? null);
+  const pendingScroll = useRef(arrivedWith && "scrollTop" in arrivedWith ? arrivedWith.scrollTop : null);
+  const pendingPlace = useRef(arrivedWith && "anchor" in arrivedWith ? arrivedWith.anchor : null);
   const conversation = useAskConversation(bookId);
   const [askSelection, setAskSelection] = useState<AskSelection | null>(null);
   const client = useQueryClient();
@@ -504,6 +506,12 @@ export const ReaderRoute = () => {
     if (scrollTop !== null && page.data?.position === position) {
       pendingScroll.current = null;
       requestAnimationFrame(() => pageRoot.current?.scrollTo({ top: scrollTop }));
+    }
+    const place = pendingPlace.current;
+    if (place && page.data?.position === position) {
+      pendingPlace.current = null;
+      // The saved word only lands in the right spot once the page's fonts have laid it out.
+      void document.fonts.ready.then(() => requestAnimationFrame(() => holdAnchor({ selector: wordSelector(place), offset: place.offset })));
     }
     const row = pendingRow.current;
     if (row && page.data?.position === row.position) {
@@ -765,6 +773,37 @@ export const ReaderRoute = () => {
     }
   }, [book.data, bookId, position, total]);
 
+  const shownPosition = useRef<number | null>(null);
+  shownPosition.current = page.data?.position ?? null;
+  const placeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const savePlace = useCallback(() => {
+    clearTimeout(placeTimer.current);
+    placeTimer.current = undefined;
+    const root = pageRoot.current;
+    const at = shownPosition.current;
+    if (!root || at === null) return;
+    const view = root.getBoundingClientRect();
+    const words = [...root.querySelectorAll<HTMLElement>("[data-w]")];
+    const word = words[firstFullyVisible({ words: words.map((w) => w.getBoundingClientRect()), view })];
+    const { part, line, w } = word?.dataset ?? {};
+    if (!word || (part !== "matn" && part !== "hashiya")) return;
+    const anchor: ScrollAnchor = { part, line: Number(line), word: Number(w), offset: word.getBoundingClientRect().top - view.top };
+    void midad["library.setProgress"]({ bookId, position: at, anchor }).catch(() => undefined);
+  }, [bookId]);
+  const schedulePlaceSave = () => {
+    clearTimeout(placeTimer.current);
+    placeTimer.current = setTimeout(savePlace, SAVE_PLACE_MS);
+  };
+  // Quitting right after a scroll still keeps the place.
+  useEffect(() => {
+    const flush = () => placeTimer.current !== undefined && savePlace();
+    window.addEventListener("beforeunload", flush);
+    return () => {
+      window.removeEventListener("beforeunload", flush);
+      flush();
+    };
+  }, [savePlace]);
+
   const latestScale = useRef(textScale);
   latestScale.current = textScale;
   const [zoomShown, setZoomShown] = useState(false);
@@ -794,11 +833,11 @@ export const ReaderRoute = () => {
     const word = words[overPage ? nearestWord({ words: boxes, ...pointer }) : firstFullyVisible({ words: boxes, view })];
     if (!word) return null;
     const { part, line, w } = word.dataset;
-    zoomAnchor.current = { selector: `[data-part="${part}"][data-line="${line}"][data-w="${w}"]`, offset: word.getBoundingClientRect().top - view.top, at: now };
+    zoomAnchor.current = { selector: wordSelector({ part: part ?? "", line: line ?? "", word: w ?? "" }), offset: word.getBoundingClientRect().top - view.top, at: now };
     return zoomAnchor.current;
   };
 
-  const holdAnchor = (anchor: ZoomAnchor | null) => {
+  const holdAnchor = (anchor: Pick<ZoomAnchor, "selector" | "offset"> | null) => {
     const root = pageRoot.current;
     const word = anchor && root?.querySelector(anchor.selector);
     if (!anchor || !root || !word) return;
@@ -1193,6 +1232,7 @@ export const ReaderRoute = () => {
           onMouseLeave={() => noteEditor && scheduleNoteClose()}
           onScroll={() => {
             measureOnScreen();
+            schedulePlaceSave();
             if (toolbar) setToolbar(null);
           }}
         >

@@ -131,7 +131,7 @@ describe("reading", () => {
       }),
     ]);
     await library.setProgress({ bookId: "b1", position: 2 });
-    expect((await library.listBooks())[0]?.progress).toEqual({ position: 2, updatedAt: 1000 });
+    expect((await library.listBooks())[0]?.progress).toEqual({ position: 2, updatedAt: 1000, anchor: null });
   });
 
   it("falls back to the corpus book title when the book has no work", async () => {
@@ -230,7 +230,7 @@ describe("progress across syncs", () => {
     await library.syncBook({ bookId: "b1", mode: "new" });
     expect(await progressOf()).toBe(4);
     expect((await library.getPage({ bookId: "b1", position: 4 }))?.fileId).toBe("f4");
-    expect((await library.listBooks())[0]?.progress).toEqual({ position: 4, updatedAt: 1000 });
+    expect((await library.listBooks())[0]?.progress).toEqual({ position: 4, updatedAt: 1000, anchor: null });
   });
 
   it("stays put when new pages are inserted after it", async () => {
@@ -254,6 +254,60 @@ describe("progress across syncs", () => {
   it("refuses progress on a page the book does not have", async () => {
     await expect(library.setProgress({ bookId: "b1", position: 9 })).rejects.toThrow(/no page 9/);
     expect(await progressOf()).toBe(2);
+  });
+});
+
+describe("place on the page", () => {
+  const anchor = { part: "matn" as const, line: 7, word: 2, offset: 31.5 };
+  const anchorOf = async () => (await library.getBook("b1"))?.progress?.anchor;
+
+  beforeEach(async () => {
+    corpus.files = [file({ file_id: "f1", page_number: 1 }), file({ file_id: "f2", page_number: 2 })];
+    await library.importBook({ corpusBookId: "b1" });
+  });
+
+  it("saves the anchor word with progress", async () => {
+    await library.setProgress({ bookId: "b1", position: 2, anchor });
+    expect((await library.listBooks())[0]?.progress).toEqual({ position: 2, updatedAt: 1000, anchor });
+  });
+
+  it("keeps the anchor when the same page is saved again without one", async () => {
+    await library.setProgress({ bookId: "b1", position: 2, anchor });
+    await library.setProgress({ bookId: "b1", position: 2 });
+    expect(await anchorOf()).toEqual(anchor);
+  });
+
+  it("drops the anchor on a different page", async () => {
+    await library.setProgress({ bookId: "b1", position: 2, anchor });
+    await library.setProgress({ bookId: "b1", position: 1 });
+    expect(await anchorOf()).toBeNull();
+  });
+
+  it("replaces the anchor with a newer one", async () => {
+    await library.setProgress({ bookId: "b1", position: 2, anchor });
+    await library.setProgress({ bookId: "b1", position: 2, anchor: { ...anchor, line: 9 } });
+    expect(await anchorOf()).toEqual({ ...anchor, line: 9 });
+  });
+
+  it("ignores a stored anchor it can't read", async () => {
+    await library.setProgress({ bookId: "b1", position: 2, anchor });
+    db.prepare("UPDATE progress SET anchor = ?").run('{"part":"elsewhere","line":1}');
+    expect(await anchorOf()).toBeNull();
+    db.prepare("UPDATE progress SET anchor = ?").run("not json");
+    expect(await anchorOf()).toBeNull();
+  });
+
+  it("adds the anchor column to an existing progress table", async () => {
+    const old = new DatabaseSync(":memory:");
+    old.exec(`
+      CREATE TABLE books (book_id TEXT PRIMARY KEY, title TEXT NOT NULL, author TEXT, edition TEXT,
+        imported_at INTEGER NOT NULL, synced_at INTEGER NOT NULL);
+      CREATE TABLE progress (book_id TEXT PRIMARY KEY REFERENCES books(book_id) ON DELETE CASCADE,
+        file_id TEXT NOT NULL, updated_at INTEGER NOT NULL);
+    `);
+    createLibrary({ db: old, corpus: new FakeCorpus() });
+    const columns = old.prepare("PRAGMA table_info(progress)").all() as { name: string }[];
+    expect(columns.map((c) => c.name)).toContain("anchor");
   });
 });
 
@@ -281,8 +335,8 @@ describe("progress migration from position to page", () => {
 
     let migrated = createLibrary({ db: old, corpus: new FakeCorpus() });
     expect(await progressById()).toEqual({
-      a: { position: 2, updatedAt: 500 },
-      b: { position: 2, updatedAt: 600 },
+      a: { position: 2, updatedAt: 500, anchor: null },
+      b: { position: 2, updatedAt: 600, anchor: null },
     });
     expect(old.prepare("SELECT book_id, file_id FROM progress ORDER BY book_id").all()).toEqual([
       { book_id: "a", file_id: "a2" },
@@ -291,8 +345,8 @@ describe("progress migration from position to page", () => {
 
     migrated = createLibrary({ db: old, corpus: new FakeCorpus() });
     expect(await progressById()).toEqual({
-      a: { position: 2, updatedAt: 500 },
-      b: { position: 2, updatedAt: 600 },
+      a: { position: 2, updatedAt: 500, anchor: null },
+      b: { position: 2, updatedAt: 600, anchor: null },
     });
   });
 });

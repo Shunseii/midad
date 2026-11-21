@@ -4,6 +4,7 @@ import type {
   BookDetail,
   ImportResult,
   LibraryBook,
+  ScrollAnchor,
   StoredPage,
   SyncPreview,
   SyncResult,
@@ -50,9 +51,31 @@ CREATE INDEX IF NOT EXISTS pages_by_position ON pages (book_id, position);
 CREATE TABLE IF NOT EXISTS progress (
   book_id TEXT PRIMARY KEY REFERENCES books(book_id) ON DELETE CASCADE,
   file_id TEXT NOT NULL,
-  updated_at INTEGER NOT NULL
+  updated_at INTEGER NOT NULL,
+  anchor TEXT
 );
 `;
+
+const addProgressAnchor = (db: DatabaseSync) => {
+  const columns = db.prepare("PRAGMA table_info(progress)").all() as { name: string }[];
+  if (!columns.some((c) => c.name === "anchor")) db.exec("ALTER TABLE progress ADD COLUMN anchor TEXT");
+};
+
+const isScrollAnchor = (value: unknown): value is ScrollAnchor => {
+  if (typeof value !== "object" || value === null) return false;
+  const { part, line, word, offset } = value as Record<string, unknown>;
+  return (part === "matn" || part === "hashiya") && Number.isInteger(line) && Number.isInteger(word) && typeof offset === "number" && Number.isFinite(offset);
+};
+
+const parseAnchor = (raw: string | null): ScrollAnchor | null => {
+  if (raw === null) return null;
+  try {
+    const value: unknown = JSON.parse(raw);
+    return isScrollAnchor(value) ? value : null;
+  } catch {
+    return null;
+  }
+};
 
 /**
  * Progress used to be stored by page position, which a sync renumbers. Re-key each row by the
@@ -112,6 +135,7 @@ interface BookRow {
   page_count: number;
   progress_position: number | null;
   progress_updated_at: number | null;
+  progress_anchor: string | null;
 }
 
 const byCorpusOrder = (
@@ -137,6 +161,7 @@ export const createLibrary = ({
   db.exec("PRAGMA foreign_keys = ON;");
   db.exec(SCHEMA);
   migrateProgressToFileId(db);
+  addProgressAnchor(db);
 
   const transaction = <T>(fn: () => T): T => {
     db.exec("BEGIN");
@@ -200,12 +225,13 @@ export const createLibrary = ({
     progress:
       r.progress_position === null || r.progress_updated_at === null
         ? null
-        : { position: r.progress_position, updatedAt: r.progress_updated_at },
+        : { position: r.progress_position, updatedAt: r.progress_updated_at, anchor: parseAnchor(r.progress_anchor) },
   });
 
   const BOOK_SELECT = `
     SELECT b.*, (SELECT COUNT(*) FROM pages p WHERE p.book_id = b.book_id) AS page_count,
-           pp.position AS progress_position, pr.updated_at AS progress_updated_at
+           pp.position AS progress_position, pr.updated_at AS progress_updated_at,
+           pr.anchor AS progress_anchor
     FROM books b
     LEFT JOIN progress pr ON pr.book_id = b.book_id
     LEFT JOIN pages pp ON pp.book_id = pr.book_id AND pp.file_id = pr.file_id`;
@@ -340,15 +366,22 @@ export const createLibrary = ({
       return first?.text.trim().split("\n")[0]?.trim().slice(0, FIRST_LINE_MAX) ?? null;
     },
 
-    async setProgress({ bookId, position }: { bookId: string; position: number }): Promise<void> {
+    /**
+     * Without an anchor, a save on the page already stored keeps its anchor, so
+     * reopening a book doesn't forget where on the page the reader was.
+     */
+    async setProgress({ bookId, position, anchor }: { bookId: string; position: number; anchor?: ScrollAnchor }): Promise<void> {
       const page = db.prepare("SELECT file_id FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
         | Pick<PageRow, "file_id">
         | undefined;
       if (!page) throw new Error(`Book ${bookId} has no page ${position} in the library.`);
       db.prepare(
-        `INSERT INTO progress (book_id, file_id, updated_at) VALUES (?, ?, ?)
-         ON CONFLICT(book_id) DO UPDATE SET file_id = excluded.file_id, updated_at = excluded.updated_at`,
-      ).run(bookId, page.file_id, now());
+        `INSERT INTO progress (book_id, file_id, updated_at, anchor) VALUES (?, ?, ?, ?)
+         ON CONFLICT(book_id) DO UPDATE SET
+           anchor = CASE WHEN excluded.anchor IS NULL AND progress.file_id = excluded.file_id THEN progress.anchor ELSE excluded.anchor END,
+           file_id = excluded.file_id,
+           updated_at = excluded.updated_at`,
+      ).run(bookId, page.file_id, now(), anchor ? JSON.stringify(anchor) : null);
     },
   };
 };
