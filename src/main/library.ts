@@ -42,10 +42,46 @@ CREATE TABLE IF NOT EXISTS pages (
 CREATE INDEX IF NOT EXISTS pages_by_position ON pages (book_id, position);
 CREATE TABLE IF NOT EXISTS progress (
   book_id TEXT PRIMARY KEY REFERENCES books(book_id) ON DELETE CASCADE,
-  position INTEGER NOT NULL,
+  file_id TEXT NOT NULL,
   updated_at INTEGER NOT NULL
 );
 `;
+
+/**
+ * Progress used to be stored by page position, which a sync renumbers. Re-key each row by the
+ * page at that position, or the nearest page if the position is out of range.
+ */
+const migrateProgressToFileId = (db: DatabaseSync) => {
+  const columns = db.prepare("PRAGMA table_info(progress)").all() as { name: string }[];
+  if (columns.some((c) => c.name === "file_id")) return;
+  const rows = db.prepare("SELECT book_id, position, updated_at FROM progress").all() as {
+    book_id: string;
+    position: number;
+    updated_at: number;
+  }[];
+  const nearestPage = db.prepare(
+    "SELECT file_id FROM pages WHERE book_id = ? ORDER BY ABS(position - ?), position LIMIT 1",
+  );
+  db.exec("BEGIN");
+  try {
+    db.exec(`CREATE TABLE progress_by_page (
+      book_id TEXT PRIMARY KEY REFERENCES books(book_id) ON DELETE CASCADE,
+      file_id TEXT NOT NULL,
+      updated_at INTEGER NOT NULL
+    )`);
+    const insert = db.prepare("INSERT INTO progress_by_page (book_id, file_id, updated_at) VALUES (?, ?, ?)");
+    for (const row of rows) {
+      const page = nearestPage.get(row.book_id, row.position) as { file_id: string } | undefined;
+      if (page) insert.run(row.book_id, page.file_id, row.updated_at);
+    }
+    db.exec("DROP TABLE progress");
+    db.exec("ALTER TABLE progress_by_page RENAME TO progress");
+    db.exec("COMMIT");
+  } catch (err) {
+    db.exec("ROLLBACK");
+    throw err;
+  }
+};
 
 interface PageRow {
   book_id: string;
@@ -93,6 +129,7 @@ export const createLibrary = ({
 }) => {
   db.exec("PRAGMA foreign_keys = ON;");
   db.exec(SCHEMA);
+  migrateProgressToFileId(db);
 
   const transaction = <T>(fn: () => T): T => {
     db.exec("BEGIN");
@@ -161,8 +198,10 @@ export const createLibrary = ({
 
   const BOOK_SELECT = `
     SELECT b.*, (SELECT COUNT(*) FROM pages p WHERE p.book_id = b.book_id) AS page_count,
-           pr.position AS progress_position, pr.updated_at AS progress_updated_at
-    FROM books b LEFT JOIN progress pr ON pr.book_id = b.book_id`;
+           pp.position AS progress_position, pr.updated_at AS progress_updated_at
+    FROM books b
+    LEFT JOIN progress pr ON pr.book_id = b.book_id
+    LEFT JOIN pages pp ON pp.book_id = pr.book_id AND pp.file_id = pr.file_id`;
 
   const previewFrom = (bookId: string, files: ExportFile[]): SyncPreview => {
     const local = new Map(localPages(bookId).map((p) => [p.file_id, p]));
@@ -288,10 +327,14 @@ export const createLibrary = ({
     },
 
     async setProgress({ bookId, position }: { bookId: string; position: number }): Promise<void> {
+      const page = db.prepare("SELECT file_id FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
+        | Pick<PageRow, "file_id">
+        | undefined;
+      if (!page) throw new Error(`Book ${bookId} has no page ${position} in the library.`);
       db.prepare(
-        `INSERT INTO progress (book_id, position, updated_at) VALUES (?, ?, ?)
-         ON CONFLICT(book_id) DO UPDATE SET position = excluded.position, updated_at = excluded.updated_at`,
-      ).run(bookId, position, now());
+        `INSERT INTO progress (book_id, file_id, updated_at) VALUES (?, ?, ?)
+         ON CONFLICT(book_id) DO UPDATE SET file_id = excluded.file_id, updated_at = excluded.updated_at`,
+      ).run(bookId, page.file_id, now());
     },
   };
 };

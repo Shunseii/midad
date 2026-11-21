@@ -38,10 +38,12 @@ class FakeCorpus implements CorpusSource {
 
 let corpus: FakeCorpus;
 let library: Library;
+let db: DatabaseSync;
 
 beforeEach(() => {
   corpus = new FakeCorpus();
-  library = createLibrary({ db: new DatabaseSync(":memory:"), corpus, now: () => 1000 });
+  db = new DatabaseSync(":memory:");
+  library = createLibrary({ db, corpus, now: () => 1000 });
 });
 
 const numbers = async (bookId = "b1") =>
@@ -185,5 +187,90 @@ describe("sync", () => {
     const result = await library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f2"] });
     expect(result.overwritten).toBe(0);
     expect(await numbers()).toEqual([1, 3]);
+  });
+});
+
+describe("progress across syncs", () => {
+  const progressOf = async () => (await library.getBook("b1"))?.progress?.position;
+
+  beforeEach(async () => {
+    corpus.files = [
+      file({ file_id: "f2", page_number: 2 }),
+      file({ file_id: "f4", page_number: 4 }),
+      file({ file_id: "f6", page_number: 6 }),
+    ];
+    await library.importBook({ corpusBookId: "b1" });
+    await library.setProgress({ bookId: "b1", position: 2 });
+  });
+
+  it("follows the page when new pages are inserted before it", async () => {
+    corpus.files.push(file({ file_id: "f1", page_number: 1 }), file({ file_id: "f3", page_number: 3 }));
+    await library.syncBook({ bookId: "b1", mode: "new" });
+    expect(await progressOf()).toBe(4);
+    expect((await library.getPage({ bookId: "b1", position: 4 }))?.fileId).toBe("f4");
+    expect((await library.listBooks())[0]?.progress).toEqual({ position: 4, updatedAt: 1000 });
+  });
+
+  it("stays put when new pages are inserted after it", async () => {
+    corpus.files.push(file({ file_id: "f5", page_number: 5 }), file({ file_id: "f7", page_number: 7 }));
+    await library.syncBook({ bookId: "b1", mode: "new" });
+    expect(await progressOf()).toBe(2);
+  });
+
+  it("survives an overwrite sync", async () => {
+    corpus.files[1] = file({ file_id: "f4", page_number: 4, text: "مصححة" });
+    await library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f4"] });
+    expect(await progressOf()).toBe(2);
+  });
+
+  it("reports no progress once its page is gone, without failing", async () => {
+    db.prepare("DELETE FROM pages WHERE book_id = 'b1' AND file_id = 'f4'").run();
+    expect((await library.getBook("b1"))?.progress).toBeNull();
+    expect((await library.listBooks())[0]?.progress).toBeNull();
+  });
+
+  it("refuses progress on a page the book does not have", async () => {
+    await expect(library.setProgress({ bookId: "b1", position: 9 })).rejects.toThrow(/no page 9/);
+    expect(await progressOf()).toBe(2);
+  });
+});
+
+describe("progress migration from position to page", () => {
+  it("keys existing progress rows by the page at their position, and is idempotent", async () => {
+    const old = new DatabaseSync(":memory:");
+    old.exec(`
+      CREATE TABLE books (book_id TEXT PRIMARY KEY, title TEXT NOT NULL, author TEXT, edition TEXT,
+        imported_at INTEGER NOT NULL, synced_at INTEGER NOT NULL);
+      CREATE TABLE pages (book_id TEXT NOT NULL REFERENCES books(book_id) ON DELETE CASCADE, file_id TEXT NOT NULL,
+        position INTEGER NOT NULL, number INTEGER, order_hint INTEGER, header TEXT, matn TEXT NOT NULL,
+        hashiya TEXT NOT NULL, source TEXT NOT NULL, updated_at INTEGER NOT NULL, PRIMARY KEY (book_id, file_id));
+      CREATE TABLE progress (book_id TEXT PRIMARY KEY REFERENCES books(book_id) ON DELETE CASCADE,
+        position INTEGER NOT NULL, updated_at INTEGER NOT NULL);
+      INSERT INTO books VALUES ('a', 'A', NULL, NULL, 1, 1), ('b', 'B', NULL, NULL, 1, 1);
+      INSERT INTO pages VALUES
+        ('a', 'a1', 1, 1, NULL, NULL, '[]', '[]', 'x', 1),
+        ('a', 'a2', 2, 2, NULL, NULL, '[]', '[]', 'x', 1),
+        ('b', 'b1', 1, 1, NULL, NULL, '[]', '[]', 'x', 1),
+        ('b', 'b2', 2, 2, NULL, NULL, '[]', '[]', 'x', 1);
+      INSERT INTO progress VALUES ('a', 2, 500), ('b', 7, 600);
+    `);
+    const progressById = async () =>
+      Object.fromEntries((await migrated.listBooks()).map((b) => [b.bookId, b.progress]));
+
+    let migrated = createLibrary({ db: old, corpus: new FakeCorpus() });
+    expect(await progressById()).toEqual({
+      a: { position: 2, updatedAt: 500 },
+      b: { position: 2, updatedAt: 600 },
+    });
+    expect(old.prepare("SELECT book_id, file_id FROM progress ORDER BY book_id").all()).toEqual([
+      { book_id: "a", file_id: "a2" },
+      { book_id: "b", file_id: "b2" },
+    ]);
+
+    migrated = createLibrary({ db: old, corpus: new FakeCorpus() });
+    expect(await progressById()).toEqual({
+      a: { position: 2, updatedAt: 500 },
+      b: { position: 2, updatedAt: 600 },
+    });
   });
 });
