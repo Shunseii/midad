@@ -11,7 +11,8 @@ export const USAGE = `Usage: midad <command> [options]
 Reading
   midad books                                   List the books in the library
   midad page <book> <page> [--words]            Print a page: numbered matn lines, then ḥāshiya (ḥ1, ḥ2…)
-  midad lines <book> <page> --line <n[-m]>      Print some matn lines (add --hashiya for footnotes)
+  midad lines <book> <page> --line <n[-m]>      Print some matn lines, words numbered (add --hashiya for footnotes)
+  midad lines <book> <page> --line <n> --words <a[-b]>   Print just those words, to check a citation
   midad annotations <book> <page>               List highlights, notes and harakat with their ids
 
 Writing (labelled as written by the agent)
@@ -224,11 +225,23 @@ export const runCli = async ({
         const stored = await findPage({ book: a, position: b });
         if (!opts.line) throw new Error("Say which lines with --line <n> or --line <n-m>.");
         const lines = range(opts.line, "--line");
+        if (opts.words) {
+          // `--line 4 --words 9-10` prints exactly the words a citation covers, to check it before citing.
+          if (lines[0] !== lines[1]) throw new Error("Check a span on one line: --line <n> --words <a[-b]>.");
+          const [from, to] = range(opts.words, "--words");
+          const text = opts.hashiya ? stored.page.hashiya[lines[0] - 1]?.text : stored.page.matn.find((l) => l.line === lines[0])?.text;
+          if (text === undefined) throw new Error(`This page has no ${opts.hashiya ? "ḥāshiya " : ""}line ${lines[0]}.`);
+          const all = wordsOf(text);
+          if (to > all.length) throw new Error(`${opts.hashiya ? "Ḥāshiya l" : "L"}ine ${lines[0]} has ${all.length} words.`);
+          const covered = all.slice(from - 1, to);
+          print({ json: { line: lines[0], from, to, words: covered }, text: `${opts.hashiya ? "ḥ" : ""}${lines[0]}:${from}${to === from ? "" : `-${to}`}\t${covered.map((w, i) => `${from + i}:${w}`).join(" ")}\n` });
+          return 0;
+        }
         print({
           json: opts.hashiya
             ? stored.page.hashiya.map((f, i) => ({ line: i + 1, ...f })).filter((f) => f.line >= lines[0] && f.line <= lines[1])
             : stored.page.matn.filter((l) => l.line >= lines[0] && l.line <= lines[1]),
-          text: formatPage({ stored, words: false, lines, hashiya: opts.hashiya }),
+          text: formatPage({ stored, words: true, lines, hashiya: opts.hashiya }),
         });
         return 0;
       }
