@@ -2438,7 +2438,7 @@
       "type": "text"
     },
     "Gajc91bQ": {
-      "content": "Under: a band 0.55em high under the letters, so harakat above stay clear. Behind: a fill from 0.15em below the top of the line box to 0.05em above its bottom; the letters and harakat sit on it. Set in the display menu and Settings (Highlight style). A new highlight draws in right to left in both: 80ms plus 25ms a word, capped at 220ms, ease-out across the words (these two words take 130ms). Reduced motion fades it in.",
+      "content": "Under: a band 0.55em high under the letters, so harakat above stay clear. Behind: a fill from 0.15em below the top of the line box to 0.05em above its bottom; the letters and harakat sit on it. Set in Settings (Highlight style). A new highlight draws in right to left in both: 80ms plus 25ms a word, capped at 220ms, ease-out across the words (these two words take 130ms). Reduced motion fades it in.",
       "index": "aI",
       "name": "Spec note",
       "parentId": "WRvDdh1M",
