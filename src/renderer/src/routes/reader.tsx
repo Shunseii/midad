@@ -1144,7 +1144,7 @@ export const ReaderRoute = () => {
         )}
         {/* The scan sits beside the text, or replaces it when there isn't room for both. */}
         <div className="@container flex min-w-0 flex-1">
-        <div className={cx("flex min-w-0 flex-1 flex-col", showScan && page.data && "@max-2xl:hidden")}>
+        <div className={cx("relative flex min-w-0 flex-1 flex-col", showScan && page.data && "@max-2xl:hidden")}>
         <div
           ref={pageRoot}
           className="@container min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable_both-edges]"
@@ -1161,12 +1161,12 @@ export const ReaderRoute = () => {
             if (toolbar) setToolbar(null);
           }}
         >
-          {/* Even padding keeps the page centred; it leaves room for the last-read marker in the right margin. */}
+          {/* Even padding keeps the page centred; it leaves room for the last-read marker in the right margin. The bottom padding lets the last line scroll clear of the scrubber, which overlays the page and slides away in focus mode. */}
           <div
             data-page-area
             data-balance={balanced ? "" : undefined}
             style={{ "--balance": `${CONTENTS_WIDTH / 2}px` } as CSSProperties}
-            className="px-6 py-10 [view-transition-name:reader-page] @3xl:px-30"
+            className="px-6 pt-10 pb-28 [view-transition-name:reader-page] @3xl:px-30"
           >
           {page.isPending && (
             <div className="mx-auto flex w-full max-w-160 flex-col gap-4">
@@ -1204,7 +1204,7 @@ export const ReaderRoute = () => {
           <div
             {...chromeHover}
             data-focus={focused ? "hidden" : undefined}
-            className="relative z-10 h-18 shrink-0 bg-bg px-6 transition-[translate,opacity] [view-transition-name:page-scrubber] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
+            className="absolute inset-x-0 bottom-0 z-10 h-18 bg-bg px-6 transition-[translate,opacity] [view-transition-name:page-scrubber] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
           >
             <div className="mx-auto h-full max-w-190">
               <PageScrubber
