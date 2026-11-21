@@ -527,3 +527,15 @@ body {
     animation: page-fade-in 200ms ease both;
   }
 }
+
+/* Find on page: every match gets a soft band and an underline, the current one a solid band. Distinct from the highlight colours and the selection. */
+::highlight(find-match) {
+  background-color: var(--color-warn-soft);
+  text-decoration: underline 2px var(--color-warn);
+  text-underline-offset: 0.35em;
+}
+
+::highlight(find-active) {
+  background-color: var(--color-warn);
+  color: var(--color-bg);
+}

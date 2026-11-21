@@ -13,6 +13,8 @@ import { NoteEditor, NoteLayer, NotePeek, NoteRowPeek, SelectionToolbar } from "
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
 import { PageScrubber } from "../components/page-scrubber";
+import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } from "../components/find-bar";
+import { findOnPage } from "../../../shared/find";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Skeleton, Toast, cx } from "../components/ui";
@@ -396,6 +398,8 @@ export const ReaderRoute = () => {
   const conversation = useAskConversation(bookId);
   const [askSelection, setAskSelection] = useState<AskSelection | null>(null);
   const client = useQueryClient();
+  const [find, setFind] = useState<FindState>(CLOSED_FIND);
+  const [findFocus, setFindFocus] = useState(0);
 
   const total = book.data?.pageCount ?? 0;
   const fromUrl = Number(search.get("p"));
@@ -413,6 +417,29 @@ export const ReaderRoute = () => {
       void client.prefetchQuery({ queryKey: keys.annotations(bookId, p), queryFn: () => midad["annotations.list"]({ bookId, position: p }) });
     }
   }, [client, bookId, position, book.data?.pageCount]);
+  const findMatches = useMemo(
+    () => (find.open && page.data ? findOnPage({ page: page.data.page, query: find.query, options: find.options }) : []),
+    [find.open, find.query, find.options, page.data],
+  );
+  const activeMatch = findMatches.length ? Math.min(find.active, findMatches.length - 1) : 0;
+  useFindHighlights({ root: pageRoot, matches: findMatches, active: activeMatch, open: find.open });
+  const latestMatches = useRef(findMatches);
+  latestMatches.current = findMatches;
+  useEffect(() => {
+    if (find.open) revealMatch({ root: pageRoot.current, span: latestMatches.current[activeMatch] });
+  }, [find.open, find.query, find.options, activeMatch, page.data]);
+  const stepMatch = (by: 1 | -1) => {
+    const count = findMatches.length;
+    if (count) setFind((f) => ({ ...f, active: (activeMatch + by + count) % count }));
+  };
+  const openFind = () => {
+    setFind((f) => ({ ...f, open: true }));
+    setFindFocus((n) => n + 1);
+  };
+  const closeFind = () => {
+    setFind((f) => ({ ...f, open: false }));
+    if (document.activeElement instanceof HTMLElement && document.activeElement.closest('[role="search"]')) document.activeElement.blur();
+  };
   const chapterTitle = toc[entryIndexFor(toc, position)]?.text ?? null;
   const [chosenWidth] = usePageWidth();
   // Lags the choice by one view transition, so the reflow can play from the old column to the new one.
@@ -465,6 +492,7 @@ export const ReaderRoute = () => {
   }, []);
 
   useEffect(dismiss, [position, dismiss]);
+  useEffect(() => setFind((f) => ({ ...f, active: 0 })), [position]);
   // The library names its cover and marks the opening; once the transition has played, page turns use their own name again.
   useEffect(() => {
     const timer = setTimeout(() => delete document.documentElement.dataset.opening, 700);
@@ -929,6 +957,11 @@ export const ReaderRoute = () => {
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
     if (e.target instanceof HTMLElement && e.target.isContentEditable) return;
     if (e.target instanceof Element && e.target.closest(".sheet")) return;
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.code === "KeyF") {
+      e.preventDefault();
+      openFind();
+      return;
+    }
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
       e.preventDefault();
       step(e.code === "KeyY" || e.shiftKey ? "redo" : "undo");
@@ -941,7 +974,7 @@ export const ReaderRoute = () => {
       typing: target !== null || focusInNoteEditor() || (e.target instanceof HTMLElement && e.target.isContentEditable),
       choice: focusMode.choice,
       // A menu or popover may already have closed itself on this Esc, before this handler runs.
-      escapeTaken: menuOpen || toolbar !== null || noteEditor !== null || (e.target instanceof Element && e.target.closest("[data-slot=popover-content], [role=dialog], [role=toolbar]") !== null),
+      escapeTaken: menuOpen || toolbar !== null || noteEditor !== null || find.open || (e.target instanceof Element && e.target.closest("[data-slot=popover-content], [role=dialog], [role=toolbar]") !== null),
     });
     if (focusKey) {
       e.preventDefault();
@@ -979,6 +1012,7 @@ export const ReaderRoute = () => {
     else if (e.code === "KeyS" && !e.shiftKey) setShowScan(!showScan);
     else if (e.key === "Escape") {
       setMenuOpen(false);
+      if (find.open && !toolbar && !noteEditor && !menuOpen) closeFind();
       dismiss();
     }
   };
@@ -1152,6 +1186,14 @@ export const ReaderRoute = () => {
         {/* The scan sits beside the text, or replaces it when there isn't room for both. */}
         <div className="@container flex min-w-0 flex-1">
         <div className={cx("relative flex min-w-0 flex-1 flex-col", showScan && page.data && "@max-2xl:hidden")}>
+        <FindBar
+          state={find}
+          count={findMatches.length}
+          focusKey={findFocus}
+          onChange={(next) => setFind((f) => ({ ...f, ...next }))}
+          onStep={stepMatch}
+          onClose={closeFind}
+        />
         <div
           ref={pageRoot}
           className="@container min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable_both-edges]"
