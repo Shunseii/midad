@@ -466,9 +466,6 @@ export const AskPanel = ({
     <div className="flex min-h-0 flex-1 flex-col">
       {(turns.length > 0 || history.length > 0) && (
         <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-5">
-          <span className="text-xs text-ink-3">
-            {turns.length > 0 ? `${turns.length} ${turns.length === 1 ? "question" : "questions"}` : "New conversation"}
-          </span>
           <span className="flex-1" />
           {history.length > 0 && <ConversationHistory history={history} currentId={conversationId} onOpen={open} />}
           {turns.length > 0 && (
