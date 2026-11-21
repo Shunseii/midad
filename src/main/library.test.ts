@@ -350,3 +350,56 @@ describe("progress migration from position to page", () => {
     });
   });
 });
+
+describe("gloss corrections", () => {
+  const source = "الباب\n\n---\n\nقال <ruby>الشيخ<rt>أي المصنف</rt></ruby> رحمه الله تعالى";
+  const key = { part: "matn" as const, line: 1, text: "أي المصنف", book: { from: 2, to: 2 } };
+
+  beforeEach(async () => {
+    corpus.files = [file({ file_id: "f1", page_number: 1, text: source })];
+    await library.importBook({ corpusBookId: "b1" });
+  });
+
+  const glosses = async () => (await library.getPage({ bookId: "b1", position: 1 }))?.page.glosses;
+
+  it("moves a gloss to other words and remembers where the book put it", async () => {
+    await library.correctGloss({ bookId: "b1", position: 1, key, from: 1, to: 2 });
+    expect(await glosses()).toEqual([{ part: "matn", line: 1, from: 1, to: 2, text: "أي المصنف", book: { from: 2, to: 2 } }]);
+  });
+
+  it("replaces an earlier correction, and moving it back to the book's words removes it", async () => {
+    await library.correctGloss({ bookId: "b1", position: 1, key, from: 1, to: 2 });
+    await library.correctGloss({ bookId: "b1", position: 1, key, from: 3, to: 4 });
+    expect((await glosses())?.[0]).toMatchObject({ from: 3, to: 4 });
+    await library.correctGloss({ bookId: "b1", position: 1, key, from: 2, to: 2 });
+    expect(await glosses()).toEqual([{ part: "matn", line: 1, from: 2, to: 2, text: "أي المصنف" }]);
+    expect(db.prepare("SELECT COUNT(*) AS n FROM gloss_corrections").get()).toEqual({ n: 0 });
+  });
+
+  it("resets a gloss to the book's words", async () => {
+    await library.correctGloss({ bookId: "b1", position: 1, key, from: 1, to: 1 });
+    await library.resetGloss({ bookId: "b1", position: 1, key });
+    expect((await glosses())?.[0]).toEqual({ part: "matn", line: 1, from: 2, to: 2, text: "أي المصنف" });
+  });
+
+  it("refuses words past the line and glosses the page doesn't have", async () => {
+    await expect(library.correctGloss({ bookId: "b1", position: 1, key, from: 4, to: 9 })).rejects.toThrow(/words 1–5/);
+    await expect(library.correctGloss({ bookId: "b1", position: 1, key, from: 3, to: 2 })).rejects.toThrow(/words 1–5/);
+    await expect(library.correctGloss({ bookId: "b1", position: 1, key: { ...key, text: "غيره" }, from: 1, to: 1 })).rejects.toThrow(/no gloss/);
+  });
+
+  it("keeps a correction through a sync that rewrites the page, and drops it once the book's gloss is gone", async () => {
+    await library.correctGloss({ bookId: "b1", position: 1, key, from: 1, to: 2 });
+    corpus.files = [file({ file_id: "f1", page_number: 1, text: `${source} أبدا` })];
+    await library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f1"] });
+    expect((await glosses())?.[0]).toMatchObject({ from: 1, to: 2, book: { from: 2, to: 2 } });
+    corpus.files = [file({ file_id: "f1", page_number: 1, text: "الباب\n\n---\n\nقال <ruby>الشيخ<rt>أي الماتن</rt></ruby> رحمه الله" })];
+    await library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f1"] });
+    expect(await glosses()).toEqual([{ part: "matn", line: 1, from: 2, to: 2, text: "أي الماتن" }]);
+  });
+
+  it("leaves the page's words and other readers of the source alone", async () => {
+    await library.correctGloss({ bookId: "b1", position: 1, key, from: 1, to: 2 });
+    expect((await library.getPage({ bookId: "b1", position: 1 }))?.page.matn).toEqual(parsePage(source).matn);
+  });
+});

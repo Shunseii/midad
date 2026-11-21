@@ -2,6 +2,7 @@ import type { BookMarks, Highlight, HighlightColor, LetterRef, Note, PageAnnotat
 import type { StreamEvent } from "./ask";
 import type { Conversation, ConversationSummary, StoredTurn } from "./conversations";
 import type { CorpusBookListing } from "./corpus";
+import type { GlossKey } from "./page";
 import type {
   BookDetail,
   Bookmark,
@@ -40,6 +41,9 @@ export interface MidadApi {
   "library.sync": (input: SyncInput) => Promise<SyncResult>;
   "library.setProgress": (input: { bookId: string; position: number; anchor?: ScrollAnchor }) => Promise<void>;
   "library.firstLine": (input: { bookId: string; position: number }) => Promise<string | null>;
+  /** Moves a gloss to other words of its line; the book's own words remove the correction. */
+  "glosses.correct": (input: { bookId: string; position: number; key: GlossKey; from: number; to: number }) => Promise<void>;
+  "glosses.reset": (input: { bookId: string; position: number; key: GlossKey }) => Promise<void>;
   "annotations.list": (input: { bookId: string; position: number }) => Promise<PageAnnotations>;
   "annotations.bookMarks": (input: { bookId: string }) => Promise<BookMarks>;
   "highlights.add": (input: { bookId: string; position: number; span: Span; color: HighlightColor }) => Promise<Highlight>;
@@ -103,6 +107,8 @@ export const CHANNELS = [
   "library.sync",
   "library.setProgress",
   "library.firstLine",
+  "glosses.correct",
+  "glosses.reset",
   "annotations.list",
   "annotations.bookMarks",
   "highlights.add",
