@@ -930,7 +930,8 @@ export const ReaderRoute = () => {
   );
 
   return (
-    <div className="relative flex h-full flex-col">
+    // Clipped: the bars focus mode moves out of view and the trace's contents dots would otherwise overflow the window and give the document a scrollbar of its own.
+    <div className="relative flex h-full flex-col overflow-clip">
       <ZoomLevel scale={textScale} shown={zoomShown} />
       {focusOn && (
         <FocusTrace
