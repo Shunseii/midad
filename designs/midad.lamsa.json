@@ -4760,7 +4760,7 @@
     },
     "2sZszw4E": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "c74END6N",
@@ -6839,7 +6839,7 @@
     },
     "4ClWc38v": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "rTKoSK5L",
@@ -10846,7 +10846,7 @@
     },
     "6OwEwjTC": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "wsLXncIi",
@@ -12467,7 +12467,7 @@
       "type": "instance"
     },
     "7TXLmJwA": {
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a0",
       "name": "Icon bookmark",
       "parentId": "AXcc76UP",
@@ -39371,7 +39371,7 @@
     },
     "NTQfZkmu": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "NkRFcxbA",
@@ -55062,7 +55062,7 @@
     },
     "WxldFKM6": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "xM0kytNw",
@@ -57520,7 +57520,7 @@
     },
     "YSFADOFl": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "iM6HjSd1",
@@ -64426,7 +64426,7 @@
     },
     "cjptYKEb": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "g6KleUug",
@@ -66075,7 +66075,7 @@
       "type": "text"
     },
     "dpRhcYun": {
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a0",
       "name": "Icon bookmark",
       "parentId": "s5c42LMS",
@@ -70294,7 +70294,7 @@
       "type": "frame"
     },
     "g6oaCZ8K": {
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a0",
       "name": "Icon bookmark",
       "parentId": "3kYrqTtO",
@@ -75778,7 +75778,7 @@
     },
     "jMDbSPQh": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "wD71daLD",
@@ -81330,7 +81330,7 @@
       "type": "frame"
     },
     "mZDrmw73": {
-      "icon": "map-pin-plus",
+      "icon": "bookmark-plus",
       "index": "a000",
       "name": "Icon bookmark-plus",
       "parentId": "tDvZjwzt",
@@ -86005,7 +86005,7 @@
     },
     "pOpxm68P": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "zy4dNzQS",
@@ -89626,7 +89626,7 @@
     },
     "rTQMr36M": {
       "css": "& svg, & svg * {\n  fill: currentColor;\n}",
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a000",
       "name": "Icon bookmark",
       "parentId": "FlLkwMWj",
@@ -91392,7 +91392,7 @@
       "type": "frame"
     },
     "sSwKPP7r": {
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a0",
       "name": "Icon bookmark",
       "parentId": "7kDkAZ6q",
@@ -92243,7 +92243,7 @@
       "type": "text"
     },
     "t4WpIDNa": {
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a0",
       "name": "Icon bookmark",
       "parentId": "JYXJHqFT",
@@ -95852,7 +95852,7 @@
       "type": "frame"
     },
     "vBaIJV9O": {
-      "icon": "map-pin",
+      "icon": "bookmark",
       "index": "a0",
       "name": "Icon bookmark",
       "parentId": "TwCI1iDZ",
