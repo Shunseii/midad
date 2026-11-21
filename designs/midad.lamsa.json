@@ -4115,7 +4115,7 @@
     },
     "3OipRKir": {
       "mode": "light",
-      "name": "Reader · Harakat hidden",
+      "name": "Reader · Display menu · Harakat off",
       "style": {
         "background": "{color.bg}",
         "color": "{color.ink}",
@@ -9653,6 +9653,18 @@
       },
       "type": "frame"
     },
+    "7tN0OznQ": {
+      "index": "a0V",
+      "name": "Row · Harakat",
+      "parentId": "1rKewHXe",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-direction": "row",
+        "gap": 12
+      },
+      "type": "frame"
+    },
     "7uRJiK0B": {
       "componentId": "RV1DOgzp",
       "index": "a006",
@@ -14076,6 +14088,19 @@
       },
       "type": "frame"
     },
+    "BSH3JiTl": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "mQRpyaeD",
+      "style": {
+        "align-self": "stretch",
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
     "BSlYlTi6": {
       "content": ".",
       "index": "a00008",
@@ -17795,6 +17820,17 @@
         "gap": 4,
         "padding": "20px 16px",
         "width": 248
+      },
+      "type": "frame"
+    },
+    "EGOTuVTA": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "BSH3JiTl",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 8
       },
       "type": "frame"
     },
@@ -31752,6 +31788,19 @@
       },
       "type": "frame"
     },
+    "PdEcZdoi": {
+      "content": "Harakat",
+      "index": "a0",
+      "name": "Label",
+      "parentId": "QuFDB1Oo",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "PdNNmLAP": {
       "content": "٣",
       "index": "a000",
@@ -33128,6 +33177,17 @@
         "position": "absolute",
         "top": 0,
         "width": 28
+      },
+      "type": "frame"
+    },
+    "QuFDB1Oo": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "oiH1LnzU",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 8
       },
       "type": "frame"
     },
@@ -41321,6 +41381,16 @@
       },
       "type": "icon"
     },
+    "XSz2e3uD": {
+      "componentId": "4aJZW1V7",
+      "index": "a1",
+      "name": "Kbd",
+      "parentId": "EGOTuVTA",
+      "props": {
+        "label": "H"
+      },
+      "type": "instance"
+    },
     "XT3yKW5d": {
       "content": "بابُ الكلامِ",
       "index": "a1",
@@ -43279,6 +43349,19 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "ZIDeEru9": {
+      "content": "The corpus's marks and yours",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "oiH1LnzU",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
     },
     "ZIWghiV1": {
       "index": "a0",
@@ -55189,6 +55272,16 @@
       },
       "type": "frame"
     },
+    "iiBQIMEk": {
+      "componentId": "4aJZW1V7",
+      "index": "a1",
+      "name": "Kbd",
+      "parentId": "QuFDB1Oo",
+      "props": {
+        "label": "H"
+      },
+      "type": "instance"
+    },
     "iiguqNxb": {
       "content": "2",
       "index": "a000",
@@ -55932,6 +56025,19 @@
         "line-height": 1,
         "padding": "0 2px",
         "vertical-align": "super"
+      },
+      "type": "text"
+    },
+    "jWh50DwD": {
+      "content": "The corpus's marks and yours",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "BSH3JiTl",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
       },
       "type": "text"
     },
@@ -59519,6 +59625,18 @@
       },
       "type": "text"
     },
+    "mQRpyaeD": {
+      "index": "a0V",
+      "name": "Row · Harakat",
+      "parentId": "FzPp96eD",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "flex-direction": "row",
+        "gap": 12
+      },
+      "type": "frame"
+    },
     "mSz8Rj4l": {
       "componentId": "3j9EZY72",
       "index": "a002",
@@ -62436,6 +62554,19 @@
         "flex-direction": "column",
         "gap": 8,
         "padding": "12px 16px"
+      },
+      "type": "frame"
+    },
+    "oiH1LnzU": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "7tN0OznQ",
+      "style": {
+        "align-self": "stretch",
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
       },
       "type": "frame"
     },
@@ -66399,6 +66530,17 @@
       },
       "type": "frame"
     },
+    "rsEYvbbZ": {
+      "componentId": "HZhkp90k",
+      "index": "a1",
+      "name": "Switch",
+      "parentId": "mQRpyaeD",
+      "props": {
+        "checked": "on"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "rsiKdBsb": {
       "content": "ْ",
       "index": "a00003",
@@ -69639,6 +69781,17 @@
       },
       "type": "text"
     },
+    "uaFyVpZN": {
+      "componentId": "HZhkp90k",
+      "index": "a1",
+      "name": "Switch",
+      "parentId": "7tN0OznQ",
+      "props": {
+        "checked": "off"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "uadL07BQ": {
       "content": "اسمٌ",
       "index": "a00001",
@@ -70279,6 +70432,19 @@
         "line-height": "36px",
         "padding-right": 12,
         "text-align": "right"
+      },
+      "type": "text"
+    },
+    "v1Hc0CNW": {
+      "content": "Harakat",
+      "index": "a0",
+      "name": "Label",
+      "parentId": "EGOTuVTA",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
       },
       "type": "text"
     },
