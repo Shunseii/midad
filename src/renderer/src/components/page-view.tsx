@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
-import { type CSSProperties, createContext, type ReactNode, type MouseEvent as ReactMouseEvent, useContext, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, createContext, type ReactNode, type MouseEvent as ReactMouseEvent, useContext, useId, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
   type HighlightColor,
@@ -9,17 +9,20 @@ import {
   type Part,
   type Span,
   spanContains,
+  type Token,
   tokenize,
   type WordRef,
 } from "../../../shared/annotations";
 import { stripHarakat } from "../../../shared/arabic";
 import { displayMarks, inContext, isMark, lettersOf } from "../../../shared/harakat";
 import type { StoredPage } from "../../../shared/library";
+import type { Gloss } from "../../../shared/page";
 import type { HighlightStyle, PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
 import { footnotesByMarker, splitFootnoteRef } from "../lib/footnotes";
 import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
 import { cx } from "./ui";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const MARK_BG: Record<HighlightColor, string> = {
@@ -68,6 +71,72 @@ const withFootnoteRefs = (text: string): ReactNode => {
   return [ref.before, <FootnoteRef key="ref" marker={ref.marker} />, withFootnoteRefs(ref.after)];
 };
 
+/** Overlapping glosses on a line, merged so each word sits under at most one mark. */
+const glossRuns = (glosses: Gloss[]): { from: number; to: number; texts: string[] }[] =>
+  [...glosses]
+    .sort((a, b) => a.from - b.from || a.to - b.to)
+    .reduce<{ from: number; to: number; texts: string[] }[]>((runs, g) => {
+      const last = runs.at(-1);
+      if (last && g.from <= last.to) {
+        last.to = Math.max(last.to, g.to);
+        last.texts.push(g.text);
+      } else runs.push({ from: g.from, to: g.to, texts: [g.text] });
+      return runs;
+    }, []);
+
+const wordNumber = (token: Token | undefined) => (token?.kind === "word" ? token.word : 0);
+
+const stopPageHandlers = (e: { stopPropagation: () => void }) => e.stopPropagation();
+
+/**
+ * An interlinear gloss's base: its words keep working as page words (selecting, highlighting,
+ * harakat), with a quiet dotted underline. Hovering, clicking or Enter shows the gloss
+ * above them, where an interlinear gloss is written, clear of the footnote peek below.
+ */
+const GlossMark = ({ texts, showHarakat, children }: { texts: string[]; showHarakat: boolean; children: ReactNode }) => {
+  const id = useId();
+  const [open, setOpen] = useState(false);
+  const shown = texts.map((t) => (showHarakat ? t : stripHarakat(t)));
+  return (
+    <Popover
+      open={open}
+      onOpenChange={(next, details) => {
+        // Not while the reader drags a selection across the words.
+        const pressed = details.event instanceof MouseEvent && details.event.buttons !== 0 && details.event.type !== "click";
+        if (next && pressed) return;
+        setOpen(next);
+      }}
+    >
+      <PopoverTrigger
+        openOnHover
+        delay={250}
+        closeDelay={200}
+        nativeButton={false}
+        aria-describedby={id}
+        render={<span data-gloss className="gloss-mark" />}
+      >
+        {children}
+        <span id={id} hidden>
+          {shown.join("\n")}
+        </span>
+      </PopoverTrigger>
+      <PopoverContent
+        side="top"
+        sideOffset={6}
+        initialFocus={false}
+        onMouseDown={stopPageHandlers}
+        onMouseUp={stopPageHandlers}
+        onClick={stopPageHandlers}
+        className="w-max max-w-96 gap-0 bg-surface-3 p-0 text-ink"
+      >
+        <div dir="rtl" className="gloss-scroll ar max-h-48 overflow-y-auto overscroll-contain px-3.5 py-2.5 text-right text-ar-small whitespace-pre-line text-ink-2">
+          {shown.join("\n")}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 export interface WordTarget {
   part: Part;
   ref: WordRef;
@@ -96,6 +165,8 @@ interface LineProps {
   part: Part;
   line: number;
   text: string;
+  /** The page's interlinear glosses; the line picks out its own. */
+  glosses: Gloss[];
   annotations: PageAnnotations;
   sweep: Sweep | null;
   display: Display;
@@ -163,7 +234,7 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
   return nodes;
 };
 
-const Line = ({ part, line, text, annotations, sweep, display, onWordHover, onWordClick }: LineProps) => {
+const Line = ({ part, line, text, glosses, annotations, sweep, display, onWordHover, onWordClick }: LineProps) => {
   const sweepAt = (h: Highlight | null, ref: WordRef) => (sweep && h?.id === sweep.id ? sweep.order.get(`${part}:${ref.line}:${ref.word}`) : undefined);
   const tokens = tokenize(text);
   const wordAt = (i: number) => {
@@ -171,7 +242,7 @@ const Line = ({ part, line, text, annotations, sweep, display, onWordHover, onWo
     return t?.kind === "word" ? { line, word: t.word } : null;
   };
 
-  return tokens.map((token, i) => {
+  const rendered = tokens.map((token, i) => {
     if (token.kind === "space") {
       const before = wordAt(i - 1);
       const after = wordAt(i + 1);
@@ -227,6 +298,29 @@ const Line = ({ part, line, text, annotations, sweep, display, onWordHover, onWo
       </span>
     );
   });
+
+  const runs = glossRuns(glosses.filter((g) => g.part === part && g.line === line));
+  if (runs.length === 0) return rendered;
+  const out: ReactNode[] = [];
+  let i = 0;
+  while (i < tokens.length) {
+    const token = tokens[i];
+    const run = token?.kind === "word" ? runs.find((r) => r.from === token.word) : undefined;
+    if (!run) {
+      out.push(rendered[i]);
+      i += 1;
+      continue;
+    }
+    let end = i;
+    while (end < tokens.length - 1 && wordNumber(tokens[end]) < run.to) end += 1;
+    out.push(
+      <GlossMark key={`g${i}`} texts={run.texts} showHarakat={display.showHarakat}>
+        {rendered.slice(i, end + 1)}
+      </GlossMark>,
+    );
+    i = end + 1;
+  }
+  return out;
 };
 
 /** One row of a matn line as laid out on screen, relative to its paragraph. `word` is the row's first word. */
@@ -456,7 +550,7 @@ export const PageView = ({
   const { page } = stored;
   const fresh = freshHighlight ? annotations.highlights.find((h) => h.id === freshHighlight) : undefined;
   const sweep = fresh ? sweepOrder({ page, highlight: fresh }) : null;
-  const lineProps = { annotations, sweep, display, onWordHover, onWordClick };
+  const lineProps = { glosses: page.glosses, annotations, sweep, display, onWordHover, onWordClick };
   const t = (s: string) => (display.showHarakat ? s : stripHarakat(s));
   const markable = (part: Part, line: number) => ({
     part,

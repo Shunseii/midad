@@ -210,6 +210,63 @@ body {
   }
 }
 
+/*
+ * An interlinear gloss's base: a quiet dotted underline, thinner and fainter than a
+ * note's, that firms up while its gloss is showing. Vertical padding on the inline box
+ * widens the hover target without touching the line's layout.
+ */
+.gloss-mark {
+  padding-block: 0.3em;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.55em;
+  text-decoration-color: color-mix(in oklab, var(--color-accent) 45%, transparent);
+  cursor: help;
+  transition: text-decoration-color var(--transition-duration-press) var(--ease-out);
+}
+/* A footnote number standing as the base is an inline-block, which the underline skips. */
+.gloss-mark sup {
+  text-decoration: inherit;
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 0.3em;
+}
+.gloss-mark:hover,
+.gloss-mark[data-popup-open] {
+  text-decoration-color: var(--color-accent);
+}
+
+/*
+ * A long gloss scrolls inside its popup. The edge it's cut at fades out; the fade
+ * shrinks as that edge is reached (a scroll-driven animation on its own scroller).
+ */
+@property --fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+.gloss-scroll {
+  mask-image: linear-gradient(to bottom, transparent, #000 var(--fade-top), #000 calc(100% - var(--fade-bottom)), transparent);
+  animation: gloss-fade linear both;
+  animation-timeline: scroll(self);
+}
+@keyframes gloss-fade {
+  from {
+    --fade-top: 0px;
+    --fade-bottom: 1.5rem;
+  }
+  to {
+    --fade-top: 1.5rem;
+    --fade-bottom: 0px;
+  }
+}
+
 /* Only the line's own rows hang; the margin controls inside it don't. */
 .page-line * {
   text-indent: 0;
