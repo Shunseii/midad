@@ -12,9 +12,11 @@ export interface Quote {
   text: string;
   span: Span | null;
   position: number;
+  /** Where in the question the pill sat. Older questions have none: their pills show first. */
+  offset?: number;
 }
 
-/** "interrupted": the app closed while the answer was still streaming. */
+/** "interrupted"": the app closed while the answer was still streaming. */
 export type TurnStatus = "streaming" | "done" | "error" | "interrupted";
 
 export interface StoredTurn {

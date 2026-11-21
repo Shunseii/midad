@@ -105,8 +105,8 @@ describe("readingContext quotes", () => {
         { span: null, text: "نص من مكان آخر" },
       ],
     });
-    expect(text).toMatch(/quote: line 2, words 1–4 .*: الكلام هو اللفظ المركب/);
-    expect(text).toMatch(/quote \(pasted\): نص من مكان آخر/);
+    expect(text).toMatch(/quote 1: line 2, words 1–4 .*: الكلام هو اللفظ المركب/);
+    expect(text).toMatch(/quote 2 \(pasted\): نص من مكان آخر/);
   });
 });
 

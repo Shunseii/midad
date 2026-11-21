@@ -1,7 +1,9 @@
 import { ArrowUp, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
-import { type ClipboardEvent, type ReactNode, type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
 import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
+import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
 import type { AskSelection, Conversation, ConversationSummary, Quote, StoredTurn } from "../../../shared/conversations";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { copiedPassage } from "../lib/copied";
@@ -88,7 +90,7 @@ export const useAskConversation = (bookId: string) => {
       requestId: id,
       bookId,
       position,
-      question: question || "Explain this passage.",
+      question: questionWithQuoteMarks({ question, quotes }) || "Explain this passage.",
       selection: selection && position === selection.position ? { span: selection.span, text: selection.text } : undefined,
       quotes: quotes.map((q) => ({ text: q.text, span: q.position === position ? q.span : null })),
       sessionId: sessionId.current,
@@ -250,24 +252,41 @@ const QuoteChip = ({ quote, onCite, onRemove, onBubble }: { quote: Quote; onCite
   );
 };
 
-/** Pasted passages, as chips like the answer's citations: hover for the words, click to jump to them. */
-const QuoteChips = ({
-  quotes,
-  onCite,
-  onRemove,
-  onBubble,
-}: {
-  quotes: Quote[];
-  onCite: (c: Citation) => void;
-  onRemove?: (id: string) => void;
-  onBubble?: boolean;
-}) => (
-  <div className="-mx-0.5 flex flex-wrap gap-y-1">
-    {quotes.map((q) => (
-      <QuoteChip key={q.id} quote={q} onCite={onCite} onBubble={onBubble} onRemove={onRemove && (() => onRemove(q.id))} />
-    ))}
-  </div>
-);
+const PILL_ATTR = "data-quote-id";
+
+/** The composer's text and pills, in order. A pill's own label isn't part of the text. */
+const readComposer = ({ root, quotes }: { root: HTMLElement; quotes: Map<string, Quote> }): ComposerPart[] => {
+  const parts: ComposerPart[] = [];
+  const walk = (node: Node) => {
+    for (const child of node.childNodes) {
+      if (child.nodeType === Node.TEXT_NODE) parts.push({ kind: "text", text: child.textContent ?? "" });
+      if (!(child instanceof HTMLElement)) continue;
+      const id = child.getAttribute(PILL_ATTR);
+      const quote = id ? quotes.get(id) : undefined;
+      if (quote) parts.push({ kind: "quote", quote });
+      else if (child.tagName === "BR") parts.push({ kind: "text", text: "\n" });
+      else if (!id) walk(child);
+    }
+  };
+  walk(root);
+  return parts;
+};
+
+const caretAtEnd = (root: HTMLElement) => {
+  const range = document.createRange();
+  range.selectNodeContents(root);
+  range.collapse(false);
+  const selection = window.getSelection();
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+};
+
+/** The node just before a collapsed caret, if the caret sits right after it. */
+const nodeBeforeCaret = (range: Range): Node | null => {
+  const { startContainer, startOffset } = range;
+  if (startContainer.nodeType === Node.TEXT_NODE) return startOffset === 0 ? startContainer.previousSibling : null;
+  return startOffset > 0 ? startContainer.childNodes[startOffset - 1] ?? null : null;
+};
 
 /** The book's saved conversations, most recent first; opening one continues its Claude session. */
 const ConversationHistory = ({
@@ -331,8 +350,10 @@ export const AskPanel = ({
   onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
 }) => {
   const { turns, ask, busy, stop, retry, reset, open, conversationId, history } = conversation;
-  const [draft, setDraft] = useState("");
-  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [draft, setDraft] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
+  const editor = useRef<HTMLDivElement>(null);
+  // Each pill's quote and the span it renders into, kept in the editor's text flow.
+  const pills = useRef(new Map<string, { quote: Quote; host: HTMLElement }>());
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const end = useRef<HTMLDivElement>(null);
   const activeSelection = selection && selection.position === position ? selection : null;
@@ -342,31 +363,90 @@ export const AskPanel = ({
     if (lastAnswer !== undefined || turns.length) end.current?.scrollIntoView({ block: "end" });
   }, [lastAnswer, turns.length]);
 
-  const send = (question: string) => {
-    if ((!question.trim() && quotes.length === 0) || busy) return;
-    void ask({ question: question.trim(), position, selection: activeSelection, quotes });
-    setDraft("");
-    setQuotes([]);
+  const sync = () => {
+    const root = editor.current;
+    if (!root) return;
+    for (const [id, pill] of pills.current) if (!root.contains(pill.host)) pills.current.delete(id);
+    const parts = readComposer({ root, quotes: new Map([...pills.current].map(([id, p]) => [id, p.quote])) });
+    const empty = parts.every((p) => p.kind === "text" && p.text === "");
+    setDraft({ ...serializeComposer(parts), empty });
+  };
+
+  const clear = () => {
+    if (editor.current) editor.current.textContent = "";
+    pills.current.clear();
+    setDraft({ question: "", quotes: [], empty: true });
+  };
+
+  const send = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
+    if ((!question && quotes.length === 0) || busy) return;
+    void ask({ question, position, selection: activeSelection, quotes });
+    clear();
+  };
+
+  const insertQuote = (quote: Quote) => {
+    const root = editor.current;
+    if (!root) return;
+    const host = document.createElement("span");
+    host.contentEditable = "false";
+    host.setAttribute(PILL_ATTR, quote.id);
+    const selection = window.getSelection();
+    const atCaret = document.activeElement === root && selection?.rangeCount && root.contains(selection.getRangeAt(0).startContainer);
+    if (!atCaret) caretAtEnd(root);
+    const range = window.getSelection()?.getRangeAt(0);
+    if (!range) return;
+    range.deleteContents();
+    range.insertNode(host);
+    range.setStartAfter(host);
+    range.collapse(true);
+    window.getSelection()?.removeAllRanges();
+    window.getSelection()?.addRange(range);
+    pills.current.set(quote.id, { quote, host });
+    sync();
+  };
+
+  const removeQuote = (id: string) => {
+    pills.current.get(id)?.host.remove();
+    sync();
   };
 
   // Text copied from the page becomes a quote with its lines; Arabic from elsewhere becomes a plain quote.
-  const onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+  // Anything else goes in as plain text.
+  const onPaste = (e: ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
     const text = e.clipboardData.getData("text/plain");
     const fromPage = copiedPassage(text);
     const arabicOnly = /\p{Script=Arabic}/u.test(text) && !/[A-Za-z]/.test(text);
-    if (!fromPage && !arabicOnly) return;
-    e.preventDefault();
-    setQuotes((all) => [
-      ...all,
-      { id: crypto.randomUUID(), text: fromPage?.text ?? text.trim(), span: fromPage?.span ?? null, position: fromPage?.position ?? position },
-    ]);
+    if (!fromPage && !arabicOnly) {
+      document.execCommand("insertText", false, text);
+      return;
+    }
+    insertQuote({ id: crypto.randomUUID(), text: fromPage?.text ?? text.trim(), span: fromPage?.span ?? null, position: fromPage?.position ?? position });
   };
 
-  const onKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       send(draft);
+      return;
     }
+    const range = window.getSelection()?.rangeCount ? window.getSelection()?.getRangeAt(0) : null;
+    if (e.key !== "Backspace" || !range?.collapsed) return;
+    const before = nodeBeforeCaret(range);
+    if (before instanceof HTMLElement && before.hasAttribute(PILL_ATTR)) {
+      e.preventDefault();
+      before.remove();
+      sync();
+    }
+  };
+
+  // A click anywhere in the composer box, outside its buttons and pills, types into it.
+  const focusComposer = (e: MouseEvent<HTMLDivElement>) => {
+    const root = editor.current;
+    if (!root || !(e.target instanceof Element) || e.target.closest("button, [contenteditable]")) return;
+    e.preventDefault();
+    root.focus();
+    caretAtEnd(root);
   };
 
   const firstWord = activeSelection?.text.split(/\s+/)[0];
@@ -419,7 +499,7 @@ export const AskPanel = ({
             </div>
             <div className="flex flex-col items-start gap-2">
               {suggestions.map((s) => (
-                <Button key={s.label} variant="secondary" icon={s.icon} onClick={() => send(s.question)}>
+                <Button key={s.label} variant="secondary" icon={s.icon} onClick={() => send({ question: s.question, quotes: draft.quotes.map(({ offset: _, ...q }) => q) })}>
                   <span dir="auto">{s.label}</span>
                 </Button>
               ))}
@@ -433,10 +513,13 @@ export const AskPanel = ({
               dir={turn.question ? (ARABIC_START.test(turn.question) ? "rtl" : "ltr") : "auto"}
               className={cx("max-w-[85%] self-end rounded-xl bg-accent-soft px-3.5 py-2.5", ARABIC_START.test(turn.question) ? "ar text-ar-body" : "text-body")}
             >
-              {turn.quotes.map((q) => (
-                <QuoteChip key={q.id} quote={q} onCite={onCite} onBubble />
-              ))}
-              {turn.question && <span className={cx(turn.quotes.length > 0 && "ms-1")}>{turn.question}</span>}
+              {parseComposer(turn).map((part, i) =>
+                part.kind === "quote" ? (
+                  <QuoteChip key={part.quote.id} quote={part.quote} onCite={onCite} onBubble />
+                ) : (
+                  <span key={i}>{part.text}</span>
+                ),
+              )}
             </p>
             {turn.answer && (
               <Answer text={turn.answer} cite={(c, key) => <AnswerCite key={key} bookId={bookId} cite={c} position={turn.position} onCite={onCite} />} />
@@ -476,18 +559,33 @@ export const AskPanel = ({
       </div>
 
       <div className="shrink-0 p-4 pt-0">
-        <div className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-3 focus-within:border-ink-3">
-          {quotes.length > 0 && <QuoteChips quotes={quotes} onCite={onCite} onRemove={(id) => setQuotes((all) => all.filter((x) => x.id !== id))} />}
-          <textarea
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={onKeyDown}
-            onPaste={onPaste}
-            rows={2}
-            dir="auto"
-            placeholder={activeSelection ? "Ask about this passage…" : "Ask about this page…"}
-            className="resize-none bg-transparent text-body outline-hidden placeholder:text-ink-3 [unicode-bidi:plaintext]"
-          />
+        <div
+          onMouseDown={focusComposer}
+          className="flex cursor-text flex-col gap-3 rounded-xl border border-line bg-surface p-3 focus-within:border-ink-3"
+        >
+          <div className="relative">
+            {draft.empty && (
+              <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 text-body text-ink-3">
+                {activeSelection ? "Ask about this passage…" : "Ask about this page…"}
+              </span>
+            )}
+            <div
+              ref={editor}
+              role="textbox"
+              aria-multiline
+              aria-label={activeSelection ? "Ask about this passage" : "Ask about this page"}
+              contentEditable="plaintext-only"
+              suppressContentEditableWarning
+              dir="auto"
+              onInput={sync}
+              onKeyDown={onKeyDown}
+              onPaste={onPaste}
+              className="max-h-40 min-h-12 overflow-y-auto break-words whitespace-pre-wrap text-body outline-hidden [unicode-bidi:plaintext]"
+            />
+            {[...pills.current.values()].map(({ quote, host }) =>
+              createPortal(<QuoteChip quote={quote} onCite={onCite} onRemove={() => removeQuote(quote.id)} />, host, quote.id),
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <span className="flex-1" />
             {busy ? (
@@ -495,7 +593,7 @@ export const AskPanel = ({
                 Stop
               </Button>
             ) : (
-              <Button size="sm" icon={ArrowUp} disabled={!draft.trim() && quotes.length === 0} onClick={() => send(draft)}>
+              <Button size="sm" icon={ArrowUp} disabled={!draft.question && draft.quotes.length === 0} onClick={() => send(draft)}>
                 Ask
               </Button>
             )}

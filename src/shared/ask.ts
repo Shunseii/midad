@@ -93,7 +93,7 @@ export const readingContext = ({
     `book: ${bookId} (${title})`,
     `page ${position}${number === null ? "" : `, printed ${number}`}`,
     ...(selection ? [`selection: ${describeSpan(selection.span)}: ${selection.text}`] : []),
-    ...quotes.map((q) => (q.span ? `quote: ${describeSpan(q.span)}: ${q.text}` : `quote (pasted): ${q.text}`)),
+    ...quotes.map((q, i) => (q.span ? `quote ${i + 1}: ${describeSpan(q.span)}: ${q.text}` : `quote ${i + 1} (pasted): ${q.text}`)),
     "</reading-context>",
   ].join("\n");
 
