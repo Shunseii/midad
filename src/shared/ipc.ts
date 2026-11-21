@@ -1,4 +1,4 @@
-import type { Highlight, HighlightColor, LetterRef, Note, PageAnnotations, Part, Span } from "./annotations";
+import type { BookMarks, Highlight, HighlightColor, LetterRef, Note, PageAnnotations, Part, Span } from "./annotations";
 import type { StreamEvent } from "./ask";
 import type { CorpusBookListing } from "./corpus";
 import type {
@@ -36,7 +36,9 @@ export interface MidadApi {
   "library.previewSync": (input: { bookId: string }) => Promise<SyncPreview>;
   "library.sync": (input: SyncInput) => Promise<SyncResult>;
   "library.setProgress": (input: { bookId: string; position: number }) => Promise<void>;
+  "library.firstLine": (input: { bookId: string; position: number }) => Promise<string | null>;
   "annotations.list": (input: { bookId: string; position: number }) => Promise<PageAnnotations>;
+  "annotations.bookMarks": (input: { bookId: string }) => Promise<BookMarks>;
   "highlights.add": (input: { bookId: string; position: number; span: Span; color: HighlightColor }) => Promise<Highlight>;
   "highlights.remove": (input: { id: string }) => Promise<void>;
   "notes.add": (input: { bookId: string; position: number; span: Span; body: string }) => Promise<Note>;
@@ -80,7 +82,9 @@ export const CHANNELS = [
   "library.previewSync",
   "library.sync",
   "library.setProgress",
+  "library.firstLine",
   "annotations.list",
+  "annotations.bookMarks",
   "highlights.add",
   "highlights.remove",
   "notes.add",

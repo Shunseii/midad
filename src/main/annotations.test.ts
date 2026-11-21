@@ -238,3 +238,22 @@ describe("harakat", () => {
     expect((await onPage()).harakat.find((h) => h.word === 3)?.stale).toBe(true);
   });
 });
+
+describe("book marks", () => {
+  it("lists the pages with highlights, in the newest highlight's colour, and the pages with notes", async () => {
+    await annotations.addHighlight({ bookId: "b1", position: 1, span: matn(2, 1), color: "green" });
+    clock = 2000;
+    await annotations.addHighlight({ bookId: "b1", position: 1, span: matn(2, 3), color: "pink" });
+    await annotations.addHighlight({ bookId: "b1", position: 3, span: matn(1, 1), color: "blue" });
+    await annotations.addNote({ bookId: "b1", position: 2, span: matn(1, 1), body: "a" });
+    await annotations.addNote({ bookId: "b1", position: 2, span: matn(1, 2), body: "b" });
+    expect(await annotations.bookMarks({ bookId: "b1" })).toEqual({
+      highlights: [{ position: 1, color: "pink" }, { position: 3, color: "blue" }],
+      notes: [2],
+    });
+  });
+
+  it("is empty for a book without any", async () => {
+    expect(await annotations.bookMarks({ bookId: "b1" })).toEqual({ highlights: [], notes: [] });
+  });
+});

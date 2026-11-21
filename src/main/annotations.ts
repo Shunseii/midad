@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
 import {
   type Author,
+  type BookMarks,
   compareSpans,
   type Highlight,
   type HighlightColor,
@@ -195,6 +196,24 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
         }),
       );
       return { highlights: highlights.sort(inReadingOrder), notes: notes.sort(inReadingOrder), harakat };
+    },
+
+    /** Which pages of a book have highlights (with the newest one's colour) and notes, for the scrubber's dots. */
+    async bookMarks({ bookId }: { bookId: string }): Promise<BookMarks> {
+      const highlightRows = db
+        .prepare(
+          `SELECT p.position, h.color FROM highlights h JOIN pages p ON p.book_id = h.book_id AND p.file_id = h.file_id
+           WHERE h.book_id = ? ORDER BY p.position, h.created_at DESC`,
+        )
+        .all(bookId) as unknown as { position: number; color: HighlightColor }[];
+      const noteRows = db
+        .prepare(
+          `SELECT DISTINCT p.position FROM notes n JOIN pages p ON p.book_id = n.book_id AND p.file_id = n.file_id
+           WHERE n.book_id = ? ORDER BY p.position`,
+        )
+        .all(bookId) as unknown as { position: number }[];
+      const highlights = highlightRows.filter((h, i) => h.position !== highlightRows[i - 1]?.position);
+      return { highlights: highlights.map((h) => ({ position: h.position, color: h.color })), notes: noteRows.map((n) => n.position) };
     },
 
     async addHighlight({

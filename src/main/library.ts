@@ -17,6 +17,9 @@ import type { CorpusSource } from "./corpus";
  * previewSync and syncBook talk to the corpus.
  */
 
+/** Enough of a first line to fill the scrubber preview; the rest is cut off anyway. */
+const FIRST_LINE_MAX = 160;
+
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS books (
   book_id TEXT PRIMARY KEY,
@@ -324,6 +327,16 @@ export const createLibrary = ({
           hashiya: JSON.parse(row.hashiya) as Footnote[],
         },
       };
+    },
+
+    /** The page's first line of main text, for the scrubber's preview; null when the page has none. */
+    async getFirstLine({ bookId, position }: { bookId: string; position: number }): Promise<string | null> {
+      const row = db.prepare("SELECT matn FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
+        | Pick<PageRow, "matn">
+        | undefined;
+      if (!row) return null;
+      const first = (JSON.parse(row.matn) as MatnBlock[]).find((b) => b.kind === "paragraph" && b.text.trim());
+      return first?.text.trim().split("\n")[0]?.trim().slice(0, FIRST_LINE_MAX) ?? null;
     },
 
     async setProgress({ bookId, position }: { bookId: string; position: number }): Promise<void> {

@@ -130,6 +130,17 @@ describe("reading", () => {
     expect((await library.listBooks())[0]).toMatchObject({ title: "نسخة مفردة", author: null });
   });
 
+  it("gives a page's first line of main text, skipping headings", async () => {
+    corpus.files = [
+      file({ file_id: "f1", page_number: 1, text: "## باب الكلام\nالكلام هو اللفظ\nالمركب المفيد" }),
+      file({ file_id: "f2", page_number: 2, text: "## باب فقط" }),
+    ];
+    await library.importBook({ corpusBookId: "b1" });
+    expect(await library.getFirstLine({ bookId: "b1", position: 1 })).toBe("الكلام هو اللفظ");
+    expect(await library.getFirstLine({ bookId: "b1", position: 2 })).toBeNull();
+    expect(await library.getFirstLine({ bookId: "b1", position: 9 })).toBeNull();
+  });
+
   it("returns null for a page position that does not exist", async () => {
     corpus.files = [file({ file_id: "f1", page_number: 1 })];
     await library.importBook({ corpusBookId: "b1" });

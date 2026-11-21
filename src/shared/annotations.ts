@@ -77,6 +77,12 @@ export interface PageAnnotations {
   harakat: UserHarakat[];
 }
 
+/** The pages of a book with highlights (the newest one's colour) and with notes. */
+export interface BookMarks {
+  highlights: { position: number; color: HighlightColor }[];
+  notes: number[];
+}
+
 export type Token = { kind: "word"; text: string; word: number } | { kind: "space"; text: string };
 
 export const tokenize = (text: string): Token[] => {
