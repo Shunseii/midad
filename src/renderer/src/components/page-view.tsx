@@ -380,6 +380,10 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
     const targetLetter = t && t.part === part && t.line === line && t.word === token.word ? t.letter : null;
     const glossRun = runOf(token.word);
     const endsGloss = runs.filter((r) => r.to === token.word);
+    // A ring goes right against its word, before any footnote reference ending it.
+    const trailingRef = endsGloss.length > 0 ? splitFootnoteRef(token.text) : null;
+    const movedRef = trailingRef && trailingRef.before !== "" && !/\p{L}/u.test(trailingRef.after) && !splitFootnoteRef(trailingRef.after) ? trailingRef : null;
+    const wordText = movedRef ? movedRef.before : token.text;
     const band = {
       className: cx(highlight && MARK_BAND[highlight.color], at !== undefined && "mark-sweep", note && "note-span", tint && "note-tint", glossClasses(glossRun)),
       style: at !== undefined && sweep ? sweepStyle({ sweep, at: at + 0.25 }) : undefined,
@@ -403,11 +407,16 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
             glossClasses(glossRun),
           )}
         >
-          <WordText text={token.text} mine={mine} display={display} targetLetter={targetLetter} />
+          <WordText text={wordText} mine={mine} display={display} targetLetter={targetLetter} />
         </span>
         {endsGloss.map((r) => (
           <GlossMarker key="gloss" texts={r.texts} showHarakat={display.showHarakat} band={band} onActive={glossActiveFor(r.to)} />
         ))}
+        {movedRef && (
+          <span className={band.className} style={band.style}>
+            {withFootnoteRefs({ text: token.text.slice(movedRef.before.length), shown: display.hashiyaMarkers })}
+          </span>
+        )}
         {startingHere.length > 0 && <NoteIcon active={startingHere.some((n) => tinted.has(n.id))} dim={dimNoteIcons} />}
       </span>
     );
