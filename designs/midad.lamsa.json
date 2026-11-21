@@ -327,6 +327,19 @@
       },
       "type": "frame"
     },
+    "0DKOYrWg": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "parentId": "b5If95fM",
+      "props": {
+        "label": "Save",
+        "state": "disabled",
+        "withIcon": "no"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "0DqhqS7Q": {
       "componentId": "RV1DOgzp",
       "index": "a002",
@@ -1449,6 +1462,19 @@
       },
       "type": "text"
     },
+    "14G417Nx": {
+      "content": "Line numbers",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "KFKqujp9",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "15HeECAa": {
       "content": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
       "index": "a1",
@@ -1965,6 +1991,20 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "1ServrYO": {
+      "index": "a0",
+      "name": "Row · Theme",
+      "parentId": "zSsdjTxO",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
     },
     "1U7xqnjL": {
       "icon": "sparkles",
@@ -2737,6 +2777,16 @@
       },
       "type": "frame"
     },
+    "2HHyNAun": {
+      "index": "a0",
+      "name": "Bar column",
+      "parentId": "bDzzTBzK",
+      "style": {
+        "display": "flex",
+        "width": 720
+      },
+      "type": "frame"
+    },
     "2HqVfYWb": {
       "css": "transition: opacity 240ms ease-out;\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  transition-duration: 180ms;\n}",
       "index": "a000V",
@@ -3198,6 +3248,17 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "2b8rYTCx": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "jHqbbA34",
+      "props": {
+        "label": "Auto",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "2bbbAWzn": {
       "componentId": "RV1DOgzp",
@@ -4337,6 +4398,19 @@
       },
       "type": "text"
     },
+    "3WEsknot": {
+      "content": "The corpus's marks and yours",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "4UIm5oAq",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "3YxFkt2m": {
       "content": "3 of 24",
       "index": "a001",
@@ -4614,6 +4688,23 @@
         "font-weight": 700
       },
       "type": "text"
+    },
+    "3nFVyTEg": {
+      "index": "a6",
+      "name": "Settings · From a book",
+      "style": {
+        "background": "{color.bg}",
+        "color": "{color.ink}",
+        "display": "flex",
+        "flex-direction": "row",
+        "height": 900,
+        "overflow": "hidden",
+        "position": "relative",
+        "width": 1440
+      },
+      "type": "frame",
+      "x": 3320,
+      "y": 3180
     },
     "3nSaef5f": {
       "index": "a1",
@@ -5275,6 +5366,19 @@
       },
       "type": "frame"
     },
+    "4NQlEmvh": {
+      "content": "The page's text. Text size is also in the reader's Display menu.",
+      "index": "a1",
+      "name": "Description",
+      "parentId": "7yRN3EzU",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 13,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "4OULs3wN": {
       "content": "5",
       "index": "a000",
@@ -5448,6 +5552,18 @@
         "text-underline-offset": "14px"
       },
       "type": "text"
+    },
+    "4UIm5oAq": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "LlfBqoni",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
     },
     "4UZqfUCP": {
       "content": "Marks you added, drawn in red",
@@ -6989,6 +7105,20 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "5dq5QI1H": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "vTbZfqgX",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
       },
       "type": "frame"
     },
@@ -9767,6 +9897,18 @@
       },
       "type": "text"
     },
+    "7yRN3EzU": {
+      "index": "a0",
+      "name": "Heading",
+      "parentId": "bgHPp5Vt",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 2,
+        "padding": "0 4px"
+      },
+      "type": "frame"
+    },
     "800nHorV": {
       "index": "a003",
       "name": "Passage",
@@ -11571,6 +11713,20 @@
       },
       "type": "text"
     },
+    "9LkvUVuw": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "1ServrYO",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
     "9PexDnLi": {
       "index": "a0",
       "name": "Page area",
@@ -11782,6 +11938,19 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "9Z5CvJkQ": {
+      "index": "a1",
+      "name": "Card",
+      "parentId": "MlF0aRYJ",
+      "style": {
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "flex-direction": "column"
+      },
+      "type": "frame"
     },
     "9a0vPjdq": {
       "content": "5",
@@ -12456,6 +12625,19 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "AAw9lyc6": {
+      "content": "Focus mode",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "oePPJpCt",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
     },
     "ABKsU2qM": {
       "index": "a001",
@@ -15175,6 +15357,20 @@
       },
       "type": "frame"
     },
+    "BzKdljYq": {
+      "index": "a0",
+      "name": "Row · Text size",
+      "parentId": "QMxHvr1M",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
+    },
     "C15SaB6R": {
       "index": "as",
       "name": "Highlight dot",
@@ -15385,6 +15581,18 @@
         "gap": 2
       },
       "type": "frame"
+    },
+    "CBCepICz": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "5dq5QI1H",
+      "props": {
+        "label": "Wide",
+        "state": "default"
+      },
+      "style": {},
+      "type": "instance"
     },
     "CBLI6moj": {
       "icon": "sparkles",
@@ -16293,6 +16501,19 @@
         "font-weight": 400,
         "line-height": "28px",
         "text-align": "right"
+      },
+      "type": "text"
+    },
+    "CwZ0goQx": {
+      "content": "Settings",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "OzJJ5Rnz",
+      "style": {
+        "font-family": "{font.display}",
+        "font-size": 32,
+        "font-weight": 600,
+        "line-height": "40px"
       },
       "type": "text"
     },
@@ -17467,6 +17688,19 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "DxrzPakf": {
+      "content": "The bars stay put. F or the Display menu turns focus on",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "oePPJpCt",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
     },
     "DzAxmQ67": {
       "index": "a001",
@@ -19074,6 +19308,19 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "FP6BmcDI": {
+      "content": "Theme",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "rXGAgGrb",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
       },
       "type": "text"
     },
@@ -22441,6 +22688,19 @@
       },
       "type": "frame"
     },
+    "HuIQ6pGb": {
+      "index": "a1",
+      "name": "Scroll area",
+      "parentId": "LQawFbYZ",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": "40px 48px"
+      },
+      "type": "frame"
+    },
     "HuL2PY85": {
       "componentId": "RV1DOgzp",
       "index": "a008",
@@ -23646,6 +23906,18 @@
       },
       "type": "frame"
     },
+    "Ipj08tG7": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "5dq5QI1H",
+      "props": {
+        "label": "Narrow",
+        "state": "selected"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "Iq7NQYiZ": {
       "componentId": "HicNahFA",
       "index": "a005",
@@ -24122,6 +24394,22 @@
       },
       "type": "frame"
     },
+    "JF8FOHjt": {
+      "index": "a0",
+      "name": "Sidebar",
+      "parentId": "3nFVyTEg",
+      "style": {
+        "background": "{color.surface-2}",
+        "border-right": "1px solid {color.line}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 4,
+        "padding": "20px 16px",
+        "width": 248
+      },
+      "type": "frame"
+    },
     "JFOeJpsl": {
       "content": "يصلحُ",
       "index": "a00001",
@@ -24214,6 +24502,17 @@
       },
       "type": "frame"
     },
+    "JIZkCdme": {
+      "componentId": "HZhkp90k",
+      "index": "a1",
+      "name": "Switch",
+      "parentId": "rWGzaf1u",
+      "props": {
+        "checked": "on"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "JJ8bpZc1": {
       "index": "a000",
       "name": "Meta",
@@ -24278,6 +24577,18 @@
         "width": 14
       },
       "type": "icon"
+    },
+    "JMHAQSf8": {
+      "content": "Appearance, reading and where Midad gets its books.",
+      "index": "a1",
+      "name": "Meta",
+      "parentId": "OzJJ5Rnz",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 14
+      },
+      "type": "text"
     },
     "JNTEaC5G": {
       "content": "فالاسمُ يُعرَفُ: ",
@@ -24661,6 +24972,19 @@
         "font-weight": 400,
         "line-height": "28px",
         "text-align": "right"
+      },
+      "type": "text"
+    },
+    "Jfp0toGc": {
+      "content": "Corpus",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "kVG7btRH",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600,
+        "line-height": "24px"
       },
       "type": "text"
     },
@@ -25433,6 +25757,18 @@
       },
       "type": "frame"
     },
+    "KFKqujp9": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "XyUPBeW5",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
     "KG19DvrD": {
       "index": "a003",
       "name": "Passage",
@@ -26200,6 +26536,18 @@
       },
       "type": "text"
     },
+    "Kul2Arkm": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "UCF4ZmdQ",
+      "props": {
+        "label": "Under text",
+        "state": "selected"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "KvVlMGt0": {
       "content": "بابُ الإعرابِ",
       "index": "a002",
@@ -26854,6 +27202,18 @@
       },
       "type": "text"
     },
+    "LQawFbYZ": {
+      "index": "a1",
+      "name": "Content",
+      "parentId": "3nFVyTEg",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "overflow": "hidden"
+      },
+      "type": "frame"
+    },
     "LRcuGxje": {
       "index": "a000",
       "name": "Contents",
@@ -27250,6 +27610,20 @@
         "text-align": "center"
       },
       "type": "text"
+    },
+    "LlfBqoni": {
+      "index": "a1",
+      "name": "Row · Harakat",
+      "parentId": "QMxHvr1M",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
     },
     "LmMb8hkp": {
       "content": "، ",
@@ -27920,6 +28294,19 @@
       },
       "type": "instance"
     },
+    "MVhiS3Mg": {
+      "content": "The page's Arabic text",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "bibg4eQm",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
     "MVnRXkwI": {
       "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-settling] > & {\n  transition-duration: 120ms;\n  transition-timing-function: {ease.out};\n}\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "aD",
@@ -28307,6 +28694,17 @@
       },
       "type": "frame"
     },
+    "MlF0aRYJ": {
+      "index": "a3",
+      "name": "Section · Corpus",
+      "parentId": "hB2dgPNl",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 12
+      },
+      "type": "frame"
+    },
     "MlcIsrhX": {
       "index": "a3",
       "name": "Row · Line numbers",
@@ -28670,6 +29068,21 @@
         "width": "100%"
       },
       "type": "instance"
+    },
+    "N2CzaYrt": {
+      "index": "a1",
+      "name": "Nav item",
+      "parentId": "JF8FOHjt",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.accent}",
+        "display": "flex",
+        "gap": 10,
+        "padding": "8px 10px"
+      },
+      "type": "frame"
     },
     "N3PJkN6a": {
       "index": "b00",
@@ -30868,6 +31281,17 @@
       },
       "type": "text"
     },
+    "OzJJ5Rnz": {
+      "index": "a0",
+      "name": "Header",
+      "parentId": "hB2dgPNl",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 4
+      },
+      "type": "frame"
+    },
     "Ozuz7LFw": {
       "index": "a001",
       "name": "Caret",
@@ -31230,6 +31654,19 @@
         "shape": "line"
       },
       "type": "instance"
+    },
+    "P7rceVDt": {
+      "content": "Narrow justifies a shorter line; Wide sets longer, ragged lines",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "boO4MV5K",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
     },
     "P8JhtLSH": {
       "content": ".",
@@ -32630,6 +33067,17 @@
       },
       "type": "text"
     },
+    "QL9jk02Y": {
+      "content": "Back to",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "hK7qy3Hq",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14
+      },
+      "type": "text"
+    },
     "QLDZUJR3": {
       "index": "a001",
       "name": "Spacer",
@@ -32653,6 +33101,19 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "QMxHvr1M": {
+      "index": "a1",
+      "name": "Card",
+      "parentId": "bgHPp5Vt",
+      "style": {
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "flex-direction": "column"
+      },
+      "type": "frame"
     },
     "QNedAfMl": {
       "icon": "message-square-text",
@@ -32729,6 +33190,19 @@
         "font-size": 12,
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
+        "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "QQn2u1ui": {
+      "content": "Follow the system, or always light or dark",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "rXGAgGrb",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
         "line-height": "16px"
       },
       "type": "text"
@@ -34443,6 +34917,17 @@
       },
       "type": "text"
     },
+    "S3sXfyxn": {
+      "index": "a1",
+      "name": "Stepper",
+      "parentId": "BzKdljYq",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 4
+      },
+      "type": "frame"
+    },
     "S53zCbPH": {
       "index": "b06",
       "name": "Note dot",
@@ -34847,6 +35332,19 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "SNuxcSk3": {
+      "index": "a3",
+      "name": "Row · Focus mode",
+      "parentId": "zSsdjTxO",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
     },
     "SOu6pJvC": {
       "componentId": "46QiZLNZ",
@@ -36346,6 +36844,20 @@
       },
       "type": "text"
     },
+    "TVWfzU7s": {
+      "content": "مداد",
+      "index": "a0",
+      "name": "Mark",
+      "parentId": "ZQJMZUMw",
+      "style": {
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700
+      },
+      "type": "text"
+    },
     "TWLRB78X": {
       "content": "، وسوف، وتاء التأنيث الساكنة",
       "index": "a00006",
@@ -36735,6 +37247,33 @@
       },
       "type": "text"
     },
+    "TnT3MRmL": {
+      "content": "100%",
+      "index": "a1",
+      "name": "Value",
+      "parentId": "S3sXfyxn",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "text-align": "center",
+        "width": 48
+      },
+      "type": "text"
+    },
+    "TnjbeJ1I": {
+      "content": "Harakat",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "4UIm5oAq",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "Tnk4lbLH": {
       "content": "ْ",
       "index": "a00003",
@@ -36861,6 +37400,19 @@
         "font-weight": 700,
         "line-height": "28px",
         "text-align": "right"
+      },
+      "type": "text"
+    },
+    "TrvI9HJt": {
+      "content": "The numbers notes and Ask AI use",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "KFKqujp9",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
       },
       "type": "text"
     },
@@ -37129,6 +37681,19 @@
       },
       "type": "frame"
     },
+    "U0FI1L3p": {
+      "content": "Text size",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "bibg4eQm",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "U1zl36fc": {
       "index": "a004",
       "name": "Passage",
@@ -37298,6 +37863,20 @@
         "height": 4,
         "overflow": "hidden",
         "width": "100%"
+      },
+      "type": "frame"
+    },
+    "UCF4ZmdQ": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "mCgc48wD",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
       },
       "type": "frame"
     },
@@ -38339,6 +38918,18 @@
       },
       "type": "text"
     },
+    "V2fCzmAm": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "mCgc48wD",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
     "V2vRmQAd": {
       "content": "متن الآجرومية",
       "index": "a0",
@@ -38415,6 +39006,19 @@
         "position": "absolute",
         "text-indent": 0,
         "top": 0
+      },
+      "type": "text"
+    },
+    "V4Bzg9ET": {
+      "content": "Marks you added, drawn in red",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "XDjLBRYs",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
       },
       "type": "text"
     },
@@ -38533,6 +39137,19 @@
       },
       "type": "frame"
     },
+    "V8FVewnZ": {
+      "content": "My harakat",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "XDjLBRYs",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "V9LIP8Oh": {
       "index": "a1",
       "name": "Content",
@@ -38584,6 +39201,19 @@
         "text-align": "right"
       },
       "type": "frame"
+    },
+    "VDvRb2ir": {
+      "icon": "arrow-left",
+      "index": "a0",
+      "name": "Icon arrow-left",
+      "parentId": "hK7qy3Hq",
+      "set": "lucide",
+      "style": {
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
     },
     "VEn5ZXq3": {
       "componentId": "RV1DOgzp",
@@ -40766,6 +41396,18 @@
       },
       "type": "text"
     },
+    "Wzd1JGqm": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "9LkvUVuw",
+      "props": {
+        "label": "System",
+        "state": "selected"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "WzpJik4B": {
       "index": "a004",
       "name": "TOC · بابُ معرفةِ علاماتِ الإعرابِ",
@@ -41109,6 +41751,18 @@
       },
       "type": "frame"
     },
+    "XDjLBRYs": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "rWGzaf1u",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
     "XGiPoLzc": {
       "index": "a005",
       "name": "Passage",
@@ -41252,6 +41906,17 @@
         "padding": "28px 0 0"
       },
       "type": "frame"
+    },
+    "XJnIEwpE": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "jHqbbA34",
+      "props": {
+        "label": "Locked",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "XL0M9iq1": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
@@ -41829,6 +42494,22 @@
       },
       "type": "text"
     },
+    "XoZcLw4d": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "plus"
+        }
+      },
+      "parentId": "S3sXfyxn",
+      "props": {
+        "label": "Larger text"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "XpzC7hVM": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
       "index": "a000",
@@ -41955,6 +42636,19 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "XyUPBeW5": {
+      "index": "a3",
+      "name": "Row · Line numbers",
+      "parentId": "QMxHvr1M",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
     },
     "XzmetsUG": {
       "content": "Locked: the bars stay hidden through mouse movement, selecting and highlighting; the selection toolbar and notes still open. Resting the pointer on the top or bottom 6px of the window for 300ms peeks the top bar, rail and scrubber (240ms ease-sheet, after the 300ms dwell; play to see it). Moving away hides them at once (the hidden state). Esc or F leaves focus mode; Tab into the bars also shows them. Reduced motion: fade only.",
@@ -42753,6 +43447,19 @@
       },
       "type": "frame"
     },
+    "Yb5W7LHQ": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Book",
+      "parentId": "hK7qy3Hq",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
+    },
     "Ye7S8jTE": {
       "index": "Za000",
       "name": "Line number",
@@ -42876,6 +43583,18 @@
       "parentId": "BI9ItG5E",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "YoDKp7Xo": {
+      "index": "a0",
+      "name": "Form",
+      "parentId": "9Z5CvJkQ",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 16,
+        "padding": 20
       },
       "type": "frame"
     },
@@ -43488,6 +44207,18 @@
       },
       "type": "text"
     },
+    "ZQJMZUMw": {
+      "index": "a0",
+      "name": "Brand",
+      "parentId": "JF8FOHjt",
+      "style": {
+        "align-items": "baseline",
+        "display": "flex",
+        "gap": 8,
+        "padding": "4px 10px 20px"
+      },
+      "type": "frame"
+    },
     "ZQbBD4JO": {
       "index": "a3",
       "name": "Rule",
@@ -43815,6 +44546,18 @@
         "width": 14
       },
       "type": "icon"
+    },
+    "Zh7FCkvV": {
+      "componentId": "uJd03iQq",
+      "index": "a0",
+      "name": "Badge",
+      "parentId": "b5If95fM",
+      "props": {
+        "label": "Connected",
+        "tone": "ok"
+      },
+      "style": {},
+      "type": "instance"
     },
     "Zhct8oPQ": {
       "index": "a001",
@@ -44886,6 +45629,22 @@
       },
       "type": "frame"
     },
+    "accOWBrq": {
+      "componentId": "RV1DOgzp",
+      "index": "a0",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "minus"
+        }
+      },
+      "parentId": "S3sXfyxn",
+      "props": {
+        "label": "Smaller text"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "adgQy1xp": {
       "content": "بابُ الكلامِ · ص ٣",
       "index": "a1",
@@ -45471,6 +46230,17 @@
       },
       "type": "frame"
     },
+    "b5If95fM": {
+      "index": "a2",
+      "name": "Actions",
+      "parentId": "YoDKp7Xo",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 12
+      },
+      "type": "frame"
+    },
     "b5Td55CC": {
       "index": "a003",
       "name": "Answer",
@@ -45686,6 +46456,23 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "bDzzTBzK": {
+      "index": "a0",
+      "name": "Back bar",
+      "parentId": "LQawFbYZ",
+      "style": {
+        "background": "{color.bg}",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "flex-shrink": 0,
+        "justify-content": "center",
+        "padding": "10px 48px",
+        "position": "sticky",
+        "top": 0,
+        "z-index": 1
+      },
+      "type": "frame"
     },
     "bE91EPxX": {
       "componentId": "RV1DOgzp",
@@ -46243,6 +47030,17 @@
       },
       "type": "frame"
     },
+    "bgHPp5Vt": {
+      "index": "a2",
+      "name": "Section · Reading",
+      "parentId": "hB2dgPNl",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 12
+      },
+      "type": "frame"
+    },
     "bgek8HF0": {
       "content": "بابُ الكلامِ",
       "index": "a1",
@@ -46272,6 +47070,18 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "bibg4eQm": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "BzKdljYq",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
     },
     "bkZbd90C": {
       "index": "a007",
@@ -46348,6 +47158,18 @@
         "width": 14
       },
       "type": "icon"
+    },
+    "boO4MV5K": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "vTbZfqgX",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
     },
     "boOtSQOF": {
       "componentId": "v8FmfBf5",
@@ -47461,6 +48283,24 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "chBnTwaR": {
+      "componentId": "mUTXOEWB",
+      "index": "a1",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "hidden": true
+        }
+      },
+      "parentId": "YoDKp7Xo",
+      "props": {
+        "helper": "Stored encrypted with your OS keychain.",
+        "label": "API key",
+        "value": "Saved. Enter a new key to replace it."
+      },
+      "style": {},
+      "type": "instance"
     },
     "ciF31HeW": {
       "content": "Contents",
@@ -48720,6 +49560,17 @@
       },
       "type": "text"
     },
+    "diCTnIN2": {
+      "componentId": "HZhkp90k",
+      "index": "a1",
+      "name": "Switch",
+      "parentId": "XyUPBeW5",
+      "props": {
+        "checked": "on"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "dikhrwGY": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "aJ",
@@ -49477,6 +50328,19 @@
       },
       "type": "instance"
     },
+    "eKoTpbuq": {
+      "content": "Page width",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "boO4MV5K",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "eM3wCQdH": {
       "content": "4",
       "index": "a0",
@@ -49635,6 +50499,19 @@
         "text-align": "right"
       },
       "type": "frame"
+    },
+    "eUSE5QVi": {
+      "componentId": "ua9C67i7",
+      "index": "a2",
+      "name": "Button",
+      "parentId": "b5If95fM",
+      "props": {
+        "label": "Test connection",
+        "variant": "secondary",
+        "withIcon": "no"
+      },
+      "style": {},
+      "type": "instance"
     },
     "eUeIaexe": {
       "index": "a1",
@@ -50245,6 +51122,17 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "esW0wWG7": {
+      "index": "a1",
+      "name": "Section · Appearance",
+      "parentId": "hB2dgPNl",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 12
+      },
+      "type": "frame"
     },
     "eseZvRq2": {
       "index": "az",
@@ -52539,6 +53427,18 @@
       },
       "type": "frame"
     },
+    "gTz63mWh": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "9LkvUVuw",
+      "props": {
+        "label": "Light",
+        "state": "default"
+      },
+      "style": {},
+      "type": "instance"
+    },
     "gUbd5ue4": {
       "icon": "chevron-left",
       "index": "a0",
@@ -53063,6 +53963,19 @@
       },
       "type": "frame"
     },
+    "h3K0du8T": {
+      "content": "Reading",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "7yRN3EzU",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600,
+        "line-height": "24px"
+      },
+      "type": "text"
+    },
     "h4JKMmC9": {
       "index": "a0",
       "name": "Page area",
@@ -53274,6 +54187,18 @@
       },
       "type": "instance"
     },
+    "hB2dgPNl": {
+      "index": "a0",
+      "name": "Column",
+      "parentId": "HuIQ6pGb",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 32,
+        "width": 720
+      },
+      "type": "frame"
+    },
     "hBiLq8nr": {
       "index": "a003",
       "name": "TOC · بابُ الإعرابِ",
@@ -53481,6 +54406,22 @@
         "variant": "user"
       },
       "type": "instance"
+    },
+    "hK7qy3Hq": {
+      "css": "transition: color var(--transition-duration-press) ease, background-color var(--transition-duration-press) ease;\n&:hover { background: color-mix(in oklab, var(--color-ink) 4%, transparent); color: var(--color-ink); }\n&:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }",
+      "index": "a0",
+      "name": "Back to book",
+      "parentId": "2HHyNAun",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.lg}",
+        "color": "{color.ink-2}",
+        "display": "flex",
+        "gap": 8,
+        "margin-left": -8,
+        "padding": "6px 8px"
+      },
+      "type": "frame"
     },
     "hM5ftAml": {
       "index": "a002",
@@ -54369,6 +55310,17 @@
       },
       "type": "instance"
     },
+    "i2LaXvaH": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "jHqbbA34",
+      "props": {
+        "label": "Off",
+        "state": "selected"
+      },
+      "type": "instance"
+    },
     "i2VqE9QJ": {
       "index": "b000",
       "name": "Margin marker · Hover",
@@ -54438,6 +55390,18 @@
         "display": "block"
       },
       "type": "frame"
+    },
+    "i4ofPL9H": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "9LkvUVuw",
+      "props": {
+        "label": "Dark",
+        "state": "default"
+      },
+      "style": {},
+      "type": "instance"
     },
     "i55ZbNuZ": {
       "componentId": "46QiZLNZ",
@@ -54829,6 +55793,18 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "iOY6oYzk": {
+      "index": "a0",
+      "name": "Heading",
+      "parentId": "esW0wWG7",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 2,
+        "padding": "0 4px"
+      },
+      "type": "frame"
     },
     "iOxETQ0Q": {
       "content": "1",
@@ -55850,6 +56826,20 @@
       },
       "type": "frame"
     },
+    "jHqbbA34": {
+      "index": "a1",
+      "name": "Segmented control",
+      "parentId": "SNuxcSk3",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
     "jI2Rnc92": {
       "index": "a0",
       "name": "Page area",
@@ -56139,6 +57129,18 @@
         "gap": 0
       },
       "type": "frame"
+    },
+    "jewJDNDL": {
+      "content": "Library",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "N2CzaYrt",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
     },
     "jfdmj1OH": {
       "index": "a001",
@@ -57150,6 +58152,18 @@
       "parentId": "SPDLLYzb",
       "style": {
         "position": "relative"
+      },
+      "type": "frame"
+    },
+    "kVG7btRH": {
+      "index": "a0",
+      "name": "Heading",
+      "parentId": "MlF0aRYJ",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 2,
+        "padding": "0 4px"
       },
       "type": "frame"
     },
@@ -59275,6 +60289,15 @@
       },
       "type": "text"
     },
+    "m34TPaq1": {
+      "index": "a1",
+      "name": "Spacer",
+      "parentId": "b5If95fM",
+      "style": {
+        "flex": 1
+      },
+      "type": "frame"
+    },
     "m50jCVM9": {
       "icon": "settings-2",
       "index": "a5",
@@ -59453,6 +60476,20 @@
         "position": "absolute",
         "top": 8,
         "width": 28
+      },
+      "type": "frame"
+    },
+    "mCgc48wD": {
+      "index": "a2",
+      "name": "Row · Highlight style",
+      "parentId": "zSsdjTxO",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
       },
       "type": "frame"
     },
@@ -59906,6 +60943,19 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "meMFxgb0": {
+      "content": "The arabic-digitization service your books come from. Used only when you import or sync.",
+      "index": "a1",
+      "name": "Description",
+      "parentId": "kVG7btRH",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 13,
+        "line-height": "20px"
       },
       "type": "text"
     },
@@ -62475,6 +63525,18 @@
       },
       "type": "frame"
     },
+    "oePPJpCt": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "SNuxcSk3",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
     "oelJhGub": {
       "componentId": "RV1DOgzp",
       "index": "a006",
@@ -62634,6 +63696,18 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "omZvxiPw": {
+      "content": "Midad",
+      "index": "a1",
+      "name": "Name",
+      "parentId": "ZQJMZUMw",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600
       },
       "type": "text"
     },
@@ -63152,6 +64226,19 @@
         "line-height": "16px",
         "padding": "0 10px 10px",
         "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
+    "pCcZlA8W": {
+      "content": "How Midad looks. Changes apply at once.",
+      "index": "a1",
+      "name": "Description",
+      "parentId": "iOY6oYzk",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 13,
+        "line-height": "20px"
       },
       "type": "text"
     },
@@ -66173,6 +67260,32 @@
       },
       "type": "text"
     },
+    "rWGzaf1u": {
+      "index": "a2",
+      "name": "Row · My harakat",
+      "parentId": "QMxHvr1M",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
+    },
+    "rXGAgGrb": {
+      "index": "a0",
+      "name": "Text",
+      "parentId": "1ServrYO",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 2
+      },
+      "type": "frame"
+    },
     "rXpNluNg": {
       "content": "والحرفُ ما لا ",
       "index": "a000",
@@ -66487,6 +67600,19 @@
       "type": "frame",
       "x": 280,
       "y": 0
+    },
+    "rqPg85y6": {
+      "content": "Under keeps the harakat clear; Behind fills the whole word",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "V2fCzmAm",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "16px"
+      },
+      "type": "text"
     },
     "rqt6hTrC": {
       "index": "a000",
@@ -67669,6 +68795,19 @@
         "width": 1
       },
       "type": "frame"
+    },
+    "sl7shK17": {
+      "content": "Appearance",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "iOY6oYzk",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600,
+        "line-height": "24px"
+      },
+      "type": "text"
     },
     "snQdr3Zp": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -68981,6 +70120,25 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "tvBwGGx5": {
+      "componentId": "mUTXOEWB",
+      "index": "a0",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "plug"
+        }
+      },
+      "parentId": "YoDKp7Xo",
+      "props": {
+        "label": "API URL",
+        "state": "filled",
+        "value": "https://arabic-digitization.example.workers.dev",
+        "withHelper": "no"
+      },
+      "style": {},
+      "type": "instance"
     },
     "tvKAVZSs": {
       "content": "بالخفضِ، والتنوينِ، ودخولِ الألفِ واللامِ",
@@ -70942,6 +72100,20 @@
       },
       "type": "text"
     },
+    "vTbZfqgX": {
+      "index": "a1",
+      "name": "Row · Page width",
+      "parentId": "zSsdjTxO",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "gap": 24,
+        "min-height": 64,
+        "padding": "12px 20px"
+      },
+      "type": "frame"
+    },
     "vTeaY4Ec": {
       "name": "Library · Default",
       "style": {
@@ -71137,6 +72309,18 @@
         "line-height": 1.6
       },
       "type": "text"
+    },
+    "vgejgXXQ": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "UCF4ZmdQ",
+      "props": {
+        "label": "Behind text",
+        "state": "default"
+      },
+      "style": {},
+      "type": "instance"
     },
     "vhBjwpwC": {
       "index": "a001",
@@ -71594,6 +72778,17 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "wAXf7e7n": {
+      "componentId": "HZhkp90k",
+      "index": "a1",
+      "name": "Switch",
+      "parentId": "LlfBqoni",
+      "props": {
+        "checked": "on"
+      },
+      "style": {},
+      "type": "instance"
     },
     "wBFoYGxN": {
       "index": "Za000",
@@ -73765,6 +74960,20 @@
       },
       "type": "text"
     },
+    "xnu2be0M": {
+      "icon": "library-big",
+      "index": "a0",
+      "name": "Icon library-big",
+      "parentId": "N2CzaYrt",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 18,
+        "width": 18
+      },
+      "type": "icon"
+    },
     "xoeotf5P": {
       "index": "a006",
       "name": "TOC · بابُ مرفوعاتِ الأسماءِ",
@@ -74640,6 +75849,19 @@
       },
       "type": "frame"
     },
+    "yjLuF1ET": {
+      "content": "Highlight style",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "V2fCzmAm",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500,
+        "line-height": "20px"
+      },
+      "type": "text"
+    },
     "yjXMURS7": {
       "content": ": an utterance only counts as كلام if the speaker meant to convey it. Your page's ḥāshiya says exactly this ",
       "index": "a002",
@@ -75489,6 +76711,19 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "zSsdjTxO": {
+      "index": "a1",
+      "name": "Card",
+      "parentId": "esW0wWG7",
+      "style": {
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "flex-direction": "column"
+      },
+      "type": "frame"
     },
     "zSt8B1SC": {
       "content": "اسمٌ",

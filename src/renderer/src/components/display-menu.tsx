@@ -4,7 +4,7 @@ import { type ReactNode, useRef } from "react";
 import type { Theme } from "../../../shared/ipc";
 import { type PageWidth, useFocusMode, usePageWidth, useTheme } from "../lib/appearance";
 import { usePref } from "../lib/prefs";
-import type { SettingsState } from "../routes/settings";
+import type { BookReturn, SettingsState } from "../routes/settings";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { IconButton, Kbd, Segmented, Switch, cx } from "./ui";
 
@@ -84,11 +84,14 @@ export const DisplayMenu = ({
   onOpenChange,
   textScale,
   onTextScale,
+  bookReturn,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   textScale: number;
   onTextScale: (v: number) => void;
+  /** Where the reader is now, so Settings can offer a way back. */
+  bookReturn: () => BookReturn | undefined;
 }) => {
   const [theme, setTheme] = useTheme();
   const [pageWidth, setPageWidth] = usePageWidth();
@@ -120,7 +123,7 @@ export const DisplayMenu = ({
           type="button"
           onClick={() => {
             onOpenChange(false);
-            void navigate("/settings", { state: { section: "appearance" } satisfies SettingsState, viewTransition: true });
+            void navigate("/settings", { state: { section: "appearance", from: bookReturn() } satisfies SettingsState, viewTransition: true });
           }}
           className="flex items-center justify-between rounded-b-xl border-t border-line px-4 py-3 text-sm text-ink-2 transition-colors duration-press hover:bg-ink/4 hover:text-ink focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
         >

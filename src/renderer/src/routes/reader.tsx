@@ -2,7 +2,7 @@ import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen,
 import { useQueryClient } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
 import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router";
+import { Link, useLocation, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
 import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, StoredPage } from "../../../shared/library";
@@ -69,6 +69,11 @@ interface NoteState {
 interface Point {
   x: number;
   y: number;
+}
+
+/** What a link into the reader can ask for: where to scroll the page once it has loaded. */
+export interface ReaderState {
+  scrollTop: number;
 }
 
 /** A word held in place while the text size changes, and how far below the top of the page's view it was. */
@@ -365,6 +370,8 @@ export const ReaderRoute = () => {
   const setMarker = useSetMarker(bookId);
   const pendingReveal = useRef<(Citation & { position: number }) | null>(null);
   const pendingRow = useRef<{ position: number; part: Part; line: number; word: number } | null>(null);
+  const arrivedWith = useLocation().state as ReaderState | null;
+  const pendingScroll = useRef(arrivedWith?.scrollTop ?? null);
   const conversation = useAskConversation(bookId);
   const [askSelection, setAskSelection] = useState<AskSelection | null>(null);
   const client = useQueryClient();
@@ -463,6 +470,11 @@ export const ReaderRoute = () => {
     if (reveal && page.data?.position === reveal.position) {
       pendingReveal.current = null;
       requestAnimationFrame(() => revealCitation({ root: pageRoot.current, cite: reveal }));
+    }
+    const scrollTop = pendingScroll.current;
+    if (scrollTop !== null && page.data?.position === position) {
+      pendingScroll.current = null;
+      requestAnimationFrame(() => pageRoot.current?.scrollTo({ top: scrollTop }));
     }
     const row = pendingRow.current;
     if (row && page.data?.position === row.position) {
@@ -1036,7 +1048,13 @@ export const ReaderRoute = () => {
           <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
         </div>
         <div className="flex-1" />
-        <DisplayMenu open={menuOpen} onOpenChange={setMenuOpen} textScale={textScale} onTextScale={(scale) => resize({ scale, pointer: null })} />
+        <DisplayMenu
+          open={menuOpen}
+          onOpenChange={setMenuOpen}
+          textScale={textScale}
+          onTextScale={(scale) => resize({ scale, pointer: null })}
+          bookReturn={() => (book.data ? { bookId, title: book.data.title, position, scrollTop: pageRoot.current?.scrollTop ?? 0 } : undefined)}
+        />
         <IconButton icon={FileImage} label={showScan ? "Hide scan (S)" : "Show scan (S)"} selected={showScan} onClick={() => setShowScan(!showScan)} />
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton

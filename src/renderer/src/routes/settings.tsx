@@ -1,6 +1,6 @@
-import { Check, Minus, Plug, Plus } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { ArrowLeft, Check, Minus, Plug, Plus } from "lucide-react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import type { Theme } from "../../../shared/ipc";
 import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
 import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
@@ -8,18 +8,28 @@ import { type HighlightStyle, type PageWidth, useFocusMode, useHighlightStyle, u
 import type { FocusChoice } from "../lib/focus";
 import { midad, useSaveSettings, useSettings } from "../lib/midad";
 import { usePref } from "../lib/prefs";
+import type { ReaderState } from "./reader";
 
 type TestState = { kind: "idle" } | { kind: "testing" } | { kind: "ok" } | { kind: "error"; message: string };
 
-/** What a link into Settings can ask for: the section to land on. */
+/** The book Settings was opened from, and where in it the reader was. */
+export interface BookReturn {
+  bookId: string;
+  title: string;
+  position: number;
+  scrollTop: number;
+}
+
+/** What a link into Settings can ask for: the section to land on, and the book to offer a way back to. */
 export interface SettingsState {
   section: "appearance";
+  from?: BookReturn;
 }
 
 const Section = ({ title, description, children }: { title: string; description: string; children: ReactNode }) => (
   <section id={title.toLowerCase()} aria-labelledby={`${title.toLowerCase()}-title`} className="flex scroll-mt-10 flex-col gap-3">
     <div className="flex flex-col gap-0.5 px-1">
-      <h2 id={`${title.toLowerCase()}-title`} tabIndex={-1} className="text-heading font-semibold outline-none">
+      <h2 id={`${title.toLowerCase()}-title`} tabIndex={-1} className="scroll-mt-20 text-heading font-semibold outline-none">
         {title}
       </h2>
       <p className="text-small text-ink-3">{description}</p>
@@ -209,6 +219,43 @@ const Corpus = () => {
 };
 
 /** Lands on the section a link asked for, with keyboard focus on its heading. */
+const typingIn = (target: EventTarget | null) =>
+  target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || (target instanceof HTMLElement && target.isContentEditable);
+
+/** Back to the book Settings was opened from, at the same page and scroll. Alt+Left, or Esc outside a field, does the same. */
+const BackToBook = ({ from }: { from: BookReturn }) => {
+  const navigate = useNavigate();
+  const back = () =>
+    void navigate(`/read/${from.bookId}?p=${from.position}`, { replace: true, state: { scrollTop: from.scrollTop } satisfies ReaderState, viewTransition: true });
+  const backRef = useRef(back);
+  backRef.current = back;
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const altLeft = e.altKey && !e.ctrlKey && !e.metaKey && e.key === "ArrowLeft";
+      const escape = e.key === "Escape" && !e.altKey && !e.ctrlKey && !e.metaKey && !typingIn(e.target) && !document.querySelector("[data-slot=popover-content], [role=dialog]");
+      if (!altLeft && !escape) return;
+      e.preventDefault();
+      backRef.current();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  return (
+    <button
+      type="button"
+      onClick={back}
+      aria-keyshortcuts="Alt+ArrowLeft Escape"
+      className="-ml-2 flex w-fit max-w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-ink-2 transition-colors duration-press hover:bg-ink/4 hover:text-ink"
+    >
+      <ArrowLeft aria-hidden className="size-4 shrink-0" />
+      <span className="shrink-0">Back to</span>
+      <span className="ar truncate font-medium">{from.title}</span>
+    </button>
+  );
+};
+
 const useLandOnSection = () => {
   const { state } = useLocation();
   const section = (state as SettingsState | null)?.section;
@@ -222,7 +269,17 @@ const useLandOnSection = () => {
 
 export const SettingsRoute = () => {
   useLandOnSection();
+  const from = (useLocation().state as SettingsState | null)?.from;
   return (
+    <>
+      {from && (
+        // Sticky, so it stays in reach after Settings lands on a section further down.
+        <div className="sticky top-0 z-10 border-b border-line bg-bg/95 backdrop-blur-sm">
+          <div className="mx-auto max-w-3xl px-12 py-2.5">
+            <BackToBook from={from} />
+          </div>
+        </div>
+      )}
     <div className="mx-auto flex max-w-3xl flex-col gap-10 px-12 py-10">
       <header className="flex flex-col gap-1">
         <h1 className="font-display text-display font-semibold">Settings</h1>
@@ -232,5 +289,6 @@ export const SettingsRoute = () => {
       <Reading />
       <Corpus />
     </div>
+    </>
   );
 };
