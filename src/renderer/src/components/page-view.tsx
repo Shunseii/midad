@@ -387,9 +387,13 @@ const LineNumber = ({ line }: { line: number }) => (
 let lastMark: { page: number; top: number } | null = null;
 const MarkPage = createContext(0);
 
-const GLIDE_EASING = "cubic-bezier(0.645, 0.045, 0.355, 1)";
+const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
 
-/** Glides the mark from where it was on this page (400ms ease-move); with reduced motion it fades in instead. */
+/**
+ * Glides the mark from where it was on this page (170ms ease-out). A mark that wasn't
+ * showing on this page just before fades and scales in where it is; with reduced motion
+ * every change fades in.
+ */
 const useGlide = (row: ScreenRow) => {
   const page = useContext(MarkPage);
   const refs = useRef<(HTMLElement | null)[]>([]);
@@ -401,11 +405,12 @@ const useGlide = (row: ScreenRow) => {
     const top = line.getBoundingClientRect().top + row.top;
     const from = lastMark?.page === page ? lastMark.top : null;
     lastMark = { page, top };
-    if (from === null || Math.abs(from - top) < 1) return;
+    if (from !== null && Math.abs(from - top) < 1) return;
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     for (const el of els) {
-      if (reduce) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, easing: "ease" });
-      else el.animate([{ translate: `0 ${from - top}px` }, { translate: "0 0" }], { duration: 400, easing: GLIDE_EASING });
+      if (reduce) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 120, easing: EASE_OUT });
+      else if (from === null) el.animate([{ opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1 }], { duration: 150, easing: EASE_OUT });
+      else el.animate([{ translate: `0 ${from - top}px` }, { translate: "0 0" }], { duration: 170, easing: EASE_OUT });
     }
   }, [page, row.top]);
   return (i: number) => (el: HTMLElement | null) => {
@@ -587,6 +592,10 @@ export const PageView = ({
   });
   const footnotes = footnotesByMarker(page.hashiya.map((f) => ({ marker: f.marker, text: t(f.text) })));
   const folio = arabicNumber(stored.number ?? stored.position);
+  // A marker removed from the page (or never on it) has nowhere to glide from when it comes back.
+  useLayoutEffect(() => {
+    if (marker === null) lastMark = null;
+  }, [marker]);
   return (
     <MarkPage value={stored.position}>
     <Footnotes value={footnotes}>
