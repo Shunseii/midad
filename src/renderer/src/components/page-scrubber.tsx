@@ -229,7 +229,11 @@ export const PageScrubber = ({
         {drag && <span style={{ right: at(position) }} className="absolute top-2.5 size-3 translate-x-1/2 rounded-full border-2 border-accent opacity-40" />}
         <div
           style={{ translate: `${-thumbFraction * 100}% 0` }}
-          className="pointer-events-none absolute inset-0 transition-[translate] duration-slide ease-move group-data-settling/scrub:duration-120 group-data-settling/scrub:ease-out group-data-dragging/scrub:transition-none motion-reduce:transition-none"
+          // Onto the bookmarked page the label rises first, then slides across; off it, it slides first, then drops.
+          className={cx(
+            "pointer-events-none absolute inset-0 transition-[translate] duration-slide ease-move group-data-settling/scrub:duration-120 group-data-settling/scrub:ease-out group-data-dragging/scrub:transition-none motion-reduce:transition-none",
+            markerAt === position && "delay-(--transition-duration-pop) group-data-settling/scrub:delay-0",
+          )}
         >
           {(() => {
             const label = pageLabel({ page: position, number: numberOf(position) });
@@ -239,7 +243,7 @@ export const PageScrubber = ({
                 data-page-label
                 className={cx(
                   "ar absolute -top-5 right-0 translate-x-1/2 text-sm leading-none whitespace-nowrap transition-[opacity,translate] duration-pop ease-out motion-reduce:transition-opacity group-hover/scrub:opacity-0 group-hover/scrub:duration-pop-exit group-data-dragging/scrub:opacity-0",
-                  markerAt === position && "-translate-y-3",
+                  markerAt === position ? "-translate-y-3" : "[transition-delay:0ms,var(--transition-duration-slide)] group-data-settling/scrub:[transition-delay:0ms,120ms]",
                   label.printed ? "text-ink-2" : "text-ink-3",
                 )}
               >
