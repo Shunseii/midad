@@ -1,54 +1,63 @@
-import { ArrowUp, Copy, Languages, Lightbulb, ListTree, NotebookPen, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
+import { ArrowUp, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Quote as QuoteIcon, RotateCcw, Square, SquarePen, TextQuote, X } from "lucide-react";
 import { type ClipboardEvent, type ReactNode, type KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import { quoteSpan, type Span } from "../../../shared/annotations";
 import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
+import type { AskSelection, Conversation, ConversationSummary, Quote, StoredTurn } from "../../../shared/conversations";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { copiedPassage } from "../lib/copied";
-import { arabicNumber } from "../lib/format";
-import { midad, usePage } from "../lib/midad";
+import { arabicNumber, timeAgo } from "../lib/format";
+import { keys, midad, usePage } from "../lib/midad";
 import { Button, IconButton, cx } from "./ui";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-export interface AskSelection {
-  span: Span;
-  text: string;
-  position: number;
-}
+export type { AskSelection, Quote };
 
-/** A passage pasted into the question. `span` is set when it was copied from the page. */
-export interface Quote {
-  id: string;
-  text: string;
-  span: Span | null;
-  position: number;
-}
-
-export interface Turn {
-  id: string;
-  question: string;
-  quotes: Quote[];
-  position: number;
-  selection: AskSelection | null;
-  answer: string;
-  status: "streaming" | "done" | "error";
+export interface Turn extends Omit<StoredTurn, "createdAt"> {
   /** While streaming: what Claude is doing, e.g. reading the page. */
   activity: string | null;
-  error: string | null;
 }
 
-/** One Ask AI conversation for a book: a Claude session continued across questions. */
+const fromStored = ({ createdAt: _, ...turn }: StoredTurn): Turn => ({ ...turn, activity: null });
+
+/**
+ * One Ask AI conversation for a book: a Claude session continued across questions.
+ * Saved as it goes; opening the book brings back its most recent one.
+ */
 export const useAskConversation = (bookId: string) => {
+  const client = useQueryClient();
   const [turns, setTurns] = useState<Turn[]>([]);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const current = useRef<string | null>(null);
   const sessionId = useRef<string | null>(null);
-  // Bumped by a new conversation, so a late answer from the old one can't revive its session.
+  // Bumped whenever another conversation is shown, so a late load or answer can't revive the old one.
   const generation = useRef(0);
   const update = useCallback((id: string, change: (t: Turn) => Partial<Turn>) => {
     setTurns((all) => all.map((t) => (t.id === id ? { ...t, ...change(t) } : t)));
   }, []);
+  const history = useQuery({ queryKey: keys.conversations(bookId), queryFn: () => midad["conversations.list"]({ bookId }) });
+  const refreshHistory = () => client.invalidateQueries({ queryKey: keys.conversations(bookId) });
 
-  useEffect(() => {
-    setTurns([]);
-    sessionId.current = null;
-  }, [bookId]);
+  const show = useCallback((conversation: Conversation | null) => {
+    generation.current += 1;
+    current.current = conversation?.id ?? null;
+    setConversationId(current.current);
+    sessionId.current = conversation?.sessionId ?? null;
+    setTurns(conversation?.turns.map(fromStored) ?? []);
+  }, []);
+
+  const load = useCallback(
+    (fetch: () => Promise<Conversation | null>) => {
+      show(null);
+      const started = generation.current;
+      void fetch().then((conversation) => {
+        if (started === generation.current) show(conversation);
+      });
+    },
+    [show],
+  );
+
+  useEffect(() => load(() => midad["conversations.latest"]({ bookId })), [bookId, load]);
 
   useEffect(
     () =>
@@ -59,10 +68,22 @@ export const useAskConversation = (bookId: string) => {
     [update],
   );
 
-  const ask = ({ question, position, selection, quotes = [] }: { question: string; position: number; selection: AskSelection | null; quotes?: Quote[] }) => {
+  const ask = async ({ question, position, selection, quotes = [] }: { question: string; position: number; selection: AskSelection | null; quotes?: Quote[] }) => {
     const id = crypto.randomUUID();
+    if (!current.current) {
+      current.current = crypto.randomUUID();
+      setConversationId(current.current);
+    }
+    const conversation = current.current;
     const started = generation.current;
     setTurns((all) => [...all, { id, question, quotes, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }]);
+    try {
+      await midad["conversations.addTurn"]({ conversationId: conversation, bookId, turn: { id, question, quotes, position, selection } });
+    } catch (err) {
+      update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) }));
+      return;
+    }
+    void refreshHistory();
     midad["ai.ask"]({
       requestId: id,
       bookId,
@@ -71,28 +92,34 @@ export const useAskConversation = (bookId: string) => {
       selection: selection && position === selection.position ? { span: selection.span, text: selection.text } : undefined,
       quotes: quotes.map((q) => ({ text: q.text, span: q.position === position ? q.span : null })),
       sessionId: sessionId.current,
-    }).then(
-      (result) => {
-        if (started === generation.current) sessionId.current = result.sessionId || sessionId.current;
-        update(id, () => ({ answer: result.text, status: "done", activity: null }));
-      },
-      (err: unknown) => update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) })),
-    );
+    })
+      .then(
+        (result) => {
+          if (started === generation.current) sessionId.current = result.sessionId || sessionId.current;
+          update(id, () => ({ answer: result.text, status: "done", activity: null }));
+        },
+        (err: unknown) => update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) })),
+      )
+      .finally(() => void refreshHistory());
   };
 
   const busy = turns.some((t) => t.status === "streaming");
   const stop = () => {
     for (const t of turns) if (t.status === "streaming") void midad["ai.cancel"]({ requestId: t.id });
   };
-  const retry = (turn: Turn) => ask({ question: turn.question, position: turn.position, selection: turn.selection, quotes: turn.quotes });
-  /** Drops the conversation; the next question starts a fresh Claude session. */
+  const retry = (turn: Turn) => void ask({ question: turn.question, position: turn.position, selection: turn.selection, quotes: turn.quotes });
+  /** Starts a fresh conversation and Claude session; the old one stays in the history. */
   const reset = () => {
     stop();
-    generation.current += 1;
-    setTurns([]);
-    sessionId.current = null;
+    show(null);
   };
-  return { turns, ask, busy, stop, retry, reset };
+  /** Shows a saved conversation; the next question continues its Claude session. */
+  const open = (id: string) => {
+    if (id === current.current) return;
+    stop();
+    load(() => midad["conversations.get"]({ id }));
+  };
+  return { turns, ask, busy, stop, retry, reset, open, conversationId, history: history.data ?? [] };
 };
 
 const ARABIC_START = /^[^\p{L}]*\p{Script=Arabic}/u;
@@ -237,6 +264,48 @@ const QuoteChips = ({
   </div>
 );
 
+/** The book's saved conversations, most recent first; opening one continues its Claude session. */
+const ConversationHistory = ({
+  history,
+  currentId,
+  onOpen,
+}: {
+  history: ConversationSummary[];
+  currentId: string | null;
+  onOpen: (id: string) => void;
+}) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger render={<IconButton icon={History} label="Past conversations" selected={open} />} />
+      <PopoverContent align="end" className="w-80 gap-0 p-1.5">
+        <p className="px-2.5 pt-1.5 pb-1 text-xs font-medium text-ink-3">Past conversations</p>
+        <div className="flex max-h-80 flex-col overflow-y-auto">
+          {history.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              aria-current={c.id === currentId || undefined}
+              onClick={() => {
+                onOpen(c.id);
+                setOpen(false);
+              }}
+              className="flex flex-col gap-0.5 rounded-lg px-2.5 py-2 text-left transition-colors duration-press hover:bg-ink/6 aria-[current]:bg-accent-soft"
+            >
+              <span dir="auto" className="truncate text-sm [unicode-bidi:plaintext]">
+                {c.title || "Untitled"}
+              </span>
+              <span className="text-xs text-ink-3">
+                {timeAgo(c.updatedAt)} · {c.turnCount} {c.turnCount === 1 ? "question" : "questions"}
+              </span>
+            </button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 export const AskPanel = ({
   bookId,
   conversation,
@@ -256,7 +325,7 @@ export const AskPanel = ({
   onCite: (cite: Citation) => void;
   onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
 }) => {
-  const { turns, ask, busy, stop, retry, reset } = conversation;
+  const { turns, ask, busy, stop, retry, reset, open, conversationId, history } = conversation;
   const [draft, setDraft] = useState("");
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [saved, setSaved] = useState<Set<string>>(new Set());
@@ -270,7 +339,7 @@ export const AskPanel = ({
 
   const send = (question: string) => {
     if ((!question.trim() && quotes.length === 0) || busy) return;
-    ask({ question: question.trim() || "Explain this passage.", position, selection: activeSelection, quotes });
+    void ask({ question: question.trim() || "Explain this passage.", position, selection: activeSelection, quotes });
     setDraft("");
     setQuotes([]);
   };
@@ -310,15 +379,18 @@ export const AskPanel = ({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      {turns.length > 0 && (
-        <div className="flex shrink-0 items-center border-b border-line px-5 py-2">
+      {(turns.length > 0 || history.length > 0) && (
+        <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-5">
           <span className="text-xs text-ink-3">
-            {turns.length} {turns.length === 1 ? "question" : "questions"}
+            {turns.length > 0 ? `${turns.length} ${turns.length === 1 ? "question" : "questions"}` : "New conversation"}
           </span>
           <span className="flex-1" />
-          <Button variant="ghost" size="sm" icon={SquarePen} onClick={reset}>
-            New conversation
-          </Button>
+          {history.length > 0 && <ConversationHistory history={history} currentId={conversationId} onOpen={open} />}
+          {turns.length > 0 && (
+            <Button variant="ghost" size="sm" icon={SquarePen} onClick={reset}>
+              New conversation
+            </Button>
+          )}
         </div>
       )}
       <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-5">
@@ -368,6 +440,7 @@ export const AskPanel = ({
               </p>
             )}
             {turn.status === "error" && <p className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">{turn.error}</p>}
+            {turn.status === "interrupted" && <p className="text-xs text-ink-3">Interrupted when Midad closed.</p>}
             {turn.status !== "streaming" && (
               <div className="flex items-center gap-1">
                 {turn.status === "done" && turn.selection && (

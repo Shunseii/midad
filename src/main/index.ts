@@ -8,6 +8,7 @@ import { createAsk } from "./ask";
 import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
 import { createMarkers } from "./markers";
+import { createConversations } from "./conversations";
 import { type CorpusSource, createCorpusClient } from "./corpus";
 import { createLibrary } from "./library";
 import { createSettings } from "./settings";
@@ -59,7 +60,11 @@ db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
 const library = createLibrary({ db, corpus });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
+const conversations = createConversations({ db });
 const scans = createScans({ dir: join(userData, "scans"), fetchScan: (input) => corpusClient().fetchScan(input) });
+
+/** Each running answer so far, so an error or stop still saves what Claude wrote. */
+const streamed = new Map<string, string>();
 
 // Page scans load as <img src="midad-scan://scan/<bookId>/<fileId>">.
 protocol.registerSchemesAsPrivileged([{ scheme: "midad-scan", privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
@@ -68,6 +73,7 @@ const ask = createAsk({
   dbPath,
   workDir: join(userData, "ask"),
   onEvent: (requestId, event) => {
+    if (event.kind === "delta") streamed.set(requestId, (streamed.get(requestId) ?? "") + event.text);
     for (const win of BrowserWindow.getAllWindows()) win.webContents.send(ASK_EVENT, requestId, event);
   },
 });
@@ -113,9 +119,28 @@ const handlers: MidadApi = {
     const page = await library.getPage({ bookId, position });
     if (!book || !page) throw new Error("That page isn't in the library.");
     const context = readingContext({ bookId, title: book.title, position, number: page.number, selection, quotes });
-    return ask.ask({ requestId, prompt: `${context}\n\n${question}`, sessionId });
+    const prompt = `${context}\n\n${question}`;
+    try {
+      const result = await ask.ask({ requestId, prompt, sessionId }).catch((err: unknown) => {
+        // A session Claude no longer has (cleared or from another machine): carry on in a new one.
+        if (!sessionId || !(err instanceof Error) || !/no conversation found/i.test(err.message)) throw err;
+        streamed.delete(requestId);
+        return ask.ask({ requestId, prompt, sessionId: null });
+      });
+      await conversations.finishTurn({ id: requestId, answer: result.text, sessionId: result.sessionId });
+      return result;
+    } catch (err) {
+      await conversations.finishTurn({ id: requestId, answer: streamed.get(requestId) ?? "", error: err instanceof Error ? err.message : String(err) });
+      throw err;
+    } finally {
+      streamed.delete(requestId);
+    }
   },
   "ai.cancel": async (input) => ask.cancel(input),
+  "conversations.list": (input) => conversations.list(input),
+  "conversations.latest": (input) => conversations.latest(input),
+  "conversations.get": (input) => conversations.get(input),
+  "conversations.addTurn": (input) => conversations.addTurn(input),
   "app.setTheme": async ({ theme }) => {
     settings.saveTheme(theme);
     applyTheme(theme);

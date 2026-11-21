@@ -1,5 +1,6 @@
 import type { BookMarks, Highlight, HighlightColor, LetterRef, Note, PageAnnotations, Part, Span } from "./annotations";
 import type { StreamEvent } from "./ask";
+import type { Conversation, ConversationSummary, StoredTurn } from "./conversations";
 import type { CorpusBookListing } from "./corpus";
 import type {
   BookDetail,
@@ -53,6 +54,15 @@ export interface MidadApi {
   /** Streams StreamEvents for requestId while it runs; resolves with the whole answer. */
   "ai.ask": (input: AskInput) => Promise<{ sessionId: string; text: string }>;
   "ai.cancel": (input: { requestId: string }) => Promise<void>;
+  "conversations.list": (input: { bookId: string }) => Promise<ConversationSummary[]>;
+  "conversations.latest": (input: { bookId: string }) => Promise<Conversation | null>;
+  "conversations.get": (input: { id: string }) => Promise<Conversation | null>;
+  /** Saves a question before it's asked; ai.ask saves its answer. */
+  "conversations.addTurn": (input: {
+    conversationId: string;
+    bookId: string;
+    turn: Omit<StoredTurn, "answer" | "status" | "error" | "createdAt">;
+  }) => Promise<void>;
   "app.setTheme": (input: { theme: Theme }) => Promise<void>;
 }
 
@@ -98,6 +108,10 @@ export const CHANNELS = [
   "marker.clear",
   "ai.ask",
   "ai.cancel",
+  "conversations.list",
+  "conversations.latest",
+  "conversations.get",
+  "conversations.addTurn",
   "app.setTheme",
 ] as const satisfies readonly Channel[];
 

@@ -20,6 +20,7 @@ export const keys = {
   syncPreview: (bookId: string) => ["library", bookId, "sync-preview"] as const,
   annotations: (bookId: string, position: number) => ["library", bookId, "annotations", position] as const,
   marker: (bookId: string) => ["library", bookId, "marker"] as const,
+  conversations: (bookId: string) => ["library", bookId, "conversations"] as const,
   bookMarks: (bookId: string) => ["library", bookId, "book-marks"] as const,
   firstLine: (bookId: string, position: number) => ["library", bookId, "first-line", position] as const,
 };
