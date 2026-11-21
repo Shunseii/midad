@@ -231,6 +231,22 @@ export const PageScrubber = ({
           style={{ translate: `${-thumbFraction * 100}% 0` }}
           className="pointer-events-none absolute inset-0 transition-[translate] duration-slide ease-move group-data-settling/scrub:duration-120 group-data-settling/scrub:ease-out group-data-dragging/scrub:transition-none motion-reduce:transition-none"
         >
+          {(() => {
+            const label = pageLabel({ page: position, number: numberOf(position) });
+            return (
+              <span
+                aria-hidden
+                data-page-label
+                className={cx(
+                  "ar absolute right-0 translate-x-1/2 text-sm leading-none whitespace-nowrap transition-opacity duration-pop ease-out group-hover/scrub:opacity-0 group-hover/scrub:duration-pop-exit group-data-dragging/scrub:opacity-0",
+                  markerAt === position ? "-top-8" : "-top-5",
+                  label.printed ? "text-ink-2" : "text-ink-3",
+                )}
+              >
+                {label.text}
+              </span>
+            );
+          })()}
           <span
             data-thumb
             className="absolute top-2.5 right-0 size-3 translate-x-1/2 rounded-full bg-accent ring-2 ring-bg transition-transform duration-pop-exit ease-out group-hover/scrub:scale-115 group-hover/scrub:duration-pop group-data-dragging/scrub:scale-115"
