@@ -783,11 +783,23 @@ export const ReaderRoute = () => {
     return () => document.removeEventListener("selectionchange", onChange);
   }, []);
   const [overChrome, setOverChrome] = useState(false);
+  // Tabbing into the bars holds them; focus that lands there any other way (back on the Display button after its menu closes) doesn't.
   const [keyboardInChrome, setKeyboardInChrome] = useState(false);
+  const tabbing = useRef(false);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => (tabbing.current = e.key === "Tab");
+    const onPointer = () => (tabbing.current = false);
+    window.addEventListener("keydown", onKey, { capture: true });
+    window.addEventListener("pointerdown", onPointer, { capture: true });
+    return () => {
+      window.removeEventListener("keydown", onKey, { capture: true });
+      window.removeEventListener("pointerdown", onPointer, { capture: true });
+    };
+  }, []);
   const chromeHover = {
     onMouseEnter: () => setOverChrome(true),
     onMouseLeave: () => setOverChrome(false),
-    onFocus: (e: React.FocusEvent) => setKeyboardInChrome(e.target.matches(":focus-visible")),
+    onFocus: () => setKeyboardInChrome(tabbing.current),
     onBlur: () => setKeyboardInChrome(false),
   };
   const focusOn = focusMode.choice !== "off";
