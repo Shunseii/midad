@@ -904,7 +904,7 @@ export const ReaderRoute = () => {
   wheelZoom.current.zoomBy = zoomBy;
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
-      if (!e.ctrlKey) return;
+      if (!e.ctrlKey || (e.target instanceof Element && e.target.closest("[data-scan]"))) return;
       e.preventDefault();
       const z = wheelZoom.current;
       z.owed += e.deltaY;
