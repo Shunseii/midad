@@ -23,6 +23,7 @@ import { usePref } from "../lib/prefs";
 import { useFocusMode, useHighlightStyle, usePageWidth } from "../lib/appearance";
 import { useFocusChrome } from "../lib/use-focus-chrome";
 import { neighbourPages } from "../lib/neighbours";
+import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop } from "../lib/zoom-anchor";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -60,6 +61,18 @@ interface NoteState {
   rect: DOMRect;
   /** Hovering shows a read-only peek; clicking it (or adding a note) edits. */
   mode: "peek" | "edit";
+}
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+/** A word held in place while the text size changes, and how far below the top of the page's view it was. */
+interface ZoomAnchor {
+  selector: string;
+  offset: number;
+  at: number;
 }
 
 const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
@@ -670,27 +683,78 @@ export const ReaderRoute = () => {
   const [zoomShown, setZoomShown] = useState(false);
   const zoomTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => () => clearTimeout(zoomTimer.current), []);
-  /** Sets the text size from a shortcut and briefly shows the new size. */
-  const zoomTo = (scale: number) => {
+  const zoomAnchor = useRef<ZoomAnchor | null>(null);
+  const pendingAnchor = useRef<ZoomAnchor | null>(null);
+
+  /**
+   * The word to hold in place while the text size changes: the one under the
+   * pointer, or the first whole one at the top of the page. A burst of steps
+   * keeps the first step's word and height, so the page doesn't drift.
+   */
+  const pickAnchor = (pointer: Point | null): ZoomAnchor | null => {
+    const root = pageRoot.current;
+    if (!root) return null;
+    const now = performance.now();
+    const last = zoomAnchor.current;
+    if (last && continuesBurst({ anchoredAt: last.at, now })) {
+      last.at = now;
+      return last;
+    }
+    const view = root.getBoundingClientRect();
+    const words = [...root.querySelectorAll<HTMLElement>("[data-w]")];
+    const boxes = words.map((w) => w.getBoundingClientRect());
+    const overPage = pointer && pointer.x >= view.left && pointer.x <= view.right && pointer.y >= view.top && pointer.y <= view.bottom;
+    const word = words[overPage ? nearestWord({ words: boxes, ...pointer }) : firstFullyVisible({ words: boxes, view })];
+    if (!word) return null;
+    const { part, line, w } = word.dataset;
+    zoomAnchor.current = { selector: `[data-part="${part}"][data-line="${line}"][data-w="${w}"]`, offset: word.getBoundingClientRect().top - view.top, at: now };
+    return zoomAnchor.current;
+  };
+
+  useLayoutEffect(() => {
+    const anchor = pendingAnchor.current;
+    pendingAnchor.current = null;
+    const root = pageRoot.current;
+    const word = anchor && root?.querySelector(anchor.selector);
+    if (!anchor || !root || !word) return;
+    root.scrollTop = restoredScrollTop({
+      scrollTop: root.scrollTop,
+      anchorTop: word.getBoundingClientRect().top,
+      viewTop: root.getBoundingClientRect().top,
+      offset: anchor.offset,
+      maxScrollTop: root.scrollHeight - root.clientHeight,
+    });
+  }, [textScale]);
+
+  /** Changes the text size, keeping the reader's place on the page. */
+  const resize = ({ scale, pointer }: { scale: number; pointer: Point | null }) => {
+    if (scale === latestScale.current) return;
+    pendingAnchor.current = pickAnchor(pointer);
+    latestScale.current = scale;
     setTextScale(scale);
+  };
+
+  /** Sets the text size from a shortcut and briefly shows the new size. */
+  const zoomTo = ({ scale, pointer = null }: { scale: number; pointer?: Point | null }) => {
+    resize({ scale, pointer });
     setZoomShown(true);
     clearTimeout(zoomTimer.current);
     zoomTimer.current = setTimeout(() => setZoomShown(false), ZOOM_SHOWN_MS);
   };
-  const zoomBy = (by: 1 | -1) => zoomTo(stepScale({ scale: latestScale.current, by }));
+  const zoomBy = ({ by, pointer = null }: { by: 1 | -1; pointer?: Point | null }) => zoomTo({ scale: stepScale({ scale: latestScale.current, by }), pointer });
 
   /** Ctrl with =, - or 0 sizes the page's text instead of zooming the whole window. */
   const zoomKeys = (e: KeyboardEvent) => {
     if (!(e.ctrlKey || e.metaKey) || e.altKey) return false;
-    if (e.code === "Equal" || e.code === "NumpadAdd") zoomBy(1);
-    else if (e.code === "Minus" || e.code === "NumpadSubtract") zoomBy(-1);
-    else if (e.code === "Digit0" || e.code === "Numpad0") zoomTo(1);
+    if (e.code === "Equal" || e.code === "NumpadAdd") zoomBy({ by: 1 });
+    else if (e.code === "Minus" || e.code === "NumpadSubtract") zoomBy({ by: -1 });
+    else if (e.code === "Digit0" || e.code === "Numpad0") zoomTo({ scale: 1 });
     else return false;
     e.preventDefault();
     return true;
   };
 
-  // Ctrl+wheel (and trackpad pinch, which arrives as one) steps the text size too.
+  // Ctrl+wheel (and trackpad pinch, which arrives as one) steps the text size too, holding the word under the pointer.
   const wheelZoom = useRef({ zoomBy, owed: 0 });
   wheelZoom.current.zoomBy = zoomBy;
   useEffect(() => {
@@ -700,7 +764,7 @@ export const ReaderRoute = () => {
       const z = wheelZoom.current;
       z.owed += e.deltaY;
       if (Math.abs(z.owed) < WHEEL_STEP) return;
-      z.zoomBy(z.owed < 0 ? 1 : -1);
+      z.zoomBy({ by: z.owed < 0 ? 1 : -1, pointer: { x: e.clientX, y: e.clientY } });
       z.owed = 0;
     };
     window.addEventListener("wheel", onWheel, { passive: false });
@@ -877,7 +941,7 @@ export const ReaderRoute = () => {
           <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
         </div>
         <div className="flex-1" />
-        <DisplayMenu open={menuOpen} onOpenChange={setMenuOpen} textScale={textScale} onTextScale={setTextScale} lineNumbers={lineNumbers} onLineNumbers={setLineNumbers} showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
+        <DisplayMenu open={menuOpen} onOpenChange={setMenuOpen} textScale={textScale} onTextScale={(scale) => resize({ scale, pointer: null })} lineNumbers={lineNumbers} onLineNumbers={setLineNumbers} showHarakat={showHarakat} onShowHarakat={setShowHarakat} showMine={showMine} onShowMine={setShowMine} />
         <IconButton icon={FileImage} label={showScan ? "Hide scan (S)" : "Show scan (S)"} selected={showScan} onClick={() => setShowScan(!showScan)} />
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton
