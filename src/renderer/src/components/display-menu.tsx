@@ -1,4 +1,4 @@
-import { Minus, Plus, Type } from "lucide-react";
+import { Minus, Plus, Settings2, Type } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Theme } from "../../../shared/ipc";
 import { type HighlightStyle, type PageWidth, useFocusMode, useHighlightStyle, usePageWidth, useTheme } from "../lib/appearance";
@@ -82,7 +82,7 @@ const TextSize = ({ scale, onScale }: { scale: number; onScale: (v: number) => v
   </Row>
 );
 
-/** The reader's display settings, opening from the Aa button in the top bar. */
+/** The reader's display settings, opening from the Display button in the top bar. */
 export const DisplayMenu = ({
   open,
   onOpenChange,
@@ -112,7 +112,7 @@ export const DisplayMenu = ({
   const [highlightStyle, setHighlightStyle] = useHighlightStyle();
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
-      <PopoverTrigger render={<IconButton icon={Type} label="Text display" selected={open} />} />
+      <PopoverTrigger render={<IconButton icon={Settings2} label="Display" selected={open} />} />
       <PopoverContent side="bottom" align="end" sideOffset={8} className="w-84 gap-5 p-4">
         <Section title="Appearance">
           <Row title="Theme" hint="Follow the system or choose one" stacked>
