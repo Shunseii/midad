@@ -548,7 +548,7 @@
           }
         }
       },
-      "css": "&:hover {\n  color: {color.ink};\n}",
+      "css": "transition:\n  color 150ms var(--ease-out),\n  background-color 280ms var(--ease-move),\n  box-shadow 280ms var(--ease-move);\n\n&:hover {\n  color: {color.ink};\n}",
       "name": "Segment",
       "style": {
         "align-items": "center",

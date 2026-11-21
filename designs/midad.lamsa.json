@@ -11797,6 +11797,7 @@
       "type": "text"
     },
     "6wztJW2H": {
+      "css": "/* Switching tabs: the list slides in from the picked tab's side (Bookmarks from the right), the old one fades out. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "aV",
       "name": "Bookmark list",
       "parentId": "A1rUuRyL",
@@ -37173,6 +37174,7 @@
       "type": "frame"
     },
     "LnAH75CV": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). */",
       "index": "a",
       "name": "Sidebar tabs",
       "parentId": "A1rUuRyL",
@@ -59929,6 +59931,7 @@
       "type": "frame"
     },
     "ZSSLNC2e": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). */",
       "index": "a",
       "name": "Sidebar tabs",
       "parentId": "x0H4yd3G",
@@ -68199,6 +68202,7 @@
       "type": "frame"
     },
     "eStUTAoZ": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). */",
       "index": "a",
       "name": "Sidebar tabs",
       "parentId": "0ZS5i3S8",
@@ -75731,6 +75735,7 @@
       "type": "frame"
     },
     "iayUAFZv": {
+      "css": "/* Switching tabs: the list slides in from the picked tab's side (Bookmarks from the right), the old one fades out. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "aV",
       "name": "Bookmark list",
       "parentId": "XUJKoMIs",
@@ -75941,6 +75946,7 @@
       "type": "frame"
     },
     "igr6EybJ": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). */",
       "index": "a",
       "name": "Sidebar tabs",
       "parentId": "XUJKoMIs",
@@ -77109,7 +77115,7 @@
       "type": "text"
     },
     "jRI7Acr8": {
-      "css": "animation: fade-in {transition.duration-pop} {ease.out} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: none;\n}",
+      "css": "/* Switching tabs: the list slides in from the picked tab's side (Bookmarks from the right), the old one fades out. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "aV",
       "name": "Empty state",
       "parentId": "x0H4yd3G",
@@ -81137,6 +81143,7 @@
       "type": "icon"
     },
     "lfnla6Tb": {
+      "css": "/* Switching tabs: the list slides in from the picked tab's side (Bookmarks from the right), the old one fades out. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "aV",
       "name": "Bookmark list",
       "parentId": "0ZS5i3S8",
