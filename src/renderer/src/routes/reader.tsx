@@ -1040,6 +1040,18 @@ export const ReaderRoute = () => {
       toggleBookmark();
       return;
     }
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.code === "BracketLeft" || e.code === "BracketRight" || e.code === "Backslash")) {
+      e.preventDefault();
+      if (e.code === "BracketLeft") setContentsOpen(!contentsOpen);
+      else if (e.code === "BracketRight") setPanelOpen(!panelOpen);
+      else {
+        const open = !(contentsOpen || panelOpen);
+        setContentsOpen(open);
+        // A narrow window shows one sheet at a time.
+        if (wide || !open) setPanelOpen(open);
+      }
+      return;
+    }
     if ((e.ctrlKey || e.metaKey) && !e.altKey && (e.code === "KeyZ" || e.code === "KeyY")) {
       e.preventDefault();
       step(e.code === "KeyY" || e.shiftKey ? "redo" : "undo");
@@ -1187,7 +1199,7 @@ export const ReaderRoute = () => {
         </Link>
         <IconButton
           icon={contentsOpen ? PanelLeftClose : PanelLeftOpen}
-          label={contentsOpen ? "Hide contents" : "Show contents"}
+          label={contentsOpen ? "Hide contents (Ctrl+[)" : "Show contents (Ctrl+[)"}
           onClick={() => setContentsOpen(!contentsOpen)}
         />
         <div className="flex min-w-0 flex-col">
@@ -1232,7 +1244,7 @@ export const ReaderRoute = () => {
         <div className="mx-2 h-6 w-px bg-line" />
         <IconButton
           icon={NotebookPen}
-          label={panelOpen && panelTab !== "ask" ? "Hide highlights and notes" : "Show highlights and notes"}
+          label={panelOpen && panelTab !== "ask" ? "Hide highlights and notes (Ctrl+])" : "Show highlights and notes (Ctrl+])"}
           selected={panelOpen && panelTab !== "ask"}
           onClick={() => {
             if (panelOpen && panelTab !== "ask") setPanelOpen(false);
