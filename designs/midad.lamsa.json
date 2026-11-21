@@ -1592,7 +1592,7 @@
       "type": "text"
     },
     "1EyY4Pp6": {
-      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-settling] > & {\n  transition-duration: 120ms;\n  transition-timing-function: {ease.out};\n}\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "b0B",
       "name": "Thumb layer",
       "parentId": "JEu9m828",
@@ -2316,7 +2316,7 @@
       "type": "text"
     },
     "1vkfbjnj": {
-      "content": "٩",
+      "content": "ص ٩",
       "index": "a0",
       "name": "Folio",
       "parentId": "KPudANTU",
@@ -2510,7 +2510,7 @@
       "type": "frame"
     },
     "25P36cuy": {
-      "content": "٩",
+      "content": "ص ٩",
       "index": "a0",
       "name": "Folio",
       "parentId": "j0QDlO80",
@@ -3594,7 +3594,7 @@
       "type": "frame"
     },
     "30DtAMq9": {
-      "content": "٩",
+      "content": "ص ٩",
       "index": "a0",
       "name": "Folio",
       "parentId": "k7L2lua5",
@@ -4097,7 +4097,7 @@
       "type": "instance"
     },
     "3QrplK1x": {
-      "content": "١",
+      "content": "ص ١",
       "index": "a0",
       "name": "Folio",
       "parentId": "FfaA6WEi",
@@ -14838,7 +14838,7 @@
       "type": "frame"
     },
     "BtmleW0u": {
-      "content": "Hover thickens the line (scaleY 2, ticks 1.6, thumb 1.15; 160ms ease-out, 100ms back). A preview card follows the pointer: printed folio, position, the deepest heading over that page and its first line, fetched after the pointer rests 120ms (a quiet bar until it arrives). Click jumps there.",
+      "content": "Hover thickens the line (scaleY 2, ticks 1.6, thumb 1.15; 160ms ease-out, 100ms back). A preview card follows the pointer: the printed page number (ص with Arabic-Indic digits, as at the page foot; the scan position, muted, when the page has none), the deepest heading over that page and its first line, fetched after the pointer rests 120ms (a quiet bar until it arrives). Click jumps there.",
       "index": "a2",
       "name": "Spec note",
       "parentId": "fm1YrzdG",
@@ -19121,7 +19121,7 @@
       "type": "text"
     },
     "FbY3pflk": {
-      "content": "١١",
+      "content": "ص ١١",
       "index": "a0",
       "name": "Folio",
       "parentId": "TLoAtz4T",
@@ -21426,7 +21426,7 @@
       "type": "text"
     },
     "HHtCQfrz": {
-      "content": "١١",
+      "content": "ص ١١",
       "index": "a0",
       "name": "Folio",
       "parentId": "SqygxwQZ",
@@ -22007,19 +22007,6 @@
         "font-family": "{font.body}",
         "font-size": 12,
         "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "HjzxI6IT": {
-      "content": "860 of 1,312",
-      "index": "a1",
-      "name": "Position",
-      "parentId": "hWAr1mFu",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "ltr",
-        "font-family": "{font.body}",
-        "font-size": 12
       },
       "type": "text"
     },
@@ -26465,7 +26452,7 @@
       "type": "text"
     },
     "LGWrhhhz": {
-      "content": "٩",
+      "content": "ص ٩",
       "index": "a0",
       "name": "Folio",
       "parentId": "gTlcrhDF",
@@ -27470,7 +27457,7 @@
       "type": "text"
     },
     "MKvoVNq0": {
-      "content": "١١",
+      "content": "ص ١١",
       "index": "a0",
       "name": "Folio",
       "parentId": "wIRL3JjQ",
@@ -27688,7 +27675,7 @@
       "type": "instance"
     },
     "MVnRXkwI": {
-      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-settling] > & {\n  transition-duration: 120ms;\n  transition-timing-function: {ease.out};\n}\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "aD",
       "name": "Thumb layer",
       "parentId": "2x6UGkw2",
@@ -27974,7 +27961,7 @@
       "type": "frame"
     },
     "MhjkHWGg": {
-      "content": "٣",
+      "content": "ص ٣",
       "index": "a0",
       "name": "Folio",
       "parentId": "P5IGjKmA",
@@ -29916,7 +29903,7 @@
       "type": "icon"
     },
     "OLROPErm": {
-      "content": "٦٤٠",
+      "content": "ص ٦٤٠",
       "index": "a0",
       "name": "Folio",
       "parentId": "ZIWghiV1",
@@ -32767,7 +32754,7 @@
       "type": "text"
     },
     "Qhf1NYc6": {
-      "content": "١",
+      "content": "ص ١",
       "index": "a0",
       "name": "Folio",
       "parentId": "qSNUyp0m",
@@ -33068,7 +33055,7 @@
       "type": "instance"
     },
     "R0ueOZIQ": {
-      "content": "٥",
+      "content": "ص ٥",
       "index": "a0",
       "name": "Folio",
       "parentId": "wTezHrNQ",
@@ -33164,7 +33151,7 @@
       "type": "frame"
     },
     "R8Niv0h8": {
-      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-settling] > & {\n  transition-duration: 120ms;\n  transition-timing-function: {ease.out};\n}\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "b0C",
       "name": "Thumb layer",
       "parentId": "fnS6vZzv",
@@ -33681,7 +33668,7 @@
       "type": "frame"
     },
     "RXLujTpw": {
-      "content": "٥",
+      "content": "ص ٥",
       "index": "a0",
       "name": "Folio",
       "parentId": "DNBZZdPa",
@@ -37718,7 +37705,7 @@
       "type": "text"
     },
     "UkQRdCtW": {
-      "content": "Dragging moves the thumb with the pointer (no glide) and the preview follows; the faint ring stays on the page you came from. The page turns on release; Esc cancels. Other moves of the thumb glide 280ms ease-move.",
+      "content": "Dragging: the thumb follows the pointer exactly, with no stepping, and the preview names the page under it; the faint ring stays on the page you came from and the page itself doesn’t change. On release the thumb settles on that page (120ms ease-out) and the page turns; Esc cancels. Other moves of the thumb glide 280ms ease-move.",
       "index": "a2",
       "name": "Spec note",
       "parentId": "xX7HwjSb",
@@ -38512,7 +38499,7 @@
       "type": "text"
     },
     "VP2EGvLI": {
-      "content": "٣",
+      "content": "ص ٣",
       "index": "a0",
       "name": "Folio",
       "parentId": "CJQuDKaE",
@@ -38926,7 +38913,7 @@
       "type": "instance"
     },
     "Vmqb1MOK": {
-      "content": "٧",
+      "content": "ص ٧",
       "index": "a0",
       "name": "Folio",
       "parentId": "J09bbg7S",
@@ -43029,7 +43016,7 @@
         "align-items": "baseline",
         "direction": "rtl",
         "display": "flex",
-        "justify-content": "space-between"
+        "justify-content": "flex-start"
       },
       "type": "frame"
     },
@@ -44309,7 +44296,7 @@
       "type": "instance"
     },
     "aOu7bnuu": {
-      "content": "٥",
+      "content": "ص ٥",
       "index": "a0",
       "name": "Folio",
       "parentId": "UiamrIP4",
@@ -45208,7 +45195,7 @@
       "type": "frame"
     },
     "b8OySAM1": {
-      "content": "١١",
+      "content": "ص ١١",
       "index": "a0",
       "name": "Folio",
       "parentId": "QKDVzk80",
@@ -45440,7 +45427,7 @@
       "type": "frame"
     },
     "bHZIibp9": {
-      "content": "٥",
+      "content": "ص ٥",
       "index": "a0",
       "name": "Folio",
       "parentId": "s3g9UFCG",
@@ -45829,7 +45816,7 @@
       "type": "instance"
     },
     "bdo4zLW9": {
-      "content": "٧",
+      "content": "ص ٧",
       "index": "a0",
       "name": "Folio",
       "parentId": "8LewmCNy",
@@ -47801,7 +47788,7 @@
       "type": "text"
     },
     "dIGnJXlq": {
-      "content": "٣",
+      "content": "ص ٣",
       "index": "a1",
       "name": "Folio",
       "parentId": "gPZXxjOo",
@@ -50673,7 +50660,7 @@
       "type": "frame"
     },
     "fONvXFMz": {
-      "content": "٧",
+      "content": "ص ٧",
       "index": "a0",
       "name": "Folio",
       "parentId": "Zvld3AYc",
@@ -52484,7 +52471,7 @@
       "type": "frame"
     },
     "gmpUd9iM": {
-      "content": "٣",
+      "content": "ص ٣",
       "index": "a0",
       "name": "Folio",
       "parentId": "Cm5Ms3GP",
@@ -53336,7 +53323,7 @@
         "align-items": "baseline",
         "direction": "rtl",
         "display": "flex",
-        "justify-content": "space-between"
+        "justify-content": "flex-start"
       },
       "type": "frame"
     },
@@ -53651,7 +53638,7 @@
       "type": "text"
     },
     "hmyk45TI": {
-      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-settling] > & {\n  transition-duration: 120ms;\n  transition-timing-function: {ease.out};\n}\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "b0B",
       "name": "Thumb layer",
       "parentId": "1Npqcpqv",
@@ -58592,7 +58579,7 @@
       "type": "frame"
     },
     "lr5qIbWk": {
-      "content": "١",
+      "content": "ص ١",
       "index": "a0",
       "name": "Folio",
       "parentId": "U37e1Fu5",
@@ -62177,7 +62164,7 @@
       "type": "frame"
     },
     "oje7WHxH": {
-      "content": "٧",
+      "content": "ص ٧",
       "index": "a0",
       "name": "Folio",
       "parentId": "E2UwHLEK",
@@ -65254,7 +65241,7 @@
       "type": "text"
     },
     "r6uqpq1C": {
-      "content": "٤",
+      "content": "ص ٤",
       "index": "a1",
       "name": "Folio",
       "parentId": "vZyqbJma",
@@ -66665,7 +66652,7 @@
       "type": "text"
     },
     "sGpWLuqI": {
-      "content": "٣",
+      "content": "ص ٣",
       "index": "aA",
       "name": "Folio",
       "parentId": "QedUStPK",
@@ -67311,19 +67298,6 @@
         "flex": 1
       },
       "type": "frame"
-    },
-    "ssRCJX6R": {
-      "content": "640 of 1,312",
-      "index": "a1",
-      "name": "Position",
-      "parentId": "ZIWghiV1",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "ltr",
-        "font-family": "{font.body}",
-        "font-size": 12
-      },
-      "type": "text"
     },
     "stmVAZI5": {
       "index": "a001",
@@ -68216,7 +68190,7 @@
       "type": "frame"
     },
     "tjN3TLdr": {
-      "content": "٨٦٠",
+      "content": "ص ٨٦٠",
       "index": "a0",
       "name": "Folio",
       "parentId": "hWAr1mFu",
@@ -68626,7 +68600,7 @@
       "type": "icon"
     },
     "tz1gLaQb": {
-      "content": "١",
+      "content": "ص ١",
       "index": "a0",
       "name": "Folio",
       "parentId": "YatTSJa6",
@@ -71466,7 +71440,7 @@
       "type": "frame"
     },
     "wTp0136u": {
-      "content": "٣",
+      "content": "ص ٣",
       "index": "a0",
       "name": "Folio",
       "parentId": "wH7C9Heh",
@@ -72454,7 +72428,7 @@
       "type": "frame"
     },
     "xK6xnAcD": {
-      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-settling] > & {\n  transition-duration: 120ms;\n  transition-timing-function: {ease.out};\n}\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "b0B",
       "name": "Thumb layer",
       "parentId": "FdJVaD96",
@@ -73011,7 +72985,7 @@
       "type": "frame"
     },
     "xh5pDJhf": {
-      "content": "٣",
+      "content": "ص ٣",
       "index": "aB",
       "name": "Folio",
       "parentId": "kQ1okTBG",

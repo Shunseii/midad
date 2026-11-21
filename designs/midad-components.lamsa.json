@@ -669,7 +669,7 @@
       "type": "text"
     },
     "4djLM0MK": {
-      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-settling] > & {\n  transition-duration: 120ms;\n  transition-timing-function: {ease.out};\n}\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "b0B",
       "name": "Thumb layer",
       "parentId": "WE6Reiw7",
@@ -2851,19 +2851,6 @@
       },
       "type": "text"
     },
-    "IWKsRbnO": {
-      "content": "640 of 1,312",
-      "index": "a1",
-      "name": "Position",
-      "parentId": "yLnDtZzG",
-      "style": {
-        "color": "{color.ink-3}",
-        "direction": "ltr",
-        "font-family": "{font.body}",
-        "font-size": 12
-      },
-      "type": "text"
-    },
     "IYi8ydDA": {
       "index": "b0",
       "name": "Empty state",
@@ -3917,7 +3904,7 @@
       "type": "frame"
     },
     "PCqlQccz": {
-      "content": "٦٤٠",
+      "content": "ص ٦٤٠",
       "index": "a0",
       "name": "Folio",
       "parentId": "yLnDtZzG",
@@ -9276,7 +9263,7 @@
         "align-items": "baseline",
         "direction": "rtl",
         "display": "flex",
-        "justify-content": "space-between"
+        "justify-content": "flex-start"
       },
       "type": "frame"
     },
