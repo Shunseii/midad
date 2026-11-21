@@ -149,9 +149,11 @@ export const PageScrubber = ({
     if (!drag || !dragging.current) return;
     dragging.current = false;
     e.currentTarget.releasePointerCapture(e.pointerId);
+    // The last move before the release may not have rendered yet; the release point is where the thumb is headed.
+    const page = pointerAt(e.clientX)?.page ?? drag.page;
     setDrag(null);
-    setSettle({ page: drag.page });
-    onGo(drag.page);
+    setSettle({ page });
+    onGo(page);
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
