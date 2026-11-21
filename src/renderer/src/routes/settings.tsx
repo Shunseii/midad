@@ -101,7 +101,7 @@ const Reading = () => {
   const [showMine, setShowMine] = usePref({ key: "reader.showMine", fallback: true });
   const [lineNumbers, setLineNumbers] = usePref({ key: "reader.lineNumbers", fallback: true });
   return (
-    <Section title="Reading" description="The page's text. Text size is also in the reader's Display menu.">
+    <Section title="Reading" description="The page's text. Text size and harakat are also in the reader's Display menu.">
       <Row title="Text size" hint="The page's Arabic text">
         <div className="flex items-center gap-1">
           <IconButton icon={Minus} label="Smaller text" disabled={textScale <= SMALLEST} onClick={() => setTextScale(stepScale({ scale: textScale, by: -1 }))} />

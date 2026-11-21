@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { type ReactNode, useRef } from "react";
 import type { Theme } from "../../../shared/ipc";
 import { type PageWidth, useFocusMode, usePageWidth, useTheme } from "../lib/appearance";
+import { usePref } from "../lib/prefs";
 import type { SettingsState } from "../routes/settings";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { IconButton, Kbd, Segmented, Switch, cx } from "./ui";
@@ -92,6 +93,7 @@ export const DisplayMenu = ({
   const [theme, setTheme] = useTheme();
   const [pageWidth, setPageWidth] = usePageWidth();
   const focusMode = useFocusMode();
+  const [showHarakat, setShowHarakat] = usePref({ key: "reader.showHarakat", fallback: true });
   const navigate = useNavigate();
   // Opening focuses the menu itself: on the first control, Text size's tooltip would open and take the first Esc.
   const popup = useRef<HTMLDivElement>(null);
@@ -101,6 +103,9 @@ export const DisplayMenu = ({
       <PopoverContent ref={popup} initialFocus={popup} side="bottom" align="end" sideOffset={8} className="w-80 gap-4 p-0 pt-4">
         <div className="flex flex-col gap-4 px-4">
           <TextSize scale={textScale} onScale={onTextScale} />
+          <Row title="Harakat" hint="The corpus's marks and yours" shortcut="H">
+            <Switch label="Show harakat" checked={showHarakat} onChange={setShowHarakat} />
+          </Row>
           <Row title="Theme" hint="Follow the system or choose one" stacked>
             <Segmented label="Theme" value={theme} onChange={setTheme} options={THEMES} />
           </Row>
