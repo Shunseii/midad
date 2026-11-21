@@ -17,7 +17,7 @@ import {
   wordsOf,
 } from "../shared/annotations";
 import { isArabicLetter, lettersOf, normalizeMarks } from "../shared/harakat";
-import type { Footnote, MatnBlock, Page } from "../shared/page";
+import { type Page, parsePage } from "../shared/page";
 
 /**
  * Highlights and notes, stored against the page's corpus file so they stay on
@@ -94,16 +94,10 @@ interface HarakatRow {
 interface PageRow {
   file_id: string;
   position: number;
-  header: string | null;
-  matn: string;
-  hashiya: string;
+  source: string;
 }
 
-const toPage = (row: PageRow): Page => ({
-  header: row.header,
-  matn: JSON.parse(row.matn) as MatnBlock[],
-  hashiya: JSON.parse(row.hashiya) as Footnote[],
-});
+const toPage = (row: PageRow): Page => parsePage(row.source);
 
 const isStale = ({ page, span, quote }: { page: Page; span: Span; quote: string }): boolean => {
   try {
@@ -138,7 +132,7 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
 
   const pageAt = ({ bookId, position }: { bookId: string; position: number }): PageRow => {
     const row = db
-      .prepare("SELECT file_id, position, header, matn, hashiya FROM pages WHERE book_id = ? AND position = ?")
+      .prepare("SELECT file_id, position, source FROM pages WHERE book_id = ? AND position = ?")
       .get(bookId, position) as unknown as PageRow | undefined;
     if (!row) throw new Error(`Book ${bookId} has no page ${position} in the library.`);
     return row;

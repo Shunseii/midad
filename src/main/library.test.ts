@@ -74,14 +74,25 @@ describe("import", () => {
     expect(book?.pages.map((p) => p.position)).toEqual([1, 2, 3, 4]);
   });
 
-  it("stores the parsed page so reading returns matn and hashiya without glosses", async () => {
+  it("reads the matn without glosses and returns each gloss beside it", async () => {
     const source = "الباب ٣\n\n---\n\n<ruby>الكلام<rt>شرح</rt></ruby> هو اللفظ(١).\n\n---\n\n### الحاشية\n(١) أي القصد.";
     corpus.files = [file({ file_id: "f1", page_number: 3, text: source })];
     await library.importBook({ corpusBookId: "b1" });
     const page = await library.getPage({ bookId: "b1", position: 1 });
     expect(page?.page).toEqual(parsePage(source));
     expect(page?.number).toBe(3);
-    expect(JSON.stringify(page)).not.toContain("شرح");
+    expect(page?.page.matn[0]?.text).toBe("الكلام هو اللفظ(١).");
+    expect(page?.page.glosses).toEqual([{ part: "matn", line: 1, from: 1, to: 1, text: "شرح" }]);
+  });
+
+  it("parses pages from their source on every read, so an older import's parse doesn't show", async () => {
+    const source = "الباب ٣\n\n---\n\n<ruby>الكلام<rt>شرح</rt></ruby> هو\n\n## باب";
+    corpus.files = [file({ file_id: "f1", page_number: 3, text: source })];
+    await library.importBook({ corpusBookId: "b1" });
+    db.prepare("UPDATE pages SET header = '<b>', matn = ?").run(JSON.stringify([{ kind: "paragraph", text: "<ruby>الكلام</rt>", line: 1 }]));
+    expect((await library.getPage({ bookId: "b1", position: 1 }))?.page).toEqual(parsePage(source));
+    expect((await library.getBook("b1"))?.pages[0]).toMatchObject({ header: "الباب ٣", headings: [{ text: "باب", level: 2 }] });
+    expect(await library.getFirstLine({ bookId: "b1", position: 1 })).toBe("الكلام هو");
   });
 
   it("refuses to import a book twice and leaves the first import alone", async () => {

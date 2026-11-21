@@ -1,7 +1,7 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { LastRead } from "../shared/library";
 import { lineText, type Part, wordsOf } from "../shared/annotations";
-import type { Page } from "../shared/page";
+import { parsePage } from "../shared/page";
 
 /**
  * One last-read marker per book, on a word of a matn or ḥāshiya line. The reader marks
@@ -53,11 +53,11 @@ export const createMarkers = ({ db, now = Date.now }: { db: DatabaseSync; now?: 
       line: number;
       word: number;
     }): Promise<void> {
-      const row = db.prepare("SELECT file_id, matn, hashiya FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
-        | { file_id: string; matn: string; hashiya: string }
+      const row = db.prepare("SELECT file_id, source FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
+        | { file_id: string; source: string }
         | undefined;
       if (!row) throw new Error(`Book ${bookId} has no page ${position} in the library.`);
-      const page = { header: null, matn: JSON.parse(row.matn), hashiya: JSON.parse(row.hashiya) } as Page;
+      const page = parsePage(row.source);
       const text = lineText({ page, part, line });
       const name = part === "matn" ? "matn" : "ḥāshiya";
       if (text === null) throw new Error(`Page ${position} has no ${name} line ${line}.`);

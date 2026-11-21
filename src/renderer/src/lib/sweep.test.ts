@@ -10,6 +10,7 @@ const page: Page = {
     { kind: "paragraph", line: 2, text: "أربعة خمسة" },
   ],
   hashiya: [{ marker: "١", text: "حاشية أولى" }],
+  glosses: [],
 };
 
 const highlight = (span: Span): Highlight => ({

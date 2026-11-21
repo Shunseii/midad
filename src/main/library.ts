@@ -8,13 +8,17 @@ import type {
   SyncPreview,
   SyncResult,
 } from "../shared/library";
-import { type Footnote, type MatnBlock, parsePage } from "../shared/page";
+import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
 
 /**
  * Midad's local library: imported books and their parsed pages. This is the
  * source of truth for reading, agent tools and Ask AI. Only importBook,
  * previewSync and syncBook talk to the corpus.
+ *
+ * Pages are parsed from `source` whenever they're read, so a parser fix reaches
+ * every stored page without a migration. The `header`, `matn` and `hashiya`
+ * columns keep the parse from import time and nothing reads them.
  */
 
 /** Enough of a first line to fill the scrubber preview; the rest is cut off anyway. */
@@ -295,19 +299,20 @@ export const createLibrary = ({
       const row = db.prepare(`${BOOK_SELECT} WHERE b.book_id = ?`).get(bookId) as unknown as BookRow | undefined;
       if (!row) return null;
       const pages = db
-        .prepare("SELECT file_id, position, number, header, matn FROM pages WHERE book_id = ? ORDER BY position")
-        .all(bookId) as unknown as Pick<PageRow, "file_id" | "position" | "number" | "header" | "matn">[];
+        .prepare("SELECT file_id, position, number, source FROM pages WHERE book_id = ? ORDER BY position")
+        .all(bookId) as unknown as Pick<PageRow, "file_id" | "position" | "number" | "source">[];
       return {
         ...toBook(row),
-        pages: pages.map((p) => ({
-          position: p.position,
-          number: p.number,
-          fileId: p.file_id,
-          header: p.header,
-          headings: (JSON.parse(p.matn) as MatnBlock[]).flatMap((b) =>
-            b.kind === "heading" ? [{ text: b.text, level: b.level }] : [],
-          ),
-        })),
+        pages: pages.map((p) => {
+          const page = parsePage(p.source);
+          return {
+            position: p.position,
+            number: p.number,
+            fileId: p.file_id,
+            header: page.header,
+            headings: page.matn.flatMap((b) => (b.kind === "heading" ? [{ text: b.text, level: b.level }] : [])),
+          };
+        }),
       };
     },
 
@@ -321,21 +326,17 @@ export const createLibrary = ({
         position: row.position,
         number: row.number,
         fileId: row.file_id,
-        page: {
-          header: row.header,
-          matn: JSON.parse(row.matn) as MatnBlock[],
-          hashiya: JSON.parse(row.hashiya) as Footnote[],
-        },
+        page: parsePage(row.source),
       };
     },
 
     /** The page's first line of main text, for the scrubber's preview; null when the page has none. */
     async getFirstLine({ bookId, position }: { bookId: string; position: number }): Promise<string | null> {
-      const row = db.prepare("SELECT matn FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
-        | Pick<PageRow, "matn">
+      const row = db.prepare("SELECT source FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
+        | Pick<PageRow, "source">
         | undefined;
       if (!row) return null;
-      const first = (JSON.parse(row.matn) as MatnBlock[]).find((b) => b.kind === "paragraph" && b.text.trim());
+      const first = parsePage(row.source).matn.find((b) => b.kind === "paragraph" && b.text.trim());
       return first?.text.trim().split("\n")[0]?.trim().slice(0, FIRST_LINE_MAX) ?? null;
     },
 
