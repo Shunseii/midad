@@ -340,7 +340,7 @@ const Line = ({ part, line, text, glosses, annotations, sweep, display, tinted, 
             highlight && MARK_BAND[highlight.color],
             at !== undefined && "mark-sweep",
             highlight && "cursor-pointer",
-            note && "note-span",
+            note && "note-span note-ink",
             tint && "note-tint",
           )}
         >

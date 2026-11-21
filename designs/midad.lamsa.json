@@ -1154,7 +1154,7 @@
     },
     "0m93E36I": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "8zs7I39p",
@@ -4371,7 +4371,7 @@
     },
     "3Q8bvxTZ": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "41kiwxJU",
@@ -5760,7 +5760,7 @@
     },
     "4TRTMtrK": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "8xcyuu9g",
@@ -7871,7 +7871,7 @@
     },
     "5tF6IMvM": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "iedYtuEO",
@@ -8489,7 +8489,7 @@
     },
     "6T0QIwJi": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "ZdmoUKYJ",
@@ -9017,7 +9017,7 @@
     },
     "6v5cPrjY": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "HAbOOaIj",
@@ -9615,7 +9615,7 @@
     },
     "7LX0jP2M": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "fXWk4Ole",
@@ -11575,7 +11575,7 @@
     },
     "8otvPhrW": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "Iuly64RZ",
@@ -11780,7 +11780,7 @@
     },
     "8xTbkLgE": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "JVQhvxmC",
@@ -13710,7 +13710,7 @@
     },
     "ATMZGPHb": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "ndR3I96O",
@@ -15752,7 +15752,7 @@
     },
     "BjuR7OHl": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "Chsaxbb7",
@@ -18308,7 +18308,7 @@
     },
     "DWNrSgb1": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "7mv2M796",
@@ -18739,7 +18739,7 @@
     },
     "DssmBQGN": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "IgYfAjXQ",
@@ -19183,7 +19183,7 @@
     },
     "EHUsPpz7": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00",
       "name": "Note anchor · اسمٌ",
       "parentId": "1X7ah7rQ",
@@ -19831,7 +19831,7 @@
     },
     "EuTWBB9O": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "gtLyKyxH",
@@ -21049,7 +21049,7 @@
     },
     "FqHhr1Qa": {
       "content": "اسم",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "kkP06Xaa",
@@ -22370,7 +22370,7 @@
     },
     "Gjzlz62Z": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "L31bCsQ3",
@@ -23054,7 +23054,7 @@
     },
     "HCA1Kp6E": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "6cBgrAhI",
@@ -24265,7 +24265,7 @@
     },
     "I4L8kciL": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "mWlUOW7O",
@@ -24343,7 +24343,7 @@
     },
     "I9dHXsJW": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00",
       "name": "Note anchor · اسمٌ",
       "parentId": "n8zxxOdn",
@@ -25547,7 +25547,7 @@
     },
     "J04hXPn8": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "SRsYb2Rn",
@@ -25940,7 +25940,7 @@
     },
     "JFOeJpsl": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "V3sx8M2R",
@@ -27498,7 +27498,7 @@
     },
     "KLQHCoJo": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "NCZsyIkB",
@@ -28909,7 +28909,7 @@
     },
     "LUoAWGdZ": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "K2gBrdIA",
@@ -29717,7 +29717,7 @@
     },
     "MDlIfUWV": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "IXhEwtdT",
@@ -30132,7 +30132,7 @@
     },
     "MWNiUFMs": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "qguk4Ri2",
@@ -31083,7 +31083,7 @@
     },
     "N8ewj4Dr": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "zb4e3Pma",
@@ -31850,7 +31850,7 @@
     },
     "Nj5ebz2y": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "qAsPk0Rk",
@@ -32584,7 +32584,7 @@
     },
     "ONJYdFSk": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "8sohL1p9",
@@ -37295,7 +37295,7 @@
     },
     "RyMgPhih": {
       "content": "وحرفٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00002V",
       "name": "Note anchor · وحرفٌ",
       "parentId": "Y4F53FeC",
@@ -39942,7 +39942,7 @@
     },
     "Toaos5Hs": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "KnE0pA4a",
@@ -41548,7 +41548,7 @@
     },
     "V174hNGD": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "lPT1DMV9",
@@ -43081,7 +43081,7 @@
     },
     "WBL5GXMH": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "psKoyYkt",
@@ -43645,7 +43645,7 @@
     },
     "Wd6rf2QI": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "2ibZPyEK",
@@ -44206,7 +44206,7 @@
     },
     "X02pirNZ": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "2x2RztL0",
@@ -45543,7 +45543,7 @@
     },
     "Y0SsZShO": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "JwUFPKLx",
@@ -46848,7 +46848,7 @@
     },
     "ZBQe0l0Y": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "rCoEEZT1",
@@ -48812,7 +48812,7 @@
     },
     "an0C0s0Q": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "kiVOjGD5",
@@ -51010,7 +51010,7 @@
     },
     "cL4LMQzX": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "KG19DvrD",
@@ -53128,7 +53128,7 @@
     },
     "e2TTZZZH": {
       "content": "يصلح",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "AbkY4zjr",
@@ -53938,7 +53938,7 @@
     },
     "ebxrBiXF": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "Fo510vFU",
@@ -54461,7 +54461,7 @@
     },
     "evcnp5mD": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "3ATQS6ml",
@@ -54650,7 +54650,7 @@
     },
     "f1IsIpK3": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "WSWVqmob",
@@ -55932,7 +55932,7 @@
     },
     "fvCTdgJa": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "QcebiPlg",
@@ -56615,7 +56615,7 @@
     },
     "gPOtiRMr": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "QONb6PUe",
@@ -57468,7 +57468,7 @@
     },
     "h7KyxUW5": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "hbqOd7kz",
@@ -59066,7 +59066,7 @@
     },
     "iF8NztPH": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "itr3NHSj",
@@ -60379,7 +60379,7 @@
     },
     "jIdt6NXD": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "fnTZ5PBF",
@@ -65201,7 +65201,7 @@
     },
     "mxiCWXRo": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "wR2JPfxW",
@@ -65561,7 +65561,7 @@
     },
     "nCMICOVi": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "11fjDaYY",
@@ -65637,7 +65637,7 @@
     },
     "nGh6WCZo": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "4Mo6KE2W",
@@ -66940,7 +66940,7 @@
     },
     "oDHMTRPO": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "IPWB16J0",
@@ -67199,7 +67199,7 @@
     },
     "oMcoaqw3": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "eUKlxw2W",
@@ -70367,7 +70367,7 @@
     },
     "qgnRODON": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "eet67zgU",
@@ -72789,7 +72789,7 @@
     },
     "sVwuwMdz": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00",
       "name": "Note anchor · اسمٌ",
       "parentId": "baRqbR43",
@@ -75315,7 +75315,7 @@
     },
     "uYUr0pPp": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "imveUFJk",
@@ -75342,7 +75342,7 @@
     },
     "uadL07BQ": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "bLMofNY2",
@@ -75645,7 +75645,7 @@
     },
     "unnwpuyw": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "VpdBqoVw",
@@ -76181,7 +76181,7 @@
     },
     "v98sqaNH": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "lKG0H5Ko",
@@ -77236,7 +77236,7 @@
     },
     "w9ZpVtBJ": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "twrtWW85",
@@ -77713,7 +77713,7 @@
     },
     "wVEYacCe": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "TdCuKU0w",
@@ -79879,7 +79879,7 @@
     },
     "y4pTk1b5": {
       "content": "يصلحُ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · يصلحُ",
       "parentId": "l5xujw5E",
@@ -81522,7 +81522,7 @@
     },
     "zSt8B1SC": {
       "content": "اسمٌ",
-      "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
+      "css": "color: color-mix(in oklab, {color.ink}, {color.accent} 35%);\nborder-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
       "index": "a00001",
       "name": "Note anchor · اسمٌ",
       "parentId": "yTdiosuZ",
