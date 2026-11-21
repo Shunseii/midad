@@ -9353,7 +9353,8 @@
       "name": "Citation · ḥāshiya ١",
       "parentId": "Rc7fISrf",
       "props": {
-        "label": "ḥāshiya ١"
+        "content": "quote",
+        "label": "المرادُ بالوضعِ: القصدُ"
       },
       "type": "instance"
     },
@@ -12712,6 +12713,23 @@
         "width": 1
       },
       "type": "frame"
+    },
+    "7V2QbRT6": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "hh1omiDp",
+      "props": {
+        "label": "New conversation",
+        "size": "sm",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "7VUFkszs": {
       "content": "3",
@@ -18585,7 +18603,8 @@
       "name": "Citation · line 2",
       "parentId": "wWgJKeaC",
       "props": {
-        "label": "line 2"
+        "content": "quote",
+        "label": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى."
       },
       "type": "instance"
     },
@@ -21460,7 +21479,8 @@
       "name": "Citation · ḥāshiya ١",
       "parentId": "RVzR1LzF",
       "props": {
-        "label": "ḥāshiya ١"
+        "content": "quote",
+        "label": "المرادُ بالوضعِ: القصدُ"
       },
       "type": "instance"
     },
@@ -28414,7 +28434,8 @@
       "name": "Citation · line 2",
       "parentId": "ZSKFxvNC",
       "props": {
-        "label": "line 2",
+        "content": "quote",
+        "label": "ثلاثةُ أقسامٍ",
         "state": "missing"
       },
       "type": "instance"
@@ -29041,7 +29062,8 @@
       "name": "Citation · line 2",
       "parentId": "yzqYZOap",
       "props": {
-        "label": "line 2"
+        "content": "quote",
+        "label": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى."
       },
       "type": "instance"
     },
@@ -40453,7 +40475,8 @@
       "name": "Citation · line 1",
       "parentId": "9FnLuDWr",
       "props": {
-        "label": "line 1",
+        "content": "quote",
+        "label": "المفيدُ بالوضعِ",
         "state": "hover"
       },
       "type": "instance"
@@ -43731,7 +43754,8 @@
       "name": "Citation · ḥāshiya ١",
       "parentId": "9FnLuDWr",
       "props": {
-        "label": "ḥāshiya ١"
+        "content": "quote",
+        "label": "المرادُ بالوضعِ: القصدُ"
       },
       "type": "instance"
     },
@@ -49942,7 +49966,8 @@
       "name": "Citation · line 1",
       "parentId": "Rc7fISrf",
       "props": {
-        "label": "line 1"
+        "content": "quote",
+        "label": "المفيدُ بالوضعِ"
       },
       "type": "instance"
     },
@@ -50388,7 +50413,8 @@
       "name": "Citation · ḥāshiya ١",
       "parentId": "7PVmq6oJ",
       "props": {
-        "label": "ḥāshiya ١"
+        "content": "quote",
+        "label": "المرادُ بالوضعِ: القصدُ"
       },
       "type": "instance"
     },
@@ -56481,7 +56507,8 @@
       "name": "Citation · line 1",
       "parentId": "EqV6U5xU",
       "props": {
-        "label": "line 1",
+        "content": "quote",
+        "label": "المفيدُ بالوضعِ",
         "state": "default"
       },
       "type": "instance"
@@ -58641,6 +58668,15 @@
       },
       "type": "instance"
     },
+    "YLxextru": {
+      "index": "a2",
+      "name": "Spacer",
+      "parentId": "suGB5MeT",
+      "style": {
+        "flex": 1
+      },
+      "type": "frame"
+    },
     "YMCSHIrH": {
       "index": "a002",
       "name": "Segmented control",
@@ -59079,7 +59115,8 @@
       "name": "Citation · line 2",
       "parentId": "zYWDrn87",
       "props": {
-        "label": "line 2"
+        "content": "quote",
+        "label": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى."
       },
       "type": "instance"
     },
@@ -63362,7 +63399,8 @@
       "name": "Citation · ḥāshiya ١",
       "parentId": "EqV6U5xU",
       "props": {
-        "label": "ḥāshiya ١"
+        "content": "quote",
+        "label": "المرادُ بالوضعِ: القصدُ"
       },
       "type": "instance"
     },
@@ -73894,7 +73932,8 @@
       "name": "Citation · line 1",
       "parentId": "RVzR1LzF",
       "props": {
-        "label": "line 1"
+        "content": "quote",
+        "label": "المفيدُ بالوضعِ"
       },
       "type": "instance"
     },
@@ -74204,7 +74243,8 @@
       "name": "Citation · line 1",
       "parentId": "i4ZxqMMk",
       "props": {
-        "label": "line 1"
+        "content": "quote",
+        "label": "المفيدُ بالوضعِ"
       },
       "type": "instance"
     },
@@ -74697,7 +74737,8 @@
       "name": "Citation · line 1",
       "parentId": "7PVmq6oJ",
       "props": {
-        "label": "line 1"
+        "content": "quote",
+        "label": "المفيدُ بالوضعِ"
       },
       "type": "instance"
     },
@@ -82120,7 +82161,8 @@
       "name": "Citation · line 2",
       "parentId": "xVnTr4NT",
       "props": {
-        "label": "line 2"
+        "content": "quote",
+        "label": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى."
       },
       "type": "instance"
     },
@@ -90541,6 +90583,15 @@
         "white-space": "nowrap"
       },
       "type": "text"
+    },
+    "qzcfH0fF": {
+      "index": "a2",
+      "name": "Spacer",
+      "parentId": "hh1omiDp",
+      "style": {
+        "flex": 1
+      },
+      "type": "frame"
     },
     "r01HgV2V": {
       "content": "والحرفُ ما لا يصلحُ معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
@@ -101878,6 +101929,23 @@
       },
       "type": "frame"
     },
+    "xkBYV0XT": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "suGB5MeT",
+      "props": {
+        "label": "New conversation",
+        "size": "sm",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "xkfBZelr": {
       "index": "a001",
       "name": "Spacer",
@@ -104618,7 +104686,8 @@
       "name": "Citation · line 2",
       "parentId": "zpilhqIe",
       "props": {
-        "label": "line 2"
+        "content": "quote",
+        "label": "وأقسامُه ثلاثةٌ: اسمٌ، وفعلٌ، وحرفٌ جاءَ لمعنًى."
       },
       "type": "instance"
     },
@@ -105231,7 +105300,8 @@
       "name": "Citation · ḥāshiya ١",
       "parentId": "i4ZxqMMk",
       "props": {
-        "label": "ḥāshiya ١"
+        "content": "quote",
+        "label": "المرادُ بالوضعِ: القصدُ"
       },
       "type": "instance"
     },

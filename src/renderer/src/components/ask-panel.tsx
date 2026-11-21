@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowUp, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
 import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
@@ -227,14 +227,14 @@ const quoteCitation = (span: Span): Omit<Cite, "kind"> => ({
 });
 
 /**
- * A citation or quote: a small pill that shows the exact words on hover and
- * jumps to them on click. A citation's pill reads its line label; a quote's
- * pill reads the quoted words themselves. The words show in a portalled
- * tooltip so the panel's scrolling doesn't clip them.
+ * A citation or quote: a small pill that reads the quoted words, shows them
+ * in full with their line on hover, and jumps to them on click. The words show
+ * in a portalled tooltip so the panel's scrolling doesn't clip them.
  */
 const CiteChip = ({
   label,
   text,
+  pillText = text,
   quoted = false,
   onClick,
   onRemove,
@@ -243,7 +243,9 @@ const CiteChip = ({
 }: {
   label: string;
   text: string | null;
-  /** The pill shows `text` (cut short) instead of `label`; the tooltip names the label above the full text. */
+  /** What a quoted pill reads, when it differs from the tooltip's `text`. */
+  pillText?: string | null;
+  /** The pill shows `pillText` (cut short) instead of `label`; the tooltip names the label above the full text. */
   quoted?: boolean;
   /** The citation's words aren't on the page: shown muted, with `text` saying so, and it goes nowhere. */
   missing?: boolean;
@@ -267,13 +269,13 @@ const CiteChip = ({
         type="button"
         disabled={!onClick}
         onClick={onClick}
-        aria-label={quoted ? `${label}: ${text}` : undefined}
+        aria-label={quoted ? `${label}: ${pillText}` : undefined}
         className={cx("inline-flex min-w-0 items-center gap-1 rounded-md py-0.5 pl-1.5", onRemove ? "pr-0.5" : "pr-1.5", onClick && "hover:underline")}
       >
         <QuoteIcon aria-hidden className="size-3 shrink-0" />
         {quoted ? (
           <span dir="rtl" className="ar max-w-56 truncate text-ar-small leading-6">
-            {text}
+            {pillText}
           </span>
         ) : (
           label
@@ -291,7 +293,7 @@ const CiteChip = ({
       arrow={false}
       className="block w-max max-w-80 rounded-xl bg-surface-3 px-3 py-2 text-ink shadow-float"
     >
-      {quoted && <span className="mb-1 block text-xs text-ink-3">{label}</span>}
+      {quoted && !missing && <span className="mb-1 block text-xs text-ink-3">{label}</span>}
       {missing ? (
         <span className="block text-xs text-ink-2">{text}</span>
       ) : (
@@ -309,11 +311,13 @@ const CiteChip = ({
     const span = page.data ? citeSpan({ cite, page: page.data.page }) : null;
     const { kind: _, ...where } = cite;
     const label = citeLabel(cite);
-    if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} missing />;
-    return <CiteChip label={label} text={span && page.data ? quoteSpan({ page: page.data.page, span }) : null} onClick={() => onCite({ ...where, position })} />;
+    if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} pillText={cite.phrase ?? label} quoted missing />;
+    // The page's own words, with its harakat, rather than the AI's spelling of them.
+    const words = span && page.data ? quoteSpan({ page: page.data.page, span }) : null;
+    return <CiteChip label={label} text={words} pillText={words ?? cite.phrase ?? label} quoted onClick={() => onCite({ ...where, position })} />;
   };
 
-  /** An answer, one element per line so each line takes its own direction. Citations become chips. */
+  /** An answer, one element per line so each line takes its own direction. Citations become quote pills. */
   const Answer = ({ text, cite }: { text: string; cite: (c: Cite, key: number) => ReactNode }) => (
     <div className="flex flex-col gap-3">
       {text
@@ -432,6 +436,7 @@ const CiteChip = ({
     onRename,
     onDelete,
     onBack,
+    onNew,
   }: {
     history: ConversationSummary[];
     currentId: string | null;
@@ -439,6 +444,7 @@ const CiteChip = ({
     onRename: (input: { id: string; title: string }) => void;
     onDelete: (id: string) => void;
     onBack: () => void;
+    onNew: () => void;
   }) => {
     const [editing, setEditing] = useState<string | null>(null);
     // A deleted row folds away before it leaves the list.
@@ -449,6 +455,10 @@ const CiteChip = ({
         <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-3">
           <IconButton icon={ArrowLeft} label="Back to conversation" onClick={onBack} />
           <h2 className="text-sm font-medium">Saved conversations</h2>
+          <span className="flex-1" />
+          <Button variant="ghost" size="sm" icon={SquarePen} onClick={onNew}>
+            New conversation
+          </Button>
         </div>
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-2">
           {history.length === 0 && (
@@ -685,6 +695,16 @@ const CiteChip = ({
               onRename={(input) => void rename(input)}
               onDelete={remove}
               onBack={() => showScreen("chat")}
+              onNew={() => {
+                flushSync(() => {
+                  reset();
+                  showScreen("chat");
+                });
+                const root = editor.current;
+                if (!root) return;
+                root.focus();
+                caretAtEnd(root);
+              }}
             />
           </div>
         ) : (
