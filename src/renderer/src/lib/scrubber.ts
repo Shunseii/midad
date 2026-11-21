@@ -1,3 +1,5 @@
+import { stripHarakat } from "../../../shared/arabic";
+
 /**
  * The page scrubber's geometry: the whole book as one line, page 1 at the
  * right. Every page owns an equal stretch of the line and its marks sit in the
@@ -68,3 +70,13 @@ export const thinMarks = <T extends { position: number }>({
   }
   return kept.map((k) => k.mark);
 };
+
+const headingKey = (text: string) => stripHarakat(text).replace(/[\p{P}\sـ]+/gu, "");
+
+/**
+ * The page's first line for the preview card, or null when it is the same
+ * heading the card already names (a page that opens its own section), so the
+ * heading isn't shown twice.
+ */
+export const previewFirstLine = ({ chapter, firstLine }: { chapter: string | null; firstLine: string | null }) =>
+  firstLine !== null && chapter !== null && headingKey(firstLine) === headingKey(chapter) ? null : firstLine;

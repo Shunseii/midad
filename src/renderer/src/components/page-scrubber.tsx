@@ -5,7 +5,7 @@ import type { PageSummary } from "../../../shared/library";
 import { entryIndexFor } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
 import { useFirstLine } from "../lib/midad";
-import { DOT_GAP, pageAtFraction, pageFraction, thinMarks, TICK_GAP, topLevelChapters } from "../lib/scrubber";
+import { DOT_GAP, pageAtFraction, pageFraction, previewFirstLine, thinMarks, TICK_GAP, topLevelChapters } from "../lib/scrubber";
 import { MARK_BG } from "./page-view";
 import { cx, Skeleton } from "./ui";
 
@@ -270,6 +270,7 @@ const PagePreview = ({
     return () => clearTimeout(timer);
   }, [page]);
   const line = useFirstLine({ bookId, position: shown?.page ?? 1, enabled: shown !== null && settled === shown.page });
+  const repeatsHeading = line.data != null && previewFirstLine({ chapter: shown?.chapter ?? null, firstLine: line.data }) === null;
   return (
     <div
       aria-hidden
@@ -288,9 +289,11 @@ const PagePreview = ({
             );
           })()}
           {shown.chapter && <span dir="rtl" className="ar truncate text-right text-ar-small text-accent">{shown.chapter}</span>}
-          <div dir="rtl" className="ar h-7 truncate text-ar-small leading-7 text-ink-2">
-            {line.data !== undefined ? line.data : <Skeleton className="mt-2 h-3 w-40 opacity-60" />}
-          </div>
+          {!repeatsHeading && (
+            <div dir="rtl" className="ar h-7 truncate text-ar-small leading-7 text-ink-2">
+              {line.data !== undefined ? line.data : <Skeleton className="mt-2 h-3 w-40 opacity-60" />}
+            </div>
+          )}
         </>
       )}
     </div>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type Chapter, pageAtFraction, pageFraction, TICK_GAP, thinMarks, topLevelChapters } from "./scrubber";
+import { type Chapter, pageAtFraction, pageFraction, previewFirstLine, TICK_GAP, thinMarks, topLevelChapters } from "./scrubber";
 
 const thinChapters = ({ chapters, total, width }: { chapters: Chapter[]; total: number; width: number }) =>
   thinMarks({ marks: chapters, weight: (c) => c.pages, total, width, gap: TICK_GAP });
@@ -96,5 +96,24 @@ describe("thinMarks", () => {
       const wide = thinChapters({ chapters, total: 1300, width: 1400 }).length;
       expect(wide).toBeGreaterThan(narrow);
     });
+  });
+});
+
+describe("previewFirstLine", () => {
+  it("drops the first line when it is the heading the card already shows", () => {
+    expect(previewFirstLine({ chapter: "[مخالفته تعالى للحوادث]", firstLine: "[مخالفته تعالى للحوادث]" })).toBeNull();
+  });
+
+  it("matches the heading through harakat, brackets, punctuation and spacing", () => {
+    expect(previewFirstLine({ chapter: "مخالفته تعالى للحوادث", firstLine: "[مُخَالَفَتُهُ  تَعَالَى لِلْحَوَادِثِ]:" })).toBeNull();
+  });
+
+  it("keeps a first line that differs from the heading", () => {
+    expect(previewFirstLine({ chapter: "باب الكلام", firstLine: "الكلام هو اللفظ المركب المفيد" })).toBe("الكلام هو اللفظ المركب المفيد");
+  });
+
+  it("keeps the first line when there is no heading, and passes a missing line through", () => {
+    expect(previewFirstLine({ chapter: null, firstLine: "سطر" })).toBe("سطر");
+    expect(previewFirstLine({ chapter: "باب", firstLine: null })).toBeNull();
   });
 });
