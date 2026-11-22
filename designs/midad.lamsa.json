@@ -8594,18 +8594,6 @@
       },
       "type": "frame"
     },
-    "43Kjr2ZZ": {
-      "index": "a1",
-      "name": "Dot",
-      "parentId": "uqrBkL60",
-      "style": {
-        "background": "{color.accent}",
-        "border-radius": 999,
-        "height": 6,
-        "width": 6
-      },
-      "type": "frame"
-    },
     "43vrXDoo": {
       "content": "12",
       "index": "a000",
@@ -15160,7 +15148,7 @@
       "type": "text"
     },
     "77y1bOeC": {
-      "content": "Focus mode on, reader idle: the top bar and rail have slid away but keep their space, so the page never reflows; the page moves left by half the rail's width so it sits in the middle of the window. A 2px line at the top fills right to left with progress through the book, and a dot per contents entry stands where the rail was. Note marks in the margin dim to 30% and come back on hover.",
+      "content": "Focus mode on, reader idle: the top bar and rail have slid away but keep their space, so the page never reflows; the page moves left by half the rail's width so it sits in the middle of the window. A 2px line at the top fills right to left with progress through the book. Note marks in the margin dim to 30% and come back on hover.",
       "index": "a2",
       "name": "Spec note",
       "parentId": "PTZ0Mv3M",
@@ -28628,18 +28616,6 @@
       },
       "type": "frame"
     },
-    "DTn7qLWa": {
-      "index": "a5",
-      "name": "Dot",
-      "parentId": "uqrBkL60",
-      "style": {
-        "background": "{color.line}",
-        "border-radius": 999,
-        "height": 6,
-        "width": 6
-      },
-      "type": "frame"
-    },
     "DUa2TciJ": {
       "content": "Contents",
       "index": "a000",
@@ -38808,18 +38784,6 @@
       },
       "type": "text"
     },
-    "IJFZymYW": {
-      "index": "a3",
-      "name": "Dot",
-      "parentId": "uqrBkL60",
-      "style": {
-        "background": "{color.line}",
-        "border-radius": 999,
-        "height": 6,
-        "width": 6
-      },
-      "type": "frame"
-    },
     "IJLti3Y1": {
       "index": "a0",
       "name": "Top bar",
@@ -41406,18 +41370,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "JRX6FwIf": {
-      "index": "a2",
-      "name": "Dot",
-      "parentId": "uqrBkL60",
-      "style": {
-        "background": "{color.line}",
-        "border-radius": 999,
-        "height": 6,
-        "width": 6
-      },
-      "type": "frame"
     },
     "JSjawCy9": {
       "index": "a001",
@@ -63892,18 +63844,6 @@
       },
       "type": "text"
     },
-    "U7otMdRz": {
-      "index": "a4",
-      "name": "Dot",
-      "parentId": "uqrBkL60",
-      "style": {
-        "background": "{color.line}",
-        "border-radius": 999,
-        "height": 6,
-        "width": 6
-      },
-      "type": "frame"
-    },
     "U82Vnzm4": {
       "index": "a006",
       "name": "TOC · بابُ مرفوعاتِ الأسماءِ",
@@ -67958,18 +67898,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "W4Ycs1jZ": {
-      "index": "a0",
-      "name": "Dot",
-      "parentId": "uqrBkL60",
-      "style": {
-        "background": "{color.line}",
-        "border-radius": 999,
-        "height": 6,
-        "width": 6
-      },
-      "type": "frame"
     },
     "W56eCuNG": {
       "icon": "chevron-left",
@@ -120221,21 +120149,6 @@
         "position": "absolute",
         "top": 0,
         "width": 28
-      },
-      "type": "frame"
-    },
-    "uqrBkL60": {
-      "css": "transition: opacity {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  opacity: 0;\n}",
-      "index": "a0",
-      "name": "Rail dots",
-      "parentId": "X5oZCsSa",
-      "style": {
-        "display": "flex",
-        "flex-direction": "column",
-        "flex-shrink": 0,
-        "gap": 14,
-        "padding": "40px 12px",
-        "width": 248
       },
       "type": "frame"
     },

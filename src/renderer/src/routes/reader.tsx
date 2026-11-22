@@ -325,21 +325,14 @@ const moveTarget = ({ page, target, delta }: { page: StoredPage["page"]; target:
 
 /**
  * What focus mode leaves of the chrome: a thin line along the top that shows
- * how far through the book the reader is (filling right to left), and a dot
- * per contents entry where the rail was. Both fade in as the bars step aside.
+ * how far through the book the reader is (filling right to left). It fades in
+ * as the bars step aside.
  */
-const FocusTrace = ({ shown, progress, dots }: { shown: boolean; progress: number; dots: boolean[] }) => (
+const FocusTrace = ({ shown, progress }: { shown: boolean; progress: number }) => (
   <div aria-hidden data-state={shown ? "shown" : "hidden"} className="group/trace pointer-events-none absolute inset-0 z-30">
     <div className="absolute inset-x-0 top-0 h-0.5 bg-line opacity-0 transition-opacity duration-panel ease-sheet group-data-[state=shown]/trace:opacity-100">
       <div style={{ transform: `scaleX(${progress})` }} className="h-full origin-right bg-accent" />
     </div>
-    {dots.length > 0 && (
-      <div className="absolute top-24 left-3 flex flex-col gap-3 opacity-0 transition-opacity duration-panel ease-sheet group-data-[state=shown]/trace:opacity-100">
-        {dots.map((on, i) => (
-          <span key={i} className={cx("size-1.5 rounded-full", on ? "bg-accent" : "bg-line")} />
-        ))}
-      </div>
-    )}
   </div>
 );
 
@@ -1222,15 +1215,11 @@ export const ReaderRoute = () => {
   );
 
   return (
-    // Clipped: the bars focus mode moves out of view and the trace's contents dots would otherwise overflow the window and give the document a scrollbar of its own.
+    // Clipped: the bars focus mode moves out of view would otherwise overflow the window and give the document a scrollbar of its own.
     <div className="relative flex h-full flex-col overflow-clip">
       <ZoomLevel scale={textScale} shown={zoomShown} />
       {focusOn && (
-        <FocusTrace
-          shown={focused}
-          progress={total ? position / total : 0}
-          dots={wide && contentsShown ? toc.map((_, i) => activeEntries.includes(i)) : []}
-        />
+        <FocusTrace shown={focused} progress={total ? position / total : 0} />
       )}
       {removal && (
         <Toast key={removal.id} onDone={() => setRemoval(null)}>
