@@ -2,8 +2,9 @@ import type { DatabaseSync } from "node:sqlite";
 import { parseArgs } from "node:util";
 import { HIGHLIGHT_COLORS, type HighlightColor, type LetterRef, type PageAnnotations, type Part, type Span, wordsOf } from "../shared/annotations";
 import { MARK, type MarkName } from "../shared/harakat";
-import type { LibraryBook, StoredPage } from "../shared/library";
+import type { StoredPage } from "../shared/library";
 import { createAnnotations } from "../main/annotations";
+import { createPageFinder } from "../main/find-page";
 import { createLibrary } from "../main/library";
 
 export const USAGE = `Usage: midad <command> [options]
@@ -161,23 +162,11 @@ export const runCli = async ({
   });
   const annotations = createAnnotations({ db });
 
-  const findBook = async (query: string | undefined): Promise<LibraryBook> => {
-    if (!query) throw new UsageError("Name a book.");
-    const books = await library.listBooks();
-    const exact = books.find((b) => b.bookId === query);
-    if (exact) return exact;
-    const matches = books.filter((b) => b.bookId.startsWith(query) || b.title.includes(query) || b.edition?.includes(query));
-    if (matches.length === 1 && matches[0]) return matches[0];
-    if (matches.length === 0) throw new Error(`No book matches "${query}". Run \`midad books\` to see them.`);
-    throw new Error(`"${query}" matches ${matches.length} books: ${matches.map((b) => `${b.title} (${b.bookId})`).join(", ")}.`);
-  };
+  const finder = createPageFinder({ library });
 
   const findPage = async ({ book, position }: { book: string | undefined; position: string | undefined }) => {
-    const found = await findBook(book);
-    const n = int(position, "<page>");
-    const stored = await library.getPage({ bookId: found.bookId, position: n });
-    if (!stored) throw new Error(`${found.title} has no page ${n}; it has ${found.pageCount}.`);
-    return stored;
+    if (!book) throw new UsageError("Name a book.");
+    return finder.findPage({ book, position: int(position, "<page>") });
   };
 
   let parsed: { values: Options; positionals: string[] };
