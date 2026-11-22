@@ -16,13 +16,16 @@ export const FOCUS_IDLE_MS = 2000;
 export const PEEK_DWELL_MS = 300;
 /**
  * How close to the top, left or right edge of the window counts as against it.
- * Wide enough that a quick flick to the edge lands a pointer sample inside it,
- * and inside the empty space the header and the page's side margins already
- * leave, so it never reaches the text.
+ * Generous enough to hit without aiming, and still inside space the text never
+ * uses: the 60px header at the top, and at the sides the page's margins, where
+ * even in the narrowest window the text starts about 100px in.
  */
-export const PEEK_EDGE_PX = 24;
-/** The bottom band is a little taller: it reaches the scrubber, which sits 20px up, so the pointer can go straight from the edge onto it. */
-export const PEEK_BOTTOM_EDGE_PX = 32;
+export const PEEK_EDGE_PX = 48;
+/**
+ * The bottom band is taller: it covers the whole scrubber, whose bar sits 20 to
+ * 52px up, so pointing anywhere at the height of the scrubber peeks it.
+ */
+export const PEEK_BOTTOM_EDGE_PX = 64;
 
 export interface FocusState {
   /** When the reader last moved the mouse or pressed a key. */
@@ -111,3 +114,30 @@ export const toggledFocus = ({ choice, kind }: { choice: FocusChoice; kind: Focu
 
 /** Focus mode used to be a plain on/off preference; on meant what is now Auto. */
 export const focusChoiceFromLegacy = (legacy: unknown): FocusChoice => (legacy === true ? "auto" : "off");
+
+/**
+ * How far to move the page so it sits in the middle of the window, in px, or
+ * null to leave it. In focus mode the side panels keep their space while they
+ * step aside, so the page moves by half the difference: left for the contents,
+ * right for the side panel. Pass the panels as they are laid out, not as last
+ * asked for: a panel toggled while the bars are hidden hasn't moved yet.
+ */
+export const pageBalance = ({
+  focusOn,
+  wide,
+  scanBeside,
+  contentsWidth,
+  sideWidth,
+}: {
+  focusOn: boolean;
+  wide: boolean;
+  /** The scan takes the room beside the page, so there is no middle to move to. */
+  scanBeside: boolean;
+  /** 0 while the contents are closed. */
+  contentsWidth: number;
+  /** 0 while the side panel is closed. */
+  sideWidth: number;
+}): number | null => {
+  if (!focusOn || !wide || scanBeside || contentsWidth === sideWidth) return null;
+  return (contentsWidth - sideWidth) / 2;
+};

@@ -12,6 +12,7 @@ import {
   PEEK_BOTTOM_EDGE_PX,
   PEEK_DWELL_MS,
   PEEK_EDGE_PX,
+  pageBalance,
   pointerAtEdge,
   toggledFocus,
 } from "./focus";
@@ -191,11 +192,18 @@ describe("the window edge", () => {
     expect(at(700, 450)).toBe(false);
   });
 
-  it("leaves the page area alone, 60px in from any edge", () => {
-    expect(at(700, 60)).toBe(false);
-    expect(at(700, 840)).toBe(false);
-    expect(at(60, 450)).toBe(false);
-    expect(at(1340, 450)).toBe(false);
+  it("is generous: about the header's height at the top, and the scrubber's at the bottom", () => {
+    expect(PEEK_EDGE_PX).toBeGreaterThanOrEqual(48);
+    expect(PEEK_BOTTOM_EDGE_PX).toBeGreaterThanOrEqual(64);
+    expect(at(700, 47)).toBe(true);
+    expect(at(700, 900 - 52)).toBe(true);
+  });
+
+  it("leaves the page area alone, 80px in from any edge", () => {
+    expect(at(700, 80)).toBe(false);
+    expect(at(700, 820)).toBe(false);
+    expect(at(80, 450)).toBe(false);
+    expect(at(1320, 450)).toBe(false);
   });
 
   it("counts points outside the window", () => {
@@ -237,5 +245,23 @@ describe("turning focus mode on and off", () => {
     expect(focusChoiceFromLegacy(false)).toBe("off");
     expect(focusChoiceFromLegacy(undefined)).toBe("off");
     expect(focusChoiceFromLegacy("garbage")).toBe("off");
+  });
+});
+
+describe("balancing the page in focus mode", () => {
+  const base = { focusOn: true, wide: true, scanBeside: false, contentsWidth: 0, sideWidth: 0 };
+
+  it("moves left by half the contents, right by half the side panel, and by the difference with both", () => {
+    expect(pageBalance({ ...base, contentsWidth: 248 })).toBe(124);
+    expect(pageBalance({ ...base, sideWidth: 320 })).toBe(-160);
+    expect(pageBalance({ ...base, contentsWidth: 248, sideWidth: 320 })).toBe(-36);
+  });
+
+  it("leaves the page alone with no panels, equal panels, outside focus mode, in a narrow window or beside the scan", () => {
+    expect(pageBalance(base)).toBeNull();
+    expect(pageBalance({ ...base, contentsWidth: 300, sideWidth: 300 })).toBeNull();
+    expect(pageBalance({ ...base, contentsWidth: 248, focusOn: false })).toBeNull();
+    expect(pageBalance({ ...base, contentsWidth: 248, wide: false })).toBeNull();
+    expect(pageBalance({ ...base, contentsWidth: 248, scanBeside: true })).toBeNull();
   });
 });

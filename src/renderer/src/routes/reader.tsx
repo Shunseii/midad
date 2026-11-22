@@ -29,7 +29,9 @@ import { BookmarkList, BookmarkRibbon } from "../components/bookmarks";
 import { bookmarkFolio } from "../lib/bookmarks";
 import { usePref } from "../lib/prefs";
 import { useFocusMode, useGlossMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
-import { useFocusChrome } from "../lib/use-focus-chrome";
+import { pageBalance } from "../lib/focus";
+import { useChromeHover } from "../lib/use-chrome-hover";
+import { useFocusChrome, useSteadyWhileHidden } from "../lib/use-focus-chrome";
 import { switchListInTransition } from "../lib/view-transition";
 import { useKeybindings } from "../lib/use-keybindings";
 import { shortcutKeys, shortcutLabel, withShortcut } from "../lib/keymap";
@@ -557,6 +559,7 @@ export const ReaderRoute = () => {
     if (selection) setAskSelection(selection);
     setPanelTab("ask");
     setPanelOpen(true);
+    setAskShown(true);
   };
 
   const markerAt = (): MarkerAt => {
@@ -972,33 +975,28 @@ export const ReaderRoute = () => {
     document.addEventListener("selectionchange", onChange);
     return () => document.removeEventListener("selectionchange", onChange);
   }, []);
-  const [overChrome, setOverChrome] = useState(false);
-  // Tabbing into the bars holds them; focus that lands there any other way (back on the Display button after its menu closes) doesn't.
-  const [keyboardInChrome, setKeyboardInChrome] = useState(false);
-  const tabbing = useRef(false);
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => (tabbing.current = e.key === "Tab");
-    const onPointer = () => (tabbing.current = false);
-    window.addEventListener("keydown", onKey, { capture: true });
-    window.addEventListener("pointerdown", onPointer, { capture: true });
-    return () => {
-      window.removeEventListener("keydown", onKey, { capture: true });
-      window.removeEventListener("pointerdown", onPointer, { capture: true });
-    };
-  }, []);
-  const chromeHover = {
-    onMouseEnter: () => setOverChrome(true),
-    onMouseLeave: () => setOverChrome(false),
-    onFocus: () => setKeyboardInChrome(tabbing.current),
-    onBlur: () => setKeyboardInChrome(false),
-  };
+  const chrome = useChromeHover();
+  const chromeHover = chrome.props;
+  // Ask AI from a selection shows the panel even while the bars are away, until the pointer has been in it and left.
+  const [askShown, setAskShown] = useState(false);
+  if (askShown && !panelOpen) setAskShown(false);
+  if (askShown && chrome.pointerIn) setAskShown(false);
   const focusOn = focusMode.choice !== "off";
-  // In focus mode the rail keeps its space but steps out of sight, so the page shifts to the middle of the window.
-  const balanced = focusOn && wide && contentsOpen && !panelOpen && !(showScan && page.data);
   const focused = useFocusChrome({
     mode: focusMode.choice,
-    held: menuOpen || overChrome || keyboardInChrome || (!wide && (contentsOpen || panelOpen)),
+    held: menuOpen || chrome.pointerIn || chrome.keyboardIn || askShown || (!wide && (contentsOpen || panelOpen)),
     textHeld: toolbar !== null || noteEditor !== null || selecting,
+  });
+  // A panel toggled while the bars are away waits for them to come back, so nothing moves on screen until then.
+  const contentsShown = useSteadyWhileHidden({ value: contentsOpen, hidden: focused });
+  const panelShown = useSteadyWhileHidden({ value: panelOpen, hidden: focused });
+  // In focus mode the panels keep their space but step out of sight, so the page shifts to the middle of the window.
+  const balance = pageBalance({
+    focusOn,
+    wide,
+    scanBeside: showScan && !!page.data,
+    contentsWidth: contentsShown ? CONTENTS_WIDTH : 0,
+    sideWidth: panelShown ? sideWidth : 0,
   });
 
   const bookmarkList = (open: (position: number) => void) => (
@@ -1158,7 +1156,7 @@ export const ReaderRoute = () => {
         <FocusTrace
           shown={focused}
           progress={total ? position / total : 0}
-          dots={wide && contentsOpen ? toc.map((_, i) => activeEntries.includes(i)) : []}
+          dots={wide && contentsShown ? toc.map((_, i) => activeEntries.includes(i)) : []}
         />
       )}
       {removal && (
@@ -1246,7 +1244,7 @@ export const ReaderRoute = () => {
 
       <div className="flex min-h-0 flex-1">
         {wide ? (
-          <InlinePanel side="left" open={contentsOpen} width={CONTENTS_WIDTH}>
+          <InlinePanel side="left" open={contentsShown} width={CONTENTS_WIDTH}>
             <div
               {...chromeHover}
               data-focus={focused ? "hidden" : undefined}
@@ -1304,8 +1302,8 @@ export const ReaderRoute = () => {
           {/* Even padding keeps the page centred; it leaves room for the last-read marker in the right margin. The bottom padding lets the last line scroll clear of the scrubber, which overlays the page and slides away in focus mode. */}
           <div
             data-page-area
-            data-balance={balanced ? "" : undefined}
-            style={{ "--balance": `${CONTENTS_WIDTH / 2}px` } as CSSProperties}
+            data-balance={balance === null ? undefined : ""}
+            style={{ "--balance": `${balance ?? 0}px` } as CSSProperties}
             className="px-6 pt-10 pb-34 [view-transition-name:reader-page] @3xl:px-30"
           >
           {page.isPending && (
@@ -1377,8 +1375,12 @@ export const ReaderRoute = () => {
         </ScanSlot>
         </div>
         {wide ? (
-          <InlinePanel side="right" open={panelOpen} width={sideWidth}>
-            <div {...chromeHover} className="flex">
+          <InlinePanel side="right" open={panelShown} width={sideWidth}>
+            <div
+              {...chromeHover}
+              data-focus={focused ? "hidden" : undefined}
+              className="flex transition-[translate,opacity] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-x-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
+            >
               {sidePanel}
             </div>
           </InlinePanel>

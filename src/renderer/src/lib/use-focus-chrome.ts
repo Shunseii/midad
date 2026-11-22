@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { chromeHidden, type FocusChoice, focusReducer, initialFocus, msUntilChange, pointerAtEdge } from "./focus";
 
 /** Activity closer together than this is one burst; the chrome is never hidden while it lasts. */
@@ -70,4 +70,11 @@ export const useFocusChrome = ({ mode, held, textHeld }: { mode: FocusChoice; he
   }, [mode, held, textHeld, state, hidden]);
 
   return hidden;
+};
+
+/** The value as it was when the chrome last showed: what is laid out, while a change waits for the chrome to come back. */
+export const useSteadyWhileHidden = <T>({ value, hidden }: { value: T; hidden: boolean }): T => {
+  const [shown, setShown] = useState(value);
+  if (!hidden && shown !== value) setShown(value);
+  return hidden ? shown : value;
 };

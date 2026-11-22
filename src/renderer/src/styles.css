@@ -368,8 +368,9 @@ body {
 
 /*
  * Balancing the page in focus mode (data-balance, see reader.tsx): it moves
- * left by --balance, as far as the room beside it allows while keeping 3rem
- * for the line numbers, so a narrow window never squeezes or clips it.
+ * left by --balance (right when negative), as far as the room beside it allows
+ * while keeping 3rem for the line numbers, so a narrow window never squeezes or
+ * clips it.
  */
 /* Narrow and Wide: the column eases to its new width, reflowing as it goes (reader.tsx holds the top word in place). */
 [data-page-area] .reader-text {
@@ -378,7 +379,8 @@ body {
     max-width var(--transition-duration-slide) var(--ease-move);
 }
 [data-page-area][data-balance] .reader-text {
-  translate: calc(-1 * min(var(--balance), max(0px, (100cqw - var(--page-max)) / 2 - 3rem))) 0;
+  --balance-room: max(0px, (100cqw - var(--page-max)) / 2 - 3rem);
+  translate: calc(-1 * clamp(-1 * var(--balance-room), var(--balance), var(--balance-room))) 0;
 }
 @media (prefers-reduced-motion: reduce) {
   [data-page-area] .reader-text {
