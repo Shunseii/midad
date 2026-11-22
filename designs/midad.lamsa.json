@@ -1,6 +1,6 @@
 {
   "$schema": "https://lamsa.dev/schema/v1.json",
-  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%, 60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n@keyframes marker-sweep {\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes marker-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes page-out {\n  to {\n    opacity: 0;\n  }\n}\n\n@keyframes page-in-forward {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes page-in-back {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes cover-content-in {\n  0%, 40% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-old(reader-page) {\n  animation-name: page-out;\n  animation-duration: 90ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-forward;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-back;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n::view-transition-group(page-counter) {\n  animation-duration: 0s;\n}\n\n::view-transition-old(page-counter) {\n  display: none;\n}\n\n::view-transition-new(page-counter) {\n  animation: none;\n}\n\n::view-transition-group(book-cover) {\n  animation-duration: 420ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n}\n\n::view-transition-new(book-cover) {\n  animation-name: cover-content-in;\n  animation-duration: 420ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  :active-view-transition-type(forward)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  :active-view-transition-type(back)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  ::view-transition-group(book-cover) {\n    animation-duration: 0s;\n  }\n}\n\n@property --fade-top {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@property --fade-bottom {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@keyframes gloss-fade {\n  from {\n    --fade-top: 0px;\n    --fade-bottom: 1.5rem;\n  }\n\n  to {\n    --fade-top: 1.5rem;\n    --fade-bottom: 0px;\n  }\n}\n\n@keyframes footnote-reveal {\n  0%, 60% {\n    background-color: var(--color-accent-soft);\n  }\n\n  100% {\n    background-color: transparent;\n  }\n}\n\n@keyframes screen-in-forward {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes screen-in-back {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes screen-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes bookmark-pop {\n  0% {\n    scale: 1;\n  }\n\n  40% {\n    scale: 1.2;\n  }\n\n  100% {\n    scale: 1;\n  }\n}\n\n@keyframes fade-in {\n  from {\n    opacity: 0;\n  }\n\n  to {\n    opacity: 1;\n  }\n}\n\n@keyframes copied-flash {\n  from {\n    opacity: 0;\n    translate: -50% 3px;\n  }\n}\n\n@keyframes copied-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes answer-stream {\n  from {\n    clip-path: inset(0 0 100% 0);\n  }\n\n  to {\n    clip-path: inset(0);\n  }\n}",
+  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%, 60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n@keyframes marker-sweep {\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes marker-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes page-out {\n  to {\n    opacity: 0;\n  }\n}\n\n@keyframes page-in-forward {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes page-in-back {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-in-from-right {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes cover-content-in {\n  0%, 40% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-old(reader-page) {\n  animation-name: page-out;\n  animation-duration: 90ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-forward;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-back;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n::view-transition-group(page-counter) {\n  animation-duration: 0s;\n}\n\n::view-transition-old(page-counter) {\n  display: none;\n}\n\n::view-transition-new(page-counter) {\n  animation: none;\n}\n\n::view-transition-group(book-cover) {\n  animation-duration: 420ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n}\n\n::view-transition-new(book-cover) {\n  animation-name: cover-content-in;\n  animation-duration: 420ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  :active-view-transition-type(forward)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  :active-view-transition-type(back)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  ::view-transition-group(book-cover) {\n    animation-duration: 0s;\n  }\n}\n\n@property --fade-top {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@property --fade-bottom {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@keyframes gloss-fade {\n  from {\n    --fade-top: 0px;\n    --fade-bottom: 1.5rem;\n  }\n\n  to {\n    --fade-top: 1.5rem;\n    --fade-bottom: 0px;\n  }\n}\n\n@keyframes footnote-reveal {\n  0%, 60% {\n    background-color: var(--color-accent-soft);\n  }\n\n  100% {\n    background-color: transparent;\n  }\n}\n\n@keyframes screen-in-forward {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes screen-in-back {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes screen-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes bookmark-pop {\n  0% {\n    scale: 1;\n  }\n\n  40% {\n    scale: 1.2;\n  }\n\n  100% {\n    scale: 1;\n  }\n}\n\n@keyframes fade-in {\n  from {\n    opacity: 0;\n  }\n\n  to {\n    opacity: 1;\n  }\n}\n\n@keyframes copied-flash {\n  from {\n    opacity: 0;\n    translate: -50% 3px;\n  }\n}\n\n@keyframes copied-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes answer-stream {\n  from {\n    clip-path: inset(0 0 100% 0);\n  }\n\n  to {\n    clip-path: inset(0);\n  }\n}",
   "nodes": {
     "00omVh1n": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
@@ -3654,7 +3654,7 @@
       "content": "Library",
       "index": "a0",
       "name": "Title",
-      "parentId": "U4g37Dvu",
+      "parentId": "NP7kvPTD",
       "style": {
         "font-family": "{font.display}",
         "font-size": 32,
@@ -3936,6 +3936,28 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "1uwK0wfh": {
+      "componentId": "mUTXOEWB",
+      "index": "a002",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "search"
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": 288
+          }
+        }
+      },
+      "parentId": "lFDUKKnb",
+      "props": {
+        "value": "Filter by title or author",
+        "withHelper": "no",
+        "withLabel": "no"
+      },
+      "type": "instance"
     },
     "1vMCGY5P": {
       "componentId": "v8FmfBf5",
@@ -5179,6 +5201,21 @@
       },
       "type": "frame"
     },
+    "2XTC04LY": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
+      "index": "a003",
+      "name": "Segmented control",
+      "parentId": "lFDUKKnb",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
     "2XUqHhmG": {
       "index": "ap",
       "name": "Highlight dot",
@@ -5724,7 +5761,7 @@
       "content": "4 books · 1,844 pages",
       "index": "a1",
       "name": "Meta",
-      "parentId": "U4g37Dvu",
+      "parentId": "NP7kvPTD",
       "style": {
         "color": "{color.ink-2}",
         "font-family": "{font.body}",
@@ -5786,7 +5823,7 @@
       "content": "Library",
       "index": "a0",
       "name": "Title",
-      "parentId": "e9YYZqW1",
+      "parentId": "73BMpMcU",
       "style": {
         "font-family": "{font.display}",
         "font-size": 32,
@@ -7934,6 +7971,28 @@
       },
       "type": "text"
     },
+    "3ooegeLc": {
+      "componentId": "mUTXOEWB",
+      "index": "a1",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "search"
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": 288
+          }
+        }
+      },
+      "parentId": "e9YYZqW1",
+      "props": {
+        "value": "Filter by title or author",
+        "withHelper": "no",
+        "withLabel": "no"
+      },
+      "type": "instance"
+    },
     "3ovUuKei": {
       "content": "فالاسمُ يُعرَفُ: ",
       "index": "a000",
@@ -8892,7 +8951,7 @@
       "content": "4 books · 1,844 pages",
       "index": "a1",
       "name": "Meta",
-      "parentId": "e9YYZqW1",
+      "parentId": "73BMpMcU",
       "style": {
         "color": "{color.ink-2}",
         "font-family": "{font.body}",
@@ -14778,6 +14837,18 @@
       },
       "type": "text"
     },
+    "73BMpMcU": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "e9YYZqW1",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 4
+      },
+      "type": "frame"
+    },
     "73tULo16": {
       "index": "a0",
       "name": "Line number",
@@ -19302,6 +19373,22 @@
       },
       "type": "frame"
     },
+    "9CCipWJI": {
+      "componentId": "ua9C67i7",
+      "index": "a003",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "wgKLBx3h",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
+    },
     "9CWn9GSP": {
       "index": "a007",
       "name": "TOC · بابُ الفاعلِ",
@@ -20140,6 +20227,18 @@
       },
       "type": "text"
     },
+    "9gljB3Xt": {
+      "css": "/* * Switching shelves (All | Reading | Finished): only this block moves. The\n * header and the tabs stay put, and the Segmented fill slides live.\n * Exit: the old shelf fades out quickly (page-out, 100ms ease-out) toward the\n * side it leaves: list-out-to-left going forward, list-out-to-right going back.\n * Entrance: the new shelf slides a short way in from the side of the picked tab\n * (220ms ease-out after 40ms). Forward, picking a tab to the right, comes in\n * from the right as played here; back uses page-in-from-left. */\nanimation: page-in-from-right 220ms var(--ease-out) 40ms both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: none;\n}",
+      "index": "a1",
+      "name": "Shelf content",
+      "parentId": "V9LIP8Oh",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 28
+      },
+      "type": "frame"
+    },
     "9gltLNdq": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "index": "a0",
@@ -20554,9 +20653,9 @@
     },
     "9sxtQTOR": {
       "content": "All books",
-      "index": "a3",
+      "index": "a2",
       "name": "Overline",
-      "parentId": "V9LIP8Oh",
+      "parentId": "9gljB3Xt",
       "style": {
         "color": "{color.ink-3}",
         "font-family": "{font.body}",
@@ -24568,6 +24667,18 @@
       },
       "type": "text"
     },
+    "BoHJBM9g": {
+      "css": "/* * Switching shelves (All | Reading | Finished): only this block moves. The\n * header and the tabs stay put, and the Segmented fill slides live.\n * Exit: the old shelf fades out quickly (page-out, 100ms ease-out) toward the\n * side it leaves: list-out-to-left going forward, list-out-to-right going back.\n * Entrance: the new shelf slides a short way in from the side of the picked tab\n * (220ms ease-out after 40ms). Forward, picking a tab to the right, comes in\n * from the right as played here; back uses page-in-from-left. */\nanimation: page-in-from-right 220ms var(--ease-out) 40ms both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: none;\n}",
+      "index": "a1",
+      "name": "Shelf content",
+      "parentId": "qSN7mzDl",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 28
+      },
+      "type": "frame"
+    },
     "Boi4vAaZ": {
       "content": "الثواب",
       "index": "a0",
@@ -25041,6 +25152,22 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "By1yg8Nl": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "e9YYZqW1",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
     },
     "By3Sr316": {
       "content": "5",
@@ -28207,6 +28334,21 @@
       },
       "type": "text"
     },
+    "DV2xUkoE": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
+      "index": "a2",
+      "name": "Segmented control",
+      "parentId": "e9YYZqW1",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
     "DVB7Of8A": {
       "content": "12",
       "index": "a000",
@@ -30180,7 +30322,7 @@
       "content": "Library",
       "index": "a0",
       "name": "Title",
-      "parentId": "TPgtQZgl",
+      "parentId": "p1zW9QCs",
       "style": {
         "font-family": "{font.display}",
         "font-size": 32,
@@ -32754,6 +32896,28 @@
         "font-size": 15
       },
       "type": "text"
+    },
+    "FdodVzy8": {
+      "componentId": "mUTXOEWB",
+      "index": "a1",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "search"
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": 288
+          }
+        }
+      },
+      "parentId": "U4g37Dvu",
+      "props": {
+        "value": "Filter by title or author",
+        "withHelper": "no",
+        "withLabel": "no"
+      },
+      "type": "instance"
     },
     "FdsjOYx2": {
       "content": "Others read it as by Arabic convention (الوضع العربي). Either way, every كلام is built from the three parts listed in ",
@@ -35409,6 +35573,7 @@
       "type": "frame"
     },
     "GwAGYVnL": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
       "index": "a002",
       "name": "Segmented control",
       "parentId": "ROp8az9G",
@@ -37981,6 +38146,17 @@
         "text-align": "center"
       },
       "type": "text"
+    },
+    "IBuSsJml": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "PCWVvpqu",
+      "props": {
+        "label": "Finished",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "ICn35B6b": {
       "index": "a0",
@@ -44533,6 +44709,22 @@
       },
       "type": "text"
     },
+    "LKH9iBcr": {
+      "componentId": "ua9C67i7",
+      "index": "a003",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "ROp8az9G",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
+    },
     "LKZDSf8R": {
       "index": "a005",
       "name": "TOC · بابُ الأفعالِ",
@@ -48694,6 +48886,18 @@
       },
       "type": "frame"
     },
+    "NP7kvPTD": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "U4g37Dvu",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 4
+      },
+      "type": "frame"
+    },
     "NPEFhZX4": {
       "componentId": "RV1DOgzp",
       "index": "a003",
@@ -50055,6 +50259,22 @@
       },
       "type": "frame"
     },
+    "NzOx3in5": {
+      "componentId": "ua9C67i7",
+      "index": "a004",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "lFDUKKnb",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
+    },
     "O0OMJAFk": {
       "index": "a0",
       "name": "Page area",
@@ -51292,6 +51512,17 @@
         "height": 1
       },
       "type": "frame"
+    },
+    "Od6HECAS": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "PCWVvpqu",
+      "props": {
+        "label": "All",
+        "state": "selected"
+      },
+      "type": "instance"
     },
     "OdBkvEc5": {
       "index": "Za000",
@@ -52767,6 +52998,21 @@
       },
       "type": "frame"
     },
+    "PCWVvpqu": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
+      "index": "a2",
+      "name": "Segmented control",
+      "parentId": "TPgtQZgl",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
+    },
     "PCfEZoIG": {
       "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -4px;\n}\n\n&:hover {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}\n\n&[data-state=\"removed\"] {\n  display: none;\n  opacity: 0;\n  translate: -8px 0;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: background-color, opacity, display;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a03",
@@ -52921,6 +53167,17 @@
         "text-transform": "uppercase"
       },
       "type": "text"
+    },
+    "PH1t1ctM": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "ptuNgtvp",
+      "props": {
+        "label": "Finished",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "PHEEtWGt": {
       "css": "transition: background-color {transition.duration-press} {ease.out};\ncursor: pointer;\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}",
@@ -54988,9 +55245,9 @@
       "type": "frame"
     },
     "QKzGzmy8": {
-      "index": "a2",
+      "index": "a1",
       "name": "Continue reading",
-      "parentId": "qSN7mzDl",
+      "parentId": "BoHJBM9g",
       "style": {
         "align-items": "center",
         "background": "{color.surface}",
@@ -61218,9 +61475,9 @@
       "name": "Header",
       "parentId": "qSN7mzDl",
       "style": {
+        "align-items": "flex-end",
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 4
+        "gap": 16
       },
       "type": "frame"
     },
@@ -62819,9 +63076,9 @@
       "name": "Header",
       "parentId": "qtzASSlC",
       "style": {
+        "align-items": "flex-end",
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 4
+        "gap": 16
       },
       "type": "frame"
     },
@@ -64731,6 +64988,22 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "V2YH61jZ": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "U4g37Dvu",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
     },
     "V2fCzmAm": {
       "index": "a0",
@@ -69021,9 +69294,9 @@
       "type": "frame"
     },
     "X8v0yz8f": {
-      "index": "a2",
+      "index": "a1",
       "name": "Continue reading",
-      "parentId": "V9LIP8Oh",
+      "parentId": "9gljB3Xt",
       "style": {
         "align-items": "center",
         "background": "{color.surface}",
@@ -69670,9 +69943,9 @@
       "type": "instance"
     },
     "XQOvMB7m": {
-      "index": "a4",
+      "index": "a3",
       "name": "Shelf",
-      "parentId": "qSN7mzDl",
+      "parentId": "BoHJBM9g",
       "style": {
         "display": "flex",
         "gap": 28
@@ -69692,6 +69965,17 @@
       "props": {
         "label": "Show highlights and notes",
         "variant": "ghost"
+      },
+      "type": "instance"
+    },
+    "XRuJVSgZ": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "ptuNgtvp",
+      "props": {
+        "label": "All",
+        "state": "selected"
       },
       "type": "instance"
     },
@@ -71833,6 +72117,7 @@
       "type": "frame"
     },
     "YMCSHIrH": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
       "index": "a002",
       "name": "Segmented control",
       "parentId": "wgKLBx3h",
@@ -74430,7 +74715,7 @@
         },
         "mUTXOEWB": {
           "style": {
-            "width": 280
+            "width": 288
           }
         }
       },
@@ -76741,6 +77026,17 @@
         "text-align": "right"
       },
       "type": "frame"
+    },
+    "axCsydaF": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "2XTC04LY",
+      "props": {
+        "label": "Finished",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "axcElGqN": {
       "index": "a4",
@@ -82826,9 +83122,9 @@
     },
     "dzQYzYOR": {
       "content": "Continue reading",
-      "index": "a1",
+      "index": "a0",
       "name": "Overline",
-      "parentId": "V9LIP8Oh",
+      "parentId": "9gljB3Xt",
       "style": {
         "color": "{color.ink-3}",
         "font-family": "{font.body}",
@@ -83092,9 +83388,9 @@
       "name": "Header",
       "parentId": "V9LIP8Oh",
       "style": {
+        "align-items": "flex-end",
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 4
+        "gap": 16
       },
       "type": "frame"
     },
@@ -84414,6 +84710,17 @@
       },
       "type": "frame"
     },
+    "ekaXIh7A": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "2XTC04LY",
+      "props": {
+        "label": "Reading",
+        "state": "default"
+      },
+      "type": "instance"
+    },
     "ekxPcRqW": {
       "index": "a1",
       "name": "Page column",
@@ -85426,6 +85733,17 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "f9VQ7SJ8": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "PCWVvpqu",
+      "props": {
+        "label": "Reading",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "f9lq1h5B": {
       "content": "Save a conversation to come back to it here.",
@@ -93615,6 +93933,17 @@
       },
       "type": "text"
     },
+    "izITzcQw": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "DV2xUkoE",
+      "props": {
+        "label": "Finished",
+        "state": "default"
+      },
+      "type": "instance"
+    },
     "izJAPIW9": {
       "content": "والحرفُ ما لا ",
       "index": "a1",
@@ -100040,6 +100369,22 @@
       },
       "type": "text"
     },
+    "lyReHCb2": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "TPgtQZgl",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
+    },
     "lykvivhH": {
       "componentId": "RV1DOgzp",
       "index": "aA",
@@ -100496,7 +100841,7 @@
       "content": "4 books · 1,844 pages",
       "index": "a1",
       "name": "Meta",
-      "parentId": "TPgtQZgl",
+      "parentId": "p1zW9QCs",
       "style": {
         "color": "{color.ink-2}",
         "font-family": "{font.body}",
@@ -100704,6 +101049,17 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "mGSrKA4t": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "2XTC04LY",
+      "props": {
+        "label": "All",
+        "state": "selected"
+      },
+      "type": "instance"
     },
     "mHFwUbbY": {
       "index": "a2",
@@ -101805,6 +102161,17 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "msrMvnIA": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "DV2xUkoE",
+      "props": {
+        "label": "Reading",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "msz1zujz": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
@@ -106079,6 +106446,18 @@
       },
       "type": "text"
     },
+    "p1zW9QCs": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "TPgtQZgl",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 4
+      },
+      "type": "frame"
+    },
     "p2LrFKEi": {
       "index": "a006",
       "name": "TOC · بابُ مرفوعاتِ الأسماءِ",
@@ -107837,6 +108216,21 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "ptuNgtvp": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
+      "index": "a2",
+      "name": "Segmented control",
+      "parentId": "U4g37Dvu",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
+      },
+      "type": "frame"
     },
     "ptyC0bsk": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
@@ -110098,6 +110492,17 @@
       },
       "type": "frame"
     },
+    "qyCKnRXp": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "DV2xUkoE",
+      "props": {
+        "label": "All",
+        "state": "selected"
+      },
+      "type": "instance"
+    },
     "qzavZZhq": {
       "content": "فصلٌ في الفاعلِ المضمرِ",
       "index": "a00",
@@ -111641,6 +112046,17 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "rd5vXWMg": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "ptuNgtvp",
+      "props": {
+        "label": "Reading",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "reUPQIvW": {
       "componentId": "RV1DOgzp",
@@ -114934,6 +115350,28 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "tE1LzVWV": {
+      "componentId": "mUTXOEWB",
+      "index": "a1",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "search"
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": 288
+          }
+        }
+      },
+      "parentId": "TPgtQZgl",
+      "props": {
+        "value": "Filter by title or author",
+        "withHelper": "no",
+        "withLabel": "no"
+      },
+      "type": "instance"
     },
     "tE3MOKNY": {
       "componentId": "v8FmfBf5",
@@ -121675,7 +122113,7 @@
         },
         "mUTXOEWB": {
           "style": {
-            "width": 280
+            "width": 288
           }
         }
       },
@@ -122359,9 +122797,9 @@
     },
     "wzkmfTKY": {
       "content": "All books",
-      "index": "a3",
+      "index": "a2",
       "name": "Overline",
-      "parentId": "qSN7mzDl",
+      "parentId": "BoHJBM9g",
       "style": {
         "color": "{color.ink-3}",
         "font-family": "{font.body}",
@@ -123421,9 +123859,9 @@
     },
     "xQSJVPsz": {
       "content": "Continue reading",
-      "index": "a1",
+      "index": "a0",
       "name": "Overline",
-      "parentId": "qSN7mzDl",
+      "parentId": "BoHJBM9g",
       "style": {
         "color": "{color.ink-3}",
         "font-family": "{font.body}",
@@ -124757,9 +125195,9 @@
       "type": "instance"
     },
     "y8HZRd6P": {
-      "index": "a4",
+      "index": "a3",
       "name": "Shelf",
-      "parentId": "V9LIP8Oh",
+      "parentId": "9gljB3Xt",
       "style": {
         "display": "flex",
         "gap": 28
