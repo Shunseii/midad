@@ -39874,6 +39874,41 @@
       },
       "type": "frame"
     },
+    "JmpLt8Qa": {
+      "componentId": "ua9C67i7",
+      "css": "/* Shown while the reader has scrolled up from the bottom of a conversation; streaming text then holds their place. Pressing it scrolls smoothly to the latest message and follows again. */\ntransition:\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out};\n\n&[data-state=\"hidden\"] {\n  opacity: 0;\n  translate: -50% 8px;\n  pointer-events: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
+      "index": "z0",
+      "name": "Jump to latest",
+      "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
+        "O46dZG6P": {
+          "icon": "arrow-down"
+        },
+        "ua9C67i7": {
+          "style": {
+            "border-radius": 999,
+            "bottom": 12,
+            "box-shadow": "{shadow.md}",
+            "height": 32,
+            "left": "50%",
+            "padding": 0,
+            "position": "absolute",
+            "translate": "-50% 0",
+            "width": 32
+          }
+        }
+      },
+      "parentId": "WeTWRbpE",
+      "props": {
+        "label": "Jump to latest",
+        "size": "sm",
+        "variant": "secondary",
+        "withIcon": "yes"
+      },
+      "type": "instance"
+    },
     "JnOl3dSU": {
       "content": "الفاعل الظاهر والمضمر",
       "index": "a01",
@@ -65538,7 +65573,8 @@
         "flex-direction": "column",
         "gap": 16,
         "overflow": "hidden",
-        "padding": 20
+        "padding": 20,
+        "position": "relative"
       },
       "type": "frame"
     },
