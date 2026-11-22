@@ -1,6 +1,6 @@
-import { ArrowLeft, ArrowUp, Copy, History, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
+import { ArrowLeft, ArrowUp, Copy, History, Sparkles, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import { createPortal, flushSync } from "react-dom";
+import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
 import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
@@ -186,7 +186,22 @@ export const useAskConversation = (bookId: string) => {
     setDeleted(null);
   };
 
+  // `moved` stays false until the first switch, so the panel doesn't slide in when it opens.
+  const [screen, setScreen] = useState<{ name: "chat" | "history"; moved: boolean }>({ name: "chat", moved: false });
+  const showScreen = (name: "chat" | "history") => setScreen({ name, moved: true });
+  // Bumped to put the caret in the composer once a new conversation is showing.
+  const [composeRequest, setComposeRequest] = useState(0);
+  const startNew = () => {
+    reset();
+    if (screen.name !== "chat") showScreen("chat");
+    setComposeRequest((n) => n + 1);
+  };
+
   return {
+    screen,
+    showScreen,
+    startNew,
+    composeRequest,
     turns,
     ask,
     busy,
@@ -440,16 +455,12 @@ const CiteChip = ({
     onOpen,
     onRename,
     onDelete,
-    onBack,
-    onNew,
   }: {
     history: ConversationSummary[];
     currentId: string | null;
     onOpen: (id: string) => void;
     onRename: (input: { id: string; title: string }) => void;
     onDelete: (id: string) => void;
-    onBack: () => void;
-    onNew: () => void;
   }) => {
     const [editing, setEditing] = useState<string | null>(null);
     // A deleted row folds away before it leaves the list.
@@ -457,14 +468,6 @@ const CiteChip = ({
     const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
     return (
       <>
-        <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-3">
-          <IconButton icon={ArrowLeft} label="Back to conversation" onClick={onBack} />
-          <h2 className="text-sm font-medium">Saved conversations</h2>
-          <span className="flex-1" />
-          <Button variant="ghost" size="sm" icon={SquarePen} onClick={onNew}>
-            New conversation
-          </Button>
-        </div>
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-2">
           {history.length === 0 && (
             <div className="flex flex-col items-center gap-1 px-6 py-16 text-center">
@@ -539,6 +542,39 @@ const CiteChip = ({
     );
   };
 
+  /** The Ask AI panel's header: the title and the conversation buttons, or the way back from saved conversations. */
+  export const AskHeader = ({ conversation }: { conversation: ReturnType<typeof useAskConversation> }) => {
+    const { screen, showScreen, startNew, turns, saved, save } = conversation;
+    if (screen.name === "history")
+      return (
+        <>
+          <IconButton icon={ArrowLeft} label="Back to conversation" onClick={() => showScreen("chat")} />
+          <h2 className="truncate text-sm font-semibold">Saved conversations</h2>
+          <span className="flex-1" />
+          <IconButton icon={SquarePen} label="New conversation" onClick={startNew} />
+        </>
+      );
+    return (
+      <>
+        <h2 className="flex items-center gap-2 text-sm font-semibold">
+          <Sparkles className="size-4 text-accent" /> Ask AI
+        </h2>
+        <span className="flex-1" />
+        <IconButton icon={History} label="Saved conversations" onClick={() => showScreen("history")} />
+        {turns.length > 0 && (
+          <IconButton
+            icon={Star}
+            label={saved ? "Saved" : "Save conversation"}
+            selected={saved}
+            className={saved ? "[&_svg]:fill-current" : undefined}
+            onClick={() => void save()}
+          />
+        )}
+        {turns.length > 0 && <IconButton icon={SquarePen} label="New conversation" onClick={startNew} />}
+      </>
+    );
+  };
+
   export const AskPanel = ({
     bookId,
     conversation,
@@ -558,11 +594,7 @@ const CiteChip = ({
     onCite: (cite: Citation) => void;
     onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
   }) => {
-    const { turns, ask, busy, stop, retry, reset, open, conversationId, saved: conversationSaved, save, rename, history, remove, undoDelete, commitDelete, deleted } =
-      conversation;
-    // `moved` stays false until the first switch, so the panel doesn't slide in when it opens.
-    const [screen, setScreen] = useState<{ name: "chat" | "history"; moved: boolean }>({ name: "chat", moved: false });
-    const showScreen = (name: "chat" | "history") => setScreen({ name, moved: true });
+    const { screen, showScreen, composeRequest, turns, ask, busy, stop, retry, open, conversationId, rename, history, remove, undoDelete, commitDelete, deleted } = conversation;
     const [draft, setDraft] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
     const editor = useRef<HTMLDivElement>(null);
     // Each pill's quote and the span it renders into, kept in the editor's text flow.
@@ -570,6 +602,13 @@ const CiteChip = ({
     const [saved, setSaved] = useState<Set<string>>(new Set());
     const end = useRef<HTMLDivElement>(null);
     const activeSelection = selection && selection.position === position ? selection : null;
+
+    useEffect(() => {
+      const root = editor.current;
+      if (!composeRequest || !root) return;
+      root.focus();
+      caretAtEnd(root);
+    }, [composeRequest]);
 
     const lastAnswer = turns.at(-1)?.answer;
     useEffect(() => {
@@ -699,17 +738,6 @@ const CiteChip = ({
               }}
               onRename={(input) => void rename(input)}
               onDelete={remove}
-              onBack={() => showScreen("chat")}
-              onNew={() => {
-                flushSync(() => {
-                  reset();
-                  showScreen("chat");
-                });
-                const root = editor.current;
-                if (!root) return;
-                root.focus();
-                caretAtEnd(root);
-              }}
             />
           </div>
         ) : (
@@ -717,24 +745,6 @@ const CiteChip = ({
           key="chat"
           className={cx("flex min-h-0 flex-1 flex-col", screen.moved && "animate-in fade-in slide-in-from-left-6 duration-slide ease-move motion-reduce:slide-in-from-left-0")}
         >
-        <div className="flex shrink-0 items-center gap-1 border-b border-line py-2 pr-3 pl-3">
-          <IconButton icon={History} label="Saved conversations" onClick={() => showScreen("history")} />
-          <span className="flex-1" />
-          {turns.length > 0 && (
-            <IconButton
-              icon={Star}
-              label={conversationSaved ? "Saved" : "Save conversation"}
-              selected={conversationSaved}
-              className={conversationSaved ? "[&_svg]:fill-current" : undefined}
-              onClick={() => void save()}
-            />
-          )}
-          {turns.length > 0 && (
-            <Button variant="ghost" size="sm" icon={SquarePen} onClick={reset}>
-              New conversation
-            </Button>
-          )}
-        </div>
         <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-5">
           {activeSelection && (
             <div className="flex flex-col gap-2 rounded-xl bg-surface-2 px-4 py-3">
@@ -819,11 +829,11 @@ const CiteChip = ({
         <div className="shrink-0 p-4 pt-0">
           <div
             onMouseDown={focusComposer}
-            className="flex cursor-text flex-col gap-3 rounded-xl border border-line bg-surface p-3 focus-within:border-ink-3"
+            className="flex cursor-text items-end gap-2 rounded-xl border border-line bg-surface py-1.5 pr-1.5 pl-3 focus-within:border-ink-3"
           >
-            <div className="relative">
+            <div className="relative min-w-0 flex-1 py-1">
               {draft.empty && (
-                <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 text-body text-ink-3">
+                <span aria-hidden className="pointer-events-none absolute inset-x-0 top-1 truncate text-body text-ink-3">
                   {activeSelection ? "Ask about this passage…" : "Ask about this page…"}
                 </span>
               )}
@@ -838,24 +848,25 @@ const CiteChip = ({
                 onInput={sync}
                 onKeyDown={onKeyDown}
                 onPaste={onPaste}
-                className="max-h-40 min-h-12 overflow-y-auto break-words whitespace-pre-wrap text-body outline-hidden [unicode-bidi:plaintext]"
+                className="max-h-12 min-h-6 overflow-y-auto break-words whitespace-pre-wrap text-body outline-hidden [scrollbar-color:auto] [scrollbar-width:auto] [unicode-bidi:plaintext] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-ink/20"
               />
               {[...pills.current.values()].map(({ quote, host }) =>
                 createPortal(<QuoteChip quote={quote} onCite={onCite} onRemove={() => removeQuote(quote.id)} />, host, quote.id),
               )}
             </div>
-            <div className="flex items-center gap-2">
-              <span className="flex-1" />
-              {busy ? (
-                <Button variant="secondary" size="sm" icon={Square} onClick={stop}>
-                  Stop
-                </Button>
-              ) : (
-                <Button size="sm" icon={ArrowUp} disabled={!draft.question && draft.quotes.length === 0} onClick={() => send(draft)}>
-                  Ask
-                </Button>
-              )}
-            </div>
+            {busy ? (
+              <Button variant="secondary" size="sm" icon={Square} tooltip="Stop" aria-label="Stop" className="size-8 shrink-0 p-0" onClick={stop} />
+            ) : (
+              <Button
+                size="sm"
+                icon={ArrowUp}
+                tooltip="Ask"
+                aria-label="Ask"
+                className="size-8 shrink-0 p-0"
+                disabled={!draft.question && draft.quotes.length === 0}
+                onClick={() => send(draft)}
+              />
+            )}
           </div>
         </div>
         </div>

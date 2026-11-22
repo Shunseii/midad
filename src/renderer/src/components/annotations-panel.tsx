@@ -1,4 +1,4 @@
-import { Highlighter, NotebookPen, Sparkles, Trash2, X } from "lucide-react";
+import { Highlighter, NotebookPen, Trash2, X } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { Highlight, Note, PageAnnotations, Span } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
@@ -141,11 +141,13 @@ export const AnnotationsPanel = ({
   onUpdateNote,
   onEditingNote,
   askPanel,
+  askHeader,
   width,
   onResize,
   onResetSize,
 }: {
   askPanel: ReactNode;
+  askHeader: ReactNode;
   width: number;
   /** Called while the reader drags the panel's left edge. */
   onResize: (width: number) => void;
@@ -173,9 +175,7 @@ export const AnnotationsPanel = ({
       header={
         <>
           {tab === "ask" ? (
-            <h2 className="flex items-center gap-2 text-sm font-semibold">
-              <Sparkles className="size-4 text-accent" /> Ask AI
-            </h2>
+            askHeader
           ) : (
             <Segmented
               label="Annotations"
@@ -184,7 +184,7 @@ export const AnnotationsPanel = ({
               options={ANNOTATION_TABS}
             />
           )}
-          <span className="flex-1" />
+          {tab !== "ask" && <span className="flex-1" />}
           <IconButton icon={X} label="Close panel" onClick={onClose} />
         </>
       }

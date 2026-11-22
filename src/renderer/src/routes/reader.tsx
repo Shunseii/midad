@@ -12,7 +12,7 @@ import { SidePanel, SidePanelBody } from "../components/side-panel";
 import { useMediaQuery } from "../lib/media";
 import { NoteEditor, NoteLayer, NotePeek, NoteRowPeek, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
-import { type AskSelection, AskPanel, useAskConversation } from "../components/ask-panel";
+import { type AskSelection, AskHeader, AskPanel, useAskConversation } from "../components/ask-panel";
 import { PageScrubber } from "../components/page-scrubber";
 import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } from "../components/find-bar";
 import { findOnPage } from "../../../shared/find";
@@ -1173,6 +1173,7 @@ export const ReaderRoute = () => {
       width={sideWidth}
       onResize={(w) => setSideWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
       onResetSize={() => (asking ? setAskWidth(null) : setPanelWidth(PANEL_WIDTH))}
+      askHeader={<AskHeader conversation={conversation} />}
       askPanel={
         <AskPanel
           bookId={bookId}
