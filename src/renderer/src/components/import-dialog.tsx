@@ -1,5 +1,6 @@
 import { Download, Search } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ImportProgress } from "../../../shared/library";
 import { Link } from "react-router";
 import { plural } from "../lib/format";
 import { useCorpusBooks, useImportBook, useLibrary } from "../lib/midad";
@@ -18,6 +19,15 @@ export const ImportDialog = ({
   const [filter, setFilter] = useState("");
   const [importingId, setImportingId] = useState<string | null>(null);
   const filterField = useRef<HTMLInputElement>(null);
+  const [progress, setProgress] = useState<ImportProgress | null>(null);
+
+  useEffect(() => {
+    if (!importingId) return;
+    setProgress(null);
+    return window.midadEvents.onImportProgress((corpusBookId, next) => {
+      if (corpusBookId === importingId) setProgress(next);
+    });
+  }, [importingId]);
 
   const imported = useMemo(() => new Set(library.data?.map((b) => b.bookId)), [library.data]);
   const books = useMemo(() => {
@@ -88,8 +98,10 @@ export const ImportDialog = ({
                 <span className="ar truncate text-ar-small text-ink-2">
                   {[b.author, b.workTitle].filter(Boolean).join(" · ") || " "}
                 </span>
-                <span className="text-xs text-ink-3">
-                  {b.pagesReady === 0
+                <span className="text-xs text-ink-3 tabular-nums">
+                  {importingId === b.id
+                    ? importStatus(progress)
+                    : b.pagesReady === 0
                     ? "Not transcribed yet"
                     : `${b.pagesReady.toLocaleString("en")} of ${plural({ count: b.pagesTotal, one: "page", many: "pages" })} transcribed`}
                 </span>
@@ -97,6 +109,8 @@ export const ImportDialog = ({
               <div className="flex w-28 shrink-0 justify-end">
               {imported.has(b.id) ? (
                 <Badge tone="accent">In library</Badge>
+              ) : importingId === b.id ? (
+                <ImportBar progress={progress} />
               ) : b.pagesReady === 0 ? null : (
                 <Button
                   size="sm"
@@ -105,7 +119,7 @@ export const ImportDialog = ({
                   disabled={importingId !== null}
                   onClick={() => runImport(b.id)}
                 >
-                  {importingId === b.id ? "Importing…" : "Import"}
+                  Import
                 </Button>
               )}
               </div>
@@ -114,5 +128,33 @@ export const ImportDialog = ({
         </ul>
       </div>
     </Dialog>
+  );
+};
+
+const importStatus = (progress: ImportProgress | null) => {
+  if (progress?.phase === "saving") return "Saving to your library…";
+  if (!progress) return "Importing…";
+  return `Importing ${progress.done.toLocaleString("en")} of ${plural({ count: progress.total, one: "page", many: "pages" })}`;
+};
+
+const ImportBar = ({ progress }: { progress: ImportProgress | null }) => {
+  const saving = progress?.phase === "saving";
+  const percent = saving ? 100 : progress && progress.total > 0 ? (progress.done / progress.total) * 100 : 0;
+  return (
+    <div
+      role="progressbar"
+      aria-label="Import progress"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(percent)}
+      className="flex h-8 w-full animate-in items-center fade-in duration-press"
+    >
+      <div className="h-1 w-full overflow-hidden rounded-full bg-line">
+        <div
+          className={cx("h-full rounded-full bg-accent transition-[width] duration-pop ease-out motion-reduce:transition-none", saving && "animate-pulse")}
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </div>
   );
 };
