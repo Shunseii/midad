@@ -11,6 +11,7 @@ import { launchPlace, ON_LAUNCH_PREF } from "./lib/launch";
 import { getPref } from "./lib/prefs";
 import { KeybindingsRoot } from "./lib/use-keybindings";
 import { keys, midad } from "./lib/midad";
+import { dropFocusFromClickedControls } from "./lib/pointer-focus";
 import { passPressesThroughTransitions } from "./lib/view-transition";
 import { LibraryRoute } from "./routes/library";
 import { ReaderRoute, type ReaderState } from "./routes/reader";
@@ -25,6 +26,7 @@ const queryClient = new QueryClient({
 window.midadEvents.onLibraryChanged(() => void queryClient.invalidateQueries({ queryKey: ["library"] }));
 
 passPressesThroughTransitions();
+dropFocusFromClickedControls();
 
 const router = createHashRouter([
   {
