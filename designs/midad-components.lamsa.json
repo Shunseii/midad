@@ -6997,7 +6997,9 @@
       "index": "a000",
       "name": "Label",
       "parentId": "46QiZLNZ",
-      "style": {},
+      "style": {
+        "white-space": "nowrap"
+      },
       "type": "text"
     },
     "kc4IwSzv": {
