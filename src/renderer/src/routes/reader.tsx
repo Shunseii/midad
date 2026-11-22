@@ -204,7 +204,14 @@ const useActiveIndicator = (active: number[]) => {
     const items = list.current?.querySelectorAll<HTMLElement>("[data-entry]");
     const top = items?.[first];
     const bottom = items?.[last];
-    if (!top || !bottom) return setBox(null);
+    if (!top || !bottom) {
+      setBox(null);
+      // Before the first heading nothing is current: go back to the start of the list.
+      const scroller = list.current?.closest<HTMLElement>(".overflow-y-auto");
+      const smooth = followed.current && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (scroller && scroller.scrollTop > 0) scroller.scrollTo({ top: 0, behavior: smooth ? "smooth" : "instant" });
+      return;
+    }
     setBox((prev) => ({ top: top.offsetTop, height: bottom.offsetTop + bottom.offsetHeight - top.offsetTop, animate: prev !== null }));
     // Follow the reader: bring the current chapter into view when it's scrolled out, at once when the list opens.
     const scroller = top.closest<HTMLElement>(".overflow-y-auto");
