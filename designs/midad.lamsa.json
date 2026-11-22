@@ -18759,7 +18759,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -22479,7 +22479,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -26440,7 +26440,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -28979,7 +28979,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -33029,7 +33029,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -35928,7 +35928,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -50990,7 +50990,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -56966,7 +56966,7 @@
       "type": "frame"
     },
     "SRgjUp0T": {
-      "css": "/* One line tall, or two once the text wraps (data-state), then it scrolls with a slim thumb. The height change animates. */\ntransition: height var(--transition-duration-pop) var(--ease-out);\n\n&[data-state=\"one-line\"] {\n  height: 24px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}\nscrollbar-width: auto;\nscrollbar-color: auto;\n\n&::-webkit-scrollbar {\n  width: 4px;\n}\n\n&::-webkit-scrollbar-button {\n  display: none;\n}\n\n&::-webkit-scrollbar-thumb {\n  border-radius: 999px;\n  background: color-mix(in oklab, {color.ink} 20%, transparent);\n}",
+      "css": "/* Grows a line at a time up to three (data-state one-line / three-lines; two is the default here), then scrolls with a slim thumb. Each height change animates. */\ntransition: height var(--transition-duration-pop) var(--ease-out);\n\n&[data-state=\"one-line\"] {\n  height: 24px;\n}\n\n&[data-state=\"three-lines\"] {\n  height: 72px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}\nscrollbar-width: auto;\nscrollbar-color: auto;\n\n&::-webkit-scrollbar {\n  width: 4px;\n}\n\n&::-webkit-scrollbar-button {\n  display: none;\n}\n\n&::-webkit-scrollbar-thumb {\n  border-radius: 999px;\n  background: color-mix(in oklab, {color.ink} 20%, transparent);\n}",
       "index": "a0",
       "name": "Editor",
       "parentId": "ysRYgvjt",
@@ -61806,7 +61806,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -65240,7 +65240,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },
@@ -81307,7 +81307,7 @@
         "flex-shrink": 0,
         "gap": 8,
         "margin": "0 16px 16px",
-        "padding": "6px 6px 6px 12px"
+        "padding": "{spacing.2} {spacing.2} {spacing.2} {spacing.3}"
       },
       "type": "frame"
     },

@@ -27,6 +27,7 @@ const UNDO_DELETE_MS = 4500;
 
 /** The composer's line height in px (`text-body`). */
 const COMPOSER_LINE = 24;
+const COMPOSER_ROWS = 3;
 
 const fromStored = ({ createdAt: _, ...turn }: StoredTurn): Turn => ({ ...turn, activity: null });
 
@@ -618,14 +619,15 @@ const CiteChip = ({
       if (lastAnswer !== undefined || turns.length) end.current?.scrollIntoView({ block: "end" });
     }, [lastAnswer, turns.length]);
 
-    // The composer is one line tall, or two once the text wraps; switching between them is what animates.
-    const [rows, setRows] = useState<1 | 2>(1);
+    // The composer grows a line at a time up to COMPOSER_ROWS, then scrolls; each step's height change animates.
+    const [rows, setRows] = useState(1);
     const measureRows = useCallback(() => {
       const root = editor.current;
       if (!root) return;
       const text = document.createRange();
       text.selectNodeContents(root);
-      setRows(text.getBoundingClientRect().height > COMPOSER_LINE * 1.5 ? 2 : 1);
+      const lines = Math.ceil(text.getBoundingClientRect().height / COMPOSER_LINE - 0.25);
+      setRows(Math.min(Math.max(lines, 1), COMPOSER_ROWS));
     }, []);
     useEffect(() => {
       const root = editor.current;
@@ -851,7 +853,7 @@ const CiteChip = ({
         <div className="shrink-0 p-4 pt-0">
           <div
             onMouseDown={focusComposer}
-            className="flex cursor-text items-end gap-2 rounded-xl border border-line bg-surface py-1.5 pr-1.5 pl-3 focus-within:border-ink-3"
+            className="flex cursor-text items-end gap-2 rounded-xl border border-line bg-surface py-2 pr-2 pl-3 focus-within:border-ink-3"
           >
             <div className="relative min-w-0 flex-1 py-1">
               {draft.empty && (
@@ -871,7 +873,7 @@ const CiteChip = ({
                 onKeyDown={onKeyDown}
                 onPaste={onPaste}
                 data-rows={rows}
-                className="h-6 overflow-y-auto transition-[height] duration-pop ease-out data-[rows=2]:h-12 motion-reduce:transition-none break-words whitespace-pre-wrap text-body outline-hidden [scrollbar-color:auto] [scrollbar-width:auto] [unicode-bidi:plaintext] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-ink/20"
+                className="h-6 overflow-y-auto transition-[height] duration-pop ease-out data-[rows=2]:h-12 data-[rows=3]:h-18 motion-reduce:transition-none break-words whitespace-pre-wrap text-body outline-hidden [scrollbar-color:auto] [scrollbar-width:auto] [unicode-bidi:plaintext] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-ink/20"
               />
               {[...pills.current.values()].map(({ quote, host }) =>
                 createPortal(<QuoteChip quote={quote} onCite={onCite} onRemove={() => removeQuote(quote.id)} />, host, quote.id),
