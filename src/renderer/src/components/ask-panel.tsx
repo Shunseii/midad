@@ -1,5 +1,5 @@
-import { ArrowLeft, ArrowUp, Copy, History, Sparkles, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
-import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowLeft, ArrowUp, Copy, History, Sparkles, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
+import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
 import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
@@ -359,6 +359,37 @@ const CiteChip = ({
     </div>
   );
 
+  /**
+   * Text that arrives in bursts, revealed at a steady pace: each frame shows a share of what's still hidden,
+   * so it keeps up with a fast stream without jumping. Text that's already complete shows at once.
+   */
+  const useSmoothText = (text: string, streaming: boolean) => {
+    const [shown, setShown] = useState(streaming ? 0 : text.length);
+    const length = useRef(text.length);
+    length.current = text.length;
+    useEffect(() => {
+      if (shown >= text.length) return;
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        setShown(text.length);
+        return;
+      }
+      const frame = requestAnimationFrame(() => setShown((n) => Math.min(length.current, n + Math.max(2, Math.ceil((length.current - n) / 12)))));
+      return () => cancelAnimationFrame(frame);
+    }, [shown, text.length]);
+    return text.slice(0, shown);
+  };
+
+  /** Drops a citation still being written, so `[[line 2: …` never shows as raw brackets. */
+  const withoutOpenCite = (text: string) => {
+    const open = text.lastIndexOf("[[");
+    return open !== -1 && !text.includes("]]", open) ? text.slice(0, open) : text;
+  };
+
+  const StreamedAnswer = ({ text, streaming, cite }: { text: string; streaming: boolean; cite: (c: Cite, key: number) => ReactNode }) => {
+    const shown = withoutOpenCite(useSmoothText(text, streaming));
+    return shown.trim() ? <Answer text={shown} cite={cite} /> : null;
+  };
+
   const plainAnswer = (text: string) =>
     parseCitations(text)
       .map((s) => (s.kind === "text" ? s.text : citeLabel(s)))
@@ -604,7 +635,11 @@ const CiteChip = ({
     // Each pill's quote and the span it renders into, kept in the editor's text flow.
     const pills = useRef(new Map<string, { quote: Quote; host: HTMLElement }>());
     const [saved, setSaved] = useState<Set<string>>(new Set());
-    const end = useRef<HTMLDivElement>(null);
+    const scroller = useRef<HTMLDivElement>(null);
+    const content = useRef<HTMLDivElement>(null);
+    // Follows new text while the reader is at the bottom; scrolling up lets go until they're back at the bottom.
+    const pinned = useRef(true);
+    const [atBottom, setAtBottom] = useState(true);
     const activeSelection = selection && selection.position === position ? selection : null;
 
     useEffect(() => {
@@ -614,10 +649,33 @@ const CiteChip = ({
       caretAtEnd(root);
     }, [composeRequest]);
 
-    const lastAnswer = turns.at(-1)?.answer;
+    const toBottom = useCallback(() => {
+      const el = scroller.current;
+      if (el) el.scrollTop = el.scrollHeight;
+    }, []);
+    const onScroll = () => {
+      const el = scroller.current;
+      if (!el) return;
+      const bottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+      pinned.current = bottom;
+      setAtBottom(bottom);
+    };
+    // A conversation opens at its latest message.
+    useLayoutEffect(() => {
+      if (screen.name !== "chat") return;
+      pinned.current = true;
+      setAtBottom(true);
+      toBottom();
+    }, [conversationId, screen.name, toBottom]);
     useEffect(() => {
-      if (lastAnswer !== undefined || turns.length) end.current?.scrollIntoView({ block: "end" });
-    }, [lastAnswer, turns.length]);
+      const box = content.current;
+      if (screen.name !== "chat" || !box) return;
+      const observer = new ResizeObserver(() => {
+        if (pinned.current) toBottom();
+      });
+      observer.observe(box);
+      return () => observer.disconnect();
+    }, [screen.name, toBottom]);
 
     // The composer grows a line at a time up to COMPOSER_ROWS, then scrolls; each step's height change animates.
     const [rows, setRows] = useState(1);
@@ -656,6 +714,7 @@ const CiteChip = ({
 
     const send = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
       if ((!question && quotes.length === 0) || busy) return;
+      pinned.current = true;
       void ask({ question, position, selection: activeSelection, quotes });
       clear();
     };
@@ -769,7 +828,9 @@ const CiteChip = ({
           key="chat"
           className={cx("flex min-h-0 flex-1 flex-col", screen.moved && "animate-in fade-in slide-in-from-left-6 duration-slide ease-move motion-reduce:slide-in-from-left-0")}
         >
-        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-5">
+        <div className="relative flex min-h-0 flex-1 flex-col">
+        <div ref={scroller} onScroll={onScroll} className="min-h-0 flex-1 overflow-y-auto">
+        <div ref={content} className="flex flex-col gap-5 p-5">
           {activeSelection && (
             <div className="flex flex-col gap-2 rounded-xl bg-surface-2 px-4 py-3">
               <div className="flex items-center gap-1.5 text-xs text-ink-3">
@@ -813,7 +874,11 @@ const CiteChip = ({
                 )}
               </p>
               {turn.answer && (
-                <Answer text={turn.answer} cite={(c, key) => <AnswerCite key={key} bookId={bookId} cite={c} position={turn.position} onCite={onCite} />} />
+                <StreamedAnswer
+                  text={turn.answer}
+                  streaming={turn.status === "streaming"}
+                  cite={(c, key) => <AnswerCite key={key} bookId={bookId} cite={c} position={turn.position} onCite={onCite} />}
+                />
               )}
               {turn.status === "streaming" && (
                 <p className="flex items-center gap-2 text-xs text-ink-3">
@@ -847,7 +912,23 @@ const CiteChip = ({
               )}
             </div>
           ))}
-          <div ref={end} />
+        </div>
+        </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={ArrowDown}
+            tooltip="Jump to latest"
+            aria-label="Jump to latest"
+            data-state={atBottom || turns.length === 0 ? "hidden" : "shown"}
+            aria-hidden={atBottom || turns.length === 0 || undefined}
+            tabIndex={atBottom || turns.length === 0 ? -1 : undefined}
+            className="absolute bottom-3 left-1/2 size-8 -translate-x-1/2 rounded-full p-0 shadow-md transition-[opacity,translate] duration-pop ease-out data-[state=hidden]:pointer-events-none data-[state=hidden]:translate-y-2 data-[state=hidden]:opacity-0 motion-reduce:transition-none"
+            onClick={() => {
+              pinned.current = true;
+              scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
+            }}
+          />
         </div>
 
         <div className="shrink-0 p-4 pt-0">
