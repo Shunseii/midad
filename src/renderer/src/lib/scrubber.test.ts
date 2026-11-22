@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type Chapter, markCluster, nearestMarkPage, nextMarkPage, pageAtFraction, pageFraction, previewFirstLine, TICK_GAP, stickyMarkPage, thinMarks, topLevelChapters } from "./scrubber";
+import { type Chapter, nearestMarkPage, nextMarkPage, pageAtFraction, pageFraction, previewFirstLine, TICK_GAP, stickyMarkPage, thinMarks, topLevelChapters } from "./scrubber";
 
 const thinChapters = ({ chapters, total, width }: { chapters: Chapter[]; total: number; width: number }) =>
   thinMarks({ marks: chapters, weight: (c) => c.pages, total, width, gap: TICK_GAP });
@@ -201,35 +201,5 @@ describe("nextMarkPage", () => {
     expect(nextMarkPage({ pages, from: 50, direction: 1 })).toBeNull();
     expect(nextMarkPage({ pages, from: 4, direction: -1 })).toBeNull();
     expect(nextMarkPage({ pages: [], from: 1, direction: 1 })).toBeNull();
-  });
-});
-
-describe("markCluster", () => {
-  // 800 pages on 760px: neighbouring pages under 1px apart.
-  const dense = { total: 800, width: 760 };
-
-  it("puts the picked page first, then its crowded neighbours nearest first", () => {
-    expect(markCluster({ pages: [28, 25, 30, 60], around: 28, ...dense })).toEqual([28, 30, 25]);
-  });
-
-  it("caps how many pages share the card", () => {
-    expect(markCluster({ pages: [10, 11, 12, 13, 14], around: 12, ...dense })).toEqual([12, 11, 13]);
-  });
-
-  it("is just the page when nothing is close", () => {
-    expect(markCluster({ pages: [10, 40], around: 10, total: 100, width: 1000 })).toEqual([10]);
-  });
-
-  it("lists a page once however many marks it has", () => {
-    expect(markCluster({ pages: [10, 10, 11, 11], around: 10, ...dense })).toEqual([10, 11]);
-  });
-
-  it("leaves out nearby marks that have their own dot, so pointing at a bookmark shows just its page", () => {
-    // 2000 pages on 760px: pages 100 and 112 are about 4.6px apart, both drawn.
-    expect(markCluster({ pages: [100, 112, 95], drawn: [100, 112, 95], around: 100, total: 2000, width: 760 })).toEqual([100]);
-  });
-
-  it("keeps thinned-away marks whose nearest dot is the pointed one", () => {
-    expect(markCluster({ pages: [100, 103, 112, 110], drawn: [100, 112], around: 100, total: 2000, width: 760 })).toEqual([100, 103]);
   });
 });

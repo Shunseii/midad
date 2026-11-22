@@ -7,7 +7,7 @@ import { entryIndexFor } from "../lib/contents";
 import { arabicNumber, plural } from "../lib/format";
 import { keys, midad, useFirstLine, usePagePreview } from "../lib/midad";
 import { handleKeys, useKeybindings } from "../lib/use-keybindings";
-import { DOT_GAP, markCluster, nextMarkPage, pageAtFraction, stickyMarkPage, pageFraction, previewFirstLine, thinMarks, TICK_GAP, topLevelChapters } from "../lib/scrubber";
+import { DOT_GAP, nextMarkPage, pageAtFraction, stickyMarkPage, pageFraction, previewFirstLine, thinMarks, TICK_GAP, topLevelChapters } from "../lib/scrubber";
 import { MARK_BG } from "./page-view";
 import { cx, Skeleton } from "./ui";
 
@@ -235,8 +235,6 @@ export const PageScrubber = ({
   const pointed = hover && picked !== null && markedPages.includes(picked) ? picked : null;
   const hoveredMark = drag?.moved ? null : (pointed ?? keyMark);
   const numberOf = (page: number) => pages[page - 1]?.number ?? null;
-  // A key-stepped mark previews just its page; a pointed one, the marks crowded around it too.
-  const cluster = hoveredMark === null ? [] : hoveredMark === pointed ? markCluster({ pages: allMarkedPages, drawn: markedPages, around: hoveredMark, total, width }) : [hoveredMark];
   const markedPage = (page: number): MarkedPage => ({
     page,
     number: numberOf(page),
@@ -260,7 +258,7 @@ export const PageScrubber = ({
       />
       <MarkPreview
         bookId={bookId}
-        cluster={cluster.map(markedPage)}
+        marked={hoveredMark === null ? null : markedPage(hoveredMark)}
         x={clampPreview({ x: hoveredMark === null ? 0 : width - pageFraction({ position: hoveredMark, total }) * width, width })}
       />
       <div
@@ -378,7 +376,7 @@ export interface MarkedPage {
 }
 
 /** One page's marks in the preview. Notes and highlights load once `load` is set. */
-const MarkSection = ({ bookId, marked, load, primary }: { bookId: string; marked: MarkedPage; load: boolean; primary: boolean }) => {
+const MarkSection = ({ bookId, marked, load }: { bookId: string; marked: MarkedPage; load: boolean }) => {
   const enabled = load && (marked.hasNotes || marked.highlights.length > 0);
   const annotations = useQuery({
     queryKey: keys.annotations(bookId, marked.page),
@@ -398,8 +396,8 @@ const MarkSection = ({ bookId, marked, load, primary }: { bookId: string; marked
   const notes = annotations.data?.notes ?? [];
   const label = pageLabel(marked);
   return (
-    <section data-mark-page={marked.page} className={cx("flex flex-col gap-1.5", !primary && "border-t border-line pt-2")}>
-      <span dir="rtl" className={cx("ar text-right font-bold", primary ? "text-ar-body leading-7" : "text-ar-small leading-6", label.printed ? "text-ink" : "text-ink-3")}>
+    <section data-mark-page={marked.page} className="flex flex-col gap-1.5">
+      <span dir="rtl" className={cx("ar text-right text-ar-body leading-7 font-bold", label.printed ? "text-ink" : "text-ink-3")}>
         {label.text}
       </span>
       <ul className="flex flex-col gap-1.5">
@@ -471,30 +469,27 @@ const MarkSection = ({ bookId, marked, load, primary }: { bookId: string; marked
 
 /**
  * The card above a mark the pointer is near (or the keyboard stepped to): the
- * page and everything marked on it. Where marks crowd too close to point at
- * one, the pages beside it follow in the same card.
+ * page and everything marked on it.
  */
-const MarkPreview = ({ bookId, cluster, x }: { bookId: string; cluster: MarkedPage[]; x: number }) => {
-  // Keep the last pages shown so the card can fade out with its content.
-  const last = useRef<MarkedPage[]>([]);
-  if (cluster.length > 0) last.current = cluster;
+const MarkPreview = ({ bookId, marked, x }: { bookId: string; marked: MarkedPage | null; x: number }) => {
+  // Keep the last page shown so the card can fade out with its content.
+  const last = useRef<MarkedPage | null>(null);
+  if (marked) last.current = marked;
   const shown = last.current;
-  const open = cluster.length > 0;
+  const open = marked !== null;
   // And where it was, so it fades out in place rather than at the bar's end.
   const lastX = useRef(x);
   if (open) lastX.current = x;
-  const key = cluster.map((m) => m.page).join(",");
-  const [settled, setSettled] = useState<string | null>(null);
+  const key = marked?.page ?? null;
+  const [settled, setSettled] = useState<number | null>(null);
   useEffect(() => {
-    if (!key) return;
+    if (key === null) return;
     const timer = setTimeout(() => setSettled(key), FIRST_LINE_DELAY_MS);
     return () => clearTimeout(timer);
   }, [key]);
   return (
     <div aria-hidden data-mark-preview data-state={open ? "open" : "closed"} style={{ left: lastX.current }} className={cx(PREVIEW_CARD, "max-h-96 overflow-hidden")}>
-      {shown.map((marked, i) => (
-        <MarkSection key={marked.page} bookId={bookId} marked={marked} load={open && settled === key} primary={i === 0} />
-      ))}
+      {shown && <MarkSection key={shown.page} bookId={bookId} marked={shown} load={open && settled === key} />}
     </div>
   );
 };
