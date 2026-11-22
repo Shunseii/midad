@@ -66,7 +66,10 @@ const insertBook = ({ db, bookId, title, author, pages, withHeadings }) => {
 
 const FAKE_CLAUDE = `#!/usr/bin/env node
 // Stands in for Claude Code: streams stream-json text deltas slowly, then a result.
-const words = Array.from({ length: 1000 }, (_, i) => (i % 40 === 39 ? "word.\\n\\n" : "word" + i + " "));
+// A question with "[N words]" in it gets an answer that long (about a second per 60 words); others get 1000 words.
+const prompt = process.argv[process.argv.indexOf("-p") + 1] ?? "";
+const length = Number(/\\[(\\d+) words\\]/.exec(prompt)?.[1] ?? 1000);
+const words = Array.from({ length }, (_, i) => (i % 40 === 39 ? "word.\\n\\n" : "word" + i + " "));
 let i = 0;
 const out = (o) => process.stdout.write(JSON.stringify(o) + "\\n");
 const tick = () => {
