@@ -46,3 +46,30 @@ export interface CorpusBookListing {
   pagesTotal: number;
   pagesReady: number;
 }
+
+export interface TextEdit {
+  old: string;
+  new: string;
+}
+
+export type TextEditResult =
+  | { kind: "edited"; changed: boolean; revisionId: string | null; textEditedAt: number | null }
+  /** 422: edit number `failedEdit` (from 0) didn't apply, so none did. */
+  | { kind: "failed"; failedEdit: number; reason: string }
+  /** 409: the page isn't done, or it changed during the edit. */
+  | { kind: "conflict"; message: string };
+
+export interface TextRevision {
+  /** Addresses the text as it was just before this change. */
+  id: string;
+  change: "edit" | "ocr";
+  model: string | null;
+  note: string | null;
+  createdAt: number;
+}
+
+export interface TextHistory {
+  textEditedAt: number | null;
+  /** Newest first. */
+  revisions: TextRevision[];
+}
