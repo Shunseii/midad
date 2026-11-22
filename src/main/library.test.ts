@@ -68,6 +68,25 @@ describe("import", () => {
     expect(await numbers()).toEqual([1, 2, 3]);
   });
 
+  it("stores a page the corpus finished with no text as a blank page, not as pending", async () => {
+    corpus.files = [
+      file({ file_id: "f1", page_number: 1 }),
+      file({ file_id: "f2", page_number: 2, state: "done", text: "" }),
+      file({ file_id: "f3", page_number: 3, state: "queued", text: "" }),
+    ];
+    const result = await library.importBook({ corpusBookId: "b1" });
+    expect(result).toEqual({ bookId: "b1", imported: 2, pending: 1 });
+    expect(await numbers()).toEqual([1, 2]);
+    expect(await library.previewSync({ bookId: "b1" })).toMatchObject({ newPages: [], changedPages: [], pending: 1 });
+  });
+
+  it("offers a blank finished page that an older import skipped as new on sync", async () => {
+    corpus.files = [file({ file_id: "f1", page_number: 1 })];
+    await library.importBook({ corpusBookId: "b1" });
+    corpus.files.push(file({ file_id: "f2", page_number: 2, state: "done", text: "" }));
+    expect(await library.previewSync({ bookId: "b1" })).toMatchObject({ newPages: [{ fileId: "f2", number: 2 }], pending: 0 });
+  });
+
   it("stores pages that have text and counts the rest as pending", async () => {
     corpus.files = [
       file({ file_id: "f1", page_number: 1 }),

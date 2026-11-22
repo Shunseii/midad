@@ -1,5 +1,5 @@
 import type { DatabaseSync } from "node:sqlite";
-import type { ExportFile } from "../shared/corpus";
+import type { ExportFile, FileState } from "../shared/corpus";
 import type {
   BookDetail,
   ImportProgress,
@@ -148,7 +148,11 @@ const byCorpusOrder = (
   return nullsLast(a.number, b.number) || nullsLast(a.orderHint, b.orderHint) || a.fileId.localeCompare(b.fileId);
 };
 
-const hasText = (f: ExportFile): f is ExportFile & { text: string } => typeof f.text === "string" && f.text.trim().length > 0;
+const TRANSCRIBED: readonly FileState[] = ["done", "needs_review", "approved"];
+
+/** A page to store: one with text, or one the corpus finished with nothing on it to transcribe (a blank page, or one left out by the book's instructions). */
+const isReady = (f: ExportFile): f is ExportFile & { text: string } =>
+  typeof f.text === "string" && (f.text.trim().length > 0 || TRANSCRIBED.includes(f.state));
 
 export const createLibrary = ({
   db,
@@ -239,7 +243,7 @@ export const createLibrary = ({
 
   const previewFrom = (bookId: string, files: ExportFile[]): SyncPreview => {
     const local = new Map(localPages(bookId).map((p) => [p.file_id, p]));
-    const ready = files.filter(hasText);
+    const ready = files.filter(isReady);
     return {
       newPages: ready.filter((f) => !local.has(f.file_id)).map((f) => ({ fileId: f.file_id, number: f.page_number })),
       changedPages: ready.flatMap((f) => {
@@ -264,7 +268,7 @@ export const createLibrary = ({
       onProgress?.({ phase: "saving" });
       // Lets the saving step reach the window before the write holds the main process.
       await new Promise((resolve) => setImmediate(resolve));
-      const ready = files.filter(hasText);
+      const ready = files.filter(isReady);
       transaction(() => {
         const at = now();
         db.prepare(
@@ -294,7 +298,7 @@ export const createLibrary = ({
       if (!bookExists(bookId)) throw new Error(`Book ${bookId} is not in the library.`);
       const files = await corpus.exportBook(bookId);
       const preview = previewFrom(bookId, files);
-      const byId = new Map(files.filter(hasText).map((f) => [f.file_id, f]));
+      const byId = new Map(files.filter(isReady).map((f) => [f.file_id, f]));
 
       return transaction(() => {
         let added = 0;
