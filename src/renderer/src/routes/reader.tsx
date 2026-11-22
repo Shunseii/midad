@@ -558,6 +558,18 @@ export const ReaderRoute = () => {
     if (!fromUrl && marker.data) pendingRow.current = marker.data;
   }, [marker.isSuccess, marker.data, fromUrl]);
 
+  // Each page starts at its top, unless it's opening at a particular place (a saved spot, a citation, a contents row).
+  const shownPage = page.data?.position;
+  const lastShownPage = useRef(shownPage);
+  useLayoutEffect(() => {
+    if (shownPage === undefined || shownPage === lastShownPage.current) return;
+    const first = lastShownPage.current === undefined;
+    lastShownPage.current = shownPage;
+    const placed =
+      pendingReveal.current?.position === shownPage || pendingRow.current?.position === shownPage || pendingScroll.current !== null || pendingPlace.current !== null;
+    if (!first && !placed) pageRoot.current?.scrollTo({ top: 0 });
+  }, [shownPage]);
+
   useEffect(() => {
     const reveal = pendingReveal.current;
     if (reveal && page.data?.position === reveal.position) {
