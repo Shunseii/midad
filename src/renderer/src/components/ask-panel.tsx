@@ -1,5 +1,5 @@
-import { ArrowDown, ArrowLeft, ArrowUp, Copy, History, Sparkles, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
-import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowLeft, ArrowUp, Copy, History, Sparkles, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
+import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
 import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
@@ -31,6 +31,9 @@ const COMPOSER_LINE = 24;
 const COMPOSER_ROWS = 3;
 
 const fromStored = ({ createdAt: _, ...turn }: StoredTurn): Turn => ({ ...turn, activity: null });
+
+/** The error of an answer the reader stopped: shown as a note, not a failure. */
+const STOPPED = "Stopped.";
 
 /** A question typed while Claude was answering, waiting its turn. It keeps the page and selection it was typed on. */
 export interface QueuedMessage {
@@ -569,7 +572,6 @@ const CiteChip = ({
     const [editing, setEditing] = useState<string | null>(null);
     // A deleted row folds away before it leaves the list.
     const [leaving, setLeaving] = useState<string | null>(null);
-    const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
     return (
       <>
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-2">
@@ -646,6 +648,101 @@ const CiteChip = ({
     );
   };
 
+  const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /**
+   * The list as it's drawn: items taken out stay, marked leaving, until they've folded away.
+   * Each leaving item keeps its place among the others.
+   */
+  const useLeavingList = <T extends { id: string }>(items: T[]) => {
+    const [shown, setShown] = useState(() => items.map((item) => ({ item, leaving: false })));
+    const [from, setFrom] = useState(items);
+    if (from !== items) {
+      setFrom(items);
+      const next = items.map((item) => ({ item, leaving: false }));
+      if (!reduceMotion())
+        shown.forEach((entry, index) => {
+          if (!items.some((item) => item.id === entry.item.id)) next.splice(Math.min(index, next.length), 0, { item: entry.item, leaving: true });
+        });
+      setShown(next);
+    }
+    const gone = (id: string) => setShown((all) => all.filter((entry) => !(entry.leaving && entry.item.id === id)));
+    // An item that leaves before it has finished coming in may never fire transitionend.
+    useEffect(() => {
+      if (!shown.some((entry) => entry.leaving)) return;
+      const timer = setTimeout(() => setShown((all) => all.filter((entry) => !entry.leaving)), 400);
+      return () => clearTimeout(timer);
+    }, [shown]);
+    return { shown, gone };
+  };
+
+  const FOLD = "grid grid-rows-[1fr] transition-[grid-template-rows,opacity] duration-pop ease-out starting:grid-rows-[0fr] starting:opacity-0 data-[state=leaving]:grid-rows-[0fr] data-[state=leaving]:opacity-0 data-[state=leaving]:duration-pop-exit motion-reduce:transition-none";
+
+  /** Questions waiting for the answer in progress, oldest first. Each can be sent now, edited or removed. */
+  const QueuedMessages = ({
+    queue,
+    onSendNow,
+    onEdit,
+    onRemove,
+    onCite,
+  }: {
+    queue: AskQueue<QueuedMessage>;
+    onSendNow: (id: string) => void;
+    onEdit: (id: string) => void;
+    onRemove: (id: string) => void;
+    onCite: (c: Citation) => void;
+  }) => {
+    // A question being sent now has left the queue already, as far as the reader is concerned.
+    const waiting = useMemo(() => (queue.sendingNow ? queue.items.slice(1) : queue.items), [queue]);
+    const { shown, gone } = useLeavingList(waiting);
+    // While the last one folds away the count keeps its old number.
+    const count = useRef(0);
+    if (waiting.length) count.current = waiting.length;
+    const first = waiting[0];
+    if (shown.length === 0) return null;
+    return (
+      <div data-state={waiting.length ? undefined : "leaving"} className={cx(FOLD, "mb-2")}>
+        <div className="min-h-0 overflow-hidden">
+          <div role="list" aria-label="Queued questions" className="flex flex-col rounded-xl bg-surface-2 p-1">
+            <div className="flex min-h-7 items-center gap-2 pr-1 pl-2 text-xs text-ink-3">
+              {queue.paused && "Paused · "}
+              {count.current} queued
+              <span className="flex-1" />
+              {queue.paused && first && (
+                <Button variant="ghost" size="sm" onClick={() => onSendNow(first.id)}>
+                  Resume
+                </Button>
+              )}
+            </div>
+            {shown.map(({ item, leaving }) => (
+              <div
+                key={item.id}
+                role="listitem"
+                data-state={leaving ? "leaving" : undefined}
+                inert={leaving || undefined}
+                onTransitionEnd={(e) => {
+                  if (leaving && e.target === e.currentTarget && e.propertyName === "grid-template-rows") gone(item.id);
+                }}
+                className={FOLD}
+              >
+                <div className="flex min-h-0 items-center gap-0.5 overflow-hidden rounded-lg pl-2">
+                  <p dir="auto" className="min-w-0 flex-1 truncate text-sm text-ink-2 [unicode-bidi:plaintext]">
+                    {parseComposer(item).map((part, i) =>
+                      part.kind === "quote" ? <QuoteChip key={part.quote.id} quote={part.quote} onCite={onCite} /> : <span key={i}>{part.text}</span>,
+                    )}
+                  </p>
+                  <IconButton icon={SendHorizontal} label="Send now" onClick={() => onSendNow(item.id)} />
+                  <IconButton icon={Pencil} label="Edit" onClick={() => onEdit(item.id)} />
+                  <IconButton icon={X} label="Remove" onClick={() => onRemove(item.id)} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   /** The Ask AI panel's header: the title and the conversation buttons, or the way back from saved conversations. */
   export const AskHeader = ({ conversation }: { conversation: ReturnType<typeof useAskConversation> }) => {
     const { screen, showScreen, startNew, turns, saved, save } = conversation;
@@ -699,6 +796,7 @@ const CiteChip = ({
     onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
   }) => {
     const { screen, showScreen, composeRequest, turns, ask, busy, stop, retry, open, conversationId, rename, history, remove, undoDelete, commitDelete, deleted } = conversation;
+    const { queue, queueMessage, sendQueuedNow, sendDraftNow, takeQueued, removeQueued } = conversation;
     const [draft, setDraft] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
     const editor = useRef<HTMLDivElement>(null);
     // Each pill's quote and the span it renders into, kept in the editor's text flow.
@@ -739,6 +837,11 @@ const CiteChip = ({
     const stopJump = () => {
       jumping.current = false;
     };
+    // Every new question, typed or sent from the queue, follows its answer.
+    const latestTurn = turns.at(-1);
+    useLayoutEffect(() => {
+      if (latestTurn?.status === "streaming") pinned.current = true;
+    }, [latestTurn?.id]);
     // A conversation opens at its latest message.
     useLayoutEffect(() => {
       if (screen.name !== "chat") return;
@@ -791,11 +894,44 @@ const CiteChip = ({
       setRows(1);
     };
 
+    /** Asks now, or queues the question while Claude is answering. */
     const send = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
-      if ((!question && quotes.length === 0) || busy) return;
-      pinned.current = true;
-      void ask({ question, position, selection: activeSelection, quotes });
+      if (!question && quotes.length === 0) return;
+      if (busy) queueMessage({ question, quotes, position, selection: activeSelection });
+      else {
+        pinned.current = true;
+        void ask({ question, position, selection: activeSelection, quotes });
+      }
       clear();
+    };
+
+    const sendNow = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
+      if (!question && quotes.length === 0) return;
+      if (!busy) return send({ question, quotes });
+      sendDraftNow({ question, quotes, position, selection: activeSelection });
+      clear();
+    };
+
+    /** Puts a queued question back in the composer, after anything already typed there. */
+    const editQueued = (id: string) => {
+      const root = editor.current;
+      const message = takeQueued(id);
+      if (!root || !message) return;
+      if (!draft.empty) root.append("\n");
+      for (const part of parseComposer(message)) {
+        if (part.kind === "text") {
+          root.append(part.text);
+          continue;
+        }
+        const host = document.createElement("span");
+        host.contentEditable = "false";
+        host.setAttribute(PILL_ATTR, part.quote.id);
+        root.append(host);
+        pills.current.set(part.quote.id, { quote: part.quote, host });
+      }
+      sync();
+      root.focus();
+      caretAtEnd(root);
     };
 
     const insertQuote = (quote: Quote) => {
@@ -839,11 +975,7 @@ const CiteChip = ({
     };
 
     const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        send(draft);
-        return;
-      }
+      if (handleKeys({ event: e, handlers: { "ask.send": () => send(draft), "ask.sendNow": () => sendNow(draft) } })) return;
       const range = window.getSelection()?.rangeCount ? window.getSelection()?.getRangeAt(0) : null;
       if (e.key !== "Backspace" || !range?.collapsed) return;
       const before = nodeBeforeCaret(range);
@@ -965,7 +1097,12 @@ const CiteChip = ({
                   {turn.activity ?? "Writing…"}
                 </p>
               )}
-              {turn.status === "error" && <p className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">{turn.error}</p>}
+              {turn.status === "error" &&
+                (turn.error === STOPPED ? (
+                  <p className="text-xs text-ink-3">{STOPPED}</p>
+                ) : (
+                  <p className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">{turn.error}</p>
+                ))}
               {turn.status === "interrupted" && <p className="text-xs text-ink-3">Interrupted when Midad closed.</p>}
               {turn.restarted && <p className="text-xs text-ink-3">Claude no longer had this conversation, so it picked up in a new session from what was said so far.</p>}
               {turn.status !== "streaming" && (
@@ -1012,6 +1149,7 @@ const CiteChip = ({
         </div>
 
         <div className="shrink-0 p-4 pt-0">
+          <QueuedMessages queue={queue} onSendNow={sendQueuedNow} onEdit={editQueued} onRemove={removeQueued} onCite={onCite} />
           <div
             onMouseDown={focusComposer}
             className="flex cursor-text items-end gap-2 rounded-xl border border-line bg-surface py-2 pr-2 pl-3 focus-within:border-ink-3"
@@ -1040,9 +1178,18 @@ const CiteChip = ({
                 createPortal(<QuoteChip quote={quote} onCite={onCite} onRemove={() => removeQuote(quote.id)} />, host, quote.id),
               )}
             </div>
-            {busy ? (
-              <Button variant="secondary" size="sm" icon={Square} tooltip="Stop" aria-label="Stop" className="size-8 shrink-0 p-0" onClick={stop} />
-            ) : (
+            {busy && <Button variant="secondary" size="sm" icon={Square} tooltip="Stop" aria-label="Stop" className="size-8 shrink-0 p-0" onClick={stop} />}
+            {busy && !draft.empty && (
+              <Button
+                size="sm"
+                icon={ArrowUp}
+                tooltip="Queue"
+                aria-label="Queue"
+                className="size-8 shrink-0 p-0 transition-[opacity,scale] duration-pop ease-out starting:scale-80 starting:opacity-0 motion-reduce:starting:scale-100"
+                onClick={() => send(draft)}
+              />
+            )}
+            {!busy && (
               <Button
                 size="sm"
                 icon={ArrowUp}
