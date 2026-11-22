@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { createHashRouter, RouterProvider } from "react-router";
 import { AppShell } from "./components/app-shell";
+import { ShortcutsDialog } from "./components/shortcuts-dialog";
 import { ThemeSync } from "./lib/appearance";
 import { launchPlace, ON_LAUNCH_PREF } from "./lib/launch";
 import { getPref } from "./lib/prefs";
@@ -63,6 +64,7 @@ createRoot(root).render(
       <KeybindingsRoot />
       <TooltipProvider delay={400}>
       <RouterProvider router={router} />
+      <ShortcutsDialog />
       <Toaster />
       </TooltipProvider>
     </QueryClientProvider>

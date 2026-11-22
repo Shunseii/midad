@@ -20,55 +20,63 @@
  *   pass the key on.
  */
 
+/** The sections of the keyboard shortcuts list, in the order it shows them. */
+export const SHORTCUT_GROUPS = ["General", "Pages", "Reading", "Panels", "Text size", "Find", "Page scrubber", "Scan", "Notes", "Settings"] as const;
+
+export type ShortcutGroup = (typeof SHORTCUT_GROUPS)[number];
+
 export interface Command {
   keys: string | readonly string[];
-  /** What the command does, for tooltips and a future command palette. */
+  /** What the command does, for tooltips, the shortcuts list and a future command palette. */
   label: string;
+  /** Where the shortcuts list shows it. Commands without one (Escape to close, Enter to save a field) aren't listed. */
+  group?: ShortcutGroup;
   /** Also runs while typing in a field. */
   allowWhileTyping?: boolean;
 }
 
 export const COMMANDS = {
-  "text.bigger": { keys: ["Mod+=", "Mod+Shift+=", "Mod+NumpadAdd"], label: "Larger text", allowWhileTyping: true },
-  "text.smaller": { keys: ["Mod+-", "Mod+NumpadSubtract"], label: "Smaller text", allowWhileTyping: true },
-  "text.reset": { keys: ["Mod+0", "Mod+Numpad0"], label: "Reset to normal size", allowWhileTyping: true },
-  "find.open": { keys: "Mod+F", label: "Find on page" },
-  "bookmark.toggle": { keys: "Mod+D", label: "Bookmark page" },
-  "contents.toggle": { keys: "Mod+[", label: "Show or hide contents" },
-  "panel.toggle": { keys: "Mod+]", label: "Show or hide highlights and notes" },
-  "panels.toggle": { keys: "Mod+\\", label: "Show or hide both side panels" },
-  "edit.undo": { keys: "Mod+Z", label: "Undo" },
-  "edit.redo": { keys: ["Mod+Y", "Mod+Shift+Z"], label: "Redo" },
-  "focus.toggle": { keys: "F", label: "Focus mode" },
-  "focus.leave": { keys: "Escape", label: "Leave focus mode" },
-  "page.next": { keys: ["ArrowLeft", "PageDown"], label: "Next page" },
-  "page.previous": { keys: ["ArrowRight", "PageUp"], label: "Previous page" },
-  "harakat.toggle": { keys: "H", label: "Show or hide harakat" },
-  "scan.toggle": { keys: "S", label: "Show or hide scan" },
+  "shortcuts.show": { keys: "Shift+/", label: "Keyboard shortcuts", group: "General" },
+  "text.bigger": { keys: ["Mod+=", "Mod+Shift+=", "Mod+NumpadAdd"], label: "Larger text", group: "Text size", allowWhileTyping: true },
+  "text.smaller": { keys: ["Mod+-", "Mod+NumpadSubtract"], label: "Smaller text", group: "Text size", allowWhileTyping: true },
+  "text.reset": { keys: ["Mod+0", "Mod+Numpad0"], label: "Reset to normal size", group: "Text size", allowWhileTyping: true },
+  "find.open": { keys: "Mod+F", label: "Find on page", group: "Pages" },
+  "bookmark.toggle": { keys: "Mod+D", label: "Bookmark page", group: "Pages" },
+  "contents.toggle": { keys: "Mod+[", label: "Show or hide contents", group: "Panels" },
+  "panel.toggle": { keys: "Mod+]", label: "Show or hide highlights and notes", group: "Panels" },
+  "panels.toggle": { keys: "Mod+\\", label: "Show or hide both side panels", group: "Panels" },
+  "edit.undo": { keys: "Mod+Z", label: "Undo", group: "General" },
+  "edit.redo": { keys: ["Mod+Y", "Mod+Shift+Z"], label: "Redo", group: "General" },
+  "focus.toggle": { keys: "F", label: "Focus mode", group: "Reading" },
+  "focus.leave": { keys: "Escape", label: "Leave focus mode", group: "Reading" },
+  "page.next": { keys: ["ArrowLeft", "PageDown"], label: "Next page", group: "Pages" },
+  "page.previous": { keys: ["ArrowRight", "PageUp"], label: "Previous page", group: "Pages" },
+  "harakat.toggle": { keys: "H", label: "Show or hide harakat", group: "Reading" },
+  "scan.toggle": { keys: "S", label: "Show or hide scan", group: "Reading" },
   "reader.dismiss": { keys: "Escape", label: "Close" },
 
-  "find.next": { keys: ["Enter", "ArrowDown"], label: "Next match", allowWhileTyping: true },
-  "find.previous": { keys: ["Shift+Enter", "ArrowUp"], label: "Previous match", allowWhileTyping: true },
+  "find.next": { keys: ["Enter", "ArrowDown"], label: "Next match", group: "Find", allowWhileTyping: true },
+  "find.previous": { keys: ["Shift+Enter", "ArrowUp"], label: "Previous match", group: "Find", allowWhileTyping: true },
   "find.selectQuery": { keys: "Mod+F", label: "Select the search", allowWhileTyping: true },
   "find.close": { keys: "Escape", label: "Close", allowWhileTyping: true },
 
-  "scrubber.nextMark": { keys: "Shift+ArrowLeft", label: "Next marked page" },
-  "scrubber.previousMark": { keys: "Shift+ArrowRight", label: "Previous marked page" },
+  "scrubber.nextMark": { keys: "Shift+ArrowLeft", label: "Next marked page", group: "Page scrubber" },
+  "scrubber.previousMark": { keys: "Shift+ArrowRight", label: "Previous marked page", group: "Page scrubber" },
   "scrubber.next": { keys: ["ArrowLeft", "ArrowUp"], label: "Next page" },
   "scrubber.previous": { keys: ["ArrowRight", "ArrowDown"], label: "Previous page" },
-  "scrubber.forward": { keys: "PageDown", label: "Ten pages on" },
-  "scrubber.back": { keys: "PageUp", label: "Ten pages back" },
-  "scrubber.first": { keys: "Home", label: "First page" },
-  "scrubber.last": { keys: "End", label: "Last page" },
+  "scrubber.forward": { keys: "PageDown", label: "Ten pages on", group: "Page scrubber" },
+  "scrubber.back": { keys: "PageUp", label: "Ten pages back", group: "Page scrubber" },
+  "scrubber.first": { keys: "Home", label: "First page", group: "Page scrubber" },
+  "scrubber.last": { keys: "End", label: "Last page", group: "Page scrubber" },
   "scrubber.cancelDrag": { keys: "Escape", label: "Cancel dragging" },
 
-  "scan.fit": { keys: ["0", "Numpad0", "Escape"], label: "Fit to width" },
+  "scan.fit": { keys: ["0", "Numpad0", "Escape"], label: "Fit to width", group: "Scan" },
 
   "field.commit": { keys: "Enter", label: "Save", allowWhileTyping: true },
   "field.cancel": { keys: "Escape", label: "Cancel", allowWhileTyping: true },
-  "note.save": { keys: "Mod+Enter", label: "Save note", allowWhileTyping: true },
+  "note.save": { keys: "Mod+Enter", label: "Save note", group: "Notes", allowWhileTyping: true },
 
-  "settings.back": { keys: "Alt+ArrowLeft", label: "Back to the book", allowWhileTyping: true },
+  "settings.back": { keys: "Alt+ArrowLeft", label: "Back to the book", group: "Settings", allowWhileTyping: true },
   "settings.close": { keys: "Escape", label: "Back to the book" },
 } satisfies Record<string, Command>;
 
@@ -178,6 +186,9 @@ const KEY_NAMES: Record<string, string> = {
   NumpadSubtract: "−",
 };
 
+/** Shift with these keys is shown as the character it types: "?" rather than "Shift+/". */
+const SHIFTED: Record<string, string> = { "/": "?", "=": "+" };
+
 const keyName = (key: string) => KEY_NAMES[key] ?? (key.startsWith("Numpad") ? key.slice(6) : key.length === 1 ? key.toUpperCase() : key);
 
 /** The keys of a combo as shown to the reader, one entry per key: ["Ctrl", "D"], or ["⌘", "D"] on macOS. */
@@ -185,10 +196,12 @@ export const comboParts = (combo: string | Combo, { mac = IS_MAC }: { mac?: bool
   const c = typeof combo === "string" ? parseCombo(combo) : combo;
   const ctrl = c.ctrl || (c.mod && !mac);
   const meta = c.meta || (c.mod && mac);
+  const shifted = c.shift ? SHIFTED[c.key] : undefined;
+  const shift = c.shift && !shifted;
   const modifiers = mac
-    ? [ctrl && "⌃", c.alt && "⌥", c.shift && "⇧", meta && "⌘"]
-    : [ctrl && "Ctrl", c.alt && "Alt", c.shift && "Shift", meta && "Meta"];
-  return [...modifiers.filter((m): m is string => typeof m === "string"), keyName(c.key)];
+    ? [ctrl && "⌃", c.alt && "⌥", shift && "⇧", meta && "⌘"]
+    : [ctrl && "Ctrl", c.alt && "Alt", shift && "Shift", meta && "Meta"];
+  return [...modifiers.filter((m): m is string => typeof m === "string"), shifted ?? keyName(c.key)];
 };
 
 /** A combo as shown to the reader: "Ctrl+D", or "⌘D" on macOS. */
@@ -208,6 +221,17 @@ export const withShortcut = ({ label, command, mac }: { label: string; command: 
 /** A command's own label with its keys: "Bookmark page (Ctrl+D)". */
 export const shortcutLabel = (id: CommandId, options: { mac?: boolean } = {}): string =>
   withShortcut({ label: commandOf(id).label, command: id, mac: options.mac });
+
+/** The listed commands under each section of the keyboard shortcuts list, with the combos worth showing (no numpad duplicates). */
+export const shortcutSections = (): { group: ShortcutGroup; commands: { id: CommandId; label: string; combos: string[] }[] }[] =>
+  SHORTCUT_GROUPS.map((group) => ({
+    group,
+    commands: COMMAND_IDS.filter((id) => commandOf(id).group === group).map((id) => ({
+      id,
+      label: commandOf(id).label,
+      combos: keysOf(id).filter((combo) => !combo.includes("Numpad")),
+    })),
+  })).filter((section) => section.commands.length > 0);
 
 const ARIA_MODIFIERS = { ctrl: "Control", alt: "Alt", shift: "Shift", meta: "Meta" } as const;
 

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { ariaKeyShortcuts, COMMANDS, comboParts, type CommandId, formatCombo, keysOf, matchesCombo, matchesCommand, parseCombo, shortcutKeys, shortcutLabel, withShortcut } from "./keymap";
+import { ariaKeyShortcuts, COMMANDS, comboParts, type CommandId, formatCombo, keysOf, matchesCombo, matchesCommand, parseCombo, SHORTCUT_GROUPS, shortcutKeys, shortcutLabel, shortcutSections, withShortcut } from "./keymap";
 import { createKeyDispatcher, type DispatchedKey, handleKeys } from "./use-keybindings";
 
 interface FakeKey extends DispatchedKey {
@@ -240,3 +240,27 @@ describe("handleKeys", () => {
     expect(e.prevented || e.stopped).toBe(false);
   });
 });
+
+describe("the keyboard shortcuts list", () => {
+  it("shows ? for Shift+/ and + for Shift+=", () => {
+    expect(formatCombo("Shift+/", { mac: false })).toBe("?");
+    expect(formatCombo("Mod+Shift+=", { mac: false })).toBe("Ctrl++");
+    expect(comboParts("Shift+/", { mac: true })).toEqual(["?"]);
+  });
+
+  it("opens on ? from the physical key, so it works on an Arabic layout", () => {
+    const event = { key: "؟", code: "Slash", ctrlKey: false, metaKey: false, altKey: false, shiftKey: true };
+    expect(matchesCommand({ event, id: "shortcuts.show", mac: false })).toBe(true);
+    expect(matchesCommand({ event: { ...event, shiftKey: false }, id: "shortcuts.show", mac: false })).toBe(false);
+  });
+
+  it("lists grouped commands in section order, without numpad duplicates or unlisted commands", () => {
+    const sections = shortcutSections();
+    expect(sections.map((s) => s.group)).toEqual(SHORTCUT_GROUPS.filter((g) => sections.some((s) => s.group === g)));
+    expect(sections[0]?.commands[0]?.id).toBe("shortcuts.show");
+    const listed = sections.flatMap((s) => s.commands);
+    expect(listed.find((c) => c.id === "text.bigger")?.combos).toEqual(["Mod+=", "Mod+Shift+="]);
+    expect(listed.some((c) => c.id === "reader.dismiss" || c.id === "field.commit")).toBe(false);
+  });
+});
+

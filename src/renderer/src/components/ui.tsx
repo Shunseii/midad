@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { X } from "lucide-react";
-import { type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactElement, type ReactNode, type Ref, type RefObject, useEffect, useId, useRef } from "react";
+import { type ButtonHTMLAttributes, type InputHTMLAttributes, type KeyboardEvent, type ReactElement, type ReactNode, type Ref, type RefObject, useEffect, useId, useRef } from "react";
 import { toast } from "sonner";
 import { Badge as BadgeBase } from "@/components/ui/badge";
 import { Button as ButtonBase } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import { Switch as SwitchBase } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { OWN_KEYS } from "../lib/use-keybindings";
 
 const cx = cn;
 
@@ -236,6 +237,8 @@ export const Dialog = ({
   children,
   footer,
   initialFocus,
+  className,
+  onKeyDown,
 }: {
   title: string;
   description?: string;
@@ -243,12 +246,15 @@ export const Dialog = ({
   children: ReactNode;
   footer?: ReactNode;
   initialFocus?: RefObject<HTMLElement | null>;
+  className?: string;
+  onKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
 }) => {
   const popup = useRef<HTMLDivElement>(null);
   return (
     <DialogRoot open onOpenChange={(open) => !open && onClose()}>
       {/* The dialog opens without a trigger, so focus the panel rather than ringing its close button. */}
-      <DialogContent ref={popup} initialFocus={initialFocus ?? popup} showCloseButton={false}>
+      {/* Modal: the page's shortcuts stay out while it's open. */}
+      <DialogContent ref={popup} initialFocus={initialFocus ?? popup} showCloseButton={false} className={className} onKeyDown={onKeyDown} {...{ [OWN_KEYS]: "" }}>
         <DialogHeader>
           <div className="flex flex-1 flex-col gap-0.5">
             <DialogTitle>{title}</DialogTitle>
