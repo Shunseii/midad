@@ -57233,18 +57233,6 @@
       },
       "type": "frame"
     },
-    "R3K3yCkp": {
-      "content": "← → a page · Shift ← → a mark · PgUp PgDn ten · Home End",
-      "index": "a0",
-      "name": "Hint",
-      "parentId": "hj4oHe4K",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12
-      },
-      "type": "text"
-    },
     "R4SGnsrw": {
       "content": "3",
       "index": "a000",
@@ -92392,25 +92380,6 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
-      },
-      "type": "frame"
-    },
-    "hj4oHe4K": {
-      "css": "transition: opacity {transition.duration-pop-exit} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n}",
-      "index": "a2",
-      "name": "Keyboard hint",
-      "parentId": "WXPr4QxS",
-      "style": {
-        "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 999,
-        "bottom": 68,
-        "display": "flex",
-        "gap": 8,
-        "left": "50%",
-        "padding": "4px 10px",
-        "position": "absolute",
-        "translate": "-50% 0"
       },
       "type": "frame"
     },

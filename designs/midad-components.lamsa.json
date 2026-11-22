@@ -7690,18 +7690,6 @@
       },
       "type": "text"
     },
-    "oAsjqf7d": {
-      "content": "← → a page · Shift ← → a mark · PgUp PgDn ten · Home End",
-      "index": "a0",
-      "name": "Hint",
-      "parentId": "zeWgtqSi",
-      "style": {
-        "color": "{color.ink-3}",
-        "font-family": "{font.body}",
-        "font-size": 12
-      },
-      "type": "text"
-    },
     "oPDWpLaU": {
       "content": "content ↓ / variant →",
       "index": "a000",
@@ -9887,26 +9875,6 @@
         "variant": "primary"
       },
       "type": "instance"
-    },
-    "zeWgtqSi": {
-      "css": "transition: opacity {transition.duration-pop-exit} {ease.out};\n\n:focus-visible ~ & {\n  opacity: 1;\n  transition-duration: {transition.duration-pop};\n}",
-      "index": "a2",
-      "name": "Keyboard hint",
-      "parentId": "v8FmfBf5",
-      "style": {
-        "align-items": "center",
-        "background": "{color.surface-2}",
-        "border-radius": 999,
-        "bottom": 68,
-        "display": "flex",
-        "gap": 8,
-        "left": "50%",
-        "opacity": 0,
-        "padding": "4px 10px",
-        "position": "absolute",
-        "translate": "-50% 0"
-      },
-      "type": "frame"
     },
     "zoSQRonB": {
       "content": "line 1",

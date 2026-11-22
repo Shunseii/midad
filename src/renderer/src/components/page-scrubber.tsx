@@ -291,7 +291,7 @@ export const PageScrubber = ({
           cancelDrag();
           setKeyMark(null);
         }}
-        className="group/scrub peer absolute inset-x-0 bottom-5 h-8 cursor-pointer touch-none rounded-md outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-solid focus-visible:outline-accent"
+        className="group/scrub absolute inset-x-0 bottom-5 h-8 cursor-pointer touch-none rounded-md outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-solid focus-visible:outline-accent"
       >
         <div className="absolute inset-x-0 top-3.5 h-1 origin-center rounded-full bg-line transition-transform duration-pop-exit ease-out group-hover/scrub:scale-y-200 group-hover/scrub:duration-pop group-data-dragging/scrub:scale-y-200 motion-reduce:transition-none">
           <div
@@ -351,9 +351,6 @@ export const PageScrubber = ({
           />
         </div>
       </div>
-      <p className="pointer-events-none absolute bottom-17 left-1/2 -translate-x-1/2 rounded-full bg-surface-2 px-2.5 py-1 text-xs whitespace-nowrap text-ink-3 opacity-0 transition-opacity duration-pop-exit ease-out peer-focus-visible:opacity-100 peer-focus-visible:duration-pop peer-hover:opacity-0! peer-data-key-mark:opacity-0!">
-        ← → a page · Shift ← → a mark · PgUp PgDn ten · Home End
-      </p>
     </div>
   );
 };
