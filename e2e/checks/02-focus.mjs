@@ -41,6 +41,28 @@ export const checks = [
     },
   ],
   [
+    "clicking the page leaves the Ask AI input, so shortcuts work again",
+    async (page) => {
+      const composer = '[role=textbox][aria-multiline]';
+      await openReader(page, { bookId: LONG_BOOK, position: 50 });
+      await page.click('[aria-label^="Ask AI"]');
+      await page.waitFor(`!!document.querySelector('${composer}')`, { message: "Ask AI didn't open" });
+      await page.waitStill(composer);
+      await page.click(composer);
+      await page.waitFor(`document.activeElement?.matches('${composer}')`, { message: "clicking the Ask AI input didn't focus it" });
+      // In the margin beside a line: a press near the text starts the page's own drag selection, which stops the
+      // browser moving focus.
+      const area = await page.rectOf("[data-page-area]");
+      const word = await page.rectOf("[data-w]");
+      await page.clickAt(area.x + 12, word.y + word.height / 2);
+      await page.sleep(150);
+      assert.equal(await page.ev(`document.activeElement?.matches('${composer}') ?? false`), false, "the Ask AI input kept focus after clicking the page");
+      await page.press("ArrowLeft");
+      assert.equal(await pageChangedFrom(page, 50, "← after leaving the Ask AI input didn't turn the page"), 51, "← is the next page");
+      await page.click('[aria-label^="Ask AI"]');
+    },
+  ],
+  [
     "the Find field keeps focus and types '?'",
     async (page) => {
       await openReader(page, { bookId: LONG_BOOK, position: 50 });
