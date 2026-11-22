@@ -7,8 +7,8 @@ import { createHashRouter, RouterProvider } from "react-router";
 import { AppShell } from "./components/app-shell";
 import { ShortcutsDialog } from "./components/shortcuts-dialog";
 import { ThemeSync } from "./lib/appearance";
-import { launchPlace, ON_LAUNCH_PREF } from "./lib/launch";
-import { getPref } from "./lib/prefs";
+import { LAST_SCREEN_PREF, launchPlace, ON_LAUNCH_PREF, screenOf } from "./lib/launch";
+import { getPref, setPref } from "./lib/prefs";
 import { KeybindingsRoot } from "./lib/use-keybindings";
 import { keys, midad } from "./lib/midad";
 import { dropFocusFromClickedControls } from "./lib/pointer-focus";
@@ -45,7 +45,7 @@ const openLastBook = async () => {
   if (onLaunch !== "continue" || router.state.location.pathname !== "/") return;
   try {
     const books = await queryClient.fetchQuery({ queryKey: keys.library, queryFn: () => midad["library.list"]() });
-    const place = launchPlace({ onLaunch, books });
+    const place = launchPlace({ onLaunch, lastScreen: getPref(LAST_SCREEN_PREF), books });
     if (!place) return;
     const state: ReaderState | null = place.anchor ? { anchor: place.anchor } : null;
     await router.navigate(`/read/${place.bookId}?p=${place.position}`, { replace: true, state });
@@ -58,6 +58,9 @@ const root = document.getElementById("root");
 if (!root) throw new Error("#root is missing from index.html");
 
 await openLastBook();
+const recordScreen = (pathname: string) => setPref({ key: LAST_SCREEN_PREF.key, value: screenOf(pathname) });
+recordScreen(router.state.location.pathname);
+router.subscribe(({ location }) => recordScreen(location.pathname));
 
 createRoot(root).render(
   <StrictMode>

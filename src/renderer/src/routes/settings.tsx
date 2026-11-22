@@ -76,7 +76,7 @@ const ON_LAUNCH_CHOICES: { value: OnLaunch; label: string }[] = [
 
 const ON_LAUNCH_HINTS: Record<OnLaunch, string> = {
   library: "Midad opens to your library.",
-  continue: "Midad opens the last book you read, where you left off.",
+  continue: "Midad opens where you left off: your book at the page you were on, or the library if you closed it there.",
 };
 
 const Appearance = () => {
