@@ -8,8 +8,15 @@ import { SyncDialog } from "../components/sync-dialog";
 import { Button, IconButton, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
 import { plural, timeAgo } from "../lib/format";
 import { useLibrary, useSettings } from "../lib/midad";
+import { switchListInTransition } from "../lib/view-transition";
 
 type Shelf = "all" | "reading" | "finished";
+
+const SHELVES: { value: Shelf; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "reading", label: "Reading" },
+  { value: "finished", label: "Finished" },
+];
 
 const isFinished = (b: LibraryBook) => b.progress !== null && b.progress.position >= b.pageCount;
 
@@ -109,12 +116,8 @@ export const LibraryRoute = () => {
         <Segmented
           label="Shelf"
           value={shelf}
-          onChange={setShelf}
-          options={[
-            { value: "all", label: "All" },
-            { value: "reading", label: "Reading" },
-            { value: "finished", label: "Finished" },
-          ]}
+          onChange={(next) => switchListInTransition({ list: "library", order: SHELVES.map((s) => s.value), from: shelf, to: next, apply: setShelf })}
+          options={SHELVES}
         />
         <Button icon={Download} onClick={() => setImporting(true)}>
           Import
@@ -132,6 +135,7 @@ export const LibraryRoute = () => {
         </div>
       )}
 
+      <div data-switch-list="library" className="flex flex-col gap-8">
       {library.isPending && (
         <div className="grid grid-cols-shelf gap-6">
           {[0, 1, 2].map((i) => (
@@ -173,6 +177,7 @@ export const LibraryRoute = () => {
           )}
         </section>
       )}
+      </div>
 
       {importing && (
         <ImportDialog

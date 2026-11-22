@@ -547,8 +547,8 @@ body {
 
 /*
  * Switching a tabbed list: the sidebar's Contents | Bookmarks, the right
- * panel's Highlights | Notes, and the right panel itself between the notes and
- * Ask AI (data-list-switch, see switchListInTransition).
+ * panel's Highlights | Notes, the right panel itself between the notes and
+ * Ask AI, and the library's shelves (data-list-switch, see switchListInTransition).
  * Only the list under the tabs moves: the old one fades out quickly toward the
  * side it leaves, the new one slides a short way in from the side of the picked
  * tab. Everything else, the tabs included, changes in place so their indicator
@@ -560,7 +560,8 @@ body {
 }
 :root[data-list-switch-target="sidebar"] [data-switch-list="sidebar"],
 :root[data-list-switch-target="annotations"] [data-switch-list="annotations"],
-:root[data-list-switch-target="panel"] [data-switch-list="panel"] {
+:root[data-list-switch-target="panel"] [data-switch-list="panel"],
+:root[data-list-switch-target="library"] [data-switch-list="library"] {
   view-transition-name: switch-list !important;
 }
 :root[data-list-switch]::view-transition-group(*),
