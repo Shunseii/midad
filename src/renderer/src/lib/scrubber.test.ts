@@ -223,4 +223,13 @@ describe("markCluster", () => {
   it("lists a page once however many marks it has", () => {
     expect(markCluster({ pages: [10, 10, 11, 11], around: 10, ...dense })).toEqual([10, 11]);
   });
+
+  it("leaves out nearby marks that have their own dot, so pointing at a bookmark shows just its page", () => {
+    // 2000 pages on 760px: pages 100 and 112 are about 4.6px apart, both drawn.
+    expect(markCluster({ pages: [100, 112, 95], drawn: [100, 112, 95], around: 100, total: 2000, width: 760 })).toEqual([100]);
+  });
+
+  it("keeps thinned-away marks whose nearest dot is the pointed one", () => {
+    expect(markCluster({ pages: [100, 103, 112, 110], drawn: [100, 112], around: 100, total: 2000, width: 760 })).toEqual([100, 103]);
+  });
 });

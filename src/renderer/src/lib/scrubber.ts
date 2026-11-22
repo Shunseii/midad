@@ -165,19 +165,24 @@ export const CLUSTER_MAX = 3;
 
 /**
  * The marked pages a preview around `around` covers: that page first, then
- * the other marked pages drawn within `radius` px of it, nearest first. Where
- * marks crowd together they can't be told apart by pointing, so the card
- * shows them side by side.
+ * the marked pages within `radius` px of it that have no dot of their own on
+ * the line (thinned away) and whose nearest dot is this one, nearest first.
+ * Those can't be pointed at, so the card shows them beside the page; a mark
+ * that is drawn gets its own card when pointed at instead.
  */
 export const markCluster = ({
   pages,
+  drawn = [],
   around,
   total,
   width,
   radius = MARK_HIT_PX,
   max = CLUSTER_MAX,
 }: {
+  /** Every marked page, drawn or not. */
   pages: number[];
+  /** The pages that have a dot on the line. */
+  drawn?: number[];
   around: number;
   total: number;
   width: number;
@@ -185,8 +190,14 @@ export const markCluster = ({
   max?: number;
 }): number[] => {
   const x = (page: number) => pageFraction({ position: page, total }) * width;
+  const dots = new Set([...drawn, around]);
+  const nearestDot = (page: number) => {
+    let best = around;
+    for (const d of dots) if (Math.abs(x(d) - x(page)) < Math.abs(x(best) - x(page))) best = d;
+    return best;
+  };
   const others = [...new Set(pages)]
-    .filter((p) => p !== around && Math.abs(x(p) - x(around)) <= radius)
+    .filter((p) => !dots.has(p) && Math.abs(x(p) - x(around)) <= radius && nearestDot(p) === around)
     // Pages are evenly spaced, so the page gap orders them by distance without rounding noise.
     .sort((a, b) => Math.abs(a - around) - Math.abs(b - around) || a - b);
   return [around, ...others].slice(0, max);

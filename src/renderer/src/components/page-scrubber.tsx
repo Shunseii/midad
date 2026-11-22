@@ -236,7 +236,7 @@ export const PageScrubber = ({
   const hoveredMark = drag?.moved ? null : (pointed ?? keyMark);
   const numberOf = (page: number) => pages[page - 1]?.number ?? null;
   // A key-stepped mark previews just its page; a pointed one, the marks crowded around it too.
-  const cluster = hoveredMark === null ? [] : hoveredMark === pointed ? markCluster({ pages: allMarkedPages, around: hoveredMark, total, width }) : [hoveredMark];
+  const cluster = hoveredMark === null ? [] : hoveredMark === pointed ? markCluster({ pages: allMarkedPages, drawn: markedPages, around: hoveredMark, total, width }) : [hoveredMark];
   const markedPage = (page: number): MarkedPage => ({
     page,
     number: numberOf(page),
@@ -483,6 +483,9 @@ const MarkPreview = ({ bookId, cluster, x }: { bookId: string; cluster: MarkedPa
   if (cluster.length > 0) last.current = cluster;
   const shown = last.current;
   const open = cluster.length > 0;
+  // And where it was, so it fades out in place rather than at the bar's end.
+  const lastX = useRef(x);
+  if (open) lastX.current = x;
   const key = cluster.map((m) => m.page).join(",");
   const [settled, setSettled] = useState<string | null>(null);
   useEffect(() => {
@@ -491,7 +494,7 @@ const MarkPreview = ({ bookId, cluster, x }: { bookId: string; cluster: MarkedPa
     return () => clearTimeout(timer);
   }, [key]);
   return (
-    <div aria-hidden data-mark-preview data-state={open ? "open" : "closed"} style={{ left: x }} className={cx(PREVIEW_CARD, "max-h-96 overflow-hidden")}>
+    <div aria-hidden data-mark-preview data-state={open ? "open" : "closed"} style={{ left: lastX.current }} className={cx(PREVIEW_CARD, "max-h-96 overflow-hidden")}>
       {shown.map((marked, i) => (
         <MarkSection key={marked.page} bookId={bookId} marked={marked} load={open && settled === key} primary={i === 0} />
       ))}
@@ -518,6 +521,8 @@ const PagePreview = ({
   const last = useRef<{ page: number; number: number | null; chapter: string | null } | null>(null);
   if (page !== null) last.current = { page, number, chapter };
   const shown = last.current;
+  const lastX = useRef(x);
+  if (page !== null) lastX.current = x;
   const [settled, setSettled] = useState<number | null>(null);
   useEffect(() => {
     if (page === null) return;
@@ -530,7 +535,7 @@ const PagePreview = ({
     <div
       aria-hidden
       data-state={page === null ? "closed" : "open"}
-      style={{ left: x }}
+      style={{ left: lastX.current }}
       data-page-preview
       className={PREVIEW_CARD}
     >
