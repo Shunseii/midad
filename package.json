@@ -11,6 +11,7 @@
     "start": "electron-vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
+    "test:app": "node --no-warnings e2e/run.mjs",
     "build:cli": "vite build -c vite.cli.config.ts && chmod +x out/cli/midad.mjs"
   },
   "devDependencies": {

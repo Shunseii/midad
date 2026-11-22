@@ -72,6 +72,18 @@ pnpm test         # vitest
 pnpm typecheck
 ```
 
+### End-to-end checks
+
+`pnpm test:app` drives the built app the way a person does: it starts Electron headless, then clicks, drags, scrolls and types through the Chrome DevTools Protocol, and checks what happens on screen (the scrubber, focus rings, shortcuts, contents, Ask AI, library transitions, focus mode). It doesn't build anything, so build first:
+
+```sh
+pnpm build && pnpm build:cli
+pnpm test:app            # every group, about a minute
+pnpm test:app ask        # only groups whose name or file matches
+```
+
+Each group starts the app on a fresh copy of a synthetic library (a 300-page book with contents, highlights, notes and bookmarks, and a 20-page one) in a temporary `MIDAD_USER_DATA` folder, so your own library is never touched. Ask AI talks to a fake `claude` that streams a long answer. The checks live in `e2e/checks/`, one file per group; the CDP helpers and fixture are in `e2e/lib/`.
+
 ### The `midad` CLI
 
 ```sh
