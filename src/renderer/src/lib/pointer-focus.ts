@@ -10,6 +10,8 @@ const CONTROL = 'button, a[href], [role="button"], [role="slider"], [role="tab"]
 export const dropFocusFromClickedControls = () => {
   const clicked = new WeakSet<Element>();
   let tabbing = false;
+  // Focus that arrives during a press is the press's own, not focus handed back; dropping it would end a scrubber drag.
+  let pressing = false;
 
   const release = (el: Element) =>
     requestAnimationFrame(() => {
@@ -17,7 +19,15 @@ export const dropFocusFromClickedControls = () => {
     });
 
   document.addEventListener("keydown", (e) => (tabbing = e.key === "Tab"), true);
-  document.addEventListener("pointerdown", () => (tabbing = false), true);
+  document.addEventListener(
+    "pointerdown",
+    () => {
+      tabbing = false;
+      pressing = true;
+    },
+    true,
+  );
+  for (const type of ["pointerup", "pointercancel"]) document.addEventListener(type, () => (pressing = false), true);
   document.addEventListener("click", (e) => {
     // A click from the keyboard (Enter or Space on a focused button) keeps focus where it is.
     if (e.detail === 0 || !(e.target instanceof Element)) return;
@@ -28,6 +38,6 @@ export const dropFocusFromClickedControls = () => {
   });
   // A menu or popover hands focus back to the button that opened it when it closes.
   document.addEventListener("focusin", (e) => {
-    if (e.target instanceof Element && clicked.has(e.target) && !tabbing) release(e.target);
+    if (e.target instanceof Element && clicked.has(e.target) && !tabbing && !pressing) release(e.target);
   });
 };
