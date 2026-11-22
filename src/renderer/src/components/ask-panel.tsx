@@ -653,12 +653,22 @@ const CiteChip = ({
       const el = scroller.current;
       if (el) el.scrollTop = el.scrollHeight;
     }, []);
+    // Set while Jump to latest scrolls down: its own scroll events aren't the reader scrolling away.
+    const jumping = useRef(false);
     const onScroll = () => {
       const el = scroller.current;
       if (!el) return;
       const bottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+      if (jumping.current) {
+        if (!bottom) return;
+        jumping.current = false;
+      }
       pinned.current = bottom;
       setAtBottom(bottom);
+    };
+    // The reader's own wheel or press takes over from a jump in progress.
+    const stopJump = () => {
+      jumping.current = false;
     };
     // A conversation opens at its latest message.
     useLayoutEffect(() => {
@@ -829,7 +839,7 @@ const CiteChip = ({
           className={cx("flex min-h-0 flex-1 flex-col", screen.moved && "animate-in fade-in slide-in-from-left-6 duration-slide ease-move motion-reduce:slide-in-from-left-0")}
         >
         <div className="relative flex min-h-0 flex-1 flex-col">
-        <div ref={scroller} onScroll={onScroll} className="min-h-0 flex-1 overflow-y-auto">
+        <div ref={scroller} onScroll={onScroll} onWheel={stopJump} onPointerDown={stopJump} className="min-h-0 flex-1 overflow-y-auto">
         <div ref={content} className="flex flex-col gap-5 p-5">
           {activeSelection && (
             <div className="flex flex-col gap-2 rounded-xl bg-surface-2 px-4 py-3">
@@ -926,6 +936,7 @@ const CiteChip = ({
             className="absolute bottom-3 left-1/2 size-8 -translate-x-1/2 rounded-full p-0 shadow-md transition-[opacity,translate] duration-pop ease-out data-[state=hidden]:pointer-events-none data-[state=hidden]:translate-y-2 data-[state=hidden]:opacity-0 motion-reduce:transition-none"
             onClick={() => {
               pinned.current = true;
+              jumping.current = true;
               scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
             }}
           />
