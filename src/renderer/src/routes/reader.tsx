@@ -181,6 +181,25 @@ const useActiveIndicator = (active: number[]) => {
   const [box, setBox] = useState<{ top: number; height: number; animate: boolean } | null>(null);
   const first = active.length ? Math.min(...active) : -1;
   const last = active.length ? Math.max(...active) : -1;
+  // Resizing the panel rewraps the titles: measure again, in place.
+  useLayoutEffect(() => {
+    const el = list.current;
+    if (!el) return;
+    // It also fires once when it starts watching; the chapter change above already measured, and may be sliding.
+    let started = false;
+    const observer = new ResizeObserver(() => {
+      if (!started) {
+        started = true;
+        return;
+      }
+      const items = el.querySelectorAll<HTMLElement>("[data-entry]");
+      const top = items[first];
+      const bottom = items[last];
+      if (top && bottom) setBox({ top: top.offsetTop, height: bottom.offsetTop + bottom.offsetHeight - top.offsetTop, animate: false });
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [first, last]);
   useLayoutEffect(() => {
     const items = list.current?.querySelectorAll<HTMLElement>("[data-entry]");
     const top = items?.[first];
