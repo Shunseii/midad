@@ -208,7 +208,7 @@ export const BookmarkList = ({
   if (bookmarks.length === 0) {
     return (
       <div className="flex flex-col items-center gap-3 px-3 py-12 text-center starting:opacity-0 transition-opacity duration-pop ease-out motion-reduce:transition-none">
-        <span className="flex size-12 items-center justify-center rounded-full bg-surface">
+        <span className="flex size-12 items-center justify-center rounded-full bg-surface-2">
           <BookmarkIcon aria-hidden className="size-5 text-ink-3" />
         </span>
         <span className="flex flex-col gap-1">

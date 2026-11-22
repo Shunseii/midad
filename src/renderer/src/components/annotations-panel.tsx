@@ -8,6 +8,7 @@ import { switchListInTransition } from "../lib/view-transition";
 import { MARK_BG } from "./page-view";
 import { Badge, IconButton, Segmented, cx } from "./ui";
 import { Textarea } from "./ui/textarea";
+import { SidePanel, SidePanelBody } from "./side-panel";
 
 export type PanelTab = "highlights" | "notes" | "ask";
 
@@ -162,45 +163,37 @@ export const AnnotationsPanel = ({
 }) => {
   const items = tab === "highlights" ? (annotations?.highlights ?? []) : (annotations?.notes ?? []);
   return (
-    <aside aria-label={tab === "ask" ? "Ask AI" : "Annotations"} style={{ width }} className="relative flex min-h-0 shrink-0 flex-col border-l border-line bg-surface">
-      <div
-        role="separator"
-        aria-orientation="vertical"
-        aria-label="Resize panel"
-        title="Drag to resize · double-click to reset"
-        onDoubleClick={onResetSize}
-        onPointerDown={(e) => {
-          e.preventDefault();
-          const handle = e.currentTarget;
-          handle.setPointerCapture(e.pointerId);
-          const startX = e.clientX;
-          const move = (ev: PointerEvent) => onResize(width + startX - ev.clientX);
-          handle.addEventListener("pointermove", move);
-          handle.addEventListener("pointerup", () => handle.removeEventListener("pointermove", move), { once: true });
-        }}
-        className="absolute inset-y-0 -left-1 z-10 w-2 cursor-col-resize transition-colors hover:bg-accent-soft active:bg-accent-soft"
-      />
-      <div className="flex h-15 shrink-0 items-center gap-2 border-b border-line px-4">
-        {tab === "ask" ? (
-          <h2 className="flex items-center gap-2 text-sm font-semibold">
-            <Sparkles className="size-4 text-accent" /> Ask AI
-          </h2>
-        ) : (
-          <Segmented
-            label="Annotations"
-            value={tab}
-            onChange={(next) => switchListInTransition({ list: "annotations", order: ANNOTATION_TABS.map((t) => t.value), from: tab, to: next, apply: onTab })}
-            options={ANNOTATION_TABS}
-          />
-        )}
-        <span className="flex-1" />
-        <IconButton icon={X} label="Close panel" onClick={onClose} />
-      </div>
+    <SidePanel
+      side="right"
+      label={tab === "ask" ? "Ask AI" : "Annotations"}
+      width={width}
+      onResize={onResize}
+      onResetSize={onResetSize}
+      switchList="panel"
+      header={
+        <>
+          {tab === "ask" ? (
+            <h2 className="flex items-center gap-2 text-sm font-semibold">
+              <Sparkles className="size-4 text-accent" /> Ask AI
+            </h2>
+          ) : (
+            <Segmented
+              label="Annotations"
+              value={tab}
+              onChange={(next) => switchListInTransition({ list: "annotations", order: ANNOTATION_TABS.map((t) => t.value), from: tab, to: next, apply: onTab })}
+              options={ANNOTATION_TABS}
+            />
+          )}
+          <span className="flex-1" />
+          <IconButton icon={X} label="Close panel" onClick={onClose} />
+        </>
+      }
+    >
       {tab === "ask" ? (
         askPanel
       ) : (
       // Keyed by tab, so each list starts at its top.
-      <div key={tab} data-switch-list="annotations" className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-5">
+      <SidePanelBody key={tab} switchList="annotations" className="gap-4 p-5">
         <h2 className="flex items-center gap-2 text-heading font-semibold">
           {tab === "highlights" ? "Highlights on this page" : "Notes on this page"}
           {items.length > 0 && <Badge>{items.length}</Badge>}
@@ -241,8 +234,8 @@ export const AnnotationsPanel = ({
               : "Notes belong to this page. Click a note's text to edit it here, or open it from the page."}
           </p>
         )}
-      </div>
+      </SidePanelBody>
       )}
-    </aside>
+    </SidePanel>
   );
 };

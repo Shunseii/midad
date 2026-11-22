@@ -1,4 +1,4 @@
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Search, Sparkles } from "lucide-react";
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Search, Sparkles, X } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -8,6 +8,7 @@ import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../sha
 import type { BookDetail, Bookmark as SavedBookmark, ScrollAnchor, StoredPage } from "../../../shared/library";
 import { DisplayMenu, stepScale, WHEEL_STEP, ZOOM_SHOWN_MS, ZoomLevel } from "../components/display-menu";
 import { InlinePanel, SideSheet } from "../components/side-sheet";
+import { SidePanel, SidePanelBody } from "../components/side-panel";
 import { useMediaQuery } from "../lib/media";
 import { NoteEditor, NoteLayer, NotePeek, NoteRowPeek, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
@@ -59,6 +60,8 @@ const tableOfContents = (book: BookDetail): TocEntry[] => {
 
 /** Matches the contents rail's w-62. */
 const CONTENTS_WIDTH = 248;
+const CONTENTS_MIN = 200;
+const CONTENTS_MAX = 420;
 const PANEL_WIDTH = 400;
 /** Ask AI opens wider than highlights and notes, until the reader sizes it themselves. */
 const ASK_WIDTH = 560;
@@ -201,6 +204,10 @@ const ContentsRail = ({
   tab,
   onTab,
   bookmarks,
+  width,
+  onResize,
+  onResetSize,
+  onClose,
 }: {
   entries: TocEntry[];
   /** The entries whose text is on screen. */
@@ -209,21 +216,37 @@ const ContentsRail = ({
   tab: SidebarTab;
   onTab: (tab: SidebarTab) => void;
   bookmarks: ReactNode;
+  width: number;
+  onResize: (width: number) => void;
+  onResetSize: () => void;
+  onClose: () => void;
 }) => (
-  <nav aria-label={tab === "contents" ? "Contents" : "Bookmarks"} className="flex w-62 shrink-0 flex-col border-r border-line bg-bg pt-6">
-    <Segmented<SidebarTab>
-      label="Sidebar"
-      value={tab}
-      onChange={(next) => switchListInTransition({ list: "sidebar", order: SIDEBAR_TABS.map((t) => t.value), from: tab, to: next, apply: onTab })}
-      options={SIDEBAR_TABS}
-      fullWidth
-      className="mx-4 mb-3"
-    />
+  <SidePanel
+    side="left"
+    as="nav"
+    label={tab === "contents" ? "Contents" : "Bookmarks"}
+    width={width}
+    onResize={onResize}
+    onResetSize={onResetSize}
+    header={
+      <>
+        <Segmented<SidebarTab>
+          label="Sidebar"
+          value={tab}
+          onChange={(next) => switchListInTransition({ list: "sidebar", order: SIDEBAR_TABS.map((t) => t.value), from: tab, to: next, apply: onTab })}
+          options={SIDEBAR_TABS}
+          fullWidth
+          className="min-w-0 flex-1"
+        />
+        <IconButton icon={X} label="Hide contents" onClick={onClose} />
+      </>
+    }
+  >
     {/* Keyed by tab, so each list starts at its top. */}
-    <div key={tab} className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto px-4 pb-6" data-switch-list="sidebar">
+    <SidePanelBody key={tab} switchList="sidebar" className="gap-0.5 px-4 py-4">
       {tab === "contents" ? <ContentsList entries={entries} active={active} onGo={onGo} /> : bookmarks}
-    </div>
-  </nav>
+    </SidePanelBody>
+  </SidePanel>
 );
 
 const ContentsList = ({ entries, active, onGo }: { entries: TocEntry[]; active: number[]; onGo: (position: number) => void }) => {
@@ -251,7 +274,7 @@ const ContentsList = ({ entries, active, onGo }: { entries: TocEntry[]; active: 
             onClick={() => onGo(e.position)}
             className={cx(
               "relative flex items-center gap-2 rounded-lg px-2.5 py-1 text-left transition-colors",
-              active.includes(i) ? "text-accent" : "text-ink-2 hover:bg-surface hover:text-ink",
+              active.includes(i) ? "text-accent" : "text-ink-2 hover:bg-ink/5 hover:text-ink",
               e.level > 2 && "pl-5",
             )}
           >
@@ -336,6 +359,7 @@ export const ReaderRoute = () => {
   const panelOpen = wide ? panelPref : panelSheet;
   const setPanelOpen = wide ? setPanelPref : setPanelSheet;
   const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: PANEL_WIDTH });
+  const [contentsWidth, setContentsWidth] = usePref({ key: "reader.contentsWidth", fallback: CONTENTS_WIDTH });
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
   const [annotationsTab, setAnnotationsTab] = usePref<Exclude<PanelTab, "ask">>({ key: "reader.annotationsTab", fallback: "highlights" });
   const [askWidth, setAskWidth] = usePref<number | null>({ key: "reader.askWidth", fallback: null });
@@ -995,7 +1019,7 @@ export const ReaderRoute = () => {
     focusOn,
     wide,
     scanBeside: showScan && !!page.data,
-    contentsWidth: contentsShown ? CONTENTS_WIDTH : 0,
+    contentsWidth: contentsShown ? contentsWidth : 0,
     sideWidth: panelShown ? sideWidth : 0,
   });
   const panelRoom = wide && focused && panelShown ? sideWidth : 0;
@@ -1106,6 +1130,13 @@ export const ReaderRoute = () => {
     );
   }
 
+
+  const contentsSize = {
+    width: contentsWidth,
+    onResize: (w: number) => setContentsWidth(Math.round(Math.min(Math.max(w, CONTENTS_MIN), CONTENTS_MAX, window.innerWidth * 0.4))),
+    onResetSize: () => setContentsWidth(CONTENTS_WIDTH),
+    onClose: () => setContentsOpen(false),
+  };
 
   const sidePanel = (
     <AnnotationsPanel
@@ -1245,13 +1276,13 @@ export const ReaderRoute = () => {
 
       <div className="flex min-h-0 flex-1">
         {wide ? (
-          <InlinePanel side="left" open={contentsShown} width={CONTENTS_WIDTH}>
+          <InlinePanel side="left" open={contentsShown} width={contentsWidth}>
             <div
               {...chromeHover}
               data-focus={focused ? "hidden" : undefined}
               className="flex transition-[translate,opacity] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:-translate-x-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
             >
-              <ContentsRail entries={toc} active={activeEntries} onGo={go} tab={sidebarTab} onTab={setSidebarTab} bookmarks={bookmarkList(go)} />
+              <ContentsRail entries={toc} active={activeEntries} onGo={go} tab={sidebarTab} onTab={setSidebarTab} bookmarks={bookmarkList(go)} {...contentsSize} />
             </div>
           </InlinePanel>
         ) : (
@@ -1261,6 +1292,7 @@ export const ReaderRoute = () => {
               active={activeEntries}
               tab={sidebarTab}
               onTab={setSidebarTab}
+              {...contentsSize}
               bookmarks={bookmarkList((at) => {
                 setContentsOpen(false);
                 go(at);

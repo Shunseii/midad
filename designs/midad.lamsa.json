@@ -469,6 +469,20 @@
       "style": {},
       "type": "instance"
     },
+    "0DjQk43h": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "P4KV72Uh",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "0DqhqS7Q": {
       "componentId": "RV1DOgzp",
       "index": "a002",
@@ -1250,13 +1264,14 @@
       "name": "Sidebar · Bookmarks",
       "parentId": "2D8XlLEQ",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -1807,6 +1822,20 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "0q4Cb7nB": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "k747D4uc",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "0qKqgk0Y": {
       "index": "a007",
@@ -2952,7 +2981,6 @@
       "type": "frame"
     },
     "1RNgK7EW": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "z0",
       "name": "Side panel",
       "parentId": "RxrZ7yPt",
@@ -2963,6 +2991,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 420
       },
       "type": "frame"
@@ -4203,13 +4232,14 @@
       "name": "Contents",
       "parentId": "mh1mlX2b",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -5128,6 +5158,20 @@
         "font-size": 12
       },
       "type": "text"
+    },
+    "2Zds51gF": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "3ZabUHRh",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "2Zv2stfr": {
       "content": "متن الآجرومية",
@@ -7206,13 +7250,14 @@
       "name": "Contents",
       "parentId": "cYxW4tMg",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -7406,6 +7451,20 @@
         "width": 14
       },
       "type": "icon"
+    },
+    "3hHzY0fK": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "6d7c8zmI",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "3hIJ6VFB": {
       "index": "a4",
@@ -7845,6 +7904,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "3uUqLEuF": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "NdNLMlmV",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "3vIoMGKj": {
       "index": "a005",
@@ -10429,6 +10502,20 @@
       },
       "type": "frame"
     },
+    "553VTVzt": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "v9vyUu1m",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "55Odib0X": {
       "css": "transition: background-color {transition.duration-press} {ease.out};\ncursor: pointer;\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: color-mix(in oklab, {color.ink} 5%, transparent);\n}",
       "index": "a00",
@@ -12060,6 +12147,20 @@
       },
       "type": "text"
     },
+    "5p4iBTpH": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "Hd8SjCes",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "5pwKDygs": {
       "index": "a0",
       "name": "Frame",
@@ -12091,13 +12192,14 @@
       "name": "Contents",
       "parentId": "jL0FcADC",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -13428,13 +13530,14 @@
       "name": "Contents",
       "parentId": "DP941Ugn",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -14045,6 +14148,20 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "6yPM2gmz": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "5rKJHxig",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "7011YPBs": {
       "content": "المفيدُ بالوضعِ",
@@ -14938,6 +15055,22 @@
         "gap": 4
       },
       "type": "frame"
+    },
+    "7RHFF2FX": {
+      "componentId": "RV1DOgzp",
+      "index": "a1",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "x"
+        }
+      },
+      "parentId": "P5pRktaK",
+      "props": {
+        "label": "Hide contents",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "7RXdOo4m": {
       "content": "، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
@@ -16007,13 +16140,14 @@
       "name": "Contents",
       "parentId": "HUbKJcBG",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -18360,13 +18494,14 @@
       "name": "Contents rail",
       "parentId": "TQOpml5M",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -19198,13 +19333,14 @@
       "name": "Contents",
       "parentId": "B26PVDzR",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -19513,14 +19649,29 @@
       "name": "Contents",
       "parentId": "JSjawCy9",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
+      },
+      "type": "frame"
+    },
+    "9ntx0AZi": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "UZvIca5t",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -19953,13 +20104,14 @@
       "name": "Sidebar · Bookmarks",
       "parentId": "7dJBjXDy",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -20022,6 +20174,20 @@
         "width": 16
       },
       "type": "icon"
+    },
+    "A3w1yR66": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "DG8njKBS",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "A4KpEyc3": {
       "index": "a1",
@@ -21921,13 +22087,14 @@
       "name": "Contents",
       "parentId": "eXgt6Yq7",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -22495,13 +22662,14 @@
       "name": "Contents",
       "parentId": "cLnsusQx",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -22779,6 +22947,20 @@
       },
       "type": "frame"
     },
+    "BVUegBNm": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "PLUyB9ne",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "BWGZMC7D": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
       "index": "a000",
@@ -22869,6 +23051,20 @@
         "text-align": "justify",
         "text-align-last": "right",
         "text-indent": "-1.5em"
+      },
+      "type": "frame"
+    },
+    "BYWHOzDg": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "U95eZBCZ",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -23724,6 +23920,20 @@
       },
       "type": "frame"
     },
+    "BuSKxdwl": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "tx63hkd9",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "BuhATRDn": {
       "componentId": "ua9C67i7",
       "index": "a000",
@@ -23871,6 +24081,20 @@
         "gap": 24,
         "min-height": 64,
         "padding": "12px 20px"
+      },
+      "type": "frame"
+    },
+    "Bxf3cPhb": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "J89QmYT5",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -24031,6 +24255,20 @@
         "top": 2,
         "translate": "50% 0",
         "width": 5
+      },
+      "type": "frame"
+    },
+    "C1U5kKrD": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "k4genWl5",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -24212,6 +24450,20 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "C7GYYyUK": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "EDRzQ2i4",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "C8aReHog": {
       "index": "a4",
@@ -25235,6 +25487,20 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "Ccspyu8N": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "A1rUuRyL",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -26330,7 +26596,6 @@
       "y": 1060
     },
     "DG8njKBS": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "jL0FcADC",
@@ -26341,6 +26606,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -28306,13 +28572,14 @@
       "name": "Contents",
       "parentId": "T2b4bxXt",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -29485,6 +29752,20 @@
       },
       "type": "frame"
     },
+    "EtuVWamY": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "ZmLtmaeS",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "EuJywqGi": {
       "componentId": "uJd03iQq",
       "index": "a000",
@@ -30095,6 +30376,20 @@
       },
       "type": "frame"
     },
+    "FAfuLtv8": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "z7AxNPlj",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "FBoLw1dJ": {
       "content": "فالاسمُ يُعرَفُ: ",
       "index": "a000",
@@ -30280,6 +30575,20 @@
         "position": "absolute",
         "top": 12,
         "width": 7
+      },
+      "type": "frame"
+    },
+    "FHEEX1y7": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "uvThT1h3",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -31288,6 +31597,20 @@
       },
       "type": "text"
     },
+    "FmL31WMc": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "0ZS5i3S8",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "FmciWZrT": {
       "content": "ِ",
       "index": "a00007",
@@ -32295,6 +32618,20 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "GFroJtve": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "27bXA3Mo",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "GG8nKiT8": {
       "componentId": "ua9C67i7",
@@ -33474,13 +33811,14 @@
       "name": "Contents",
       "parentId": "PTuSRyua",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -33598,7 +33936,7 @@
       "parentId": "jRI7Acr8",
       "style": {
         "align-items": "center",
-        "background": "{color.surface}",
+        "background": "{color.surface-2}",
         "border-radius": 999,
         "display": "flex",
         "height": 48,
@@ -34126,13 +34464,14 @@
       "name": "Contents",
       "parentId": "r0HhmN7B",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -34875,13 +35214,14 @@
       "name": "Contents",
       "parentId": "o5AzTn98",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -35124,13 +35464,14 @@
       "name": "Contents",
       "parentId": "atcH4uMg",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -37750,13 +38091,14 @@
       "name": "Contents",
       "parentId": "EqIl1JS5",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -38049,7 +38391,6 @@
       "type": "frame"
     },
     "J89QmYT5": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "T2b4bxXt",
@@ -38060,6 +38401,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -40521,6 +40863,20 @@
       },
       "type": "text"
     },
+    "KIdHj1Yn": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "HWFaHga7",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "KJhSS3jv": {
       "content": "٣",
       "index": "a000",
@@ -41128,7 +41484,7 @@
       "name": "Contents",
       "parentId": "AqJFjCnA",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
@@ -41136,6 +41492,7 @@
         "gap": 2,
         "height": "100%",
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -41508,6 +41865,20 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "KufMfRbt": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "7wn9DmHQ",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "Kul2Arkm": {
       "componentId": "46QiZLNZ",
@@ -42341,13 +42712,14 @@
       "name": "Contents",
       "parentId": "YpaaVLU7",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -42545,13 +42917,14 @@
       "name": "Contents",
       "parentId": "apwpu495",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -42698,6 +43071,34 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "LWK7T4aD": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "98rrX2AP",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
+    "LX1uq5ea": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "MZlqIIVB",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "LXIDJSYc": {
       "icon": "panel-left-close",
@@ -43242,16 +43643,16 @@
     },
     "LnAH75CV": {
       "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). */",
-      "index": "a",
+      "index": "a0",
       "name": "Sidebar tabs",
-      "parentId": "A1rUuRyL",
+      "parentId": "P5pRktaK",
       "style": {
         "align-items": "center",
         "background": "{color.surface-2}",
         "border-radius": 8,
         "display": "flex",
+        "flex": 1,
         "gap": 2,
-        "margin": "0 0 12px",
         "padding": 3
       },
       "type": "frame"
@@ -43394,6 +43795,20 @@
         "gap": 2,
         "opacity": 0,
         "width": 66
+      },
+      "type": "frame"
+    },
+    "LsetQFru": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "VTrzBuIA",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -43829,6 +44244,20 @@
       },
       "type": "frame"
     },
+    "MAniCMUQ": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "1RNgK7EW",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "MBFkczvX": {
       "index": "a001",
       "name": "Spacer",
@@ -44207,6 +44636,20 @@
       },
       "type": "frame"
     },
+    "MPb49adH": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "hbcVxN8c",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "MPklDD6n": {
       "index": "a001",
       "name": "Spacer",
@@ -44532,13 +44975,14 @@
       "name": "Contents",
       "parentId": "0Q4pvFZm",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -44745,6 +45189,20 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "MgDLYgoE": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "tzsDBwBu",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -46569,6 +47027,20 @@
       },
       "type": "text"
     },
+    "NW0lliSI": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "g7KwQfEh",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "NWNbcpuX": {
       "componentId": "KLaQXYk7",
       "index": "a002",
@@ -46841,7 +47313,6 @@
       "type": "frame"
     },
     "NdLa0SYF": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "jLCOsKNV",
@@ -46862,13 +47333,14 @@
       "name": "Contents",
       "parentId": "74c1ggnQ",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -47108,6 +47580,20 @@
         "flex": 1,
         "flex-direction": "column",
         "min-width": 0
+      },
+      "type": "frame"
+    },
+    "NlIPamXL": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "P72G6KSp",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -48813,6 +49299,22 @@
       },
       "type": "text"
     },
+    "Oeg6wZwr": {
+      "componentId": "RV1DOgzp",
+      "index": "a1",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "x"
+        }
+      },
+      "parentId": "WskFBUQB",
+      "props": {
+        "label": "Hide contents",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "Oem3Od2x": {
       "index": "a0",
       "name": "Brand",
@@ -49778,13 +50280,14 @@
       "name": "Contents",
       "parentId": "X4uesPtl",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -49851,6 +50354,22 @@
       },
       "type": "frame"
     },
+    "P5pRktaK": {
+      "index": "a0",
+      "name": "Panel header",
+      "parentId": "A1rUuRyL",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 60,
+        "margin": "-24px -16px 12px",
+        "padding": "0 16px"
+      },
+      "type": "frame"
+    },
     "P6QTz4v5": {
       "index": "a2",
       "name": "Title",
@@ -49905,13 +50424,14 @@
       "name": "Contents",
       "parentId": "Na7dOKzM",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -50358,13 +50878,14 @@
       "name": "Contents",
       "parentId": "DE2nGvmr",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -51080,7 +51601,6 @@
       "type": "instance"
     },
     "Pk9KeL1t": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "z0V",
       "name": "Side panel",
       "parentId": "rrVZmaPT",
@@ -51092,6 +51612,7 @@
         "flex-shrink": 0,
         "height": "100%",
         "overflow": "hidden",
+        "position": "relative",
         "width": 420
       },
       "type": "frame"
@@ -51512,13 +52033,14 @@
       "name": "Contents",
       "parentId": "SGd3rpmT",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -52559,6 +53081,20 @@
       },
       "type": "frame"
     },
+    "QSjwAGRH": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "fW337xCU",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "QTMqK9Jo": {
       "index": "a001",
       "name": "Spacer",
@@ -53066,6 +53602,20 @@
       },
       "type": "frame"
     },
+    "QnPmpNzU": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "n9e6PO4e",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "QnhKruPH": {
       "index": "a005",
       "name": "Passage",
@@ -53409,7 +53959,6 @@
       "type": "text"
     },
     "QzwbVZH5": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "0Q4pvFZm",
@@ -53420,6 +53969,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -56564,6 +57114,20 @@
       },
       "type": "frame"
     },
+    "SdcjvDEr": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "v07G4AOk",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "SeqPmf47": {
       "index": "a007",
       "name": "Divider",
@@ -56970,6 +57534,20 @@
         "height": 36,
         "padding": "0 10px",
         "position": "relative"
+      },
+      "type": "frame"
+    },
+    "SriOIhd5": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "9cZ7seow",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -58205,6 +58783,22 @@
       },
       "type": "frame"
     },
+    "TPh156V5": {
+      "index": "a0",
+      "name": "Panel header",
+      "parentId": "0ZS5i3S8",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 60,
+        "margin": "-24px -16px 12px",
+        "padding": "0 16px"
+      },
+      "type": "frame"
+    },
     "TQOpml5M": {
       "index": "a1",
       "name": "Body",
@@ -59407,6 +60001,34 @@
       "x": 4840,
       "y": 8820
     },
+    "Tx0eh1GP": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "gngeE2fy",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
+    "Ty1j7sUh": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "LIMNZRpQ",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "TyE5f3DN": {
       "index": "a1",
       "name": "Gloss",
@@ -59794,13 +60416,14 @@
       "name": "Contents",
       "parentId": "DKgYBMoQ",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -60568,13 +61191,14 @@
       "name": "Contents",
       "parentId": "uQYYJiye",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -62103,6 +62727,20 @@
       },
       "type": "text"
     },
+    "VGfKKgEe": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "QzwbVZH5",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "VGqNFaT2": {
       "content": "بابُ الكلامِ",
       "index": "a001",
@@ -62478,13 +63116,14 @@
       "name": "Contents rail",
       "parentId": "DIsJvSA3",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -64009,13 +64648,14 @@
       "name": "Contents",
       "parentId": "esOc4J4o",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -65073,6 +65713,22 @@
       },
       "type": "instance"
     },
+    "WskFBUQB": {
+      "index": "a0",
+      "name": "Panel header",
+      "parentId": "x0H4yd3G",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 60,
+        "margin": "-24px -16px 12px",
+        "padding": "0 16px"
+      },
+      "type": "frame"
+    },
     "Wub8VN2J": {
       "content": "6",
       "index": "a000",
@@ -65220,6 +65876,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "WwnkzPUx": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "9n0naeDx",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "WxT5QL55": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -65584,6 +66254,20 @@
         "top": 10,
         "translate": "50% 0",
         "width": 1
+      },
+      "type": "frame"
+    },
+    "X9qfdvy3": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "yNiafHhD",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -66225,13 +66909,14 @@
       "name": "Sidebar · Bookmarks",
       "parentId": "Cz5Otcjp",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -70006,16 +70691,16 @@
     },
     "ZSSLNC2e": {
       "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). */",
-      "index": "a",
+      "index": "a0",
       "name": "Sidebar tabs",
-      "parentId": "x0H4yd3G",
+      "parentId": "WskFBUQB",
       "style": {
         "align-items": "center",
         "background": "{color.surface-2}",
         "border-radius": 8,
         "display": "flex",
+        "flex": 1,
         "gap": 2,
-        "margin": "0 0 12px",
         "padding": 3
       },
       "type": "frame"
@@ -70670,13 +71355,14 @@
       "name": "Contents rail",
       "parentId": "rlniNQTO",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -71556,6 +72242,22 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "aEaKUFEI": {
+      "componentId": "RV1DOgzp",
+      "index": "a1",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "x"
+        }
+      },
+      "parentId": "TPh156V5",
+      "props": {
+        "label": "Hide contents",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "aF09PURZ": {
       "index": "a001",
@@ -73939,6 +74641,20 @@
       },
       "type": "frame"
     },
+    "bNkLByMT": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "KhDHxBDQ",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "bOHDUIbi": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "aI",
@@ -75294,6 +76010,20 @@
       },
       "type": "text"
     },
+    "c6KbtoND": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "kLk8oSAU",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "c6OAwV7N": {
       "index": "a001",
       "name": "Body",
@@ -75897,6 +76627,22 @@
       },
       "type": "frame"
     },
+    "cPbkIIA1": {
+      "index": "a0",
+      "name": "Panel header",
+      "parentId": "XUJKoMIs",
+      "style": {
+        "align-items": "center",
+        "border-bottom": "1px solid {color.line}",
+        "display": "flex",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 60,
+        "margin": "-24px -16px 12px",
+        "padding": "0 16px"
+      },
+      "type": "frame"
+    },
     "cS1fSUSO": {
       "index": "Za000",
       "name": "Bar",
@@ -76152,6 +76898,20 @@
       "parentId": "0ZS5i3S8",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "cZfgt5rN": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "vtDPx7u3",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -76910,6 +77670,34 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "d32vxQiu": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "zdIwNdWD",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
+    "d3EnSj5v": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "iDIpR3m2",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "d44S8IXZ": {
       "index": "a3V",
@@ -78508,6 +79296,20 @@
       },
       "type": "text"
     },
+    "dv5MspTS": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "XUJKoMIs",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "dvgxVv6z": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "index": "a0",
@@ -79294,6 +80096,20 @@
       },
       "type": "text"
     },
+    "eMVM7jYS": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "GrrSkE9R",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "eNUbkY4i": {
       "index": "a005",
       "name": "Passage",
@@ -79410,16 +80226,16 @@
     },
     "eStUTAoZ": {
       "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). */",
-      "index": "a",
+      "index": "a0",
       "name": "Sidebar tabs",
-      "parentId": "0ZS5i3S8",
+      "parentId": "TPh156V5",
       "style": {
         "align-items": "center",
         "background": "{color.surface-2}",
         "border-radius": 8,
         "display": "flex",
+        "flex": 1,
         "gap": 2,
-        "margin": "0 0 12px",
         "padding": 3
       },
       "type": "frame"
@@ -79918,13 +80734,14 @@
       "name": "Contents",
       "parentId": "8BeV8PFY",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -81945,7 +82762,6 @@
       "type": "instance"
     },
     "fW337xCU": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "DKgYBMoQ",
@@ -81956,6 +82772,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -83102,6 +83919,20 @@
       },
       "type": "frame"
     },
+    "fzrMjg3S": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "x0H4yd3G",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "fzwzIbSS": {
       "content": "14",
       "index": "a000",
@@ -83339,13 +84170,14 @@
       "name": "Contents",
       "parentId": "ZzpvFLwI",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -84367,6 +85199,20 @@
       },
       "type": "frame"
     },
+    "geZ0c0GD": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "yhPzLof4",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "gei2r59L": {
       "componentId": "RV1DOgzp",
       "index": "a000",
@@ -84394,6 +85240,20 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "gftQjyYD": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "BRcUU2vE",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -84616,13 +85476,14 @@
       "name": "Contents",
       "parentId": "ihRD5DdX",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -86094,7 +86955,6 @@
       "type": "frame"
     },
     "hbcVxN8c": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "PTuSRyua",
@@ -86105,6 +86965,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -86459,6 +87320,20 @@
       "parentId": "BMv2tF1I",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "hkhUUXyg": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "J0B7omKd",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -87584,7 +88459,6 @@
       "type": "text"
     },
     "iDIpR3m2": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "esOc4J4o",
@@ -87595,6 +88469,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -88419,16 +89294,16 @@
     },
     "igr6EybJ": {
       "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). */",
-      "index": "a",
+      "index": "a0",
       "name": "Sidebar tabs",
-      "parentId": "XUJKoMIs",
+      "parentId": "cPbkIIA1",
       "style": {
         "align-items": "center",
         "background": "{color.surface-2}",
         "border-radius": 8,
         "display": "flex",
+        "flex": 1,
         "gap": 2,
-        "margin": "0 0 12px",
         "padding": 3
       },
       "type": "frame"
@@ -91090,7 +91965,6 @@
       "type": "instance"
     },
     "k4genWl5": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "553B4Q3J",
@@ -91101,6 +91975,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -91138,13 +92013,14 @@
       "name": "Contents",
       "parentId": "RxrZ7yPt",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -91738,13 +92614,14 @@
       "name": "Contents",
       "parentId": "wrk8FGcD",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -92427,6 +93304,20 @@
       "parentId": "BhuMENDg",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "keUYGy3L": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "Pk9KeL1t",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -94723,6 +95614,20 @@
         "min-height": 0,
         "overflow": "hidden",
         "padding": "40px 48px"
+      },
+      "type": "frame"
+    },
+    "llOGxBH9": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "NdLa0SYF",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -97519,13 +98424,14 @@
       "name": "Contents",
       "parentId": "rly1bzIk",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -99124,13 +100030,14 @@
       "name": "Contents",
       "parentId": "aYExKYTF",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -99488,6 +100395,22 @@
         "top": 0
       },
       "type": "text"
+    },
+    "o8smXYzE": {
+      "componentId": "RV1DOgzp",
+      "index": "a1",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "x"
+        }
+      },
+      "parentId": "cPbkIIA1",
+      "props": {
+        "label": "Hide contents",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "o9RV7jAv": {
       "index": "a5",
@@ -103816,13 +104739,14 @@
       "name": "Contents rail",
       "parentId": "7kLejtUt",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -105942,7 +106866,6 @@
       "type": "frame"
     },
     "rQw63gFd": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002V",
       "name": "Side panel",
       "parentId": "i8s1OzHV",
@@ -105954,6 +106877,7 @@
         "flex-shrink": 0,
         "height": "100%",
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -106457,6 +107381,20 @@
       },
       "type": "text"
     },
+    "rfx5aF12": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "H7ZJkhV4",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "rgP84pOs": {
       "index": "a0",
       "name": "Page area",
@@ -106680,6 +107618,20 @@
         "position": "absolute",
         "top": 12,
         "width": 7
+      },
+      "type": "frame"
+    },
+    "rn8Tjbrq": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "zYwp1AEE",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -107610,6 +108562,20 @@
         "display": "inline"
       },
       "type": "text"
+    },
+    "sAyj2rIG": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "LRcuGxje",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "sB3Xik0o": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
@@ -109048,6 +110014,20 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "t0l5d5qe": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "nzGsoa0y",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "t1VSiAIm": {
       "content": "4",
@@ -110924,13 +111904,14 @@
       "name": "Contents",
       "parentId": "Xh2eQVJQ",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -111008,7 +111989,6 @@
       "type": "frame"
     },
     "tzsDBwBu": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "aYExKYTF",
@@ -111019,6 +111999,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -112916,7 +113897,6 @@
       "type": "icon"
     },
     "uvThT1h3": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "z0",
       "name": "Side panel",
       "parentId": "eXgt6Yq7",
@@ -112927,6 +113907,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 420
       },
       "type": "frame"
@@ -113042,13 +114023,14 @@
       "name": "Contents rail",
       "parentId": "tGlhP5sS",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -113401,13 +114383,14 @@
       "name": "Contents",
       "parentId": "wKg60xjv",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -113601,6 +114584,20 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "vIn2rvbz": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "qUKJQ79v",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
     },
     "vJb20nOg": {
       "index": "a005",
@@ -114492,13 +115489,14 @@
       "name": "Contents",
       "parentId": "0B17B0kk",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -116607,13 +117605,14 @@
       "name": "Sidebar · Bookmarks",
       "parentId": "ubIR3A55",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -117107,6 +118106,20 @@
       "style": {},
       "type": "instance"
     },
+    "xET0rr1e": {
+      "css": "/* Drag to resize, double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "rQw63gFd",
+      "style": {
+        "bottom": 0,
+        "left": -4,
+        "position": "absolute",
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "xFBilkzR": {
       "content": "4",
       "index": "a0",
@@ -117149,6 +118162,20 @@
         "gap": 16,
         "position": "relative",
         "width": 640
+      },
+      "type": "frame"
+    },
+    "xFpHqfFF": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "edtX6LvY",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -117620,6 +118647,20 @@
       "parentId": "KASSBmnJ",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "xSCeFhLN": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "PyhE3EOo",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
       },
       "type": "frame"
     },
@@ -119017,6 +120058,20 @@
       },
       "type": "frame"
     },
+    "yBrSGTfe": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "WMN1VXGO",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "yC8vq4Gi": {
       "content": "1",
       "index": "a0",
@@ -119287,13 +120342,14 @@
       "name": "Contents",
       "parentId": "553B4Q3J",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -119852,18 +120908,33 @@
       },
       "type": "frame"
     },
+    "yfJXi1WR": {
+      "css": "/* Drag to resize (200–420px), double-click to reset; the width is remembered. */\ncursor: col-resize;\ntransition: background-color 120ms var(--ease-out);\n\n&:hover {\n  background: {color.accent-soft};\n}",
+      "index": "Z9",
+      "name": "Resize handle",
+      "parentId": "BCy7WMQM",
+      "style": {
+        "bottom": 0,
+        "position": "absolute",
+        "right": -4,
+        "top": 0,
+        "width": 8
+      },
+      "type": "frame"
+    },
     "yhPzLof4": {
       "index": "a000",
       "name": "Contents",
       "parentId": "uXmMODLt",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -120647,13 +121718,14 @@
       "name": "Contents",
       "parentId": "jLCOsKNV",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
@@ -121547,7 +122619,6 @@
       "type": "frame"
     },
     "zYwp1AEE": {
-      "css": "transition: width {transition.duration-panel} {ease.sheet};\n\n@starting-style {\n  width: 0;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "HUbKJcBG",
@@ -121558,6 +122629,7 @@
         "flex-direction": "column",
         "flex-shrink": 0,
         "overflow": "hidden",
+        "position": "relative",
         "width": 540
       },
       "type": "frame"
@@ -121746,13 +122818,14 @@
       "name": "Contents",
       "parentId": "uJaFO70B",
       "style": {
-        "background": "{color.bg}",
+        "background": "{color.surface}",
         "border-right": "1px solid {color.line}",
         "display": "flex",
         "flex-direction": "column",
         "flex-shrink": 0,
         "gap": 2,
         "padding": "24px 16px",
+        "position": "relative",
         "width": 248
       },
       "type": "frame"
