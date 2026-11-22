@@ -25,6 +25,9 @@ export interface Turn extends Omit<StoredTurn, "createdAt"> {
 /** How long a deleted conversation can be brought back; a little longer than its toast shows. */
 const UNDO_DELETE_MS = 4500;
 
+/** The composer's line height in px (`text-body`). */
+const COMPOSER_LINE = 24;
+
 const fromStored = ({ createdAt: _, ...turn }: StoredTurn): Turn => ({ ...turn, activity: null });
 
 /**
@@ -615,9 +618,27 @@ const CiteChip = ({
       if (lastAnswer !== undefined || turns.length) end.current?.scrollIntoView({ block: "end" });
     }, [lastAnswer, turns.length]);
 
+    // The composer is one line tall, or two once the text wraps; switching between them is what animates.
+    const [rows, setRows] = useState<1 | 2>(1);
+    const measureRows = useCallback(() => {
+      const root = editor.current;
+      if (!root) return;
+      const text = document.createRange();
+      text.selectNodeContents(root);
+      setRows(text.getBoundingClientRect().height > COMPOSER_LINE * 1.5 ? 2 : 1);
+    }, []);
+    useEffect(() => {
+      const root = editor.current;
+      if (!root) return;
+      const observer = new ResizeObserver(measureRows);
+      observer.observe(root);
+      return () => observer.disconnect();
+    }, [measureRows]);
+
     const sync = () => {
       const root = editor.current;
       if (!root) return;
+      measureRows();
       for (const [id, pill] of pills.current) if (!root.contains(pill.host)) pills.current.delete(id);
       const parts = readComposer({ root, quotes: new Map([...pills.current].map(([id, p]) => [id, p.quote])) });
       const empty = parts.every((p) => p.kind === "text" && p.text.trim() === "");
@@ -628,6 +649,7 @@ const CiteChip = ({
       if (editor.current) editor.current.textContent = "";
       pills.current.clear();
       setDraft({ question: "", quotes: [], empty: true });
+      setRows(1);
     };
 
     const send = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
@@ -848,7 +870,8 @@ const CiteChip = ({
                 onInput={sync}
                 onKeyDown={onKeyDown}
                 onPaste={onPaste}
-                className="max-h-12 min-h-6 overflow-y-auto break-words whitespace-pre-wrap text-body outline-hidden [scrollbar-color:auto] [scrollbar-width:auto] [unicode-bidi:plaintext] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-ink/20"
+                data-rows={rows}
+                className="h-6 overflow-y-auto transition-[height] duration-pop ease-out data-[rows=2]:h-12 motion-reduce:transition-none break-words whitespace-pre-wrap text-body outline-hidden [scrollbar-color:auto] [scrollbar-width:auto] [unicode-bidi:plaintext] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-button]:hidden [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-ink/20"
               />
               {[...pills.current.values()].map(({ quote, host }) =>
                 createPortal(<QuoteChip quote={quote} onCite={onCite} onRemove={() => removeQuote(quote.id)} />, host, quote.id),

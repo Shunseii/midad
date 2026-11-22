@@ -56966,7 +56966,7 @@
       "type": "frame"
     },
     "SRgjUp0T": {
-      "css": "/* One line by default, two at most, then it scrolls with a slim thumb. */\nscrollbar-width: auto;\nscrollbar-color: auto;\n\n&::-webkit-scrollbar {\n  width: 4px;\n}\n\n&::-webkit-scrollbar-button {\n  display: none;\n}\n\n&::-webkit-scrollbar-thumb {\n  border-radius: 999px;\n  background: color-mix(in oklab, {color.ink} 20%, transparent);\n}",
+      "css": "/* One line tall, or two once the text wraps (data-state), then it scrolls with a slim thumb. The height change animates. */\ntransition: height var(--transition-duration-pop) var(--ease-out);\n\n&[data-state=\"one-line\"] {\n  height: 24px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}\nscrollbar-width: auto;\nscrollbar-color: auto;\n\n&::-webkit-scrollbar {\n  width: 4px;\n}\n\n&::-webkit-scrollbar-button {\n  display: none;\n}\n\n&::-webkit-scrollbar-thumb {\n  border-radius: 999px;\n  background: color-mix(in oklab, {color.ink} 20%, transparent);\n}",
       "index": "a0",
       "name": "Editor",
       "parentId": "ysRYgvjt",
@@ -56976,7 +56976,7 @@
         "column-gap": 4,
         "display": "flex",
         "flex-wrap": "wrap",
-        "max-height": 48,
+        "height": 48,
         "overflow-y": "auto",
         "row-gap": 0
       },
