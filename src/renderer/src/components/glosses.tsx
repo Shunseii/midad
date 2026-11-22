@@ -261,7 +261,6 @@ export const GlossLabel = ({
   onHover: (hovered: boolean) => void;
 }) => {
   const [copied, setCopied] = useState(false);
-  const [tip, setTip] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
   const floating = mode === "hover";
@@ -284,7 +283,7 @@ export const GlossLabel = ({
         ...(placement!.slot === "below" ? { top: placement!.offset } : { bottom: placement!.offset }),
       };
   return (
-    <Tooltip open={tip || copied} onOpenChange={setTip}>
+    <Tooltip open={copied}>
       <TooltipTrigger
         render={
           <span
@@ -294,7 +293,7 @@ export const GlossLabel = ({
             role="button"
             tabIndex={0}
             dir="rtl"
-            aria-label={`Gloss: ${text}. Click to copy`}
+            aria-label={`Copy gloss: ${text}`}
             style={style}
             onMouseDown={stop}
             onMouseUp={stop}
@@ -321,7 +320,7 @@ export const GlossLabel = ({
         {text}
       </TooltipTrigger>
       <TooltipContent side="top" sideOffset={4}>
-        {copied ? "Copied" : "Click to copy"}
+        Copied
       </TooltipContent>
     </Tooltip>
   );

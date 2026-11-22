@@ -11095,7 +11095,7 @@
       "type": "instance"
     },
     "5PNAxg2N": {
-      "content": "Hovering a gloss inks it and tints its words with one gloss-soft band (the height of a Behind highlight, rounded ends; under an Under highlight band), fading in over 120ms ease-out. Its tooltip reads Click to copy. Hovering the words inks the gloss without the tint.",
+      "content": "Hovering a gloss inks it and tints its words with one gloss-soft band (the height of a Behind highlight, rounded ends; under an Under highlight band), fading in over 120ms ease-out. No tooltip; clicking copies it and flashes Copied. Hovering the words inks the gloss without the tint.",
       "index": "a1",
       "name": "Spec note",
       "parentId": "2o2tsUks",
@@ -52416,30 +52416,6 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
-      },
-      "type": "text"
-    },
-    "QNWgg68w": {
-      "content": "Click to copy",
-      "css": "transition:\n  opacity 160ms,\n  translate {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n  translate: -50% 2px;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
-      "index": "a1",
-      "name": "Tooltip · Click to copy",
-      "parentId": "7SRqdp2z",
-      "style": {
-        "background": "{color.ink}",
-        "border-radius": "{radius.md}",
-        "bottom": "calc(100% + 6px)",
-        "color": "{color.bg}",
-        "direction": "ltr",
-        "font-family": "{font.body}",
-        "font-size": 12,
-        "left": "50%",
-        "line-height": "16px",
-        "padding": "4px 8px",
-        "position": "absolute",
-        "translate": "-50% 0",
-        "white-space": "nowrap",
-        "z-index": 6
       },
       "type": "text"
     },
