@@ -998,6 +998,7 @@ export const ReaderRoute = () => {
     contentsWidth: contentsShown ? CONTENTS_WIDTH : 0,
     sideWidth: panelShown ? sideWidth : 0,
   });
+  const panelRoom = wide && focused && panelShown ? sideWidth : 0;
 
   const bookmarkList = (open: (position: number) => void) => (
     <BookmarkList
@@ -1284,7 +1285,7 @@ export const ReaderRoute = () => {
         />
         <div
           ref={pageRoot}
-          className="@container min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable_both-edges]"
+          className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable_both-edges]"
           onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
           onCopy={() => {
@@ -1300,6 +1301,8 @@ export const ReaderRoute = () => {
           }}
         >
           {/* Even padding keeps the page centred; it leaves room for the last-read marker in the right margin. The bottom padding lets the last line scroll clear of the scrubber, which overlays the page and slides away in focus mode. */}
+          {/* While the bars are away the side panel folds up so the scrollbar meets the window edge; this margin keeps its room, so the page doesn't move. */}
+          <div style={{ marginRight: panelRoom }} className="@container transition-[margin-right] duration-panel ease-sheet motion-reduce:transition-none">
           <div
             data-page-area
             data-balance={balance === null ? undefined : ""}
@@ -1348,6 +1351,7 @@ export const ReaderRoute = () => {
             />
           )}
           </div>
+          </div>
         </div>
         {book.data && total > 0 && (
           <div
@@ -1375,7 +1379,7 @@ export const ReaderRoute = () => {
         </ScanSlot>
         </div>
         {wide ? (
-          <InlinePanel side="right" open={panelShown} width={sideWidth}>
+          <InlinePanel side="right" open={panelShown && !focused} width={sideWidth}>
             <div
               {...chromeHover}
               data-focus={focused ? "hidden" : undefined}
