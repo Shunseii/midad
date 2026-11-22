@@ -2981,6 +2981,7 @@
       "type": "frame"
     },
     "1RNgK7EW": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "z0",
       "name": "Side panel",
       "parentId": "RxrZ7yPt",
@@ -26596,6 +26597,7 @@
       "y": 1060
     },
     "DG8njKBS": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "jL0FcADC",
@@ -38391,6 +38393,7 @@
       "type": "frame"
     },
     "J89QmYT5": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "T2b4bxXt",
@@ -47313,6 +47316,7 @@
       "type": "frame"
     },
     "NdLa0SYF": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "jLCOsKNV",
@@ -51601,6 +51605,7 @@
       "type": "instance"
     },
     "Pk9KeL1t": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "z0V",
       "name": "Side panel",
       "parentId": "rrVZmaPT",
@@ -53959,6 +53964,7 @@
       "type": "text"
     },
     "QzwbVZH5": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "0Q4pvFZm",
@@ -82762,6 +82768,7 @@
       "type": "instance"
     },
     "fW337xCU": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "DKgYBMoQ",
@@ -86955,6 +86962,7 @@
       "type": "frame"
     },
     "hbcVxN8c": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "PTuSRyua",
@@ -88459,6 +88467,7 @@
       "type": "text"
     },
     "iDIpR3m2": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "esOc4J4o",
@@ -91965,6 +91974,7 @@
       "type": "instance"
     },
     "k4genWl5": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "553B4Q3J",
@@ -106866,6 +106876,7 @@
       "type": "frame"
     },
     "rQw63gFd": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002V",
       "name": "Side panel",
       "parentId": "i8s1OzHV",
@@ -111989,6 +112000,7 @@
       "type": "frame"
     },
     "tzsDBwBu": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "aYExKYTF",
@@ -113897,6 +113909,7 @@
       "type": "icon"
     },
     "uvThT1h3": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "z0",
       "name": "Side panel",
       "parentId": "eXgt6Yq7",
@@ -122619,6 +122632,7 @@
       "type": "frame"
     },
     "zYwp1AEE": {
+      "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "a002",
       "name": "Side panel",
       "parentId": "HUbKJcBG",

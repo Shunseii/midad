@@ -546,8 +546,9 @@ body {
 }
 
 /*
- * Switching a tabbed list: the sidebar's Contents | Bookmarks and the right
- * panel's Highlights | Notes (data-list-switch, see switchListInTransition).
+ * Switching a tabbed list: the sidebar's Contents | Bookmarks, the right
+ * panel's Highlights | Notes, and the right panel itself between the notes and
+ * Ask AI (data-list-switch, see switchListInTransition).
  * Only the list under the tabs moves: the old one fades out quickly toward the
  * side it leaves, the new one slides a short way in from the side of the picked
  * tab. Everything else, the tabs included, changes in place so their indicator
@@ -558,7 +559,8 @@ body {
   view-transition-name: none !important;
 }
 :root[data-list-switch-target="sidebar"] [data-switch-list="sidebar"],
-:root[data-list-switch-target="annotations"] [data-switch-list="annotations"] {
+:root[data-list-switch-target="annotations"] [data-switch-list="annotations"],
+:root[data-list-switch-target="panel"] [data-switch-list="panel"] {
   view-transition-name: switch-list !important;
 }
 :root[data-list-switch]::view-transition-group(*),
@@ -586,6 +588,13 @@ body {
 }
 :root[data-list-switch="back"]::view-transition-new(switch-list) {
   animation: page-in-from-left 220ms var(--ease-out) 40ms both;
+}
+/* Ask AI is wider than the notes: the panel snapshots keep their own size, pinned to the window edge, rather than stretching to the new width. */
+:root[data-list-switch-target="panel"]::view-transition-old(switch-list),
+:root[data-list-switch-target="panel"]::view-transition-new(switch-list) {
+  inline-size: auto;
+  left: auto;
+  right: 0;
 }
 @keyframes list-out-to-left {
   to {

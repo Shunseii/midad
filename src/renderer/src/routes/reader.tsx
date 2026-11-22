@@ -579,9 +579,24 @@ export const ReaderRoute = () => {
     }
   };
 
+  /**
+   * Switches the side panel between the annotations and Ask AI. While it's on
+   * screen the whole panel slides across, like a list switch: Ask AI's button
+   * sits right of the annotations', so it comes in from the right.
+   */
+  const switchPanelTab = (next: PanelTab) => {
+    const group = (tab: PanelTab) => (tab === "ask" ? "ask" : "annotations");
+    const onScreen = panelOpen && (!wide || (panelShown && !focused));
+    if (!onScreen || group(next) === group(panelTab)) {
+      setPanelTab(next);
+      return;
+    }
+    switchListInTransition({ list: "panel", order: ["annotations", "ask"], from: group(panelTab), to: group(next), apply: () => setPanelTab(next) });
+  };
+
   const openAsk = (selection: AskSelection | null) => {
     if (selection) setAskSelection(selection);
-    setPanelTab("ask");
+    switchPanelTab("ask");
     setPanelOpen(true);
     setAskShown(true);
   };
@@ -1261,7 +1276,7 @@ export const ReaderRoute = () => {
           onClick={() => {
             if (panelOpen && panelTab !== "ask") setPanelOpen(false);
             else {
-              if (panelTab === "ask") setPanelTab(annotationsTab);
+              if (panelTab === "ask") switchPanelTab(annotationsTab);
               setPanelOpen(true);
             }
           }}
