@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { citeSpan, claudeArgs, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
+import { CORPUS_TOOLS, citeSpan, claudeArgs, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -207,6 +207,24 @@ describe("claudeArgs", () => {
     expect(args).toEqual(expect.arrayContaining(["-p", "q", "--output-format", "stream-json", "--include-partial-messages", "--setting-sources", "project"]));
     expect(args[args.indexOf("--allowedTools") + 1]).toBe("Bash(midad:*)");
     expect(args).not.toContain("--resume");
+  });
+
+  it("leaves out the corpus server unless it is given", () => {
+    const args = claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: null });
+    expect(args).toContain("--strict-mcp-config");
+    expect(args).not.toContain("--mcp-config");
+    expect(args.some((a) => a.startsWith("mcp__"))).toBe(false);
+  });
+
+  it("passes the corpus server and allows its tools when given", () => {
+    const args = claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: null, corpusServer: "/app/out/cli/corpus-mcp.mjs" });
+    expect(args).toContain("--strict-mcp-config");
+    expect(JSON.parse(args[args.indexOf("--mcp-config") + 1] ?? "")).toEqual({
+      mcpServers: { corpus: { type: "stdio", command: "node", args: ["--no-warnings", "/app/out/cli/corpus-mcp.mjs"] } },
+    });
+    const allowed = args.slice(args.indexOf("--allowedTools") + 1, args.indexOf("--append-system-prompt"));
+    expect(allowed).toEqual(["Bash(midad:*)", "mcp__corpus__corpus_text", "mcp__corpus__corpus_edit", "mcp__corpus__corpus_history", "mcp__corpus__corpus_restore"]);
+    expect(CORPUS_TOOLS).toHaveLength(4);
   });
 
   it("resumes the conversation's session", () => {

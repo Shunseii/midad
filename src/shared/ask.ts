@@ -175,7 +175,24 @@ export const sessionRecap = (turns: { question: string; answer: string; quotes: 
   ].join("\n");
 };
 
-export const claudeArgs = ({ prompt, systemPrompt, sessionId }: { prompt: string; systemPrompt: string; sessionId: string | null }): string[] => [
+export const CORPUS_TOOLS = ["corpus_text", "corpus_edit", "corpus_history", "corpus_restore"].map((name) => `mcp__corpus__${name}`);
+
+/** Claude Code starts the corpus server itself; it inherits the corpus credentials from Claude's environment, so they never appear here. */
+export const corpusMcpConfig = (serverPath: string): string =>
+  JSON.stringify({ mcpServers: { corpus: { type: "stdio", command: "node", args: ["--no-warnings", serverPath] } } });
+
+export const claudeArgs = ({
+  prompt,
+  systemPrompt,
+  sessionId,
+  corpusServer = null,
+}: {
+  prompt: string;
+  systemPrompt: string;
+  sessionId: string | null;
+  /** Path to the corpus MCP server, when Ask AI may fix the corpus text. */
+  corpusServer?: string | null;
+}): string[] => [
   "-p",
   prompt,
   "--output-format",
@@ -186,10 +203,12 @@ export const claudeArgs = ({ prompt, systemPrompt, sessionId }: { prompt: string
   "--setting-sources",
   "project",
   "--strict-mcp-config",
+  ...(corpusServer ? ["--mcp-config", corpusMcpConfig(corpusServer)] : []),
   "--tools",
   "Bash",
   "--allowedTools",
   "Bash(midad:*)",
+  ...(corpusServer ? CORPUS_TOOLS : []),
   "--append-system-prompt",
   systemPrompt,
   ...(sessionId ? ["--resume", sessionId] : []),

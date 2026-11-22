@@ -72,6 +72,14 @@ const streamed = new Map<string, string>();
 protocol.registerSchemesAsPrivileged([{ scheme: "midad-scan", privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
 const ask = createAsk({
   cliPath: join(app.getAppPath(), "out", "cli", "midad.mjs"),
+  corpusServerPath: join(app.getAppPath(), "out", "cli", "corpus-mcp.mjs"),
+  corpusCredentials: () => {
+    try {
+      return settings.credentials();
+    } catch {
+      return null;
+    }
+  },
   dbPath,
   workDir: join(userData, "ask"),
   onEvent: (requestId, event) => {

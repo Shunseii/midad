@@ -8,14 +8,20 @@ import { claudeArgs, type StreamEvent, streamEvent, SYSTEM_PROMPT } from "../sha
 /**
  * Runs Ask AI questions through the local Claude Code CLI. Claude runs in its
  * own empty folder with a `midad` command on its PATH that opens this library.
+ * When the corpus is set up, it also gets the corpus MCP server, which reads the
+ * credentials from the environment Claude passes on to it.
  */
 export const createAsk = ({
   cliPath,
+  corpusServerPath,
+  corpusCredentials,
   dbPath,
   workDir,
   onEvent,
 }: {
   cliPath: string;
+  corpusServerPath: string;
+  corpusCredentials: () => { endpoint: string; key: string } | null;
   dbPath: string;
   workDir: string;
   onEvent: (requestId: string, event: StreamEvent) => void;
@@ -33,13 +39,15 @@ export const createAsk = ({
       if (!existsSync(cliPath)) {
         return Promise.reject(new Error(`The midad CLI isn't built yet (${cliPath}). Run \`pnpm build:cli\`.`));
       }
+      const credentials = existsSync(corpusServerPath) ? corpusCredentials() : null;
       return new Promise((resolve, reject) => {
-        const child = spawn("claude", claudeArgs({ prompt, systemPrompt: SYSTEM_PROMPT, sessionId }), {
+        const child = spawn("claude", claudeArgs({ prompt, systemPrompt: SYSTEM_PROMPT, sessionId, corpusServer: credentials ? corpusServerPath : null }), {
           cwd: workDir,
           env: {
             ...process.env,
             PATH: [binDir, join(homedir(), ".local", "bin"), process.env.PATH].filter(Boolean).join(delimiter),
             MIDAD_DB: dbPath,
+            ...(credentials ? { MIDAD_CORPUS_URL: credentials.endpoint, MIDAD_CORPUS_KEY: credentials.key } : {}),
           },
           stdio: ["ignore", "pipe", "pipe"],
         });
