@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
 import { isLostSession, readingContext, sessionRecap } from "../shared/ask";
-import { ASK_EVENT, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared/ipc";
+import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
@@ -51,7 +51,7 @@ const corpusClient = () => {
 // Resolved per call so a settings change takes effect without a restart.
 const corpus: CorpusSource = {
   getBook: (id) => corpusClient().getBook(id),
-  exportBook: (id) => corpusClient().exportBook(id),
+  exportBook: (id, options) => corpusClient().exportBook(id, options),
 };
 
 const dbPath = join(userData, "midad.db");
@@ -106,7 +106,13 @@ const handlers: MidadApi = {
   "library.list": () => library.listBooks(),
   "library.get": (bookId) => library.getBook(bookId),
   "library.page": (input) => library.getPage(input),
-  "library.import": (input) => library.importBook(input),
+  "library.import": (input) =>
+    library.importBook({
+      ...input,
+      onProgress: (progress) => {
+        for (const win of BrowserWindow.getAllWindows()) win.webContents.send(IMPORT_PROGRESS, input.corpusBookId, progress);
+      },
+    }),
   "library.previewSync": (input) => library.previewSync(input),
   "library.sync": (input) => library.syncBook(input),
   "library.setProgress": (input) => library.setProgress(input),

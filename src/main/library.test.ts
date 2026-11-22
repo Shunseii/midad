@@ -1,6 +1,6 @@
 import { DatabaseSync } from "node:sqlite";
 import { beforeEach, describe, expect, it } from "vitest";
-import type { CorpusSource } from "./corpus";
+import type { CorpusSource, ExportProgress } from "./corpus";
 import { createLibrary, type Library } from "./library";
 import { parsePage } from "../shared/page";
 import type { ExportFile } from "../shared/corpus";
@@ -25,8 +25,9 @@ class FakeCorpus implements CorpusSource {
     return { ...this.book, id };
   }
 
-  async exportBook() {
+  async exportBook(_id: string, { onProgress }: { onProgress?: (progress: ExportProgress) => void } = {}) {
     this.guard();
+    for (let done = 1; done <= this.files.length; done += 2) onProgress?.({ done, total: this.files.length });
     return structuredClone(this.files);
   }
 
@@ -50,6 +51,23 @@ const numbers = async (bookId = "b1") =>
   (await library.getBook(bookId))?.pages.map((p) => p.number);
 
 describe("import", () => {
+  it("reports download progress, then saving, before the pages are stored", async () => {
+    corpus.files = [1, 2, 3].map((n) => file({ file_id: `f${n}`, page_number: n }));
+    const seen: { progress: unknown; stored: number }[] = [];
+    await library.importBook({
+      corpusBookId: "b1",
+      onProgress: (progress) => {
+        seen.push({ progress, stored: (db.prepare("SELECT COUNT(*) AS n FROM pages").get() as { n: number }).n });
+      },
+    });
+    expect(seen).toEqual([
+      { progress: { phase: "downloading", done: 1, total: 3 }, stored: 0 },
+      { progress: { phase: "downloading", done: 3, total: 3 }, stored: 0 },
+      { progress: { phase: "saving" }, stored: 0 },
+    ]);
+    expect(await numbers()).toEqual([1, 2, 3]);
+  });
+
   it("stores pages that have text and counts the rest as pending", async () => {
     corpus.files = [
       file({ file_id: "f1", page_number: 1 }),

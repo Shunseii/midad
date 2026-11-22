@@ -2,6 +2,7 @@ import type { DatabaseSync } from "node:sqlite";
 import type { ExportFile } from "../shared/corpus";
 import type {
   BookDetail,
+  ImportProgress,
   ImportResult,
   LibraryBook,
   ScrollAnchor,
@@ -252,11 +253,17 @@ export const createLibrary = ({
   };
 
   return {
-    async importBook({ corpusBookId }: { corpusBookId: string }): Promise<ImportResult> {
+    async importBook({ corpusBookId, onProgress }: { corpusBookId: string; onProgress?: (progress: ImportProgress) => void }): Promise<ImportResult> {
       if (bookExists(corpusBookId)) {
         throw new Error(`Book ${corpusBookId} is already imported. Sync it to pull changes from the corpus.`);
       }
-      const [meta, files] = await Promise.all([corpus.getBook(corpusBookId), corpus.exportBook(corpusBookId)]);
+      const [meta, files] = await Promise.all([
+        corpus.getBook(corpusBookId),
+        corpus.exportBook(corpusBookId, { onProgress: (p) => onProgress?.({ phase: "downloading", ...p }) }),
+      ]);
+      onProgress?.({ phase: "saving" });
+      // Lets the saving step reach the window before the write holds the main process.
+      await new Promise((resolve) => setImmediate(resolve));
       const ready = files.filter(hasText);
       transaction(() => {
         const at = now();

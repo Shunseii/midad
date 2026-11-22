@@ -92,3 +92,47 @@ describe("getText", () => {
     await expect(client.getText({ ...page, rev: "99" })).rejects.toMatchObject({ status: 404 });
   });
 });
+
+describe("exportBook", () => {
+  const exported = (id: string) => ({ file_id: id, page_number: null, role: null, order_hint: null, state: "done", text: id });
+
+  it("fetches the book in batches, following the cursor, and reports progress after each", async () => {
+    const batches = [
+      { files: [exported("a"), exported("b")], files_total: 3, next_cursor: "p 2/x" },
+      { files: [exported("c")], files_total: 3, next_cursor: null },
+    ];
+    const fetchMock = vi.fn(async (_url: string, _init?: RequestInit) => json(200, { success: true, book_id: "book 1", ...batches.shift() }));
+    vi.stubGlobal("fetch", fetchMock);
+    const progress: { done: number; total: number }[] = [];
+    const files = await client.exportBook("book 1", { onProgress: (p) => progress.push(p) });
+    expect(files.map((f) => f.file_id)).toEqual(["a", "b", "c"]);
+    expect(fetchMock.mock.calls.map(([url]) => url)).toEqual([
+      "https://corpus.test/api/books/book%201/export?limit=50",
+      "https://corpus.test/api/books/book%201/export?limit=50&cursor=p%202%2Fx",
+    ]);
+    expect(progress).toEqual([
+      { done: 2, total: 3 },
+      { done: 3, total: 3 },
+    ]);
+  });
+
+  it("uses the latest total, and never reports more done than total", async () => {
+    const batches = [
+      { files: [exported("a")], files_total: 1, next_cursor: "c1" },
+      { files: [exported("b")], files_total: 1, next_cursor: null },
+    ];
+    vi.stubGlobal("fetch", vi.fn(async () => json(200, { success: true, ...batches.shift() })));
+    const progress: { done: number; total: number }[] = [];
+    await client.exportBook("b", { onProgress: (p) => progress.push(p) });
+    expect(progress).toEqual([
+      { done: 1, total: 1 },
+      { done: 2, total: 2 },
+    ]);
+  });
+
+  it("fails the whole export when a batch fails", async () => {
+    const responses = [json(200, { success: true, files: [exported("a")], files_total: 2, next_cursor: "c1" }), json(400, { success: false, error: "bad cursor" })];
+    vi.stubGlobal("fetch", vi.fn(async () => responses.shift()));
+    await expect(client.exportBook("b")).rejects.toBeInstanceOf(CorpusError);
+  });
+});

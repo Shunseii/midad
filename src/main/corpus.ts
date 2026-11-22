@@ -1,10 +1,19 @@
 import type { BookWithStatus, CorpusBookListing, ExportFile, TextEdit, TextEditResult, TextHistory, Work } from "../shared/corpus";
 
+/** Files fetched so far out of the book's latest file count. */
+export interface ExportProgress {
+  done: number;
+  total: number;
+}
+
 /** What the library needs from a book source. The corpus is the only one today. */
 export interface CorpusSource {
   getBook(id: string): Promise<{ id: string; title: string; work: { name: string; author: string | null } | null }>;
-  exportBook(id: string): Promise<ExportFile[]>;
+  exportBook(id: string, options?: { onProgress?: (progress: ExportProgress) => void }): Promise<ExportFile[]>;
 }
+
+/** Files per export request; each batch reports progress. */
+export const EXPORT_BATCH = 50;
 
 export class CorpusError extends Error {
   constructor(
@@ -64,8 +73,20 @@ export const createCorpusClient = ({ endpoint, key }: { endpoint: string; key: s
       };
     },
 
-    async exportBook(id: string): Promise<ExportFile[]> {
-      return (await get<{ files: ExportFile[] }>(`/api/books/${id}/export`)).files;
+    /** The book's files in batches, so a long book reports progress as it arrives. */
+    async exportBook(id: string, { onProgress }: { onProgress?: (progress: ExportProgress) => void } = {}): Promise<ExportFile[]> {
+      const files = new Map<string, ExportFile>();
+      let cursor: string | null = null;
+      do {
+        const query: string = cursor === null ? "" : `&cursor=${encodeURIComponent(cursor)}`;
+        const batch = await get<{ files: ExportFile[]; files_total: number; next_cursor: string | null }>(
+          `/api/books/${encodeURIComponent(id)}/export?limit=${EXPORT_BATCH}${query}`,
+        );
+        for (const f of batch.files) files.set(f.file_id, f);
+        cursor = batch.next_cursor;
+        onProgress?.({ done: files.size, total: Math.max(batch.files_total, files.size) });
+      } while (cursor !== null);
+      return [...files.values()];
     },
 
     /** The page's original scan image. */

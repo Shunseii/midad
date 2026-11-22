@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type { StreamEvent } from "../shared/ask";
-import { ASK_EVENT, CHANNELS, type MidadApi, type MidadEvents, LIBRARY_CHANGED } from "../shared/ipc";
+import { ASK_EVENT, CHANNELS, IMPORT_PROGRESS, type MidadApi, type MidadEvents, LIBRARY_CHANGED } from "../shared/ipc";
+import type { ImportProgress } from "../shared/library";
 
 // Electron prefixes errors thrown in the main process; strip it so the UI can
 // show the original message.
@@ -23,6 +24,11 @@ const events: MidadEvents = {
     const listener = () => callback();
     ipcRenderer.on(LIBRARY_CHANGED, listener);
     return () => ipcRenderer.off(LIBRARY_CHANGED, listener);
+  },
+  onImportProgress: (callback) => {
+    const listener = (_event: unknown, corpusBookId: string, progress: ImportProgress) => callback(corpusBookId, progress);
+    ipcRenderer.on(IMPORT_PROGRESS, listener);
+    return () => ipcRenderer.off(IMPORT_PROGRESS, listener);
   },
   onAskEvent: (callback) => {
     const listener = (_event: unknown, requestId: string, event: StreamEvent) => callback(requestId, event);

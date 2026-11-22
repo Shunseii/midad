@@ -60,6 +60,9 @@ export interface SyncResult {
   pending: number;
 }
 
+/** Where an import stands: fetching pages from the corpus, then writing them to the library. */
+export type ImportProgress = { phase: "downloading"; done: number; total: number } | { phase: "saving" };
+
 export interface ImportResult {
   bookId: string;
   imported: number;

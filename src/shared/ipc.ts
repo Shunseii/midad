@@ -5,6 +5,7 @@ import type { CorpusBookListing } from "./corpus";
 import type {
   BookDetail,
   Bookmark,
+  ImportProgress,
   ImportResult,
   LastRead,
   LibraryBook,
@@ -135,6 +136,8 @@ export const CHANNELS = [
 export interface MidadEvents {
   /** Another process (the midad CLI) changed the library. Returns an unsubscribe function. */
   onLibraryChanged: (callback: () => void) => () => void;
+  /** Progress of a book being imported from the corpus. Returns an unsubscribe function. */
+  onImportProgress: (callback: (corpusBookId: string, progress: ImportProgress) => void) => () => void;
   /** Progress of an Ask AI request. Returns an unsubscribe function. */
   onAskEvent: (callback: (requestId: string, event: StreamEvent) => void) => () => void;
 }
@@ -142,3 +145,5 @@ export interface MidadEvents {
 export const ASK_EVENT = "ai.event";
 
 export const LIBRARY_CHANGED = "library.changed";
+
+export const IMPORT_PROGRESS = "library.importProgress";
