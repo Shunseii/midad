@@ -177,6 +177,7 @@ const linesOnScreen = (root: HTMLElement): number[] => {
  */
 const useActiveIndicator = (active: number[]) => {
   const list = useRef<HTMLDivElement>(null);
+  const followed = useRef(false);
   const [box, setBox] = useState<{ top: number; height: number; animate: boolean } | null>(null);
   const first = active.length ? Math.min(...active) : -1;
   const last = active.length ? Math.max(...active) : -1;
@@ -186,7 +187,18 @@ const useActiveIndicator = (active: number[]) => {
     const bottom = items?.[last];
     if (!top || !bottom) return setBox(null);
     setBox((prev) => ({ top: top.offsetTop, height: bottom.offsetTop + bottom.offsetHeight - top.offsetTop, animate: prev !== null }));
+    // Follow the reader: bring the current chapter into view when it's scrolled out, at once when the list opens.
+    const scroller = top.closest<HTMLElement>(".overflow-y-auto");
+    if (!scroller) return;
+    const view = scroller.getBoundingClientRect();
+    const at = top.getBoundingClientRect();
+    if (at.top >= view.top && at.bottom <= view.bottom) return;
+    const smooth = followed.current && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    scroller.scrollTo({ top: scroller.scrollTop + at.top - view.top - (view.height - at.height) / 2, behavior: smooth ? "smooth" : "instant" });
   }, [first, last]);
+  useEffect(() => {
+    followed.current = true;
+  }, []);
   return { list, box };
 };
 
