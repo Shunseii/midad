@@ -503,7 +503,8 @@ body {
  * quickly and the page shows through over the last part of the move, so the
  * cover never looks stretched.
  */
-:root[data-opening] [data-page-area] {
+:root[data-opening] [data-page-area],
+:root[data-closing] [data-page-area] {
   view-transition-name: book-cover;
 }
 ::view-transition-group(book-cover) {
@@ -515,6 +516,23 @@ body {
 }
 ::view-transition-new(book-cover) {
   animation: cover-content-in 420ms ease both;
+}
+/*
+ * Back to the library, the reverse: the page shrinks into its book's cover,
+ * a little quicker. The page fades early so it never looks squashed, and the
+ * cover shows through over the last part. The scrubber and page counter,
+ * which otherwise change in place, fade out with the reader.
+ */
+:root[data-closing]::view-transition-group(book-cover) {
+  animation-duration: 360ms;
+}
+:root[data-closing]::view-transition-new(book-cover) {
+  animation-duration: 360ms;
+}
+:root[data-closing]::view-transition-old(page-scrubber),
+:root[data-closing]::view-transition-old(page-counter) {
+  display: block;
+  animation: page-out 120ms ease-out both;
 }
 @keyframes cover-content-in {
   0%,

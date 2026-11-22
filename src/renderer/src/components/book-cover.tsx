@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { type CSSProperties, useLayoutEffect } from "react";
 import { cx } from "./ui";
 
 /**
@@ -30,3 +30,26 @@ export const markOpeningCover = (from: Element) => {
   if (cover) cover.style.viewTransitionName = "book-cover";
   document.documentElement.dataset.opening = "";
 };
+
+/** Marks leaving the reader for the library, so the page shrinks back into this book's cover. */
+export const markClosingBook = (bookId: string) => {
+  document.documentElement.dataset.closing = bookId;
+};
+
+/** How long the opening and closing transitions keep their marks: a little longer than they play. */
+export const COVER_TRANSITION_MS = 700;
+
+/** In the library: names the closing book's cover (the first one, Continue reading's when shown) for the page to shrink into. */
+export const useClosingCover = () =>
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    const bookId = root.dataset.closing;
+    if (bookId === undefined) return;
+    const cover = document.querySelector<HTMLElement>(`[data-book="${CSS.escape(bookId)}"] [data-cover]`);
+    if (cover) cover.style.viewTransitionName = "book-cover";
+    const timer = setTimeout(() => {
+      delete root.dataset.closing;
+      if (cover) cover.style.viewTransitionName = "";
+    }, COVER_TRANSITION_MS);
+    return () => clearTimeout(timer);
+  }, []);

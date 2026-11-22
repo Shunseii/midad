@@ -2,7 +2,7 @@ import { BookOpen, Download, RefreshCw, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import type { LibraryBook } from "../../../shared/library";
-import { BookCover, markOpeningCover } from "../components/book-cover";
+import { BookCover, markOpeningCover, useClosingCover } from "../components/book-cover";
 import { ImportDialog } from "../components/import-dialog";
 import { SyncDialog } from "../components/sync-dialog";
 import { Button, IconButton, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
@@ -23,7 +23,7 @@ const isFinished = (b: LibraryBook) => b.progress !== null && b.progress.positio
 const BookCard = ({ book, onSync }: { book: LibraryBook; onSync: () => void }) => {
   const position = book.progress?.position ?? 0;
   return (
-    <div data-book className="group relative flex flex-col gap-3">
+    <div data-book={book.bookId} className="group relative flex flex-col gap-3">
       <Link
         to={`/read/${book.bookId}`}
         viewTransition
@@ -52,7 +52,7 @@ const ContinueCard = ({ book }: { book: LibraryBook }) => {
   };
   const author = [book.author, book.edition].filter(Boolean).join(" · ");
   return (
-    <div data-book className="flex items-center gap-8 rounded-2xl border border-line bg-surface p-6">
+    <div data-book={book.bookId} className="flex items-center gap-8 rounded-2xl border border-line bg-surface p-6">
       <button
         type="button"
         aria-label={`Open ${book.title}`}
@@ -85,6 +85,7 @@ export const LibraryRoute = () => {
   const library = useLibrary();
   const settings = useSettings();
   const [shelf, setShelf] = useState<Shelf>("all");
+  useClosingCover();
   const [filter, setFilter] = useState("");
   const [importing, setImporting] = useState(false);
   const [syncing, setSyncing] = useState<LibraryBook | null>(null);

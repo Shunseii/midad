@@ -27,6 +27,7 @@ import { arabicNumber } from "../lib/format";
 import { type BookmarkState, createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
 import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookmarks, useBookMarks, useMarker, usePage, useSetBookmark, useSetMarker } from "../lib/midad";
 import { BookmarkList, BookmarkRibbon } from "../components/bookmarks";
+import { COVER_TRANSITION_MS, markClosingBook } from "../components/book-cover";
 import { bookmarkFolio } from "../lib/bookmarks";
 import { usePref } from "../lib/prefs";
 import { useFocusMode, useGlossMode, useHighlightStyle, useNoteIcons, usePageWidth } from "../lib/appearance";
@@ -526,7 +527,7 @@ export const ReaderRoute = () => {
   useEffect(() => setFind((f) => ({ ...f, active: 0 })), [position]);
   // The library names its cover and marks the opening; once the transition has played, page turns use their own name again.
   useEffect(() => {
-    const timer = setTimeout(() => delete document.documentElement.dataset.opening, 700);
+    const timer = setTimeout(() => delete document.documentElement.dataset.opening, COVER_TRANSITION_MS);
     return () => clearTimeout(timer);
   }, []);
 
@@ -1222,7 +1223,7 @@ export const ReaderRoute = () => {
         data-focus={focused ? "hidden" : undefined}
         className="relative z-20 flex h-15 shrink-0 items-center gap-2 border-b border-line bg-bg px-4 transition-[translate,opacity] duration-panel ease-sheet [view-transition-name:reader-header] data-[focus=hidden]:pointer-events-none data-[focus=hidden]:-translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
       >
-        <Link to="/" viewTransition aria-label="Back to Library">
+        <Link to="/" viewTransition aria-label="Back to Library" onClick={() => markClosingBook(bookId)}>
           <IconButton icon={ArrowLeft} label="Back to Library" tabIndex={-1} />
         </Link>
         <IconButton
