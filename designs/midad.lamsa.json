@@ -678,6 +678,22 @@
       },
       "type": "text"
     },
+    "0IexGVCV": {
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "j9aA2LqN",
+      "props": {
+        "label": "New conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "0J0HqkYz": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "index": "a0",
@@ -1213,15 +1229,6 @@
       },
       "type": "text"
     },
-    "0YCeKUiQ": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "byvYjfeF",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
     "0YfBHR3m": {
       "index": "a001",
       "name": "Spacer",
@@ -1721,15 +1728,6 @@
       },
       "type": "text"
     },
-    "0lwgdzz2": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "zzT8EFDb",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
     "0m93E36I": {
       "content": "اسمٌ",
       "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
@@ -1793,8 +1791,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -3957,7 +3957,7 @@
       "type": "frame"
     },
     "1zDrATf9": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "EabXcvml",
       "style": {
@@ -4827,7 +4827,7 @@
     },
     "2TEBjYuz": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a3",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -6908,15 +6908,21 @@
     },
     "3OiUQdnn": {
       "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "D6CFnMoM",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -8179,7 +8185,7 @@
       "type": "frame"
     },
     "41qb5Ez9": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "j9aA2LqN",
       "style": {
@@ -10864,17 +10870,29 @@
     },
     "5HOSA4Jq": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "JivOBW4m",
+      "parentId": "ekPNxz8b",
       "props": {
         "label": "Ask",
         "size": "sm",
+        "state": "disabled",
         "variant": "primary",
         "withIcon": "yes"
       },
@@ -12328,7 +12346,7 @@
           "icon": "arrow-left"
         }
       },
-      "parentId": "suGB5MeT",
+      "parentId": "kXoTskvP",
       "props": {
         "label": "Back to conversation",
         "variant": "ghost"
@@ -12947,6 +12965,22 @@
       },
       "type": "frame"
     },
+    "6HlkAA4m": {
+      "componentId": "RV1DOgzp",
+      "index": "a3",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "star"
+        }
+      },
+      "parentId": "j9aA2LqN",
+      "props": {
+        "label": "Save conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "6HoQyj8j": {
       "index": "a3",
       "name": "Word · في",
@@ -13002,6 +13036,22 @@
         "z-index": 5
       },
       "type": "frame"
+    },
+    "6JQtpK2h": {
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "xdr47bV6",
+      "props": {
+        "label": "New conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "6KagQ7MX": {
       "index": "a002",
@@ -14451,15 +14501,6 @@
       },
       "type": "frame"
     },
-    "78qZrssg": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "kXoTskvP",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
     "79WvO2EA": {
       "componentId": "RV1DOgzp",
       "index": "a004V",
@@ -15191,18 +15232,17 @@
       "type": "frame"
     },
     "7V2QbRT6": {
-      "componentId": "ua9C67i7",
+      "componentId": "RV1DOgzp",
       "index": "a3",
-      "name": "Button",
+      "name": "IconButton",
       "overrides": {
-        "O46dZG6P": {
+        "YmvmyXk9": {
           "icon": "square-pen"
         }
       },
-      "parentId": "hh1omiDp",
+      "parentId": "OmByzNzN",
       "props": {
         "label": "New conversation",
-        "size": "sm",
         "variant": "ghost"
       },
       "type": "instance"
@@ -15393,6 +15433,22 @@
         "width": 7
       },
       "type": "frame"
+    },
+    "7ahlNcqy": {
+      "componentId": "RV1DOgzp",
+      "index": "a3",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "star"
+        }
+      },
+      "parentId": "M8jf4U8I",
+      "props": {
+        "label": "Save conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "7bRCV16k": {
       "componentId": "uJd03iQq",
@@ -16350,9 +16406,9 @@
     },
     "84uPuh22": {
       "content": "Which of these three is a ḥarf?",
-      "index": "a000",
+      "index": "a2",
       "name": "Draft",
-      "parentId": "UiBywUNe",
+      "parentId": "SRgjUp0T",
       "style": {
         "color": "{color.ink}",
         "font-family": "{font.body}",
@@ -16437,7 +16493,7 @@
       "type": "text"
     },
     "87MdH9LS": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "xdr47bV6",
       "style": {
@@ -16632,7 +16688,7 @@
       "type": "frame"
     },
     "8HOKSS6R": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "M8jf4U8I",
       "style": {
@@ -16689,17 +16745,6 @@
         "position": "absolute",
         "top": 0,
         "width": 28
-      },
-      "type": "frame"
-    },
-    "8HtGrx2B": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "9EllkQ63",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
       },
       "type": "frame"
     },
@@ -17775,7 +17820,7 @@
       "type": "icon"
     },
     "8nZ0Y0St": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "xdr47bV6",
       "style": {
@@ -18343,14 +18388,14 @@
     },
     "94i61Wwo": {
       "componentId": "RV1DOgzp",
-      "index": "a0",
+      "index": "a2",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
           "icon": "history"
         }
       },
-      "parentId": "GTSktRca",
+      "parentId": "eTvSWQhe",
       "props": {
         "label": "Saved conversations",
         "variant": "ghost"
@@ -18516,15 +18561,6 @@
         "display": "inline"
       },
       "type": "text"
-    },
-    "99ATur9u": {
-      "index": "a1",
-      "name": "Spacer",
-      "parentId": "GTSktRca",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
     },
     "99V2F1Wx": {
       "componentId": "RV1DOgzp",
@@ -18710,18 +18746,20 @@
       "type": "text"
     },
     "9EllkQ63": {
+      "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "tzsDBwBu",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -18893,7 +18931,7 @@
     },
     "9IaJrVO9": {
       "componentId": "wTNsBmCc",
-      "index": "a000",
+      "index": "a0",
       "name": "Chip",
       "parentId": "SRgjUp0T",
       "props": {
@@ -19452,6 +19490,22 @@
       },
       "type": "frame"
     },
+    "9h8P9hpY": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "j9aA2LqN",
+      "props": {
+        "label": "Saved conversations",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "9hKpZU2f": {
       "index": "a1",
       "name": "Word · الصلاة",
@@ -19620,15 +19674,6 @@
         "position": "absolute",
         "top": -31,
         "width": 7
-      },
-      "type": "frame"
-    },
-    "9lysLFG3": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "myIfonNd",
-      "style": {
-        "flex": 1
       },
       "type": "frame"
     },
@@ -20829,7 +20874,7 @@
     },
     "ATYehiMq": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a5",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -21072,19 +21117,6 @@
         "gap": 4
       },
       "type": "frame"
-    },
-    "Aaoe22Bs": {
-      "content": "Ask AI",
-      "index": "a01",
-      "name": "Ask AI",
-      "parentId": "ysTp7l5w",
-      "style": {
-        "color": "{color.ink}",
-        "font-family": "{font.body}",
-        "font-size": 14,
-        "font-weight": 600
-      },
-      "type": "text"
     },
     "Abb2oWm8": {
       "content": "فالاسمُ يُعرَفُ: ",
@@ -21417,6 +21449,22 @@
         "gap": 2
       },
       "type": "frame"
+    },
+    "AnEBJQCG": {
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "M8jf4U8I",
+      "props": {
+        "label": "New conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "Aniy3ybP": {
       "content": "كتطهير الثوب",
@@ -22418,18 +22466,20 @@
       "type": "text"
     },
     "BMAru9kn": {
+      "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "iDIpR3m2",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -22518,8 +22568,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -25843,6 +25895,22 @@
       },
       "type": "text"
     },
+    "Cqe0tfje": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "fEXxXJUc",
+      "props": {
+        "label": "Saved conversations",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "CqmhYNiK": {
       "content": "5",
       "index": "a000",
@@ -26359,18 +26427,20 @@
       "type": "text"
     },
     "D6CFnMoM": {
+      "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "DG8njKBS",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -26455,7 +26525,7 @@
           "icon": "arrow-left"
         }
       },
-      "parentId": "hh1omiDp",
+      "parentId": "OmByzNzN",
       "props": {
         "label": "Back to conversation",
         "variant": "ghost"
@@ -27620,7 +27690,7 @@
       "type": "text"
     },
     "DmCzojZe": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "fEXxXJUc",
       "style": {
@@ -28088,6 +28158,22 @@
         "z-index": 2
       },
       "type": "frame"
+    },
+    "DzxJF3QB": {
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "fEXxXJUc",
+      "props": {
+        "label": "New conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "E08DgvOX": {
       "content": "5",
@@ -28880,18 +28966,20 @@
       "type": "frame"
     },
     "ELtZNklF": {
+      "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}\n/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "zYwp1AEE",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -29013,15 +29101,21 @@
     },
     "ESK74Tjo": {
       "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "9EllkQ63",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -29097,6 +29191,22 @@
       },
       "type": "text"
     },
+    "EZBezplw": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "0maC1Exv",
+      "props": {
+        "label": "Saved conversations",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "EZxtcm6G": {
       "content": "َ",
       "index": "a00001",
@@ -29121,8 +29231,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -29931,13 +30043,15 @@
       "content": "Saved conversations",
       "index": "a1",
       "name": "Title",
-      "parentId": "suGB5MeT",
+      "parentId": "kXoTskvP",
       "style": {
         "color": "{color.ink}",
         "font-family": "{font.body}",
         "font-size": 14,
-        "font-weight": 500,
-        "line-height": "20px"
+        "font-weight": 600,
+        "overflow": "hidden",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -30419,6 +30533,22 @@
       "parentId": "2fbBLs5L",
       "props": {
         "label": "Previous page",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
+    "FC38r62u": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "BMv2tF1I",
+      "props": {
+        "label": "Saved conversations",
         "variant": "ghost"
       },
       "type": "instance"
@@ -31049,6 +31179,22 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "FSK4VijL": {
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "x"
+        }
+      },
+      "parentId": "OmByzNzN",
+      "props": {
+        "label": "Close panel",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "FSgLzQIs": {
       "componentId": "v8FmfBf5",
@@ -32637,17 +32783,29 @@
     },
     "GG8nKiT8": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "8HtGrx2B",
+      "parentId": "9EllkQ63",
       "props": {
         "label": "Ask",
         "size": "sm",
+        "state": "disabled",
         "variant": "primary",
         "withIcon": "yes"
       },
@@ -32858,18 +33016,20 @@
       "type": "frame"
     },
     "GOVZE0dQ": {
+      "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "QzwbVZH5",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -33077,20 +33237,6 @@
       "parentId": "eQCnfbyo",
       "style": {
         "flex": 1
-      },
-      "type": "frame"
-    },
-    "GTSktRca": {
-      "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}",
-      "index": "a000V",
-      "name": "Conversation bar",
-      "parentId": "fW337xCU",
-      "style": {
-        "align-items": "center",
-        "border-bottom": "1px solid {color.line}",
-        "display": "flex",
-        "gap": 4,
-        "padding": "8px 12px"
       },
       "type": "frame"
     },
@@ -33359,15 +33505,21 @@
     },
     "GdqY9pIw": {
       "content": "Wait for the answer, or stop it…",
-      "index": "a000",
-      "name": "Wait for the answer, or stop it…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "ELtZNklF",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -34582,15 +34734,6 @@
       },
       "type": "instance"
     },
-    "HBEzWYwF": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "clgCAKKE",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
     "HCA1Kp6E": {
       "content": "يصلحُ",
       "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
@@ -35604,6 +35747,22 @@
       },
       "type": "text"
     },
+    "HhS3IR3H": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "M8jf4U8I",
+      "props": {
+        "label": "Saved conversations",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "HiLu4Wdk": {
       "content": "140 of 1,312",
       "index": "a2",
@@ -35756,18 +35915,20 @@
       "type": "frame"
     },
     "Hntlaz2T": {
+      "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "rQw63gFd",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -36306,8 +36467,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -37595,7 +37758,7 @@
       "type": "instance"
     },
     "IkPLT0NK": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "EabXcvml",
       "style": {
@@ -39474,7 +39637,7 @@
     },
     "Jd0OChsA": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a5",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -39628,17 +39791,6 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
-      },
-      "type": "frame"
-    },
-    "JivOBW4m": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "ekPNxz8b",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
       },
       "type": "frame"
     },
@@ -40195,7 +40347,7 @@
       "type": "text"
     },
     "K0AyerB5": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "j9aA2LqN",
       "style": {
@@ -40434,15 +40586,21 @@
     },
     "K7VcZwqe": {
       "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "ekPNxz8b",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -40674,18 +40832,17 @@
       "type": "text"
     },
     "KDpOg7EI": {
-      "componentId": "ua9C67i7",
-      "index": "a3",
-      "name": "Button",
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
       "overrides": {
-        "O46dZG6P": {
+        "YmvmyXk9": {
           "icon": "square-pen"
         }
       },
-      "parentId": "GTSktRca",
+      "parentId": "eTvSWQhe",
       "props": {
         "label": "New conversation",
-        "size": "sm",
         "variant": "ghost"
       },
       "type": "instance"
@@ -40826,7 +40983,7 @@
     },
     "KHt0efu8": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a5",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -42064,17 +42221,6 @@
         "font-size": 12
       },
       "type": "text"
-    },
-    "KyslIoSm": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "Hntlaz2T",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
-      },
-      "type": "frame"
     },
     "L0APUO58": {
       "mode": "light",
@@ -44194,8 +44340,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -46321,7 +46469,7 @@
     },
     "NCsrkTuH": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a5",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -47307,7 +47455,7 @@
       "type": "frame"
     },
     "NdIQyKIZ": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "vuQOu0BY",
       "style": {
@@ -47389,6 +47537,22 @@
         "gap": 4
       },
       "type": "frame"
+    },
+    "NfNniUuH": {
+      "componentId": "RV1DOgzp",
+      "index": "a3",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "star"
+        }
+      },
+      "parentId": "xdr47bV6",
+      "props": {
+        "label": "Save conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "NfUiTTiR": {
       "componentId": "RV1DOgzp",
@@ -48106,15 +48270,6 @@
         "line-height": "16px"
       },
       "type": "text"
-    },
-    "O3poDU7F": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "KyslIoSm",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
     },
     "O4O33i7r": {
       "index": "a3",
@@ -49543,7 +49698,7 @@
       "type": "text"
     },
     "OlJSXzuY": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "0maC1Exv",
       "style": {
@@ -49561,8 +49716,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -49629,15 +49786,21 @@
     },
     "OpVif6x1": {
       "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "WUdoWCLb",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -50814,18 +50977,20 @@
       "type": "frame"
     },
     "PJj3vZwA": {
+      "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}\n/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "fW337xCU",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -52253,7 +52418,7 @@
       "type": "text"
     },
     "Q7f2gG6N": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "eTvSWQhe",
       "style": {
@@ -53934,17 +54099,29 @@
     },
     "QyTed555": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "yYfilfcH",
+      "parentId": "PJj3vZwA",
       "props": {
         "label": "Ask",
         "size": "sm",
+        "state": "disabled",
         "variant": "primary",
         "withIcon": "yes"
       },
@@ -54189,6 +54366,22 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "R9W5ByWp": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "xdr47bV6",
+      "props": {
+        "label": "Saved conversations",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "R9kvH15E": {
       "content": "(٢) قوله: لا يكون لها صحة: أوردَ عليه أنَّ انتفاء الثواب إنما يستلزمُ انتفاءَ الصحَّة لو كانت الصحَّةُ عبارةً عن ترتُّب الغرض ويكون الغرضُ هو الثواب…",
@@ -54671,17 +54864,29 @@
     },
     "RQeKQCbr": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "KyslIoSm",
+      "parentId": "Hntlaz2T",
       "props": {
         "label": "Ask",
         "size": "sm",
+        "state": "disabled",
         "variant": "primary",
         "withIcon": "yes"
       },
@@ -55257,6 +55462,22 @@
       },
       "type": "text"
     },
+    "RftcC3B4": {
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "vuQOu0BY",
+      "props": {
+        "label": "New conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "RfxiFtFC": {
       "content": "4",
       "index": "a000",
@@ -55391,15 +55612,6 @@
         "line-height": "20px"
       },
       "type": "text"
-    },
-    "Rjdnj1Zm": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "g5FfOSMi",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
     },
     "RkmyX58L": {
       "content": "بابُ مرفوعاتِ الأسماءِ",
@@ -56754,14 +56966,19 @@
       "type": "frame"
     },
     "SRgjUp0T": {
-      "index": "Za000",
-      "name": "Quote chips",
-      "parentId": "UiBywUNe",
+      "css": "/* One line by default, two at most, then it scrolls with a slim thumb. */\nscrollbar-width: auto;\nscrollbar-color: auto;\n\n&::-webkit-scrollbar {\n  width: 4px;\n}\n\n&::-webkit-scrollbar-button {\n  display: none;\n}\n\n&::-webkit-scrollbar-thumb {\n  border-radius: 999px;\n  background: color-mix(in oklab, {color.ink} 20%, transparent);\n}",
+      "index": "a0",
+      "name": "Editor",
+      "parentId": "ysRYgvjt",
       "style": {
+        "align-content": "flex-start",
+        "align-items": "center",
+        "column-gap": 4,
         "display": "flex",
         "flex-wrap": "wrap",
-        "margin": "0 -2px",
-        "row-gap": 4
+        "max-height": 48,
+        "overflow-y": "auto",
+        "row-gap": 0
       },
       "type": "frame"
     },
@@ -57218,6 +57435,22 @@
         "text-indent": "-1.5em"
       },
       "type": "frame"
+    },
+    "SgoxBCrp": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "vuQOu0BY",
+      "props": {
+        "label": "Saved conversations",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "SgwByplx": {
       "componentId": "uJd03iQq",
@@ -58302,28 +58535,31 @@
       },
       "type": "text"
     },
-    "TCNEQjMX": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "yYfilfcH",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
     "TCq5bzwZ": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "zzT8EFDb",
+      "parentId": "GOVZE0dQ",
       "props": {
         "label": "Ask",
         "size": "sm",
+        "state": "disabled",
         "variant": "primary",
         "withIcon": "yes"
       },
@@ -58415,6 +58651,22 @@
         "width": 640
       },
       "type": "frame"
+    },
+    "TGETVbRK": {
+      "componentId": "RV1DOgzp",
+      "index": "a3",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "star"
+        }
+      },
+      "parentId": "fEXxXJUc",
+      "props": {
+        "label": "Save conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "TGNn0fxA": {
       "index": "a2",
@@ -59203,14 +59455,25 @@
     },
     "TatFNO4h": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "byvYjfeF",
+      "parentId": "UiBywUNe",
       "props": {
         "label": "Ask",
         "size": "sm",
@@ -61530,18 +61793,20 @@
       "type": "frame"
     },
     "UiBywUNe": {
+      "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "k4genWl5",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -62481,7 +62746,7 @@
     },
     "V9zCZtVT": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a5",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -64962,18 +65227,20 @@
       "type": "frame"
     },
     "WUdoWCLb": {
+      "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "hbcVxN8c",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -65110,15 +65377,21 @@
     },
     "WXkdG4gS": {
       "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "GOVZE0dQ",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -65255,6 +65528,7 @@
       "type": "icon"
     },
     "WeTWRbpE": {
+      "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}",
       "index": "a001",
       "name": "Panel body",
       "parentId": "zYwp1AEE",
@@ -65705,7 +65979,7 @@
     },
     "WsIy5nMr": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a5",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -66027,6 +66301,22 @@
         "width": 28
       },
       "type": "frame"
+    },
+    "X22D3uvT": {
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "square-pen"
+        }
+      },
+      "parentId": "BMv2tF1I",
+      "props": {
+        "label": "New conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "X3ClB3i7": {
       "name": "Page turn · 2 · Page 4",
@@ -68204,7 +68494,7 @@
     },
     "Y79DqLT7": {
       "componentId": "wTNsBmCc",
-      "index": "a000V",
+      "index": "a1",
       "name": "Chip",
       "parentId": "SRgjUp0T",
       "props": {
@@ -68831,7 +69121,7 @@
     "YLxextru": {
       "index": "a2",
       "name": "Spacer",
-      "parentId": "suGB5MeT",
+      "parentId": "kXoTskvP",
       "style": {
         "flex": 1
       },
@@ -72323,6 +72613,22 @@
       "x": 9400,
       "y": 2120
     },
+    "aHMl2R4E": {
+      "componentId": "RV1DOgzp",
+      "index": "a3",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "star"
+        }
+      },
+      "parentId": "vuQOu0BY",
+      "props": {
+        "label": "Save conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "aIzRCYpJ": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "index": "a4",
@@ -72539,17 +72845,29 @@
     },
     "aO2lyaNX": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "g5FfOSMi",
+      "parentId": "BMAru9kn",
       "props": {
         "label": "Ask",
         "size": "sm",
+        "state": "disabled",
         "variant": "primary",
         "withIcon": "yes"
       },
@@ -74846,7 +75164,7 @@
       "type": "text"
     },
     "bWCkzpxM": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "vuQOu0BY",
       "style": {
@@ -75024,7 +75342,7 @@
       "type": "frame"
     },
     "bbvsJYP4": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "I60ErK2M",
       "style": {
@@ -75697,17 +76015,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "byvYjfeF": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "UiBywUNe",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
-      },
-      "type": "frame"
     },
     "byxXDl4T": {
       "content": "12",
@@ -77255,17 +77562,6 @@
       "parentId": "hBiLq8nr",
       "style": {
         "flex": 1
-      },
-      "type": "frame"
-    },
-    "clgCAKKE": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "D6CFnMoM",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
       },
       "type": "frame"
     },
@@ -79064,7 +79360,7 @@
       "type": "frame"
     },
     "doziGxDe": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "M8jf4U8I",
       "style": {
@@ -80291,8 +80587,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -80492,15 +80790,6 @@
         "variant": "ghost"
       },
       "type": "instance"
-    },
-    "eYCIuuWX": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "JivOBW4m",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
     },
     "eZ5ajXsF": {
       "content": "1",
@@ -81005,18 +81294,20 @@
       "type": "text"
     },
     "ekPNxz8b": {
+      "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
       "name": "Composer",
       "parentId": "J89QmYT5",
       "style": {
+        "align-items": "flex-end",
         "background": "{color.surface}",
         "border": "1px solid {color.line}",
         "border-radius": 12,
         "display": "flex",
-        "flex-direction": "column",
-        "gap": 12,
+        "flex-shrink": 0,
+        "gap": 8,
         "margin": "0 16px 16px",
-        "padding": 12
+        "padding": "6px 6px 6px 12px"
       },
       "type": "frame"
     },
@@ -82191,8 +82482,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -82599,15 +82892,6 @@
       "index": "a001",
       "name": "Spacer",
       "parentId": "VdX5pjGs",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
-    "fRgVhKVD": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "8HtGrx2B",
       "style": {
         "flex": 1
       },
@@ -84091,17 +84375,6 @@
       },
       "type": "frame"
     },
-    "g5FfOSMi": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "BMAru9kn",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
-      },
-      "type": "frame"
-    },
     "g6F8Xnnn": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "index": "a2",
@@ -84306,20 +84579,6 @@
         "position": "absolute",
         "top": 12,
         "width": 7
-      },
-      "type": "frame"
-    },
-    "gA64kR4A": {
-      "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}",
-      "index": "a000V",
-      "name": "Conversation bar",
-      "parentId": "zYwp1AEE",
-      "style": {
-        "align-items": "center",
-        "border-bottom": "1px solid {color.line}",
-        "display": "flex",
-        "gap": 4,
-        "padding": "8px 12px"
       },
       "type": "frame"
     },
@@ -86872,18 +87131,17 @@
       "type": "frame"
     },
     "hWOUvC8K": {
-      "componentId": "ua9C67i7",
-      "index": "a3",
-      "name": "Button",
+      "componentId": "RV1DOgzp",
+      "index": "a4",
+      "name": "IconButton",
       "overrides": {
-        "O46dZG6P": {
+        "YmvmyXk9": {
           "icon": "square-pen"
         }
       },
-      "parentId": "gA64kR4A",
+      "parentId": "I60ErK2M",
       "props": {
         "label": "New conversation",
-        "size": "sm",
         "variant": "ghost"
       },
       "type": "instance"
@@ -87220,19 +87478,6 @@
       },
       "type": "text"
     },
-    "hh1omiDp": {
-      "index": "a0",
-      "name": "Screen bar",
-      "parentId": "xzREwFh2",
-      "style": {
-        "align-items": "center",
-        "border-bottom": "1px solid {color.line}",
-        "display": "flex",
-        "gap": 4,
-        "padding": "8px 12px"
-      },
-      "type": "frame"
-    },
     "hh9FiHBa": {
       "content": "4 of 24",
       "css": "view-transition-name: page-counter;",
@@ -87323,7 +87568,7 @@
       "type": "text"
     },
     "hkfKwpmx": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "BMv2tF1I",
       "style": {
@@ -90212,8 +90457,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -90948,17 +91195,29 @@
     },
     "jaNbd8oz": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "myIfonNd",
+      "parentId": "WUdoWCLb",
       "props": {
         "label": "Ask",
         "size": "sm",
+        "state": "disabled",
         "variant": "primary",
         "withIcon": "yes"
       },
@@ -91179,15 +91438,21 @@
     },
     "jiBtejFU": {
       "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "BMAru9kn",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -92470,7 +92735,8 @@
     },
     "kIVXTb3x": {
       "componentId": "RV1DOgzp",
-      "index": "a2",
+      "css": "& svg {\n  fill: currentColor;\n  transition: fill {transition.duration-press} {ease.out};\n}",
+      "index": "a3",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -92480,7 +92746,7 @@
           }
         }
       },
-      "parentId": "gA64kR4A",
+      "parentId": "I60ErK2M",
       "props": {
         "label": "Saved",
         "state": "selected",
@@ -93080,8 +93346,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -93197,19 +93465,6 @@
         "min-width": 0
       },
       "type": "frame"
-    },
-    "kbCTdDWV": {
-      "content": "Ask AI",
-      "index": "a1",
-      "name": "Title",
-      "parentId": "OmByzNzN",
-      "style": {
-        "color": "{color.ink}",
-        "font-family": "{font.body}",
-        "font-size": 15,
-        "font-weight": 600
-      },
-      "type": "text"
     },
     "kbSukD6W": {
       "index": "a6",
@@ -93498,7 +93753,7 @@
       "type": "icon"
     },
     "kkJW8LwH": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "eTvSWQhe",
       "style": {
@@ -94693,7 +94948,7 @@
       "type": "instance"
     },
     "lL7vb004": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "I60ErK2M",
       "style": {
@@ -96159,15 +96414,6 @@
       },
       "type": "frame"
     },
-    "m07c7iq2": {
-      "index": "a001",
-      "name": "Spacer",
-      "parentId": "rFvIxJCV",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
-    },
     "m08uhv7c": {
       "content": "د",
       "index": "a00002",
@@ -96470,13 +96716,15 @@
       "content": "Saved conversations",
       "index": "a1",
       "name": "Title",
-      "parentId": "hh1omiDp",
+      "parentId": "OmByzNzN",
       "style": {
         "color": "{color.ink}",
         "font-family": "{font.body}",
         "font-size": 14,
-        "font-weight": 500,
-        "line-height": "20px"
+        "font-weight": 600,
+        "overflow": "hidden",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -96636,17 +96884,29 @@
     },
     "mB4zpg6n": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Ask button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "arrow-up"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "clgCAKKE",
+      "parentId": "D6CFnMoM",
       "props": {
         "label": "Ask",
         "size": "sm",
+        "state": "disabled",
         "variant": "primary",
         "withIcon": "yes"
       },
@@ -96992,15 +97252,21 @@
     },
     "mPUNAsUP": {
       "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "Hntlaz2T",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -97793,14 +98059,14 @@
     },
     "mqgPyzo0": {
       "componentId": "RV1DOgzp",
-      "index": "a0",
+      "index": "a2",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
           "icon": "history"
         }
       },
-      "parentId": "gA64kR4A",
+      "parentId": "I60ErK2M",
       "props": {
         "label": "Saved conversations",
         "variant": "ghost"
@@ -98092,17 +98358,6 @@
         "line-height": "52px"
       },
       "type": "text"
-    },
-    "myIfonNd": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "WUdoWCLb",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
-      },
-      "type": "frame"
     },
     "myIyVNTM": {
       "content": "Contents",
@@ -98683,20 +98938,6 @@
       },
       "type": "text"
     },
-    "nGzUFlDk": {
-      "icon": "sparkles",
-      "index": "a00",
-      "name": "Icon sparkles",
-      "parentId": "ysTp7l5w",
-      "set": "lucide",
-      "style": {
-        "color": "{color.accent}",
-        "flex-shrink": 0,
-        "height": 16,
-        "width": 16
-      },
-      "type": "icon"
-    },
     "nHbWM7Jc": {
       "index": "a004",
       "name": "Divider",
@@ -98771,19 +99012,6 @@
         "white-space": "pre"
       },
       "type": "frame"
-    },
-    "nKCjaA7O": {
-      "icon": "sparkles",
-      "index": "a0",
-      "name": "Icon sparkles",
-      "parentId": "OmByzNzN",
-      "set": "lucide",
-      "style": {
-        "color": "{color.accent}",
-        "height": 18,
-        "width": 18
-      },
-      "type": "icon"
     },
     "nKN3972y": {
       "content": "Resume reading",
@@ -99305,14 +99533,25 @@
     },
     "naNb7UnU": {
       "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
+      "index": "a1",
+      "name": "Stop button",
       "overrides": {
+        "1lq7vclo": {
+          "hidden": true
+        },
         "O46dZG6P": {
           "icon": "square"
+        },
+        "ua9C67i7": {
+          "style": {
+            "flex-shrink": 0,
+            "height": 32,
+            "padding": 0,
+            "width": 32
+          }
         }
       },
-      "parentId": "rFvIxJCV",
+      "parentId": "ELtZNklF",
       "props": {
         "label": "Stop",
         "size": "sm",
@@ -100253,15 +100492,21 @@
     },
     "o4FllCy1": {
       "content": "Ask about this passage…",
-      "index": "a000",
-      "name": "Ask about this passage…",
+      "index": "a0",
+      "name": "Input placeholder",
       "parentId": "PJj3vZwA",
       "style": {
         "color": "{color.ink-3}",
+        "flex": 1,
         "font-family": "{font.body}",
         "font-size": 15,
         "font-weight": 400,
-        "line-height": "24px"
+        "line-height": "24px",
+        "min-width": 0,
+        "overflow": "hidden",
+        "padding": "4px 0",
+        "text-overflow": "ellipsis",
+        "white-space": "nowrap"
       },
       "type": "text"
     },
@@ -101724,14 +101969,14 @@
     },
     "ouozpgfP": {
       "componentId": "RV1DOgzp",
-      "index": "a2",
+      "index": "a3",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
           "icon": "star"
         }
       },
-      "parentId": "GTSktRca",
+      "parentId": "eTvSWQhe",
       "props": {
         "label": "Save conversation",
         "variant": "ghost"
@@ -105862,7 +106107,7 @@
     "qzcfH0fF": {
       "index": "a2",
       "name": "Spacer",
-      "parentId": "hh1omiDp",
+      "parentId": "OmByzNzN",
       "style": {
         "flex": 1
       },
@@ -106468,17 +106713,6 @@
         "line-height": "24px"
       },
       "type": "text"
-    },
-    "rFvIxJCV": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "ELtZNklF",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
-      },
-      "type": "frame"
     },
     "rGDEQgxT": {
       "content": "6 works · 2,772 pages transcribed",
@@ -107352,7 +107586,7 @@
       "type": "instance"
     },
     "rfarGlyS": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "fEXxXJUc",
       "style": {
@@ -108795,6 +109029,22 @@
       },
       "type": "frame"
     },
+    "sHGUZooT": {
+      "componentId": "RV1DOgzp",
+      "index": "a3",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "star"
+        }
+      },
+      "parentId": "BMv2tF1I",
+      "props": {
+        "label": "Save conversation",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "sHW1iJS9": {
       "content": "صحة",
       "index": "a1",
@@ -109604,7 +109854,7 @@
     },
     "sjqoCPFK": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a5",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -109892,19 +110142,6 @@
         "align-items": "center",
         "display": "flex",
         "gap": 8
-      },
-      "type": "frame"
-    },
-    "suGB5MeT": {
-      "index": "a0",
-      "name": "Screen bar",
-      "parentId": "1YQBL9G5",
-      "style": {
-        "align-items": "center",
-        "border-bottom": "1px solid {color.line}",
-        "display": "flex",
-        "gap": 4,
-        "padding": "8px 12px"
       },
       "type": "frame"
     },
@@ -110926,15 +111163,6 @@
         "display": "inline"
       },
       "type": "text"
-    },
-    "tQuvX3Tc": {
-      "index": "a1",
-      "name": "Spacer",
-      "parentId": "gA64kR4A",
-      "style": {
-        "flex": 1
-      },
-      "type": "frame"
     },
     "tRbZhj6a": {
       "index": "a0",
@@ -112330,7 +112558,7 @@
       "type": "text"
     },
     "uANv83i7": {
-      "index": "a000",
+      "index": "a0",
       "name": "Title",
       "parentId": "BMv2tF1I",
       "style": {
@@ -113213,7 +113441,7 @@
     },
     "ucFLjQ58": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a5",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -115570,8 +115798,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -116701,6 +116931,22 @@
       },
       "type": "text"
     },
+    "wUmpKztB": {
+      "componentId": "RV1DOgzp",
+      "index": "a2",
+      "name": "IconButton",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "history"
+        }
+      },
+      "parentId": "EabXcvml",
+      "props": {
+        "label": "Saved conversations",
+        "variant": "ghost"
+      },
+      "type": "instance"
+    },
     "wVEYacCe": {
       "content": "يصلحُ",
       "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
@@ -117415,6 +117661,7 @@
       "type": "text"
     },
     "wuNZKIkc": {
+      "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}",
       "index": "a001",
       "name": "Panel body",
       "parentId": "fW337xCU",
@@ -117561,7 +117808,7 @@
       "type": "icon"
     },
     "wzVVkgp7": {
-      "index": "a001",
+      "index": "a1",
       "name": "Spacer",
       "parentId": "0maC1Exv",
       "style": {
@@ -119003,8 +119250,10 @@
         "align-items": "center",
         "border-bottom": "1px solid {color.line}",
         "display": "flex",
+        "flex-shrink": 0,
         "gap": 8,
-        "padding": "12px 16px"
+        "height": 60,
+        "padding": "0 16px"
       },
       "type": "frame"
     },
@@ -119314,18 +119563,17 @@
       "type": "frame"
     },
     "xkBYV0XT": {
-      "componentId": "ua9C67i7",
+      "componentId": "RV1DOgzp",
       "index": "a3",
-      "name": "Button",
+      "name": "IconButton",
       "overrides": {
-        "O46dZG6P": {
+        "YmvmyXk9": {
           "icon": "square-pen"
         }
       },
-      "parentId": "suGB5MeT",
+      "parentId": "kXoTskvP",
       "props": {
         "label": "New conversation",
-        "size": "sm",
         "variant": "ghost"
       },
       "type": "instance"
@@ -119438,7 +119686,7 @@
     },
     "xorV1K6M": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a4",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -120596,17 +120844,6 @@
       },
       "type": "text"
     },
-    "yYfilfcH": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "PJj3vZwA",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
-      },
-      "type": "frame"
-    },
     "yZSNibNT": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a4",
@@ -121075,7 +121312,7 @@
     },
     "ylxfJk3a": {
       "componentId": "RV1DOgzp",
-      "index": "a002",
+      "index": "a3",
       "name": "IconButton",
       "overrides": {
         "YmvmyXk9": {
@@ -121338,14 +121575,16 @@
       },
       "type": "text"
     },
-    "ysTp7l5w": {
-      "index": "a000",
-      "name": "Title",
-      "parentId": "kXoTskvP",
+    "ysRYgvjt": {
+      "index": "a0",
+      "name": "Input",
+      "parentId": "UiBywUNe",
       "style": {
-        "align-items": "center",
         "display": "flex",
-        "gap": 8
+        "flex": 1,
+        "flex-direction": "column",
+        "min-width": 0,
+        "padding": "4px 0"
       },
       "type": "frame"
     },
@@ -123479,17 +123718,6 @@
         "text-align": "right"
       },
       "type": "text"
-    },
-    "zzT8EFDb": {
-      "index": "a001",
-      "name": "Footer",
-      "parentId": "GOVZE0dQ",
-      "style": {
-        "align-items": "center",
-        "display": "flex",
-        "gap": 8
-      },
-      "type": "frame"
     },
     "zzdCyuaK": {
       "content": "ْ",
