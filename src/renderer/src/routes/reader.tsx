@@ -59,11 +59,13 @@ const tableOfContents = (book: BookDetail): TocEntry[] => {
     .map((p) => ({ text: p.header ?? "", level: 2, position: p.position, number: p.number }));
 };
 
-/** Matches the contents rail's w-62. */
-const CONTENTS_WIDTH = 248;
-const CONTENTS_MIN = 200;
+const CONTENTS_WIDTH = 264;
+/** Room for the Contents | Bookmarks tabs and the close button. */
+const CONTENTS_MIN = 256;
 const CONTENTS_MAX = 420;
 const PANEL_WIDTH = 400;
+/** Room for the side panel's tabs or Ask AI's buttons, and the close button. */
+const PANEL_MIN = 320;
 /** Ask AI opens wider than highlights and notes, until the reader sizes it themselves. */
 const ASK_WIDTH = 560;
 const ASK_EXTRA = 120;
@@ -391,7 +393,9 @@ export const ReaderRoute = () => {
   const panelOpen = wide ? panelPref : panelSheet;
   const setPanelOpen = wide ? setPanelPref : setPanelSheet;
   const [panelWidth, setPanelWidth] = usePref({ key: "reader.panelWidth", fallback: PANEL_WIDTH });
-  const [contentsWidth, setContentsWidth] = usePref({ key: "reader.contentsWidth", fallback: CONTENTS_WIDTH });
+  const [savedContentsWidth, setContentsWidth] = usePref({ key: "reader.contentsWidth", fallback: CONTENTS_WIDTH });
+  // Widths saved before the minimums grew still open wide enough for the panels' headers.
+  const contentsWidth = Math.max(savedContentsWidth, CONTENTS_MIN);
   const [panelTab, setPanelTab] = usePref<PanelTab>({ key: "reader.panelTab", fallback: "highlights" });
   const [annotationsTab, setAnnotationsTab] = usePref<Exclude<PanelTab, "ask">>({ key: "reader.annotationsTab", fallback: "highlights" });
   const [askWidth, setAskWidth] = usePref<number | null>({ key: "reader.askWidth", fallback: null });
@@ -403,7 +407,7 @@ export const ReaderRoute = () => {
     const { asking: wasAsking, panelPref: wasOpen, setPanelPref: close } = askOpenAtLoad.current;
     if (wasAsking && wasOpen) close(false);
   }, [bookId]);
-  const sideWidth = asking ? (askWidth ?? Math.max(ASK_WIDTH, panelWidth + ASK_EXTRA)) : panelWidth;
+  const sideWidth = Math.max(asking ? (askWidth ?? Math.max(ASK_WIDTH, panelWidth + ASK_EXTRA)) : panelWidth, PANEL_MIN);
   const setSideWidth = asking ? setAskWidth : setPanelWidth;
   const [toolbar, setToolbar] = useState<Toolbar | null>(null);
   const [removal, setRemoval] = useState<{ id: number; message: string } | null>(null);
@@ -1192,7 +1196,8 @@ export const ReaderRoute = () => {
 
   const contentsSize = {
     width: contentsWidth,
-    onResize: (w: number) => setContentsWidth(Math.round(Math.min(Math.max(w, CONTENTS_MIN), CONTENTS_MAX, window.innerWidth * 0.4))),
+    // The minimum wins over the share of the window, so the header always fits.
+    onResize: (w: number) => setContentsWidth(Math.round(Math.max(Math.min(w, CONTENTS_MAX, window.innerWidth * 0.4), CONTENTS_MIN))),
     onResetSize: () => setContentsWidth(CONTENTS_WIDTH),
     onClose: () => setContentsOpen(false),
   };
@@ -1215,7 +1220,7 @@ export const ReaderRoute = () => {
       onUpdateNote={(input) => void noteWrites.update(input)}
       onEditingNote={setPanelEditTint}
       width={sideWidth}
-      onResize={(w) => setSideWidth(Math.round(Math.min(Math.max(w, 320), window.innerWidth * 0.6)))}
+      onResize={(w) => setSideWidth(Math.round(Math.max(Math.min(w, window.innerWidth * 0.6), PANEL_MIN)))}
       onResetSize={() => (asking ? setAskWidth(null) : setPanelWidth(PANEL_WIDTH))}
       askHeader={<AskHeader conversation={conversation} />}
       askPanel={
