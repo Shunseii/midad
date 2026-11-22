@@ -6,6 +6,7 @@ import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
 import type { AskSelection, Conversation, ConversationSummary, Quote, StoredTurn } from "../../../shared/conversations";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { afterAnswer, type AnswerEnd, type AskQueue, dequeue, emptyQueue, enqueue, sendFirst } from "../lib/ask-queue";
 import { copiedPassage } from "../lib/copied";
 import { arabicNumber, timeAgo } from "../lib/format";
 import { keys, midad, usePage } from "../lib/midad";
@@ -31,6 +32,15 @@ const COMPOSER_ROWS = 3;
 
 const fromStored = ({ createdAt: _, ...turn }: StoredTurn): Turn => ({ ...turn, activity: null });
 
+/** A question typed while Claude was answering, waiting its turn. It keeps the page and selection it was typed on. */
+export interface QueuedMessage {
+  id: string;
+  question: string;
+  quotes: Quote[];
+  position: number;
+  selection: AskSelection | null;
+}
+
 /**
  * One Ask AI conversation for a book: a Claude session continued across questions.
  * A new one lives only in memory until it's saved; once saved, each question is saved as it's asked.
@@ -53,6 +63,15 @@ export const useAskConversation = (bookId: string) => {
   const [deleted, setDeleted] = useState<{ id: string; wasOpen: boolean } | null>(null);
   const deleting = useRef<{ id: string; timer: ReturnType<typeof setTimeout> } | null>(null);
   const refreshHistory = () => client.invalidateQueries({ queryKey: keys.conversations(bookId) });
+  // Read by an answer as it ends, so it's kept in a ref as well as in state.
+  const queueRef = useRef<AskQueue<QueuedMessage>>(emptyQueue());
+  const [queue, setQueueState] = useState(queueRef.current);
+  const setQueue = useCallback((next: AskQueue<QueuedMessage>) => {
+    queueRef.current = next;
+    setQueueState(next);
+  }, []);
+  // Answers the reader stopped, so their end pauses the queue rather than counting as a failure.
+  const stopped = useRef(new Set<string>());
 
   const show = useCallback((conversation: Conversation | null) => {
     generation.current += 1;
@@ -62,7 +81,8 @@ export const useAskConversation = (bookId: string) => {
     setSaved(isSaved.current);
     sessionId.current = conversation?.sessionId ?? null;
     setTurns(conversation?.turns.map(fromStored) ?? []);
-  }, []);
+    setQueue(emptyQueue());
+  }, [setQueue]);
 
   const load = useCallback(
     (fetch: () => Promise<Conversation | null>) => {
@@ -94,12 +114,20 @@ export const useAskConversation = (bookId: string) => {
     }
     const conversation = current.current;
     const started = generation.current;
+    const ended = (end: AnswerEnd) => {
+      stopped.current.delete(id);
+      if (started !== generation.current) return;
+      const { next, queue: after } = afterAnswer({ queue: queueRef.current, end });
+      setQueue(after);
+      if (next) void ask(next);
+    };
     setTurns((all) => [...all, { id, question, quotes, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }]);
     if (isSaved.current) {
       try {
         await midad["conversations.addTurn"]({ conversationId: conversation, bookId, turn: { id, question, quotes, position, selection } });
       } catch (err) {
         update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) }));
+        ended("error");
         return;
       }
       void refreshHistory();
@@ -117,8 +145,12 @@ export const useAskConversation = (bookId: string) => {
         (result) => {
           if (started === generation.current) sessionId.current = result.sessionId || sessionId.current;
           update(id, () => ({ answer: result.text, status: "done", activity: null, restarted: result.restarted }));
+          ended("done");
         },
-        (err: unknown) => update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) })),
+        (err: unknown) => {
+          update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) }));
+          ended(stopped.current.has(id) ? "stopped" : "error");
+        },
       )
       .finally(() => {
         if (isSaved.current) void refreshHistory();
@@ -127,9 +159,40 @@ export const useAskConversation = (bookId: string) => {
 
   const busy = turns.some((t) => t.status === "streaming");
   const stop = () => {
-    for (const t of turns) if (t.status === "streaming") void midad["ai.cancel"]({ requestId: t.id });
+    for (const t of turns) {
+      if (t.status !== "streaming") continue;
+      stopped.current.add(t.id);
+      void midad["ai.cancel"]({ requestId: t.id });
+    }
   };
-  const retry = (turn: Turn) => void ask({ question: turn.question, position: turn.position, selection: turn.selection, quotes: turn.quotes });
+  const queueMessage = (message: Omit<QueuedMessage, "id">) => setQueue(enqueue({ queue: queueRef.current, item: { id: crypto.randomUUID(), ...message } }));
+  /** Sends a message at once: an answer in progress is stopped first, keeping what it wrote so far. */
+  const sendNow = (message: QueuedMessage) => {
+    if (!busy) {
+      setQueue(dequeue({ queue: { ...queueRef.current, paused: false }, id: message.id }));
+      void ask(message);
+      return;
+    }
+    setQueue(sendFirst({ queue: queueRef.current, item: message }));
+    stop();
+  };
+  const sendQueuedNow = (id: string) => {
+    const message = queueRef.current.items.find((m) => m.id === id);
+    if (message) sendNow(message);
+  };
+  const sendDraftNow = (message: Omit<QueuedMessage, "id">) => sendNow({ id: crypto.randomUUID(), ...message });
+  /** Takes a message out of the queue, to edit it in the composer. */
+  const takeQueued = (id: string): QueuedMessage | null => {
+    const message = queueRef.current.items.find((m) => m.id === id) ?? null;
+    setQueue(dequeue({ queue: queueRef.current, id }));
+    return message;
+  };
+  const removeQueued = (id: string) => setQueue(dequeue({ queue: queueRef.current, id }));
+  const retry = (turn: Turn) => {
+    const message = { question: turn.question, position: turn.position, selection: turn.selection, quotes: turn.quotes };
+    if (busy) queueMessage(message);
+    else void ask(message);
+  };
   /** Starts a fresh conversation and Claude session; the old one stays in the history. */
   const reset = () => {
     stop();
@@ -211,6 +274,12 @@ export const useAskConversation = (bookId: string) => {
     busy,
     stop,
     retry,
+    queue,
+    queueMessage,
+    sendQueuedNow,
+    sendDraftNow,
+    takeQueued,
+    removeQueued,
     reset,
     open,
     conversationId,

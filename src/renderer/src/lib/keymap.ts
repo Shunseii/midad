@@ -21,7 +21,7 @@
  */
 
 /** The sections of the keyboard shortcuts list, in the order it shows them. */
-export const SHORTCUT_GROUPS = ["General", "Pages", "Reading", "Panels", "Text size", "Find", "Page scrubber", "Scan", "Notes", "Settings"] as const;
+export const SHORTCUT_GROUPS = ["General", "Pages", "Reading", "Panels", "Text size", "Find", "Page scrubber", "Scan", "Notes", "Ask AI", "Settings"] as const;
 
 export type ShortcutGroup = (typeof SHORTCUT_GROUPS)[number];
 
@@ -75,6 +75,9 @@ export const COMMANDS = {
   "field.commit": { keys: "Enter", label: "Save", allowWhileTyping: true },
   "field.cancel": { keys: "Escape", label: "Cancel", allowWhileTyping: true },
   "note.save": { keys: "Mod+Enter", label: "Save note", group: "Notes", allowWhileTyping: true },
+
+  "ask.send": { keys: "Enter", label: "Ask, or queue while Claude answers", group: "Ask AI", allowWhileTyping: true },
+  "ask.sendNow": { keys: "Mod+Enter", label: "Send now, stopping the answer", group: "Ask AI", allowWhileTyping: true },
 
   "settings.back": { keys: "Alt+ArrowLeft", label: "Back to the book", group: "Settings", allowWhileTyping: true },
   "settings.close": { keys: "Escape", label: "Back to the book" },
