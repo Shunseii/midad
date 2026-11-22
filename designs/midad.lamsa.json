@@ -52296,12 +52296,12 @@
       "name": "Button",
       "overrides": {
         "O46dZG6P": {
-          "icon": "languages"
+          "icon": "lightbulb"
         }
       },
       "parentId": "tEpC5OeI",
       "props": {
-        "label": "Translate",
+        "label": "Explain this",
         "size": "sm",
         "variant": "secondary",
         "withIcon": "yes"
@@ -53554,12 +53554,12 @@
       "name": "Button",
       "overrides": {
         "O46dZG6P": {
-          "icon": "list-tree"
+          "icon": "message-circle-question"
         }
       },
       "parentId": "2P37Ya9V",
       "props": {
-        "label": "Parse it (iʿrāb)",
+        "label": "Quiz me on this",
         "size": "sm",
         "variant": "secondary",
         "withIcon": "yes"
@@ -78983,24 +78983,6 @@
         "min-width": 0
       },
       "type": "frame"
-    },
-    "a7P9ipKL": {
-      "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
-      "overrides": {
-        "O46dZG6P": {
-          "icon": "lightbulb"
-        }
-      },
-      "parentId": "2P37Ya9V",
-      "props": {
-        "label": "Explain بالوضع",
-        "size": "sm",
-        "variant": "secondary",
-        "withIcon": "yes"
-      },
-      "type": "instance"
     },
     "a83eaupc": {
       "content": "14",
@@ -104935,12 +104917,12 @@
       "name": "Button",
       "overrides": {
         "O46dZG6P": {
-          "icon": "list-tree"
+          "icon": "message-circle-question"
         }
       },
       "parentId": "tEpC5OeI",
       "props": {
-        "label": "Parse it (iʿrāb)",
+        "label": "Quiz me on this",
         "size": "sm",
         "variant": "secondary",
         "withIcon": "yes"
@@ -116614,12 +116596,12 @@
       "name": "Button",
       "overrides": {
         "O46dZG6P": {
-          "icon": "languages"
+          "icon": "lightbulb"
         }
       },
       "parentId": "2P37Ya9V",
       "props": {
-        "label": "Translate",
+        "label": "Explain this",
         "size": "sm",
         "variant": "secondary",
         "withIcon": "yes"
@@ -134721,24 +134703,6 @@
         "gap": "{spacing.1.5}"
       },
       "type": "frame"
-    },
-    "zj37H1VC": {
-      "componentId": "ua9C67i7",
-      "index": "a002",
-      "name": "Button",
-      "overrides": {
-        "O46dZG6P": {
-          "icon": "lightbulb"
-        }
-      },
-      "parentId": "tEpC5OeI",
-      "props": {
-        "label": "Explain بالوضع",
-        "size": "sm",
-        "variant": "secondary",
-        "withIcon": "yes"
-      },
-      "type": "instance"
     },
     "zjI6GKFS": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",

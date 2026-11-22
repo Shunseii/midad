@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowLeft, ArrowUp, Copy, History, Sparkles, Languages, Lightbulb, ListTree, NotebookPen, Pencil, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, BookA, Copy, History, Sparkles, Lightbulb, MessageCircleQuestion, NotebookPen, Pencil, PenLine, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
@@ -995,17 +995,27 @@ const CiteChip = ({
       caretAtEnd(root);
     };
 
-    const firstWord = activeSelection?.text.split(/\s+/)[0];
-    const suggestions = activeSelection
+    /** Starts a message for the reader to finish with their own attempt. */
+    const startDraft = (text: string) => {
+      const root = editor.current;
+      if (!root) return;
+      if (!draft.empty) root.append("\n");
+      root.append(text);
+      sync();
+      root.focus();
+      caretAtEnd(root);
+    };
+
+    // Starters make the reader do the work: they try and Claude checks, or Claude hints and quizzes.
+    const suggestions: { icon: typeof Lightbulb; label: string; question?: string; draft?: string }[] = activeSelection
       ? [
-          { icon: Languages, label: "Translate", question: "Translate the selected words into English." },
-          { icon: ListTree, label: "Parse it (iʿrāb)", question: "Give the iʿrāb of the selected words." },
-          { icon: Lightbulb, label: `Explain ${firstWord}`, question: `What does ${firstWord} mean here?` },
+          { icon: Lightbulb, label: "Explain this", question: "Explain what the selected words mean here." },
+          { icon: MessageCircleQuestion, label: "Quiz me on this", question: "Quiz me on the selected words. Ask one question at a time and wait for my answer before the next. Don't give answers unless I ask." },
         ]
       : [
-          { icon: TextQuote, label: "Summarise this page", question: "Summarise this page in a few sentences." },
-          { icon: Languages, label: "Translate the first lines", question: "Translate the first few lines of this page." },
-          { icon: Lightbulb, label: "Explain the hardest line", question: "Which line on this page is hardest, and what does it mean?" },
+          { icon: MessageCircleQuestion, label: "Quiz me on this page", question: "Quiz me on this page. Ask one question at a time and wait for my answer before the next. Don't give answers unless I ask." },
+          { icon: PenLine, label: "Check my understanding", draft: "My understanding of this page: " },
+          { icon: BookA, label: "Key terms on this page", question: "List the key technical terms on this page for me to look up. Don't define them." },
         ];
 
     return (
@@ -1062,7 +1072,7 @@ const CiteChip = ({
               </div>
               <div className="flex flex-col items-start gap-2">
                 {suggestions.map((s) => (
-                  <Button key={s.label} variant="secondary" icon={s.icon} onClick={() => send({ question: s.question, quotes: draft.quotes.map(({ offset: _, ...q }) => q) })}>
+                  <Button key={s.label} variant="secondary" icon={s.icon} onClick={() => (s.draft ? startDraft(s.draft) : send({ question: s.question ?? "", quotes: draft.quotes.map(({ offset: _, ...q }) => q) }))}>
                     <span dir="auto">{s.label}</span>
                   </Button>
                 ))}

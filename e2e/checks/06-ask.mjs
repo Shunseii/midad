@@ -27,6 +27,21 @@ export const checks = [
     },
   ],
   [
+    "page starters coach rather than answer, and Check my understanding waits for the reader",
+    async (page) => {
+      const starters = await page.ev(`[...document.querySelectorAll("button")].map((b) => b.textContent.trim()).filter((t) => /Quiz me|Check my|Key terms|Translate|Summarise/.test(t))`);
+      assert.deepEqual(starters, ["Quiz me on this page", "Check my understanding", "Key terms on this page"]);
+      await page.click(buttonByText("Check my understanding"));
+      await page.sleep(200);
+      assert.equal(await page.ev(`document.querySelector("${COMPOSER}").innerText.trim()`), "My understanding of this page:");
+      assert.ok(await page.ev(`document.activeElement === document.querySelector("${COMPOSER}")`), "the composer isn't focused");
+      assert.ok(!(await streaming(page)), "the starter sent a question");
+      await page.press("a", { code: "KeyA", ctrl: true, commands: ["selectAll"] });
+      await page.press("Backspace", { commands: ["deleteBackward"] });
+      await page.sleep(100);
+    },
+  ],
+  [
     "the composer grows from one line to three, then stops, and shrinks back",
     async (page) => {
       await page.click(COMPOSER);
