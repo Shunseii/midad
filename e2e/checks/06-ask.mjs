@@ -175,4 +175,24 @@ export const checks = [
       assert.equal(await page.ev(`document.body.textContent.includes("Ask about this passage")`), false);
     },
   ],
+  [
+    "a pasted quote pill fits the composer's line, with no scrollbar",
+    async (page) => {
+      await openReader(page, { bookId: LONG_BOOK, position: 12 });
+      await page.ev(`window.getSelection().removeAllRanges()`);
+      await page.sleep(300);
+      const a = await page.rectOf('[data-part=matn][data-line="3"][data-w="2"]');
+      const b = await page.rectOf('[data-part=matn][data-line="3"][data-w="4"]');
+      await page.drag({ from: { x: a.x + a.width - 2, y: a.cy }, to: { x: b.x + 2, y: b.cy } });
+      await page.sleep(300);
+      await page.press("c", { code: "KeyC", ctrl: true, commands: ["copy"] });
+      await page.click(COMPOSER);
+      await page.press("a", { code: "KeyA", ctrl: true, commands: ["selectAll"] });
+      await page.press("v", { code: "KeyV", ctrl: true, commands: ["paste"] });
+      await page.sleep(600);
+      const box = await page.ev(`(() => { const e = document.querySelector("${COMPOSER}"); return { pills: e.querySelectorAll("[contenteditable=false]").length, overflow: e.scrollHeight - e.clientHeight }; })()`);
+      assert.equal(box.pills, 1, "the paste didn't make a quote pill");
+      assert.equal(box.overflow, 0, `the composer overflows by ${box.overflow}px with a pill in it`);
+    },
+  ],
 ];

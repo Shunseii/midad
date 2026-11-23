@@ -370,6 +370,7 @@ const CiteChip = ({
         "mx-0.5 inline-flex max-w-full translate-y-px items-center gap-1 rounded-md align-baseline font-sans text-xs text-accent [unicode-bidi:isolate]",
         // In a sent question the chips flow with its words, centred on the line.
         onBubble ? "translate-y-0 bg-surface align-middle" : "bg-accent-soft",
+        onRemove && "translate-y-0 align-top",
         missing && "bg-ink/6 text-ink-3",
       )}
     >
@@ -378,7 +379,8 @@ const CiteChip = ({
         disabled={!onClick}
         onClick={onClick}
         aria-label={quoted ? `${label}: ${pillText}` : undefined}
-        className={cx("inline-flex min-w-0 items-center gap-1 rounded-md py-0.5 pl-1.5", onRemove ? "pr-0.5" : "pr-1.5", onClick && "hover:underline")}
+        // In the composer a pill fits its 24px line exactly, so a line holding one doesn't grow or scroll.
+        className={cx("inline-flex min-w-0 items-center gap-1 rounded-md pl-1.5", onRemove ? "py-0 pr-0.5" : "py-0.5 pr-1.5", onClick && "hover:underline")}
       >
         <QuoteIcon aria-hidden className="size-3 shrink-0" />
         {quoted ? (
@@ -390,7 +392,7 @@ const CiteChip = ({
         )}
       </button>
       {onRemove && (
-        <button type="button" aria-label={quoted ? "Remove quote" : `Remove ${label}`} onClick={onRemove} className="rounded-sm py-0.5 pr-1 hover:text-ink">
+        <button type="button" aria-label={quoted ? "Remove quote" : `Remove ${label}`} onClick={onRemove} className="rounded-sm pr-1 hover:text-ink">
           <X aria-hidden className="size-3" />
         </button>
       )}

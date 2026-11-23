@@ -155,4 +155,20 @@ export const checks = [
       await page.press("Escape");
     },
   ],
+  [
+    "a drag that starts and ends partway through words copies the whole words",
+    async (page) => {
+      await openReader(page, { bookId: LONG_BOOK, position: 12 });
+      await page.ev(`window.getSelection().removeAllRanges()`);
+      await page.sleep(400);
+      const from = await page.rectOf(word(2, 3));
+      const to = await page.rectOf(word(2, 5));
+      // From the middle of word 3 to the middle of word 5 (right to left).
+      await page.drag({ from: { x: from.cx, y: from.cy }, to: { x: to.cx, y: to.cy } });
+      await page.sleep(300);
+      const expected = await page.ev(`[3, 4, 5].map((n) => document.querySelector('[data-part=matn][data-line="2"][data-w="' + n + '"]').textContent.trim()).join(" ")`);
+      const copied = await page.ev(`window.getSelection().toString().replace(/\\s+/g, " ").trim()`);
+      assert.equal(copied, expected, "the selection (what Ctrl+C copies) isn't the whole words");
+    },
+  ],
 ];

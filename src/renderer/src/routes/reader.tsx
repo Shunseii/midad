@@ -860,6 +860,29 @@ export const ReaderRoute = () => {
     onSelectionEnd();
   };
 
+  /**
+   * The page paints any word a selection touches as wholly selected; the selection itself, which is
+   * what gets copied, is stretched to match, so a copy never stops partway through a word.
+   */
+  const snapToWords = ({ root, span, range }: { root: HTMLElement; span: Span; range: Range }) => {
+    const at = (ref: { line: number; word: number }) => root.querySelector<HTMLElement>(`[data-part="${span.part}"][data-line="${ref.line}"][data-w="${ref.word}"]`);
+    const first = at(span.start);
+    const last = at(span.end);
+    const selection = window.getSelection();
+    if (!first?.parentNode || !last?.parentNode || !selection) return;
+    const whole = document.createRange();
+    whole.setStartBefore(first);
+    whole.setEndAfter(last);
+    // Only ever grows: a selection reaching into the ḥāshiya keeps its end there.
+    if (range.compareBoundaryPoints(Range.START_TO_START, whole) < 0) whole.setStart(range.startContainer, range.startOffset);
+    if (range.compareBoundaryPoints(Range.END_TO_END, whole) > 0) whole.setEnd(range.endContainer, range.endOffset);
+    if (range.compareBoundaryPoints(Range.START_TO_START, whole) === 0 && range.compareBoundaryPoints(Range.END_TO_END, whole) === 0) return;
+    // Keeps which end moves, so Shift+arrows carry on from the same side.
+    const backward = selection.anchorNode === range.endContainer && selection.anchorOffset === range.endOffset && !range.collapsed;
+    if (backward) selection.setBaseAndExtent(whole.endContainer, whole.endOffset, whole.startContainer, whole.startOffset);
+    else selection.setBaseAndExtent(whole.startContainer, whole.startOffset, whole.endContainer, whole.endOffset);
+  };
+
   const onSelectionEnd = () => {
     const root = pageRoot.current;
     const picked = root && spanFromSelection(root);
@@ -868,11 +891,12 @@ export const ReaderRoute = () => {
       return;
     }
     setNoteEditor(null);
-    setToolbar({ mode: "selection", ...picked, text: window.getSelection()?.toString() ?? "" });
     const { start, end, part } = picked.span;
     const range = window.getSelection()?.getRangeAt(0);
     const word = root.querySelector<HTMLElement>(`[data-part="${part}"][data-line="${start.line}"][data-w="${start.word}"]`);
     const insideOneWord = start.line === end.line && start.word === end.word && range && word && !selectionCoversWord({ range, word });
+    if (!insideOneWord && range) snapToWords({ root, span: picked.span, range });
+    setToolbar({ mode: "selection", ...picked, text: window.getSelection()?.toString() ?? "" });
     if (insideOneWord) {
       const letter = letterAtSelectionStart(root);
       if (letter !== null) setTarget({ part, line: start.line, word: start.word, letter });
