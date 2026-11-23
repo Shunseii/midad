@@ -84,6 +84,7 @@ export const COMMANDS = {
 
   "ask.send": { keys: "Enter", label: "Ask, or queue while Claude answers", group: "Ask AI", allowWhileTyping: true },
   "ask.sendNow": { keys: "Mod+Enter", label: "Send now, stopping the answer", group: "Ask AI", allowWhileTyping: true },
+  "ask.leave": { keys: "Escape", label: "Leave the message box", group: "Ask AI", allowWhileTyping: true },
 
   "settings.back": { keys: "Alt+ArrowLeft", label: "Back to the book", group: "Settings", allowWhileTyping: true },
   "settings.close": { keys: "Escape", label: "Back to the book" },

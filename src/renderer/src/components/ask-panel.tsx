@@ -975,7 +975,7 @@ const CiteChip = ({
     };
 
     const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-      if (handleKeys({ event: e, handlers: { "ask.send": () => send(draft), "ask.sendNow": () => sendNow(draft) } })) return;
+      if (handleKeys({ event: e, handlers: { "ask.send": () => send(draft), "ask.sendNow": () => sendNow(draft), "ask.leave": () => editor.current?.blur() } })) return;
       const range = window.getSelection()?.rangeCount ? window.getSelection()?.getRangeAt(0) : null;
       if (e.key !== "Backspace" || !range?.collapsed) return;
       const before = nodeBeforeCaret(range);

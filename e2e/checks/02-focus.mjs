@@ -63,6 +63,26 @@ export const checks = [
     },
   ],
   [
+    "Escape leaves the Ask AI input, keeping the draft and the panel open",
+    async (page) => {
+      const composer = '[role=textbox][aria-multiline]';
+      await openReader(page, { bookId: LONG_BOOK, position: 50 });
+      await page.click('[aria-label^="Ask AI"]');
+      await page.waitFor(`!!document.querySelector('${composer}')`, { message: "Ask AI didn't open" });
+      await page.waitStill(composer);
+      await page.click(composer);
+      await page.type("half a question");
+      await page.press("Escape");
+      await page.sleep(150);
+      assert.equal(await page.ev(`document.activeElement?.matches('${composer}') ?? false`), false, "Escape didn't leave the Ask AI input");
+      assert.equal(await page.ev(`document.querySelector('${composer}')?.innerText.trim()`), "half a question", "Escape lost the draft");
+      assert.ok(await page.ev(`!!document.querySelector('${composer}')`), "Escape closed the panel");
+      await page.press("ArrowLeft");
+      assert.equal(await pageChangedFrom(page, 50, "← after Escape didn't turn the page"), 51, "← is the next page");
+      await page.click('[aria-label^="Ask AI"]');
+    },
+  ],
+  [
     "the Find field keeps focus and types '?'",
     async (page) => {
       await openReader(page, { bookId: LONG_BOOK, position: 50 });
