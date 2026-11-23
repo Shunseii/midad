@@ -1,6 +1,7 @@
 import { lineText, type Part, type Span, wordsOf } from "./annotations";
 import { locatePhrase } from "./find";
-import type { Page } from "./page";
+import type { Gloss, Page } from "./page";
+import { foldArabic } from "./arabic";
 
 /**
  * Ask AI runs a local Claude Code session. Each message carries a small hidden
@@ -16,7 +17,7 @@ Each message starts with a <reading-context> block naming the book, the page and
   midad lines <book> <page> --line 2-3          those lines, words numbered
   midad lines <book> <page> --line 2 --words 3-5   just those words
   midad annotations <book> <page>      the reader's highlights, notes and harakat
-A line can be followed by "gloss on word…" lines: interlinear glosses the book writes between its lines, explaining those words. They aren't part of the line and aren't numbered; cite the words they explain.
+A line can be followed by "gloss on word…" lines: interlinear glosses the book writes between its lines, explaining those words. They aren't part of the line and aren't numbered. To cite a gloss, quote its words with the line it sits on, as for a phrase: [[line 2: أي ابن آجروم]]; Midad finds them in the line's glosses and points at the words they explain.
 Answer from that page. Don't search for or cite other books.
 
 The reader is a student learning to read these texts themselves. Answer exactly what they asked and stop. If they ask for the harakat of a word, give the vowelled word and nothing more: no translation, no explanation, no surrounding context. If they ask what a word means, give its meaning here, not a translation of the sentence. Never translate, parse, or explain more than was asked; doing the work for them takes away the learning. Keep answers short. You may end with one brief offer of further help, such as "Want the i'rab?", but never give it unasked. When the reader shares their own attempt (a reading with harakat, a translation, an iʿrāb, their understanding of the page), say what is right and give a hint for what is wrong so they can try again; give the full correction only if they ask or miss it a second time.
@@ -78,6 +79,15 @@ export const isArabicLine = (line: string): boolean => {
 
 type CiteTarget = Omit<Extract<Segment, { kind: "cite" }>, "kind">;
 
+const fold = (text: string) => foldArabic(text.replace(/\([٠-٩۰-۹0-9]+\)/g, ""), {}).replace(/\s+/g, " ").trim();
+
+/** The gloss on the cited lines whose words the citation quotes, when it quotes a gloss rather than the text. */
+export const citedGloss = ({ cite, page }: { cite: CiteTarget; page: Page }): Gloss | null => {
+  const phrase = cite.phrase ? fold(cite.phrase) : "";
+  if (!phrase || locatePhrase({ page, part: cite.part, lines: { from: cite.from, to: cite.to }, phrase: cite.phrase ?? "" })) return null;
+  return page.glosses.find((g) => g.part === cite.part && g.line >= cite.from && g.line <= cite.to && fold(g.text).includes(phrase)) ?? null;
+};
+
 /** The words a citation points at on its page, or null when the page has no such lines or words, or the phrase isn't in them. */
 export const citeSpan = ({ cite, page }: { cite: CiteTarget; page: Page }): Span | null => {
   const count = (line: number) => {
@@ -85,7 +95,13 @@ export const citeSpan = ({ cite, page }: { cite: CiteTarget; page: Page }): Span
     return text === null ? 0 : wordsOf(text).length;
   };
   for (let line = cite.from; line <= cite.to; line += 1) if (!count(line)) return null;
-  if (cite.phrase) return locatePhrase({ page, part: cite.part, lines: { from: cite.from, to: cite.to }, phrase: cite.phrase });
+  if (cite.phrase) {
+    const inText = locatePhrase({ page, part: cite.part, lines: { from: cite.from, to: cite.to }, phrase: cite.phrase });
+    if (inText) return inText;
+    const gloss = citedGloss({ cite, page });
+    // A quoted gloss points at the words it explains.
+    return gloss && { part: gloss.part, start: { line: gloss.line, word: gloss.from }, end: { line: gloss.line, word: gloss.to } };
+  }
   if (cite.words) {
     const { from, to } = cite.words;
     if (from < 1 || to < from || to > count(cite.from)) return null;

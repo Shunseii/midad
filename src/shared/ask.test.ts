@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CORPUS_TOOLS, citeSpan, claudeArgs, cutOffRecap, isArabicLine, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
+import { CORPUS_TOOLS, citedGloss, citeSpan, claudeArgs, cutOffRecap, isArabicLine, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -309,6 +309,26 @@ describe("isArabicLine", () => {
   it("sets an English line that opens with an Arabic quote as English", () => {
     expect(isArabicLine("«ب: عدة الذمية» is now a gloss on [[line 2: وإذا طلق الذمي الذمية]]. It's no longer a line of its own.")).toBe(false);
     expect(isArabicLine("The gloss says this means the midwife.")).toBe(false);
+  });
+});
+
+describe("citing a gloss", () => {
+  // Line 1: "قال المصنف رحمه الله" with a gloss on المصنف.
+  const page = parsePage("header\n\n---\nقال <ruby>المصنف<rt>أي ابنُ آجروم</rt></ruby> رحمه الله");
+  const cite = (phrase: string) => ({ part: "matn" as const, from: 1, to: 1, words: null, phrase });
+
+  it("points a quoted gloss at the words it explains, whatever the harakat", () => {
+    expect(citeSpan({ cite: cite("أي ابن آجروم"), page })).toEqual({ part: "matn", start: { line: 1, word: 2 }, end: { line: 1, word: 2 } });
+    expect(citedGloss({ cite: cite("ابن آجروم"), page })?.text).toBe("أي ابنُ آجروم");
+  });
+
+  it("prefers the line's own words when the phrase is in the text", () => {
+    expect(citedGloss({ cite: cite("رحمه الله"), page })).toBeNull();
+    expect(citeSpan({ cite: cite("رحمه الله"), page })).toEqual({ part: "matn", start: { line: 1, word: 3 }, end: { line: 1, word: 4 } });
+  });
+
+  it("finds nothing for words in neither", () => {
+    expect(citeSpan({ cite: cite("كلام آخر"), page })).toBeNull();
   });
 });
 

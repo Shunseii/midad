@@ -2,7 +2,7 @@ import { ArrowDown, ArrowLeft, ArrowUp, BookA, Copy, History, LoaderCircle, Spar
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
-import { citeSpan, isArabicLine, parseCitations, type Segment } from "../../../shared/ask";
+import { citedGloss, citeSpan, isArabicLine, parseCitations, type Segment } from "../../../shared/ask";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
 import type { AskSelection, Conversation, ConversationSummary, Quote, StoredTurn } from "../../../shared/conversations";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -424,6 +424,9 @@ const CiteChip = ({
     if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} pillText={cite.phrase ?? label} quoted missing />;
     // The page's own words, with its harakat, rather than the AI's spelling of them.
     const words = span && page.data ? quoteSpan({ page: page.data.page, span }) : null;
+    // A quoted gloss shows the gloss, with the words it explains in the tooltip.
+    const gloss = page.data ? citedGloss({ cite, page: page.data.page }) : null;
+    if (gloss) return <CiteChip label={`gloss on ${label}${words ? `: ${words}` : ""}`} text={gloss.text} pillText={gloss.text} quoted onClick={() => onCite({ ...where, position })} />;
     return <CiteChip label={label} text={words} pillText={words ?? cite.phrase ?? label} quoted onClick={() => onCite({ ...where, position })} />;
   };
 
