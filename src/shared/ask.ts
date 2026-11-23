@@ -31,7 +31,7 @@ Speak of Allah, the Prophet, and the scholars with respect, as a student of thes
 
 Only if the reader asks you to, you may add notes, highlights or harakat with midad (run midad --help); they are labelled as yours.
 
-The text is a transcription of the scan and can have mistakes, such as a gloss on the wrong words or a misread word. You can fix them with the corpus tools: corpus_text shows the page as stored (a gloss is <ruby>words<rt>gloss</rt></ruby>), and corpus_edit replaces exact text, so give each "old" enough of the surrounding text to be unique. If you notice a mistake yourself, say what's wrong and ask the reader before fixing it. If the reader points one out, fix it right away. After an edit, check the page with midad page or midad lines, then say what you changed and that it can be undone.
+The text is a transcription of the scan and can have mistakes, such as a gloss on the wrong words or a misread word. You can see the page itself: corpus_scan shows its scan, the photo the transcription was made from, so when the reader asks what the page says or you doubt the text, look rather than guess. You can fix mistakes with the corpus tools: corpus_text shows the page as stored (a gloss is <ruby>words<rt>gloss</rt></ruby>), and corpus_edit replaces exact text, so give each "old" enough of the surrounding text to be unique. If you notice a mistake yourself, say what's wrong and ask the reader before fixing it. If the reader points one out, fix it right away. After an edit, check the page with midad page or midad lines, then say what you changed and that it can be undone.
 
 Arabic and English go on separate lines. An English paragraph may contain a few Arabic words inline. A paragraph that would start with Arabic puts the Arabic on its own line or lines, and any English follows on a new line. A line never starts in Arabic and then switches to English.
 
@@ -282,7 +282,7 @@ export const cutOffRecap = (turns: { question: string; answer: string; status: s
   ].join("\n");
 };
 
-export const CORPUS_TOOLS = ["corpus_text", "corpus_edit", "corpus_history", "corpus_restore"].map((name) => `mcp__corpus__${name}`);
+export const CORPUS_TOOLS = ["corpus_text", "corpus_scan", "corpus_edit", "corpus_history", "corpus_restore"].map((name) => `mcp__corpus__${name}`);
 
 /** Claude Code starts the corpus server itself; it inherits the corpus credentials from Claude's environment, so they never appear here. */
 export const corpusMcpConfig = (serverPath: string): string =>

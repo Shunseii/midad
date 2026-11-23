@@ -81,6 +81,7 @@ const ask = createAsk({
     }
   },
   dbPath,
+  scansDir: join(userData, "scans"),
   workDir: join(userData, "ask"),
   onEvent: (requestId, event) => {
     if (event.kind === "delta") streamed.set(requestId, (streamed.get(requestId) ?? "") + event.text);

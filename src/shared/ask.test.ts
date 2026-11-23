@@ -267,8 +267,8 @@ describe("claudeArgs", () => {
       mcpServers: { corpus: { type: "stdio", command: "node", args: ["--no-warnings", "/app/out/cli/corpus-mcp.mjs"] } },
     });
     const allowed = args.slice(args.indexOf("--allowedTools") + 1, args.indexOf("--append-system-prompt"));
-    expect(allowed).toEqual(["Bash(midad:*)", "mcp__corpus__corpus_text", "mcp__corpus__corpus_edit", "mcp__corpus__corpus_history", "mcp__corpus__corpus_restore"]);
-    expect(CORPUS_TOOLS).toHaveLength(4);
+    expect(allowed).toEqual(["Bash(midad:*)", "mcp__corpus__corpus_text", "mcp__corpus__corpus_scan", "mcp__corpus__corpus_edit", "mcp__corpus__corpus_history", "mcp__corpus__corpus_restore"]);
+    expect(CORPUS_TOOLS).toHaveLength(5);
   });
 
   it("resumes the conversation's session", () => {

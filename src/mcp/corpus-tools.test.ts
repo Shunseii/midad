@@ -8,6 +8,8 @@ const stored: StoredPage = { bookId: "wiqaya-1", position: 21, number: 40, fileI
 let corpus: { [K in keyof CorpusTextApi]: ReturnType<typeof vi.fn<CorpusTextApi[K]>> };
 let syncPage: ReturnType<typeof vi.fn<(input: { bookId: string; fileId: string; edits: { old: string; new: string }[] | null }) => Promise<void>>>;
 let tools: ReturnType<typeof createCorpusTools>;
+let scanned: { bytes: Uint8Array; contentType: string };
+let scan: ReturnType<typeof vi.fn<(input: { bookId: string; fileId: string }) => Promise<{ bytes: Uint8Array; contentType: string }>>>;
 
 const edited = (overrides: Partial<Extract<TextEditResult, { kind: "edited" }>> = {}): TextEditResult => ({
   kind: "edited",
@@ -24,6 +26,8 @@ beforeEach(() => {
     textHistory: vi.fn<CorpusTextApi["textHistory"]>(async () => ({ textEditedAt: null, revisions: [] })),
   };
   syncPage = vi.fn(async () => {});
+  scanned = { bytes: new Uint8Array([0xff, 0xd8, 0xff]), contentType: "image/jpeg" };
+  scan = vi.fn(async () => scanned);
   tools = createCorpusTools({
     findPage: async ({ book, position }) => {
       if (book !== "الوقاية" || position !== 21) throw new Error(`No book matches "${book}".`);
@@ -32,6 +36,21 @@ beforeEach(() => {
     bookTitle: async () => "شرح الوقاية",
     corpus,
     syncPage,
+    scan,
+  });
+});
+
+describe("scan", () => {
+  it("gives the named page's scan as an image Claude can look at", async () => {
+    expect(await tools.scan({ book: "الوقاية", page: 21 })).toEqual({ where: "شرح الوقاية page 21 (printed 40)", data: "/9j/", mimeType: "image/jpeg" });
+    expect(scan).toHaveBeenCalledWith({ bookId: "wiqaya-1", fileId: "file-21" });
+  });
+
+  it("refuses a scan Claude can't read, saying why", async () => {
+    scanned = { bytes: new Uint8Array(3), contentType: "image/heic" };
+    await expect(tools.scan({ book: "الوقاية", page: 21 })).rejects.toThrow(/image\/heic file, which can't be shown/);
+    scanned = { bytes: new Uint8Array(6 * 1024 * 1024), contentType: "image/png" };
+    await expect(tools.scan({ book: "الوقاية", page: 21 })).rejects.toThrow(/too large to show here \(6 MB\)/);
   });
 });
 

@@ -16,6 +16,7 @@ export const createAsk = ({
   corpusServerPath,
   corpusCredentials,
   dbPath,
+  scansDir,
   workDir,
   onEvent,
 }: {
@@ -23,6 +24,8 @@ export const createAsk = ({
   corpusServerPath: string;
   corpusCredentials: () => { endpoint: string; key: string } | null;
   dbPath: string;
+  /** Midad's scan cache, so the corpus tools show scans already downloaded without fetching them again. */
+  scansDir: string;
   workDir: string;
   onEvent: (requestId: string, event: StreamEvent) => void;
 }) => {
@@ -49,7 +52,7 @@ export const createAsk = ({
             ...process.env,
             PATH: [binDir, join(homedir(), ".local", "bin"), process.env.PATH].filter(Boolean).join(delimiter),
             MIDAD_DB: dbPath,
-            ...(credentials ? { MIDAD_CORPUS_URL: credentials.endpoint, MIDAD_CORPUS_KEY: credentials.key } : {}),
+            ...(credentials ? { MIDAD_CORPUS_URL: credentials.endpoint, MIDAD_CORPUS_KEY: credentials.key, MIDAD_SCANS: scansDir } : {}),
           },
           stdio: ["ignore", "pipe", "pipe"],
         });

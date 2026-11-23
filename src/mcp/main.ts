@@ -6,6 +6,7 @@ import { z } from "zod";
 import { createCorpusClient } from "../main/corpus";
 import { createPageFinder } from "../main/find-page";
 import { createLibrary } from "../main/library";
+import { createScans } from "../main/scans";
 import { createCorpusTools, ToolError } from "./corpus-tools";
 
 /**
@@ -16,6 +17,7 @@ import { createCorpusTools, ToolError } from "./corpus-tools";
 const dbPath = process.env.MIDAD_DB;
 const endpoint = process.env.MIDAD_CORPUS_URL;
 const key = process.env.MIDAD_CORPUS_KEY;
+const scansDir = process.env.MIDAD_SCANS;
 
 const client = () => {
   if (!endpoint || !key) throw new ToolError("The corpus isn't set up in Midad's settings, so the text can't be changed from here.");
@@ -33,6 +35,8 @@ const library = createLibrary({
   corpus: { getBook: (id) => client().getBook(id), exportBook: (id) => client().exportBook(id) },
 });
 
+const scans = scansDir ? createScans({ dir: scansDir, fetchScan: (input) => client().fetchScan(input) }) : null;
+
 const tools = createCorpusTools({
   findPage: createPageFinder({ library }).findPage,
   bookTitle: async (bookId) => (await library.getBook(bookId))?.title ?? bookId,
@@ -44,6 +48,7 @@ const tools = createCorpusTools({
   syncPage: async ({ bookId, fileId, edits }) => {
     await library.syncBook({ bookId, mode: "overwrite", fileIds: [fileId], ...(edits ? { edits: { [fileId]: edits } } : {}) });
   },
+  scan: (input) => (scans ? scans.get(input) : client().fetchScan(input)),
 });
 
 const run = async (work: () => Promise<string>) => {
@@ -86,6 +91,24 @@ server.registerTool(
     annotations: { destructiveHint: false },
   },
   (args) => run(() => tools.edit(args)),
+);
+
+server.registerTool(
+  "corpus_scan",
+  {
+    description:
+      "The page's scan: the photo of the printed page the transcription was made from. Look at it to check what the page really says, such as a gloss's wording or which words it sits over.",
+    inputSchema: pageArgs,
+    annotations: { readOnlyHint: true },
+  },
+  async (args) => {
+    try {
+      const { where, data, mimeType } = await tools.scan(args);
+      return { content: [{ type: "text" as const, text: `The scan of ${where}:` }, { type: "image" as const, data, mimeType }] };
+    } catch (err) {
+      return { isError: true, content: [{ type: "text" as const, text: err instanceof Error ? err.message : String(err) }] };
+    }
+  },
 );
 
 server.registerTool(

@@ -36,6 +36,10 @@ export const midadNote = (note: string): string => {
   return `${MIDAD_PREFIX}${text || "hand edit"}`;
 };
 
+/** The image types and size Claude can look at. */
+const SCAN_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+const SCAN_MAX_BYTES = 5 * 1024 * 1024;
+
 const describePage = (page: StoredPage, title: string) =>
   `${title} page ${page.position}${page.number === null ? "" : ` (printed ${page.number})`}`;
 
@@ -44,12 +48,15 @@ export const createCorpusTools = ({
   bookTitle,
   corpus,
   syncPage,
+  scan,
 }: {
   findPage: (input: { book: string; position: number }) => Promise<StoredPage>;
   bookTitle: (bookId: string) => Promise<string>;
   corpus: CorpusTextApi;
   /** Pulls the page's new text into the local library so the reader shows it. `edits` made the change, when they're an agent's own find-and-replace. */
   syncPage: (input: PageText & { edits: TextEdit[] | null }) => Promise<void>;
+  /** The page's scan, from Midad's scan cache or else the corpus. */
+  scan: (input: PageText) => Promise<{ bytes: Uint8Array; contentType: string }>;
 }) => {
   const resolve = async ({ book, page }: { book: string; page: number }) => {
     const stored = await findPage({ book, position: page });
@@ -85,6 +92,14 @@ export const createCorpusTools = ({
       const { where, target } = await resolve({ book, page });
       const result = await corpus.editText({ ...target, edits: valid, note: midadNote(note) });
       return applied({ result, where, target, undo: false, edits: valid });
+    },
+
+    async scan({ book, page }: { book: string; page: number }): Promise<{ where: string; data: string; mimeType: string }> {
+      const { where, target } = await resolve({ book, page });
+      const image = await scan(target);
+      if (!SCAN_TYPES.has(image.contentType)) throw new ToolError(`The scan of ${where} is a ${image.contentType} file, which can't be shown here.`);
+      if (image.bytes.byteLength > SCAN_MAX_BYTES) throw new ToolError(`The scan of ${where} is too large to show here (${Math.round(image.bytes.byteLength / 1e6)} MB).`);
+      return { where, data: Buffer.from(image.bytes).toString("base64"), mimeType: image.contentType };
     },
 
     async history({ book, page }: { book: string; page: number }): Promise<string> {
