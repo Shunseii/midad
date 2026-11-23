@@ -2,7 +2,7 @@ import { ArrowDown, ArrowLeft, ArrowUp, BookA, Copy, History, LoaderCircle, Spar
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
-import { citeSpan, parseCitations, type Segment } from "../../../shared/ask";
+import { citeSpan, isArabicLine, parseCitations, type Segment } from "../../../shared/ask";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
 import type { AskSelection, Conversation, ConversationSummary, Quote, StoredTurn } from "../../../shared/conversations";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -439,7 +439,7 @@ const CiteChip = ({
               <p
                 key={l}
                 dir="auto"
-                className={cx("[unicode-bidi:plaintext]", ARABIC_START.test(line) ? "ar text-ar-body" : "text-body leading-relaxed")}
+                className={cx("[unicode-bidi:plaintext]", isArabicLine(line) ? "ar text-ar-body" : "text-body leading-relaxed")}
               >
                 {parseCitations(line).map((s, i) => (s.kind === "text" ? <span key={i}>{s.text}</span> : cite(s, i)))}
               </p>

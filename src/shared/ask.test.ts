@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CORPUS_TOOLS, citeSpan, claudeArgs, cutOffRecap, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
+import { CORPUS_TOOLS, citeSpan, claudeArgs, cutOffRecap, isArabicLine, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -297,6 +297,18 @@ describe("cutOffRecap", () => {
 
   it("covers a new conversation whose first answer was stopped", () => {
     expect(cutOffRecap([turn("first", "error")])).toContain("Reader: first");
+  });
+});
+
+describe("isArabicLine", () => {
+  it("sets a line of Arabic, with or without a citation, as Arabic", () => {
+    expect(isArabicLine("وإذا طلق الذمي الذمية")).toBe(true);
+    expect(isArabicLine("قال المصنف [[line 2: وإذا طلق الذمي الذمية]]")).toBe(true);
+  });
+
+  it("sets an English line that opens with an Arabic quote as English", () => {
+    expect(isArabicLine("«ب: عدة الذمية» is now a gloss on [[line 2: وإذا طلق الذمي الذمية]]. It's no longer a line of its own.")).toBe(false);
+    expect(isArabicLine("The gloss says this means the midwife.")).toBe(false);
   });
 });
 

@@ -64,6 +64,18 @@ export const parseCitations = (text: string): Segment[] => {
   return segments;
 };
 
+/**
+ * Whether an answer line is Arabic, to be set in the larger Arabic type. A line with any English in
+ * its own words is an English line with Arabic in it, even when it opens with an Arabic quote.
+ * Citations are left out: their labels are English.
+ */
+export const isArabicLine = (line: string): boolean => {
+  const words = parseCitations(line)
+    .flatMap((s) => (s.kind === "text" ? [s.text] : []))
+    .join(" ");
+  return /\p{Script=Arabic}/u.test(words) && !/[A-Za-z]/.test(words);
+};
+
 type CiteTarget = Omit<Extract<Segment, { kind: "cite" }>, "kind">;
 
 /** The words a citation points at on its page, or null when the page has no such lines or words, or the phrase isn't in them. */
