@@ -786,8 +786,8 @@ const FootnoteBack = ({ marker, printed, linked }: { marker: string; printed: st
   );
 
 /**
- * The page's printed number, which also opens its page note: hovering shows a note icon
- * beside it, and once the page has a note the icon stays, in accent.
+ * The page's printed number in the running header, which also opens its page note: hovering
+ * shows a note icon beside it, and once the page has a note the icon stays, in accent.
  */
 const PageNumber = ({ folio, hasNote, onClick }: { folio: string; hasNote: boolean; onClick: () => void }) => (
   <Tooltip>
@@ -800,15 +800,15 @@ const PageNumber = ({ folio, hasNote, onClick }: { folio: string; hasNote: boole
           aria-label={hasNote ? `Page ${folio} note` : `Add a note to page ${folio}`}
           onMouseDown={(e) => e.stopPropagation()}
           onClick={onClick}
-          className="group/folio relative flex items-center gap-1.5 rounded-md px-2 py-0.5 text-ink-2 outline-none transition-colors duration-press ease-out hover:bg-ink/4 focus-visible:ring-2 focus-visible:ring-accent"
+          className="group/folio -mx-2 -my-1 flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-ink-2 outline-none transition-colors duration-press ease-out hover:bg-surface-2 focus-visible:ring-2 focus-visible:ring-accent"
         />
       }
     >
-      <span className="ar text-ar-body">{folio}</span>
+      <span className="ar text-ar-small">{folio}</span>
       <span
         aria-hidden
         className={cx(
-          "absolute left-full flex items-center transition-opacity duration-pop ease-out",
+          "flex items-center transition-opacity duration-pop ease-out",
           hasNote ? "text-accent" : "text-ink-3 opacity-0 group-hover/folio:opacity-100 group-focus-visible/folio:opacity-100",
         )}
       >
@@ -830,7 +830,6 @@ const ChapterOrnament = () => (
 
 export const PageView = ({
   stored,
-  bookTitle,
   chapter,
   width,
   highlightStyle,
@@ -850,7 +849,6 @@ export const PageView = ({
   ribbon,
 }: {
   stored: StoredPage;
-  bookTitle: string;
   /** The chapter this page falls in, for the running header. */
   chapter: string | null;
   width: PageWidth;
@@ -923,9 +921,9 @@ export const PageView = ({
         )}
       >
         {ribbon}
-        <header className="mb-6 flex items-baseline justify-between gap-6 border-b border-line pb-3 text-ink-3" dir="rtl">
-          <span className="ar truncate text-ar-small">{t(bookTitle)}</span>
+        <header className="mb-6 flex items-center justify-between gap-6 border-b border-line pb-3 text-ink-3" dir="rtl">
           <span className="ar truncate text-ar-small">{chapter && t(chapter)}</span>
+          <PageNumber folio={folio} hasNote={annotations.pageNote !== null} onClick={onPageNote} />
         </header>
         {page.matn.length === 0 && <p className="py-12 text-center text-sm text-ink-3">This page has no main text.</p>}
         {page.matn.map((b) =>
@@ -972,9 +970,6 @@ export const PageView = ({
             ))}
           </section>
         )}
-        <footer className="mt-10 flex justify-center">
-          <PageNumber folio={folio} hasNote={annotations.pageNote !== null} onClick={onPageNote} />
-        </footer>
       </article>
     </Footnotes>
     </MarkPage>

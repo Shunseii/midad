@@ -1616,7 +1616,6 @@ export const ReaderRoute = () => {
           {page.data && (
             <PageView
               stored={page.data}
-              bookTitle={book.data?.title ?? ""}
               chapter={chapterTitle}
               width={pageWidth}
               highlightStyle={highlightStyle}
