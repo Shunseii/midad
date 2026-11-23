@@ -853,6 +853,30 @@ export const ReaderRoute = () => {
     goalX.current = x;
   };
 
+  /**
+   * Moves focus to the region beside the one it's in: contents, page, side panel, left to right.
+   * Closed or hidden panels are skipped; at either end it stays put.
+   */
+  const moveRegion = (step: -1 | 1) => {
+    const order = ["contents", "page", "side"] as const;
+    const open = order.filter((name) => {
+      const el = document.querySelector<HTMLElement>(`[data-region="${name}"]`);
+      return el && el.offsetWidth > 0 && !el.closest("[inert], [data-focus=hidden]");
+    });
+    const here = (document.activeElement?.closest<HTMLElement>("[data-region]")?.dataset.region ?? "page") as (typeof order)[number];
+    const next = open[open.indexOf(here) + step];
+    if (!next) return;
+    const region = document.querySelector<HTMLElement>(`[data-region="${next}"]`);
+    if (!region) return;
+    const target =
+      next === "page"
+        ? region
+        : (region.querySelector<HTMLElement>("[role=textbox][aria-multiline]") ??
+          region.querySelector<HTMLElement>("[aria-current]:is(button, a, [tabindex])") ??
+          region.querySelector<HTMLElement>("button:not([disabled]), a[href], [tabindex]:not([tabindex='-1'])"));
+    target?.focus();
+  };
+
   /** Selects every word of the page, main text and ḥāshiya, and nothing around it. */
   const selectPage = () => {
     const root = pageRoot.current;
@@ -1284,6 +1308,8 @@ export const ReaderRoute = () => {
       "page.next": () => turnTo(position + 1),
       "page.previous": () => turnTo(position - 1),
       "selection.all": () => selectPage(),
+      "region.left": () => moveRegion(-1),
+      "region.right": () => moveRegion(1),
       "selection.extendLeft": () => extendSelection({ direction: "left", granularity: "word" }),
       "selection.extendRight": () => extendSelection({ direction: "right", granularity: "word" }),
       "selection.extendUp": () => extendSelection({ lines: -1 }),
@@ -1482,6 +1508,7 @@ export const ReaderRoute = () => {
           <InlinePanel side="left" open={contentsShown} width={contentsWidth}>
             <div
               {...chromeHover}
+              data-region="contents"
               data-focus={focused ? "hidden" : undefined}
               className="flex transition-[translate,opacity] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:-translate-x-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
             >
@@ -1520,7 +1547,9 @@ export const ReaderRoute = () => {
         />
         <div
           ref={pageRoot}
-          className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable_both-edges]"
+          data-region="page"
+          tabIndex={-1}
+          className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden outline-hidden [scrollbar-gutter:stable_both-edges]"
           onMouseDown={onMouseDown}
           onMouseUp={onSelectionEnd}
           onCopy={() => {
@@ -1617,6 +1646,7 @@ export const ReaderRoute = () => {
           <InlinePanel side="right" open={panelShown && !focused} width={sideWidth}>
             <div
               {...chromeHover}
+              data-region="side"
               data-focus={focused ? "hidden" : undefined}
               className="flex transition-[translate,opacity] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-x-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"
             >

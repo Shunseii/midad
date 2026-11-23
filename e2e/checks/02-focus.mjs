@@ -102,6 +102,32 @@ export const checks = [
     },
   ],
   [
+    "Ctrl+H and Ctrl+L move between the contents, the page and the side panel",
+    async (page) => {
+      const region = () => page.ev(`document.activeElement?.closest("[data-region]")?.dataset.region ?? "none"`);
+      await openReader(page, { bookId: LONG_BOOK, position: 50 });
+      await page.click('[aria-label^="Ask AI"]');
+      await page.waitFor(`!!document.querySelector("[role=textbox][aria-multiline]")`, { message: "Ask AI didn't open" });
+      await page.waitStill("[role=textbox][aria-multiline]");
+      await page.ev(`document.activeElement?.blur()`);
+      const seen = [];
+      for (const key of ["l", "h", "h", "h", "l", "l", "l"]) {
+        await page.press(key, { code: `Key${key.toUpperCase()}`, ctrl: true });
+        await page.sleep(150);
+        seen.push(await region());
+      }
+      assert.deepEqual(seen, ["side", "page", "contents", "contents", "page", "side", "side"], "regions after each Ctrl+L / Ctrl+H");
+      assert.ok(await page.ev(`document.activeElement?.matches("[role=textbox][aria-multiline]") ?? false`), "Ctrl+L into Ask AI didn't land in the message box");
+      await page.click('[aria-label^="Ask AI"]');
+      await page.sleep(500);
+      await page.press("h", { code: "KeyH", ctrl: true });
+      await page.sleep(150);
+      await page.press("l", { code: "KeyL", ctrl: true });
+      await page.sleep(150);
+      assert.equal(await region(), "page", "Ctrl+L moved into a closed panel");
+    },
+  ],
+  [
     "the Find field keeps focus and types '?'",
     async (page) => {
       await openReader(page, { bookId: LONG_BOOK, position: 50 });

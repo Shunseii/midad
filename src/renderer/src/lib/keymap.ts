@@ -45,6 +45,8 @@ export const COMMANDS = {
   "contents.toggle": { keys: "Mod+[", label: "Show or hide contents", group: "Panels" },
   "panel.toggle": { keys: "Mod+]", label: "Show or hide highlights and notes", group: "Panels" },
   "panels.toggle": { keys: "Mod+\\", label: "Show or hide both side panels", group: "Panels" },
+  "region.left": { keys: "Mod+H", label: "Move to the panel on the left", group: "Panels", allowWhileTyping: true },
+  "region.right": { keys: "Mod+L", label: "Move to the panel on the right", group: "Panels", allowWhileTyping: true },
   "edit.undo": { keys: "Mod+Z", label: "Undo", group: "General" },
   "edit.redo": { keys: ["Mod+Y", "Mod+Shift+Z"], label: "Redo", group: "General" },
   "focus.toggle": { keys: "F", label: "Focus mode", group: "Reading" },
