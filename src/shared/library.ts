@@ -1,3 +1,4 @@
+import type { IndexEntry } from "./fihris";
 import type { Part } from "./annotations";
 import type { Page } from "./page";
 
@@ -38,6 +39,8 @@ export interface PageSummary {
 
 export interface BookDetail extends LibraryBook {
   pages: PageSummary[];
+  /** The book's own contents, read from its printed index of topics; null when it has none Midad can read. */
+  index: IndexEntry[] | null;
 }
 
 export interface StoredPage {

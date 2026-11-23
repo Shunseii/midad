@@ -48,10 +48,17 @@ interface TocEntry {
   position: number;
 }
 
-/** Chapter headings across the book; falls back to running headers for books without headings. */
+/** Deeper headings are left out until the contents can fold them under their chapter. */
+const TOP_LEVEL = 2;
+
+/**
+ * The book's own index of topics when it has one Midad can read; otherwise its top-level headings,
+ * then its running headers for books without headings.
+ */
 const tableOfContents = (book: BookDetail): TocEntry[] => {
+  if (book.index) return book.index.map((e) => ({ text: e.text, level: TOP_LEVEL, position: e.position, number: e.number }));
   const headings = book.pages.flatMap((p) =>
-    p.headings.map((h) => ({ text: h.text, level: h.level, position: p.position, number: p.number })),
+    p.headings.filter((h) => h.level <= TOP_LEVEL).map((h) => ({ text: h.text, level: h.level, position: p.position, number: p.number })),
   );
   if (headings.length > 0) return headings;
   return book.pages

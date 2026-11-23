@@ -387,3 +387,25 @@ describe("progress migration from position to page", () => {
     });
   });
 });
+
+describe("book index", () => {
+  it("gives the book's contents from its printed index of topics, pointing at the pages", async () => {
+    corpus.files = [
+      ...Array.from({ length: 30 }, (_, i) => file({ file_id: `p${i + 1}`, page_number: i + 1, text: `صفحة ${i + 1}` })),
+      file({ file_id: "idx", page_number: 31, text: "فهرس الموضوعات ٣١\n\n---\n\n## فهرس الموضوعات\n\nالمقدمة ........ ٢\nكتاب الطهارة ........ ١٠ | كتاب الصلاة ........ ٢٠" }),
+    ];
+    await library.importBook({ corpusBookId: "b1" });
+    expect((await library.getBook("b1"))?.index).toEqual([
+      { text: "المقدمة", number: 2, position: 2 },
+      { text: "كتاب الطهارة", number: 10, position: 10 },
+      { text: "كتاب الصلاة", number: 20, position: 20 },
+    ]);
+  });
+
+  it("is null for a book without one", async () => {
+    corpus.files = [file({ file_id: "f1", page_number: 1 })];
+    await library.importBook({ corpusBookId: "b1" });
+    expect((await library.getBook("b1"))?.index).toBeNull();
+  });
+});
+

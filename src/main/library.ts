@@ -10,6 +10,7 @@ import type {
   SyncPreview,
   SyncResult,
 } from "../shared/library";
+import { bookIndex } from "../shared/fihris";
 import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
 
@@ -338,18 +339,25 @@ export const createLibrary = ({
       const pages = db
         .prepare("SELECT file_id, position, number, source FROM pages WHERE book_id = ? ORDER BY position")
         .all(bookId) as unknown as Pick<PageRow, "file_id" | "position" | "number" | "source">[];
+      const parsed = pages.map((p) => ({ row: p, page: parsePage(p.source) }));
       return {
         ...toBook(row),
-        pages: pages.map((p) => {
-          const page = parsePage(p.source);
-          return {
+        pages: parsed.map(({ row: p, page }) => ({
+          position: p.position,
+          number: p.number,
+          fileId: p.file_id,
+          header: page.header,
+          headings: page.matn.flatMap((b) => (b.kind === "heading" ? [{ text: b.text, level: b.level }] : [])),
+        })),
+        index: bookIndex(
+          parsed.map(({ row: p, page }) => ({
             position: p.position,
             number: p.number,
-            fileId: p.file_id,
             header: page.header,
-            headings: page.matn.flatMap((b) => (b.kind === "heading" ? [{ text: b.text, level: b.level }] : [])),
-          };
-        }),
+            headings: page.matn.flatMap((b) => (b.kind === "heading" ? [b.text] : [])),
+            lines: page.matn.flatMap((b) => (b.kind === "heading" ? [] : [b.text])),
+          })),
+        ),
       };
     },
 
