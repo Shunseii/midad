@@ -78,6 +78,26 @@ export const checks = [
     },
   ],
   [
+    "typing lines while an answer streams keeps following it",
+    async (page) => {
+      assert.ok(await streaming(page), "the answer finished before the check could type");
+      await page.click(COMPOSER);
+      await page.type("a follow-up");
+      const gaps = [];
+      for (let i = 0; i < 2; i++) {
+        await page.press("Enter", { shift: true, commands: ["insertLineBreak"] });
+        await page.type("more");
+        await page.sleep(350);
+        gaps.push((await position(page)).gap);
+      }
+      assert.ok(await streaming(page), "the answer finished before the check could see it follow");
+      assert.ok(gaps.every((g) => g <= 2), `the view let go of the answer as the composer grew: ${JSON.stringify(gaps)}px from the bottom`);
+      await page.press("a", { code: "KeyA", ctrl: true, commands: ["selectAll"] });
+      await page.press("Backspace", { commands: ["deleteBackward"] });
+      await page.sleep(300);
+    },
+  ],
+  [
     "scrolling up mid-stream holds the position and shows Jump to latest",
     async (page) => {
       const box = await page.rectOf(`js:${SCROLLER}`);

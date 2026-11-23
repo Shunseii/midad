@@ -315,6 +315,9 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
 
 const ARABIC_START = /^[^\p{L}]*\p{Script=Arabic}/u;
 
+/** How near the bottom of the chat still counts as following the answer, in pixels. */
+const FOLLOW_SLACK = 80;
+
 type Cite = Extract<Segment, { kind: "cite" }>;
 
 /** Where a citation or quote points, for jumping to it on the page. */
@@ -884,7 +887,8 @@ const CiteChip = ({
     const onScroll = () => {
       const el = scroller.current;
       if (!el) return;
-      const bottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+      // Close enough counts: the composer growing as the reader types shouldn't let go of the answer.
+      const bottom = el.scrollHeight - el.scrollTop - el.clientHeight < FOLLOW_SLACK;
       if (jumping.current) {
         if (!bottom) return;
         jumping.current = false;
@@ -910,11 +914,14 @@ const CiteChip = ({
     }, [conversationId, screen.name, toBottom]);
     useEffect(() => {
       const box = content.current;
-      if (screen.name !== "chat" || !box) return;
+      const view = scroller.current;
+      if (screen.name !== "chat" || !box || !view) return;
       const observer = new ResizeObserver(() => {
         if (pinned.current) toBottom();
       });
+      // The answer growing, and the view shrinking as the composer grows, both keep a following view at the bottom.
       observer.observe(box);
+      observer.observe(view);
       return () => observer.disconnect();
     }, [screen.name, toBottom]);
 
