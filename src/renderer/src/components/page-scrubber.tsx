@@ -1,4 +1,4 @@
-import { Bookmark, MessageSquareText } from "lucide-react";
+import { Bookmark, FileText, MessageSquareText } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { type KeyboardEvent, type PointerEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { type BookMarks, type HighlightColor, quoteSpan } from "../../../shared/annotations";
@@ -99,6 +99,7 @@ export const PageScrubber = ({
     () => thinMarks({ marks: topLevelChapters({ entries, total }), weight: (c) => c.pages, total, width, gap: TICK_GAP }),
     [entries, total, width],
   );
+  const pageNotes = useMemo(() => new Set(marks?.pageNotes ?? []), [marks]);
   const dots = useMemo(
     () => ({
       highlights: thinMarks({ marks: marks?.highlights ?? [], weight: () => 1, total, width, gap: DOT_GAP }),
@@ -309,7 +310,12 @@ export const PageScrubber = ({
           <span key={`h${h.position}`} data-mark="highlight" style={{ right: at(h.position) }} className={cx("absolute top-0.5 size-1.25 translate-x-1/2 rounded-full", MARK_BG[h.color])} />
         ))}
         {dots.notes.map((n) => (
-          <span key={`n${n.position}`} data-mark="note" style={{ right: at(n.position) }} className="absolute bottom-0 size-1.25 translate-x-1/2 rounded-full border-[1.5px] border-accent" />
+          pageNotes.has(n.position) ? (
+            // A page with a page note: a small filled page instead of a hollow dot.
+            <span key={`n${n.position}`} data-mark="page-note" style={{ right: at(n.position) }} className="absolute -bottom-0.5 h-2 w-1.5 translate-x-1/2 rounded-xs bg-accent" />
+          ) : (
+            <span key={`n${n.position}`} data-mark="note" style={{ right: at(n.position) }} className="absolute bottom-0 size-1.25 translate-x-1/2 rounded-full border-[1.5px] border-accent" />
+          )
         ))}
         {dots.bookmarks.map((b) => (
           <span
@@ -393,7 +399,8 @@ const MarkSection = ({ bookId, marked, load }: { bookId: string; marked: MarkedP
       return [];
     }
   });
-  const notes = annotations.data?.notes ?? [];
+  const pageNote = annotations.data?.pageNote;
+  const notes = [...(pageNote ? [{ ...pageNote, page: true }] : []), ...(annotations.data?.notes ?? []).map((n) => ({ ...n, page: false }))];
   const label = pageLabel(marked);
   return (
     <section data-mark-page={marked.page} className="flex flex-col gap-1.5">
@@ -447,8 +454,12 @@ const MarkSection = ({ bookId, marked, load }: { bookId: string; marked: MarkedP
           (annotations.data ? (
             <>
               {notes.slice(0, MARK_ITEMS).map((n) => (
-                <li key={n.id} className="flex items-start gap-2">
-                  <MessageSquareText aria-hidden className="mt-1 size-3.5 shrink-0 text-accent" />
+                <li key={n.id} data-preview-note={n.page ? "page" : "words"} className="flex items-start gap-2">
+                  {n.page ? (
+                    <FileText aria-hidden className="mt-1 size-3.5 shrink-0 text-accent" />
+                  ) : (
+                    <MessageSquareText aria-hidden className="mt-1 size-3.5 shrink-0 text-accent" />
+                  )}
                   <span dir="auto" className="line-clamp-2 flex-1 text-xs leading-5 text-ink-2">
                     {shorten(n.body, 140)}
                   </span>

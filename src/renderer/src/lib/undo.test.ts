@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { HighlightColor, LetterRef, Span } from "../../../shared/annotations";
+import type { HighlightColor, LetterRef, NoteTarget, Span } from "../../../shared/annotations";
 import { type BookmarkState, createUndoStack, type MarkerAt, type PageWrites } from "./undo";
 
 const SPAN: Span = { part: "matn", start: { line: 2, word: 1 }, end: { line: 2, word: 3 } };
@@ -9,7 +9,7 @@ const REF: LetterRef = { part: "matn", line: 2, word: 1, letter: 2 };
 const fakePage = () => {
   let next = 0;
   const highlights = new Map<string, { span: Span; color: HighlightColor }>();
-  const notes = new Map<string, { span: Span; body: string }>();
+  const notes = new Map<string, { target: NoteTarget; body: string }>();
   const harakat = new Map<string, string>();
   const book = { marker: null as MarkerAt, bookmarks: new Map<number, NonNullable<BookmarkState>>() };
   const writes: PageWrites = {
@@ -21,9 +21,9 @@ const fakePage = () => {
     removeHighlight: async (id) => {
       if (!highlights.delete(id)) throw new Error(`no highlight ${id}`);
     },
-    addNote: async ({ span, body }) => {
+    addNote: async ({ body, ...target }) => {
       const id = `n${++next}`;
-      notes.set(id, { span, body });
+      notes.set(id, { target, body });
       return id;
     },
     updateNote: async ({ id, body }) => {
@@ -82,16 +82,16 @@ describe("undo stack", () => {
   it("undoes note edits and deletes in order, following a note that came back with a new id", async () => {
     const page = fakePage();
     const stack = createUndoStack(page.writes);
-    const id = await stack.addNote({ span: SPAN, body: "first" });
+    const id = await stack.addNote({ target: { span: SPAN }, body: "first" });
     await stack.setMarks({ ref: REF, before: "", after: "\u064e" });
     await stack.updateNote({ id, before: "first", after: "second" });
-    await stack.deleteNote({ id, span: SPAN, body: "second" });
+    await stack.deleteNote({ id, target: { span: SPAN }, body: "second" });
     expect(page.notes.size).toBe(0);
 
     await stack.undo();
-    expect([...page.notes.values()]).toEqual([{ span: SPAN, body: "second" }]);
+    expect([...page.notes.values()]).toEqual([{ target: { span: SPAN }, body: "second" }]);
     await stack.undo();
-    expect([...page.notes.values()]).toEqual([{ span: SPAN, body: "first" }]);
+    expect([...page.notes.values()]).toEqual([{ target: { span: SPAN }, body: "first" }]);
     await stack.undo();
     await stack.undo();
     expect(page.notes.size).toBe(0);
@@ -99,7 +99,22 @@ describe("undo stack", () => {
     await stack.redo();
     await stack.redo();
     await stack.redo();
-    expect([...page.notes.values()]).toEqual([{ span: SPAN, body: "second" }]);
+    expect([...page.notes.values()]).toEqual([{ target: { span: SPAN }, body: "second" }]);
+  });
+
+  it("brings back a deleted page note and line note as the same kind of note", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    const pageNote = await stack.addNote({ target: { page: true }, body: "summary" });
+    const lineNote = await stack.addNote({ target: { line: { part: "matn", line: 4 } }, body: "line" });
+    await stack.deleteNote({ id: pageNote, target: { page: true }, body: "summary" });
+    await stack.deleteNote({ id: lineNote, target: { line: { part: "matn", line: 4 } }, body: "line" });
+    await stack.undo();
+    await stack.undo();
+    expect([...page.notes.values()]).toEqual([
+      { target: { line: { part: "matn", line: 4 } }, body: "line" },
+      { target: { page: true }, body: "summary" },
+    ]);
   });
 
   it("undoes harakat back to the marks that were there before", async () => {
@@ -136,10 +151,10 @@ describe("undo stack", () => {
   it("keeps a failed undo on the stack so it can be tried again", async () => {
     const page = fakePage();
     const stack = createUndoStack(page.writes);
-    const id = await stack.addNote({ span: SPAN, body: "x" });
+    const id = await stack.addNote({ target: { span: SPAN }, body: "x" });
     page.notes.delete(id);
     await expect(stack.undo()).rejects.toThrow(/no note/);
-    page.notes.set(id, { span: SPAN, body: "x" });
+    page.notes.set(id, { target: { span: SPAN }, body: "x" });
     await stack.undo();
     expect(page.notes.size).toBe(0);
   });
@@ -159,12 +174,12 @@ describe("undo stack", () => {
   it("undoes a new note and the text typed into it together", async () => {
     const page = fakePage();
     const stack = createUndoStack(page.writes);
-    const id = await stack.addNote({ span: SPAN, body: "h" });
+    const id = await stack.addNote({ target: { span: SPAN }, body: "h" });
     await stack.updateNote({ id, before: "h", after: "hello" });
     await stack.undo();
     expect(page.notes.size).toBe(0);
     await stack.redo();
-    expect([...page.notes.values()]).toEqual([{ span: SPAN, body: "hello" }]);
+    expect([...page.notes.values()]).toEqual([{ target: { span: SPAN }, body: "hello" }]);
   });
 
   it("runs quick presses one after another, so each undoes a different change", async () => {

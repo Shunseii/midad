@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
-import { type Highlight, type LetterRef, lineText, type Note, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
+import { type Highlight, type LetterRef, lineText, type Note, type NoteTarget, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
 import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, Bookmark as SavedBookmark, ScrollAnchor, StoredPage } from "../../../shared/library";
 import { DisplayMenu, stepScale, WHEEL_STEP, ZOOM_SHOWN_MS, ZoomLevel } from "../components/display-menu";
@@ -11,7 +11,7 @@ import { InlinePanel, SideSheet } from "../components/side-sheet";
 import { SidePanel, SidePanelBody } from "../components/side-panel";
 import { useMediaQuery } from "../lib/media";
 import { NoteEditor, NoteLayer, NotePeek, NoteRowPeek, SelectionToolbar } from "../components/annotation-popovers";
-import { AnnotationsPanel, type PanelTab, spanLabel } from "../components/annotations-panel";
+import { AnnotationsPanel, type NoteDraft, type PanelTab, spanLabel } from "../components/annotations-panel";
 import { type AskSelection, AskHeader, AskPanel, useAskConversation } from "../components/ask-panel";
 import { PageScrubber } from "../components/page-scrubber";
 import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } from "../components/find-bar";
@@ -439,6 +439,8 @@ export const ReaderRoute = () => {
   const [entryTint, setEntryTint] = useState<string | null>(null);
   const [markTint, setMarkTint] = useState<readonly string[]>([]);
   const [panelEditTint, setPanelEditTint] = useState<string | null>(null);
+  /** A page or line note being written in the Notes tab; dropped when the page turns. */
+  const [noteDraft, setNoteDraft] = useState<{ position: number; draft: NoteDraft } | null>(null);
   const tinted = useMemo<ReadonlySet<string>>(() => {
     const fromLayer = !noteEditor
       ? []
@@ -1019,20 +1021,40 @@ export const ReaderRoute = () => {
   };
 
   const noteWrites = {
-    create: async ({ span, body }: { span: Span; body: string }) => {
-      return { id: await edits().addNote({ span, body }) };
+    create: async ({ body, ...target }: NoteTarget & { body: string }) => {
+      return { id: await edits().addNote({ target, body }) };
     },
     update: async ({ id, body }: { id: string; body: string }) => {
-      const before = annotations.data?.notes.find((n) => n.id === id)?.body ?? "";
+      const page = annotations.data;
+      const before = (page?.pageNote?.id === id ? page.pageNote.body : page?.notes.find((n) => n.id === id)?.body) ?? "";
       await edits().updateNote({ id, before, after: body });
     },
     remove: async (id: string) => {
-      const n = annotations.data?.notes.find((x) => x.id === id);
+      const page = annotations.data;
+      if (page?.pageNote?.id === id) {
+        await edits().deleteNote({ id, target: { page: true }, body: page.pageNote.body });
+        announceRemoval("Page note deleted");
+        return;
+      }
+      const n = page?.notes.find((x) => x.id === id);
       if (!n) return;
-      await edits().deleteNote({ id, span: n.span, body: n.body });
+      const target: NoteTarget = n.kind === "line" ? { line: { part: n.span.part, line: n.span.start.line } } : { span: n.span };
+      await edits().deleteNote({ id, target, body: n.body });
       announceRemoval("Note deleted");
     },
   };
+
+  const openNotes = (draft: NoteDraft | null) => {
+    setPanelTab("notes");
+    setAnnotationsTab("notes");
+    setPanelOpen(true);
+    if (draft) setNoteDraft({ position, draft });
+  };
+  const startLineNote = (line: number) => {
+    const text = page.data ? lineText({ page: page.data.page, part: "matn", line }) : null;
+    if (text) openNotes({ kind: "line", line: { part: "matn", line }, text });
+  };
+  const openPageNote = () => openNotes(annotations.data?.pageNote ? null : { kind: "page" });
 
   const step = (direction: "undo" | "redo") => {
     setRemoval(null);
@@ -1387,6 +1409,10 @@ export const ReaderRoute = () => {
       onDeleteNote={(id) => void noteWrites.remove(id)}
       onUpdateNote={(input) => void noteWrites.update(input)}
       onEditingNote={setPanelEditTint}
+      pageLabel={arabicNumber(page.data?.number ?? position)}
+      draft={noteDraft?.position === position ? noteDraft.draft : null}
+      onDraft={(draft) => setNoteDraft(draft && { position, draft })}
+      onAddNote={(input) => void noteWrites.create(input)}
       width={sideWidth}
       onResize={(w) => setSideWidth(Math.round(Math.max(Math.min(w, window.innerWidth * 0.6), PANEL_MIN)))}
       onResetSize={() => (asking ? setAskWidth(null) : setPanelWidth(PANEL_WIDTH))}
@@ -1596,6 +1622,8 @@ export const ReaderRoute = () => {
               tinted={tinted}
               dimNoteMarks={focusOn}
               noteMarkHandlers={noteMarkHandlers}
+              onAddLineNote={startLineNote}
+              onPageNote={openPageNote}
               marker={marker.data?.position === position ? marker.data : null}
               onMark={markRow}
               onClearMark={() => void edits().setMarker({ before: markerAt(), after: null })}

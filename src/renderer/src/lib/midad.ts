@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { HighlightColor, LetterRef, PageAnnotations, Part, Span } from "../../../shared/annotations";
+import type { HighlightColor, LetterRef, NoteTarget, PageAnnotations, Part, Span } from "../../../shared/annotations";
 import type { MidadApi, MidadEvents, SyncInput } from "../../../shared/ipc";
 import type { BookmarkState } from "./undo";
 
@@ -139,8 +139,8 @@ export const useAnnotationActions = ({ bookId, position }: { bookId: string; pos
       await midad["highlights.remove"]({ id });
       await refresh();
     },
-    addNote: async ({ span, body }: { span: Span; body: string }) => {
-      const note = await midad["notes.add"]({ bookId, position, span, body });
+    addNote: async (input: NoteTarget & { body: string }) => {
+      const note = await midad["notes.add"]({ bookId, position, ...input });
       await refresh();
       return note;
     },
@@ -150,6 +150,7 @@ export const useAnnotationActions = ({ bookId, position }: { bookId: string; pos
         current && {
           ...current,
           notes: current.notes.map((n) => (n.id === id ? { ...n, body: body.trim(), updatedAt: Date.now() } : n)),
+          pageNote: current.pageNote?.id === id ? { ...current.pageNote, body: body.trim(), updatedAt: Date.now() } : current.pageNote,
         },
       );
     },

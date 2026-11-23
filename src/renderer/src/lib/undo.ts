@@ -1,4 +1,4 @@
-import type { HighlightColor, LetterRef, Part, Span } from "../../../shared/annotations";
+import type { HighlightColor, LetterRef, NoteTarget, Part, Span } from "../../../shared/annotations";
 
 export type ClearedMark = { ref: LetterRef; marks: string };
 
@@ -13,7 +13,7 @@ import { EMPTY_HISTORY, type History, record, redo, undo } from "./history";
 export interface PageWrites {
   addHighlight: (input: { span: Span; color: HighlightColor }) => Promise<string>;
   removeHighlight: (id: string) => Promise<void>;
-  addNote: (input: { span: Span; body: string }) => Promise<string>;
+  addNote: (input: NoteTarget & { body: string }) => Promise<string>;
   updateNote: (input: { id: string; body: string }) => Promise<void>;
   deleteNote: (id: string) => Promise<void>;
   /** Empty marks remove the reader's harakat from the letter. */
@@ -26,7 +26,7 @@ export interface PageWrites {
 
 export type Change =
   | { kind: "highlight"; op: "add" | "remove"; id: string; span: Span; color: HighlightColor }
-  | { kind: "note"; op: "add" | "delete"; id: string; span: Span; body: string }
+  | { kind: "note"; op: "add" | "delete"; id: string; target: NoteTarget; body: string }
   | { kind: "note-edit"; id: string; before: string; after: string }
   | { kind: "harakat"; ref: LetterRef; before: string; after: string }
   | { kind: "harakat-clear"; span: Span; removed: ClearedMark[] }
@@ -62,7 +62,7 @@ export const createUndoStack = (writes: PageWrites) => {
     else await writes.removeHighlight(current(c.id));
   };
   const note = async (c: Extract<Change, { kind: "note" }>, present: boolean) => {
-    if (present) recreated(c.id, await writes.addNote({ span: c.span, body: c.body }));
+    if (present) recreated(c.id, await writes.addNote({ ...c.target, body: c.body }));
     else await writes.deleteNote(current(c.id));
   };
 
@@ -118,10 +118,10 @@ export const createUndoStack = (writes: PageWrites) => {
         history = record(history, { kind: "highlight", op: "remove", id, span, color });
       });
     },
-    addNote({ span, body }: { span: Span; body: string }): Promise<string> {
+    addNote({ target, body }: { target: NoteTarget; body: string }): Promise<string> {
       return serial(async () => {
-        const id = await writes.addNote({ span, body });
-        history = record(history, { kind: "note", op: "add", id, span, body });
+        const id = await writes.addNote({ ...target, body });
+        history = record(history, { kind: "note", op: "add", id, target, body });
         return id;
       });
     },
@@ -139,10 +139,10 @@ export const createUndoStack = (writes: PageWrites) => {
         history = { done: [...history.done.slice(0, -1), merged], undone: [] };
       });
     },
-    deleteNote({ id, span, body }: { id: string; span: Span; body: string }): Promise<void> {
+    deleteNote({ id, target, body }: { id: string; target: NoteTarget; body: string }): Promise<void> {
       return serial(async () => {
         await writes.deleteNote(id);
-        history = record(history, { kind: "note", op: "delete", id, span, body });
+        history = record(history, { kind: "note", op: "delete", id, target, body });
       });
     },
     setMarks({ ref, before, after }: { ref: LetterRef; before: string; after: string }): Promise<void> {

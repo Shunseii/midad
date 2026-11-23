@@ -1,4 +1,4 @@
-import { Bookmark, BookmarkPlus, MessageSquareText } from "lucide-react";
+import { Bookmark, BookmarkPlus, FilePlus, FileText, MessageSquareText, Plus, Text } from "lucide-react";
 import { type CSSProperties, createContext, Fragment, type KeyboardEvent as ReactKeyboardEvent, type ReactNode, type MouseEvent as ReactMouseEvent, type RefObject, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   type Highlight,
@@ -448,13 +448,68 @@ export const rowOfWord = (rows: ScreenRow[], word: number): ScreenRow | null =>
 
 const rowStyle = (row: ScreenRow) => ({ top: row.top, height: row.height });
 
-/** The matn line's number, in the left margin beside its first row. */
-const LineNumber = ({ line }: { line: number }) => (
-  // The wrapper keeps the line's font so 1lh is one row of text; the number itself is small.
-  <span aria-hidden data-overlay className="pointer-events-none absolute -left-6 top-0 flex h-[1lh] w-5 select-none items-center @3xl:-left-10 @3xl:w-7">
-    <span className="font-sans text-xs font-normal tabular-nums text-ink-3">{line}</span>
-  </span>
-);
+/** What the line numbers need to show and add line notes. */
+export interface LineNotes {
+  byLine: ReadonlyMap<number, Note>;
+  onAdd: (line: number) => void;
+  handlers: NoteMarkHandlers;
+}
+
+/**
+ * The matn line's number, in the left margin beside its first row. On wide layouts it's a chip:
+ * hovering the line fades in "+" on its text side to add a line note, and a line with a note
+ * shows the note's icon there instead, which peeks the note.
+ */
+const LineNumber = ({ line, notes }: { line: number; notes?: LineNotes }) => {
+  const note = notes?.byLine.get(line);
+  const target = (el: HTMLElement): NoteMarkTarget => ({ notes: note ? [note] : [], anchor: (el.closest("[data-line-block]") ?? el).getBoundingClientRect() });
+  return (
+    // The wrapper keeps the line's font so 1lh is one row of text; the number itself is small.
+    // Left to right, so the icon sits between the number and the text.
+    // It reaches the text, so the pointer stays on the line on its way to the "+"; only then can the "+" be clicked.
+    <span
+      data-overlay
+      dir="ltr"
+      className="pointer-events-none absolute -left-6 top-0 flex h-[1lh] w-6 select-none items-center group-hover/line:pointer-events-auto @3xl:-left-11 @3xl:w-11"
+    >
+      {/* Without room beside the number, the "+" or the note's icon takes the number's place. */}
+      <span
+        aria-hidden
+        className={cx(
+          "w-5 text-center font-sans text-xs font-normal tabular-nums text-ink-3 transition-opacity duration-pop ease-out @3xl:w-7",
+          notes && (note ? "@max-3xl:opacity-0" : "@max-3xl:group-hover/line:opacity-0"),
+        )}
+      >
+        {line}
+      </span>
+      {notes && (
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <button
+                type="button"
+                data-margin
+                data-line-chip={line}
+                aria-label={note ? `Line ${line} note` : `Add a note to line ${line}`}
+                onMouseDown={(e) => e.stopPropagation()}
+                onMouseEnter={(e) => note && notes.handlers.onHover(target(e.currentTarget))}
+                onMouseLeave={() => note && notes.handlers.onHover(null)}
+                onClick={(e) => (note ? notes.handlers.onOpen(target(e.currentTarget)) : notes.onAdd(line))}
+                className={cx(
+                  "flex size-3 items-center justify-center rounded-sm font-sans outline-none @max-3xl:absolute @max-3xl:inset-y-0 @max-3xl:left-0 @max-3xl:h-full @max-3xl:w-5 transition-[opacity,color,scale] duration-pop ease-out hover:text-accent focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-accent active:scale-90 motion-reduce:transition-opacity",
+                  note ? "pointer-events-auto text-accent" : "text-ink-3 opacity-0 group-hover/line:opacity-100",
+                )}
+              />
+            }
+          >
+            {note ? <Text aria-hidden className="size-3" /> : <Plus aria-hidden className="size-3" />}
+          </TooltipTrigger>
+          {!note && <TooltipContent side="top">Add line note</TooltipContent>}
+        </Tooltip>
+      )}
+    </span>
+  );
+};
 
 /** Where the last-read mark was last drawn, so a mark moved on the same page can glide from there. */
 let lastMark: { page: number; top: number } | null = null;
@@ -610,6 +665,7 @@ const MarkableLine = ({
   numbered,
   noteMarks,
   footnote,
+  washed = false,
   children,
 }: {
   as: "p" | "h2";
@@ -628,6 +684,8 @@ const MarkableLine = ({
   /** Whether the line has a number in the margin, which the note marks sit beyond. */
   numbered: boolean;
   noteMarks: { dim: boolean; tinted: ReadonlySet<string>; handlers: NoteMarkHandlers };
+  /** The line's line note is being pointed at: the whole line washes. */
+  washed?: boolean;
   children: ReactNode;
 }) => {
   const ref = useRef<HTMLParagraphElement>(null);
@@ -659,7 +717,14 @@ const MarkableLine = ({
   };
 
   return (
-    <Tag ref={ref} data-line-block={`${part}-${line}`} data-footnote={footnote} onMouseLeave={() => setHover(null)} className={cx("relative", className)}>
+    <Tag
+      ref={ref}
+      data-line-block={`${part}-${line}`}
+      data-footnote={footnote}
+      data-line-washed={washed ? "" : undefined}
+      onMouseLeave={() => setHover(null)}
+      className={cx("group/line relative transition-colors duration-glide ease-out data-line-washed:bg-accent-soft", className)}
+    >
       {children}
       {/* The margin beside the line: the mark button shows only while the pointer is here. */}
       <span
@@ -720,6 +785,40 @@ const FootnoteBack = ({ marker, printed, linked }: { marker: string; printed: st
     `(${printed}) `
   );
 
+/**
+ * The page's printed number, which also opens its page note: hovering shows a note icon
+ * beside it, and once the page has a note the icon stays, in accent.
+ */
+const PageNumber = ({ folio, hasNote, onClick }: { folio: string; hasNote: boolean; onClick: () => void }) => (
+  <Tooltip>
+    <TooltipTrigger
+      render={
+        <button
+          type="button"
+          data-margin
+          data-page-number
+          aria-label={hasNote ? `Page ${folio} note` : `Add a note to page ${folio}`}
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={onClick}
+          className="group/folio relative flex items-center gap-1.5 rounded-md px-2 py-0.5 text-ink-2 outline-none transition-colors duration-press ease-out hover:bg-ink/4 focus-visible:ring-2 focus-visible:ring-accent"
+        />
+      }
+    >
+      <span className="ar text-ar-body">{folio}</span>
+      <span
+        aria-hidden
+        className={cx(
+          "absolute left-full flex items-center transition-opacity duration-pop ease-out",
+          hasNote ? "text-accent" : "text-ink-3 opacity-0 group-hover/folio:opacity-100 group-focus-visible/folio:opacity-100",
+        )}
+      >
+        {hasNote ? <FileText className="size-3.5" /> : <FilePlus className="size-3.5" />}
+      </span>
+    </TooltipTrigger>
+    <TooltipContent side="top">{hasNote ? "Page note" : "Add page note"}</TooltipContent>
+  </Tooltip>
+);
+
 /** A heading that opens a chapter, set off with space and a small ornament above it. */
 const ChapterOrnament = () => (
   <span aria-hidden className="mx-auto mt-8 mb-1 flex w-36 items-center gap-3 first:mt-2">
@@ -746,6 +845,8 @@ export const PageView = ({
   tinted,
   dimNoteMarks,
   noteMarkHandlers,
+  onAddLineNote,
+  onPageNote,
   ribbon,
 }: {
   stored: StoredPage;
@@ -768,10 +869,21 @@ export const PageView = ({
   /** Focus mode keeps the note marks faint until hovered. */
   dimNoteMarks: boolean;
   noteMarkHandlers: NoteMarkHandlers;
+  onAddLineNote: (line: number) => void;
+  /** Opens the page's note, or starts one. */
+  onPageNote: () => void;
   /** The bookmark ribbon, hung from the page's top corner. */
   ribbon?: ReactNode;
 }) => {
   const { page } = stored;
+  // Line notes are shown by their line's number, not on their words.
+  const lineNotes = new Map(annotations.notes.filter((n) => n.kind === "line" && n.span.part === "matn").map((n) => [n.span.start.line, n]));
+  annotations = { ...annotations, notes: annotations.notes.filter((n) => n.kind === "words") };
+  const lineChips: LineNotes = { byLine: lineNotes, onAdd: onAddLineNote, handlers: noteMarkHandlers };
+  const washed = (line: number) => {
+    const note = lineNotes.get(line);
+    return note !== undefined && tinted.has(note.id);
+  };
   const articleRef = useRef<HTMLElement>(null);
   useSelectionBoxes(articleRef);
   const fresh = freshHighlight ? annotations.highlights.find((h) => h.id === freshHighlight) : undefined;
@@ -789,6 +901,7 @@ export const PageView = ({
     notes: display.noteIcons === "corners" ? [] : annotations.notes.filter((n) => n.span.part === part && n.span.end.line === line),
     numbered: part === "matn" && display.lineNumbers,
     noteMarks: { dim: dimNoteMarks, tinted, handlers: noteMarkHandlers },
+    washed: part === "matn" && washed(line),
   });
   const footnotes = footnotesByMarker(page.hashiya.map((f) => ({ marker: f.marker, text: t(f.text) })));
   const referenced = new Set(page.matn.flatMap((b) => [...b.text.matchAll(new RegExp(FOOTNOTE_REF.source, "g"))].map((m) => toArabicIndic(m[1] ?? ""))));
@@ -824,7 +937,7 @@ export const PageView = ({
                 {...markable("matn", b.line)}
                 className={cx("ar mt-2 mb-4 text-center font-bold", b.level <= 2 ? "text-ar-display" : "text-ar-reading")}
               >
-                {display.lineNumbers && <LineNumber line={b.line} />}
+                {display.lineNumbers && <LineNumber line={b.line} notes={lineChips} />}
                 <Line part="matn" line={b.line} text={b.text} {...lineProps} />
               </MarkableLine>
             </div>
@@ -836,7 +949,7 @@ export const PageView = ({
           ) : (
             <MarkableLine key={b.line} as="p" {...markable("matn", b.line)} className="page-line ar whitespace-pre-line rounded-lg text-ar-reading">
               {/* A line that is only a gloss (OCR'd onto its own line) takes no height; its number would sit on the next line's. */}
-              {display.lineNumbers && b.text.trim() !== "" && <LineNumber line={b.line} />}
+              {display.lineNumbers && b.text.trim() !== "" && <LineNumber line={b.line} notes={lineChips} />}
               <Line part="matn" line={b.line} text={b.text} {...lineProps} />
             </MarkableLine>
           ),
@@ -859,8 +972,8 @@ export const PageView = ({
             ))}
           </section>
         )}
-        <footer className="ar mt-10 text-center text-ar-body text-ink-2" aria-label={`Page ${folio}`}>
-          {folio}
+        <footer className="mt-10 flex justify-center">
+          <PageNumber folio={folio} hasNote={annotations.pageNote !== null} onClick={onPageNote} />
         </footer>
       </article>
     </Footnotes>
