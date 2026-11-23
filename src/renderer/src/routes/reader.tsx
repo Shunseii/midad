@@ -110,6 +110,8 @@ interface ZoomAnchor {
   at: number;
 }
 
+const sameLines = (a: number[], b: number[]) => a.length === b.length && a.every((line, i) => line === b[i]);
+
 /** Longer than the column's width transition, in case its transitionend never comes. */
 const WIDTH_FOLLOW_MAX_MS = 600;
 
@@ -535,7 +537,9 @@ export const ReaderRoute = () => {
     measureFrame.current = requestAnimationFrame(() => {
       const root = pageRoot.current;
       if (!root) return;
-      setOnScreen({ position, lines: linesOnScreen(root) });
+      const lines = linesOnScreen(root);
+      // A resize (the side panel sliding, say) fires every frame; only a change in what's on screen needs a render.
+      setOnScreen((current) => (current.position === position && sameLines(current.lines, lines) ? current : { position, lines }));
     });
   }, [position]);
   useLayoutEffect(() => {
