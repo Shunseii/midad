@@ -66,4 +66,25 @@ export const checks = [
       assert.match(await page.ev("location.hash"), /settings/, "Esc closing the dialog also left settings");
     },
   ],
+  [
+    "in a narrow window, the panel shortcuts close the sheet they opened",
+    async (page) => {
+      await page.viewport(1000, 820);
+      try {
+        await openReader(page, { bookId: LONG_BOOK, position: 50 });
+        await clickPageArea(page);
+        const sheet = `!!document.querySelector("[data-slot=sheet-content]")`;
+        for (const [key, code] of [["]", "BracketRight"], ["[", "BracketLeft"], ["\\", "Backslash"]]) {
+          await page.press(key, { code, ctrl: true });
+          await page.waitFor(sheet, { timeout: 2000, message: `Ctrl+${key} didn't open a sheet` });
+          await page.sleep(300);
+          await page.press(key, { code, ctrl: true });
+          await page.waitFor(`!${sheet}`, { timeout: 2000, message: `Ctrl+${key} didn't close the sheet from inside it` });
+          await page.sleep(300);
+        }
+      } finally {
+        await page.viewport(1280, 820);
+      }
+    },
+  ],
 ];
