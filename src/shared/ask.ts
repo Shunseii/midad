@@ -22,6 +22,8 @@ Answer from that page. Don't search for or cite other books.
 
 The reader is a student learning to read these texts themselves. Answer exactly what they asked and stop. If they ask for the harakat of a word, give the vowelled word and nothing more: no translation, no explanation, no surrounding context. If they ask what a word means, give its meaning here, not a translation of the sentence. Never translate, parse, or explain more than was asked; doing the work for them takes away the learning. Keep answers short. You may end with one brief offer of further help, such as "Want the i'rab?", but never give it unasked. When the reader shares their own attempt (a reading with harakat, a translation, an iʿrāb, their understanding of the page), say what is right and give a hint for what is wrong so they can try again; give the full correction only if they ask or miss it a second time.
 
+Citations without a page point at the reader's page. To quote another page, put its page (the same number as for midad page) first: [[page 42, line 3: words]] or [[page 42, ḥāshiya 1]]; only ever cite a page you have read.
+
 Cite what you rely on inline. For a phrase, copy its exact words from the line into the citation: [[line 2: هو اللفظ المركب]] cites those words of line 2, and [[ḥāshiya 1: المراد بالوضع]] works the same way. Midad finds the words on the line itself, so never number them. If the phrase appears more than once on that line, include a word or two more so it is unique. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
 
 Speak of Allah, the Prophet, and the scholars with respect, as a student of these books would. Write "Allah", never "God". Use these honorific symbols, written as the single character: after Allah's name ﷻ, ﷿ or ﷾; after the Prophet ﷺ; after other prophets ﵇; after a Companion ﵁ (﵂ for a woman, ﵃ for a group, ﵄ for two); after a deceased scholar ﵀ (﵏ for several) on first mention. Never spell these out where a symbol exists. Refer to the author and the scholars by name or title (the author, Imam al-Nawawi), never by surname alone or casually. Don't argue with or belittle them; when they differ, report each view fairly.
@@ -40,25 +42,42 @@ export type Segment =
    * Lines `from`–`to`. With `phrase`, just those words, found in the lines by their text.
    * With `words` (the older form), those word numbers of the one line.
    */
-  | { kind: "cite"; part: Part; from: number; to: number; words: { from: number; to: number } | null; phrase: string | null };
+  | {
+      kind: "cite";
+      part: Part;
+      from: number;
+      to: number;
+      words: { from: number; to: number } | null;
+      phrase: string | null;
+      /** The page it's on, when Claude quotes a page other than the reader's: a position in the book, as for `midad page`. */
+      page?: number;
+    };
 
-const CITATION = /\[\[(lines?|ḥāshiya|hashiya|ḥashiya)\s+(\d+)(?:\s*[-–]\s*(\d+))?(?:\s*:\s*([^\]\n]+?))?\s*\]\]/g;
+const CITATION = /\[\[(?:page\s+(\d+)\s*,\s*)?(lines?|ḥāshiya|hashiya|ḥashiya)\s+(\d+)(?:\s*[-–]\s*(\d+))?(?:\s*:\s*([^\]\n]+?))?\s*\]\]/g;
 const WORD_NUMBERS = /^(\d+)(?:\s*[-–]\s*(\d+))?$/;
 
 export const parseCitations = (text: string): Segment[] => {
   const segments: Segment[] = [];
   let last = 0;
   for (const m of text.matchAll(CITATION)) {
-    const after = m[4]?.trim() ?? "";
+    const after = m[5]?.trim() ?? "";
     const numbers = after.match(WORD_NUMBERS);
     // Word numbers only make sense within a single line.
-    if (m[3] && numbers) continue;
+    if (m[4] && numbers) continue;
     const index = m.index ?? 0;
     if (index > last) segments.push({ kind: "text", text: text.slice(last, index) });
-    const from = Number(m[2]);
+    const from = Number(m[3]);
     const words = numbers ? { from: Number(numbers[1]), to: Number(numbers[2] ?? numbers[1]) } : null;
     const phrase = after && !numbers ? after : null;
-    segments.push({ kind: "cite", part: m[1]?.startsWith("line") ? "matn" : "hashiya", from, to: m[3] ? Number(m[3]) : from, words, phrase });
+    segments.push({
+      kind: "cite",
+      part: m[2]?.startsWith("line") ? "matn" : "hashiya",
+      from,
+      to: m[4] ? Number(m[4]) : from,
+      words,
+      phrase,
+      ...(m[1] ? { page: Number(m[1]) } : {}),
+    });
     last = index + m[0].length;
   }
   if (last < text.length) segments.push({ kind: "text", text: text.slice(last) });

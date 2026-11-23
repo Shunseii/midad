@@ -4,6 +4,14 @@ import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
 describe("parseCitations", () => {
+  it("reads a citation on another page, and leaves others on the reader's page", () => {
+    expect(parseCitations("see [[page 42, line 3: هو اللفظ]] and [[page 7, ḥāshiya 1]] and [[line 2]]").filter((s) => s.kind === "cite")).toEqual([
+      { kind: "cite", part: "matn", from: 3, to: 3, words: null, phrase: "هو اللفظ", page: 42 },
+      { kind: "cite", part: "hashiya", from: 1, to: 1, words: null, phrase: null, page: 7 },
+      { kind: "cite", part: "matn", from: 2, to: 2, words: null, phrase: null },
+    ]);
+  });
+
   it("turns [[line n]] into a citation of that matn line", () => {
     expect(parseCitations("as [[line 2]] says")).toEqual([
       { kind: "text", text: "as " },

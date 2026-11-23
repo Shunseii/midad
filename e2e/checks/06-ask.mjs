@@ -236,4 +236,20 @@ export const checks = [
       assert.deepEqual(heights, [48, 72, 48, 24], "composer height after each new line, then each delete");
     },
   ],
+  [
+    "a citation on another page names that page and takes you there",
+    async (page) => {
+      await openReader(page, { bookId: LONG_BOOK, position: 12 });
+      await page.waitFor(`!document.querySelector('[aria-label="Stop"]')`, { timeout: 20_000, message: "an earlier answer never finished" });
+      await page.click(COMPOSER);
+      await page.type("Where else? [cite page 40] [12 words]");
+      await page.press("Enter");
+      const pill = `js:[...document.querySelectorAll("button")].find((b) => b.closest("[dir=ltr]")?.textContent.includes("p. 40 · line 2") || b.getAttribute("aria-label")?.includes("p. 40 · line 2"))`;
+      await page.waitFor(`!!(${pill.slice(3)})`, { timeout: 10_000, message: "no pill naming page 40" });
+      const words = await page.ev(`[...document.querySelectorAll('[data-part=matn][data-line="2"][data-w]')].map((w) => w.textContent).join(" ")`);
+      await page.click(pill);
+      await page.waitFor(`new URLSearchParams(location.hash.split("?")[1]).get("p") === "40"`, { timeout: 5000, message: "the pill didn't go to page 40" });
+      assert.ok(words.length > 0, "the page had no line 2 to compare");
+    },
+  ],
 ];

@@ -329,8 +329,8 @@ type Cite = Extract<Segment, { kind: "cite" }>;
 export type Citation = Omit<Cite, "kind"> & { position: number };
 
 const citeLabel = (c: Omit<Cite, "kind">) => {
-  if (c.part === "hashiya") return `ḥāshiya ${arabicNumber(c.from)}${c.to === c.from ? "" : `–${arabicNumber(c.to)}`}`;
-  return c.from === c.to ? `line ${c.from}` : `lines ${c.from}–${c.to}`;
+  const lines = c.part === "hashiya" ? `ḥāshiya ${arabicNumber(c.from)}${c.to === c.from ? "" : `–${arabicNumber(c.to)}`}` : c.from === c.to ? `line ${c.from}` : `lines ${c.from}–${c.to}`;
+  return c.page === undefined ? lines : `p. ${c.page} · ${lines}`;
 };
 
 /** A pasted span as a citation: part of one line keeps its words, more than one line cites the lines. */
@@ -424,11 +424,15 @@ const CiteChip = ({
   );
 
   /** An answer's citation: its words come from the page the question was asked on. */
-  const AnswerCite = ({ bookId, cite, position, onCite }: { bookId: string; cite: Cite; position: number; onCite: (c: Citation) => void }) => {
+  const AnswerCite = ({ bookId, cite, position: askedOn, onCite }: { bookId: string; cite: Cite; position: number; onCite: (c: Citation) => void }) => {
+    // A citation names its page only when it's not the one the question was asked on.
+    const position = cite.page ?? askedOn;
     const page = usePage({ bookId, position });
     const span = page.data ? citeSpan({ cite, page: page.data.page }) : null;
     const { kind: _, ...where } = cite;
-    const label = citeLabel(cite);
+    // Naming the page the question was asked on is the same as naming none.
+    const label = citeLabel({ ...where, page: cite.page === askedOn ? undefined : cite.page });
+    if (page.isSuccess && !page.data) return <CiteChip label={label} text={`This book has no page ${position}`} pillText={cite.phrase ?? label} quoted missing />;
     if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} pillText={cite.phrase ?? label} quoted missing />;
     // The page's own words, with its harakat, rather than the AI's spelling of them.
     const words = span && page.data ? quoteSpan({ page: page.data.page, span }) : null;
