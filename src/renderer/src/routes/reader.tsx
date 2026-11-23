@@ -771,6 +771,7 @@ export const ReaderRoute = () => {
   };
 
   const onMouseDown = (e: React.MouseEvent<HTMLElement>) => {
+    goalX.current = null;
     setMenuOpen(false);
     dismiss();
     if (e.button === 0 && pageRoot.current) markDragging(pageRoot.current);
@@ -800,6 +801,9 @@ export const ReaderRoute = () => {
    * The browser only moves a selection with the keyboard in editable text, so the page does it
    * for its own selection. Words are the smallest step, since a selection snaps to whole words.
    */
+  // The column Shift+↑/↓ keep to across rows, as a text field does; any other move forgets it.
+  const goalX = useRef<number | null>(null);
+
   const extendSelection = (step: { direction: "left" | "right" | "backward" | "forward"; granularity: "word" | "lineboundary" } | { lines: 1 | -1 }) => {
     const root = pageRoot.current;
     const selection = window.getSelection();
@@ -807,30 +811,46 @@ export const ReaderRoute = () => {
     if (!root || !selection || selection.rangeCount === 0 || !selection.focusNode || !root.contains(selection.focusNode)) return false;
     if ("lines" in step) extendByLine({ root, selection, lines: step.lines });
     else {
-      selection.modify("extend", step.direction, step.granularity);
-      // Landing back on where the selection started selects nothing; carry on to the word past it.
-      if (selection.isCollapsed) selection.modify("extend", step.direction, step.granularity);
+      goalX.current = null;
+      const before = JSON.stringify(spanFromSelection(root)?.span ?? null);
+      // A step can land on a line break or the selection's start without changing the words; take another.
+      for (let tries = 0; tries < 3; tries++) {
+        selection.modify("extend", step.direction, step.granularity);
+        if (!selection.isCollapsed && JSON.stringify(spanFromSelection(root)?.span ?? null) !== before) break;
+      }
     }
     onSelectionEnd();
   };
 
-  /** Moves the selection's end to the text a row above or below it, past any glosses between. */
+  /** Moves the selection's moving end to the word in the row above or below, at the same column. */
   const extendByLine = ({ root, selection, lines }: { root: HTMLElement; selection: Selection; lines: 1 | -1 }) => {
-    const focus = document.createRange();
-    focus.setStart(selection.focusNode as Node, selection.focusOffset);
-    const at = focus.getClientRects()[0] ?? (selection.focusNode as Node).parentElement?.getBoundingClientRect();
-    if (!at) return;
-    const row = at.height || 24;
-    for (let y = lines > 0 ? at.bottom + row / 2 : at.top - row / 2, tries = 0; tries < 12; y += (lines * row) / 2, tries += 1) {
-      const caret = caretNear({ root, x: at.left, y });
-      if (!caret) continue;
-      const probe = document.createRange();
-      probe.setStart(caret.node, caret.offset);
-      const top = probe.getClientRects()[0]?.top ?? (caret.node.parentElement?.getBoundingClientRect().top ?? at.top);
-      if (Math.abs(top - at.top) < row / 2) continue;
-      selection.extend(caret.node, caret.offset);
-      return;
-    }
+    const range = selection.getRangeAt(0);
+    const backward = !range.collapsed && range.startContainer === selection.focusNode && range.startOffset === selection.focusOffset;
+    const picked = spanFromSelection(root);
+    const at = (part: string, ref: { line: number; word: number }) => root.querySelector<HTMLElement>(`[data-part="${part}"][data-line="${ref.line}"][data-w="${ref.word}"]`);
+    const focusNode = selection.focusNode as Node;
+    const from = picked
+      ? at(picked.span.part, backward ? picked.span.start : picked.span.end)
+      : (focusNode instanceof Element ? focusNode : focusNode.parentElement)?.closest<HTMLElement>("[data-w]");
+    if (!from) return;
+    const here = from.getBoundingClientRect();
+    const x = goalX.current ?? (here.left + here.right) / 2;
+    const words = [...root.querySelectorAll<HTMLElement>("[data-w]")].map((el) => ({ el, r: el.getBoundingClientRect() }));
+    const beyond = words.filter(({ r }) => (lines > 0 ? r.top >= here.bottom - here.height / 3 : r.bottom <= here.top + here.height / 3));
+    if (beyond.length === 0) return;
+    const rowEdge = lines > 0 ? Math.min(...beyond.map(({ r }) => r.top)) : Math.max(...beyond.map(({ r }) => r.bottom));
+    const row = beyond.filter(({ r }) => (lines > 0 ? Math.abs(r.top - rowEdge) : Math.abs(r.bottom - rowEdge)) < here.height / 2);
+    const gap = ({ r }: { r: DOMRect }) => (x < r.left ? r.left - x : x > r.right ? x - r.right : 0);
+    const target = row.reduce((best, w) => (gap(w) < gap(best) ? w : best)).el;
+    const parent = target.parentNode;
+    if (!parent || !selection.anchorNode) return;
+    const index = [...parent.childNodes].indexOf(target);
+    // The moving end takes in the target word: after it when it lies past the fixed end, before it when it comes first.
+    const anchor = document.createRange();
+    anchor.setStart(selection.anchorNode, selection.anchorOffset);
+    const targetFirst = anchor.comparePoint(parent, index) < 0;
+    selection.extend(parent, targetFirst ? index : index + 1);
+    goalX.current = x;
   };
 
   /** Selects every word of the page, main text and ḥāshiya, and nothing around it. */

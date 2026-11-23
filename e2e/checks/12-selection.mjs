@@ -171,4 +171,39 @@ export const checks = [
       assert.equal(copied, expected, "the selection (what Ctrl+C copies) isn't the whole words");
     },
   ],
+  [
+    "Shift+arrows cross onto the next line at once, and Shift+↓ keeps the column",
+    async (page) => {
+      await openReader(page, { bookId: LONG_BOOK, position: 12 });
+      await page.ev(`window.getSelection().removeAllRanges()`);
+      await page.sleep(400);
+      const last = await page.ev(`document.querySelectorAll('[data-part=matn][data-line="2"][data-w]').length`);
+      const w = await page.rectOf(word(2, last));
+      await page.move(w.cx, w.cy);
+      for (const n of [1, 2]) {
+        await page.mouse("mousePressed", w.cx, w.cy, { clickCount: n, buttons: 1 });
+        await page.sleep(40);
+        await page.mouse("mouseReleased", w.cx, w.cy, { clickCount: n });
+        await page.sleep(120);
+      }
+      await page.sleep(150);
+      await page.press("ArrowLeft", { shift: true });
+      await page.sleep(120);
+      assert.deepEqual(await selectedWords(page), [`2:${last}`, "3:1"], "Shift+← at the end of a line didn't take the next line's first word");
+      await page.press("ArrowLeft", { shift: true });
+      await page.press("ArrowLeft", { shift: true });
+      await page.sleep(120);
+      const column = await page.rectOf(word(3, 3));
+      await page.press("ArrowDown", { shift: true });
+      await page.sleep(150);
+      const words = await selectedWords(page);
+      const end = words.at(-1);
+      const endBox = await page.rectOf(`[data-part=matn][data-line="${end.split(":")[0]}"][data-w="${end.split(":")[1]}"]`);
+      assert.ok(end.startsWith("4:"), `Shift+↓ didn't move to the next row: ended on ${end}`);
+      assert.ok(Math.abs(endBox.cx - column.cx) < column.width + endBox.width, `Shift+↓ lost the column: ${end} is far from 3:3`);
+      await page.press("ArrowUp", { shift: true });
+      await page.sleep(150);
+      assert.equal((await selectedWords(page)).at(-1), "3:3", "Shift+↑ didn't come back to the same word");
+    },
+  ],
 ];
