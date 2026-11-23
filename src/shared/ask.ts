@@ -1,5 +1,5 @@
 import { lineText, type Part, type Span, wordsOf } from "./annotations";
-import { locatePhrase } from "./find";
+import { locatePhrases, phraseWordCount } from "./find";
 import type { Gloss, Page } from "./page";
 import { foldArabic } from "./arabic";
 
@@ -7,7 +7,8 @@ import { foldArabic } from "./arabic";
  * Ask AI runs a local Claude Code session. Each message carries a small hidden
  * block saying where the reader is; Claude reads the page itself with the
  * midad CLI and cites lines as [[line 2]], [[lines 2-3]] or [[ḥāshiya 1]], and
- * phrases by their words: [[line 2: هو اللفظ]].
+ * phrases by their words: [[line 2: هو اللفظ]], with braces around the words meant when they repeat:
+ * [[line 2: قال {الكلام} هو]].
  */
 
 export const SYSTEM_PROMPT = `You are a reading companion inside Midad, a desktop reader for classical Arabic books. The reader asks about the page they have open.
@@ -24,7 +25,7 @@ The reader is a student learning to read these texts themselves. Answer exactly 
 
 You can cite any page of this book, not only the reader's. A citation without a page points at the reader's page; for any other page, put its page (the same number as for midad page, not the printed number) first: [[page 42, line 3: words]] or [[page 42, ḥāshiya 1]]. The reader hovers it to see the words and clicks it to go there. Only cite a page you have read with midad.
 
-Cite what you rely on inline. For a phrase, copy its exact words from the line into the citation: [[line 2: هو اللفظ المركب]] cites those words of line 2, and [[ḥāshiya 1: المراد بالوضع]] works the same way. Midad finds the words on the line itself, so never number them. If the phrase appears more than once on that line, include a word or two more so it is unique. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
+Cite what you rely on inline. For a phrase, copy its exact words from the line into the citation: [[line 2: هو اللفظ المركب]] cites those words of line 2, and [[ḥāshiya 1: المراد بالوضع]] works the same way. Midad finds the words on the line itself, so never number them. If those words appear more than once on the line, copy a few neighbouring words too so the quote is unique, and put braces around the words you mean: [[line 2: قال {الكلام} هو]] cites only الكلام, the one after قال. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
 
 Speak of Allah, the Prophet, and the scholars with respect, as a student of these books would. Write "Allah", never "God". Use these honorific symbols, written as the single character: after Allah's name ﷻ, ﷿ or ﷾; after the Prophet ﷺ; after other prophets ﵇; after a Companion ﵁ (﵂ for a woman, ﵃ for a group, ﵄ for two); after a deceased scholar ﵀ (﵏ for several) on first mention. Never spell these out where a symbol exists. Refer to the author and the scholars by name or title (the author, Imam al-Nawawi), never by surname alone or casually. Don't argue with or belittle them; when they differ, report each view fairly.
 
@@ -110,32 +111,54 @@ const fold = (text: string) => foldArabic(text.replace(/\([٠-٩۰-۹0-9]+\)/g, 
 
 /** The gloss on the cited lines whose words the citation quotes, when it quotes a gloss rather than the text. */
 export const citedGloss = ({ cite, page }: { cite: CiteTarget; page: Page }): Gloss | null => {
-  const phrase = cite.phrase ? fold(cite.phrase) : "";
-  if (!phrase || locatePhrase({ page, part: cite.part, lines: { from: cite.from, to: cite.to }, phrase: cite.phrase ?? "" })) return null;
+  const quoted = cite.phrase ? markedPhrase(cite.phrase).text : "";
+  const phrase = fold(quoted);
+  if (!phrase || locatePhrases({ page, part: cite.part, lines: { from: cite.from, to: cite.to }, phrase: quoted }).length) return null;
   return page.glosses.find((g) => g.part === cite.part && g.line >= cite.from && g.line <= cite.to && fold(g.text).includes(phrase)) ?? null;
 };
 
-/** The words a citation points at on its page, or null when the page has no such lines or words, or the phrase isn't in them. */
-export const citeSpan = ({ cite, page }: { cite: CiteTarget; page: Page }): Span | null => {
+/**
+ * A quoted phrase without its braces, and the words the braces mark in it, as `locatePhrases`
+ * counts them: [[line 2: قال {الكلام} هو]] quotes three words to cite the middle one.
+ */
+export const markedPhrase = (phrase: string): { text: string; focus: { from: number; to: number } | null } => {
+  const marked = phrase.match(/^([^{}]*)\{([^{}]+)\}([^{}]*)$/);
+  if (!marked) return { text: phrase.replace(/[{}]/g, " ").replace(/\s+/g, " ").trim(), focus: null };
+  const [, before = "", words = "", after = ""] = marked;
+  const from = phraseWordCount(before);
+  const to = from + phraseWordCount(words);
+  return { text: `${before} ${words} ${after}`.replace(/\s+/g, " ").trim(), focus: to > from ? { from, to } : null };
+};
+
+/**
+ * The words a citation points at on its page: one span, or every match of a quoted phrase that
+ * appears more than once and isn't marked to tell them apart. Empty when the page has no such
+ * lines or words, or the phrase isn't in them.
+ */
+export const citeSpans = ({ cite, page }: { cite: CiteTarget; page: Page }): Span[] => {
   const count = (line: number) => {
     const text = lineText({ page, part: cite.part, line });
     return text === null ? 0 : wordsOf(text).length;
   };
-  for (let line = cite.from; line <= cite.to; line += 1) if (!count(line)) return null;
+  for (let line = cite.from; line <= cite.to; line += 1) if (!count(line)) return [];
   if (cite.phrase) {
-    const inText = locatePhrase({ page, part: cite.part, lines: { from: cite.from, to: cite.to }, phrase: cite.phrase });
-    if (inText) return inText;
+    const { text, focus } = markedPhrase(cite.phrase);
+    const inText = locatePhrases({ page, part: cite.part, lines: { from: cite.from, to: cite.to }, phrase: text, ...(focus ? { focus } : {}) });
+    if (inText.length) return inText;
     const gloss = citedGloss({ cite, page });
     // A quoted gloss points at the words it explains.
-    return gloss && { part: gloss.part, start: { line: gloss.line, word: gloss.from }, end: { line: gloss.line, word: gloss.to } };
+    return gloss ? [{ part: gloss.part, start: { line: gloss.line, word: gloss.from }, end: { line: gloss.line, word: gloss.to } }] : [];
   }
   if (cite.words) {
     const { from, to } = cite.words;
-    if (from < 1 || to < from || to > count(cite.from)) return null;
-    return { part: cite.part, start: { line: cite.from, word: from }, end: { line: cite.from, word: to } };
+    if (from < 1 || to < from || to > count(cite.from)) return [];
+    return [{ part: cite.part, start: { line: cite.from, word: from }, end: { line: cite.from, word: to } }];
   }
-  return { part: cite.part, start: { line: cite.from, word: 1 }, end: { line: cite.to, word: count(cite.to) } };
+  return [{ part: cite.part, start: { line: cite.from, word: 1 }, end: { line: cite.to, word: count(cite.to) } }];
 };
+
+/** The first of the words a citation points at, or null when it points at none. */
+export const citeSpan = (args: { cite: CiteTarget; page: Page }): Span | null => citeSpans(args)[0] ?? null;
 
 const describeSpan = ({ part, start, end }: Span) => {
   const where = part === "hashiya" ? `ḥāshiya ${start.line}` : `line ${start.line}`;

@@ -252,4 +252,42 @@ export const checks = [
       assert.ok(words.length > 0, "the page had no line 2 to compare");
     },
   ],
+  [
+    "a phrase that repeats on its line points at every place, and braces pick one",
+    async (page) => {
+      await openReader(page, { bookId: LONG_BOOK, position: 12 });
+      // A line of this page with a word on it twice, and the word just before its second use.
+      const repeat = await page.ev(`(() => {
+        for (const block of document.querySelectorAll('[data-line-block^="matn-"]')) {
+          const words = [...block.querySelectorAll("[data-w]")].map((w) => w.textContent.trim());
+          const second = words.findIndex((w, i) => i > 1 && words.indexOf(w) < i - 1);
+          if (second !== -1) return { line: Number(block.dataset.lineBlock.slice(5)), word: words[second], first: words.indexOf(words[second]) + 1, second: second + 1, before: words[second - 1] };
+        }
+        return null;
+      })()`);
+      assert.ok(repeat, "no line on page 12 repeats a word");
+      const tinted = () => page.ev(`[...document.querySelectorAll('[data-part=matn][data-line="${repeat.line}"][data-w]')].filter((w) => w.getAnimations().length).map((w) => Number(w.dataset.w))`);
+      const ask = async (citation) => {
+        await page.waitFor(`!document.querySelector('[aria-label="Stop"]')`, { timeout: 20_000, message: "an earlier answer never finished" });
+        await page.click(COMPOSER);
+        await page.type(`Which? [cite: ${citation}] [12 words]`);
+        await page.press("Enter");
+      };
+      // The newest answer's pill whose label starts so.
+      const pill = (label) => `js:[...document.querySelectorAll("button[aria-label]")].findLast((b) => b.getAttribute("aria-label").startsWith(${JSON.stringify(label)}))`;
+      const answered = (label) => page.waitFor(`!!(${pill(label).slice(3)})`, { timeout: 10_000, message: `no pill labelled "${label}…"` });
+
+      await ask(`line ${repeat.line}: ${repeat.word}`);
+      await answered(`line ${repeat.line} · in 2 places:`);
+      await page.click(pill(`line ${repeat.line} · in 2 places:`));
+      await page.waitFor(`${JSON.stringify([repeat.first, repeat.second])}.every((n) => document.querySelector('[data-part=matn][data-line="${repeat.line}"][data-w="' + n + '"]')?.getAnimations().length)`, { timeout: 3000, message: "clicking didn't tint both places" });
+      await page.sleep(3200);
+
+      await ask(`line ${repeat.line}: ${repeat.before} {${repeat.word}}`);
+      await answered(`line ${repeat.line}: `);
+      await page.click(pill(`line ${repeat.line}: `));
+      await page.waitFor(`document.querySelector('[data-part=matn][data-line="${repeat.line}"][data-w="${repeat.second}"]')?.getAnimations().length > 0`, { timeout: 3000, message: "clicking the braced citation didn't tint its word" });
+      assert.deepEqual(await tinted(), [repeat.second], "the braced citation tinted more than the word in braces");
+    },
+  ],
 ];

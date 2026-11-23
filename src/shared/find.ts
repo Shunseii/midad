@@ -68,24 +68,49 @@ export const findOnPage = ({ page, query, options }: { page: Page; query: string
   return spans;
 };
 
+/** How many words a quoted phrase has once folded, as `locatePhrases` counts them for `focus`. */
+export const phraseWordCount = (phrase: string): number => {
+  const folded = foldQuery({ query: phrase, matchHarakat: false });
+  return folded ? folded.split(" ").length : 0;
+};
+
 /**
- * Where a quoted phrase sits in some lines, compared without harakat, tatweel or
- * punctuation. A match on whole words wins over one inside longer words; the
- * first wins after that. Null when the phrase isn't there.
+ * Every place a quoted phrase sits in some lines, compared without harakat, tatweel or
+ * punctuation, in reading order. Matches on whole words win: matches inside longer words
+ * count only when there are none. With `focus`, each match narrows to those of the phrase's
+ * words (from 0, `to` excluded).
  */
-export const locatePhrase = ({ page, part, lines, phrase }: { page: Page; part: Part; lines: { from: number; to: number }; phrase: string }): Span | null => {
+export const locatePhrases = ({
+  page,
+  part,
+  lines,
+  phrase,
+  focus,
+}: {
+  page: Page;
+  part: Part;
+  lines: { from: number; to: number };
+  phrase: string;
+  focus?: { from: number; to: number };
+}): Span[] => {
   const needle = foldQuery({ query: phrase, matchHarakat: false });
-  if (!needle) return null;
+  if (!needle) return [];
   const hay = haystackOf({ page, part, matchHarakat: false, lines });
-  const wordAt = (offset: number) => hay.words.find((w) => offset >= w.start && offset < w.end);
-  let loose: Span | null = null;
+  const whole: Span[] = [];
+  const loose: Span[] = [];
   for (let at = hay.text.indexOf(needle); at !== -1; at = hay.text.indexOf(needle, at + 1)) {
-    const first = wordAt(at);
-    const last = wordAt(at + needle.length - 1);
+    const end = at + needle.length;
+    const touched = hay.words.filter((w) => w.end > at && w.start < end);
+    const picked = focus ? touched.slice(focus.from, focus.to) : touched;
+    const first = picked[0];
+    const last = picked.at(-1);
     if (!first || !last) continue;
     const span = { part, start: { line: first.line, word: first.word }, end: { line: last.line, word: last.word } };
-    if (at === first.start && at + needle.length === last.end) return span;
-    loose ??= span;
+    const exact = at === touched[0]?.start && end === touched.at(-1)?.end;
+    (exact ? whole : loose).push(span);
   }
-  return loose;
+  return whole.length ? whole : loose;
 };
+
+/** Where a quoted phrase first sits in some lines, a whole-word match first. Null when it isn't there. */
+export const locatePhrase = (args: { page: Page; part: Part; lines: { from: number; to: number }; phrase: string }): Span | null => locatePhrases(args)[0] ?? null;

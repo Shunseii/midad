@@ -16,7 +16,7 @@ import { type AskSelection, AskHeader, AskPanel, useAskConversation } from "../c
 import { PageScrubber } from "../components/page-scrubber";
 import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } from "../components/find-bar";
 import { findOnPage } from "../../../shared/find";
-import { citeSpan } from "../../../shared/ask";
+import { citeSpans } from "../../../shared/ask";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
 import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rectWithGlosses, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
 import { IconButton, Segmented, Skeleton, Toast, ToastAction, cx } from "../components/ui";
@@ -115,14 +115,18 @@ const WIDTH_FOLLOW_MAX_MS = 600;
 
 const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
 
-const revealSpan = ({ root, span }: { root: HTMLElement | null; span: Span }) => {
+/** Scrolls to the first of some spans and tints the words of all of them for a moment. */
+const revealSpans = ({ root, spans }: { root: HTMLElement | null; spans: Span[] }) => {
   if (!root) return;
-  const words = [...root.querySelectorAll<HTMLElement>(`[data-part="${span.part}"][data-w]`)].filter((el) => {
+  const words = [...root.querySelectorAll<HTMLElement>("[data-part][data-w]")].filter((el) => {
     const line = Number(el.dataset.line);
     const word = Number(el.dataset.w);
-    const afterStart = line > span.start.line || (line === span.start.line && word >= span.start.word);
-    const beforeEnd = line < span.end.line || (line === span.end.line && word <= span.end.word);
-    return afterStart && beforeEnd;
+    return spans.some((span) => {
+      if (el.dataset.part !== span.part) return false;
+      const afterStart = line > span.start.line || (line === span.start.line && word >= span.start.word);
+      const beforeEnd = line < span.end.line || (line === span.end.line && word <= span.end.word);
+      return afterStart && beforeEnd;
+    });
   });
   words[0]?.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
   tintWords(words);
@@ -138,8 +142,8 @@ interface LineRange {
 type Citation = LineRange & { words: { from: number; to: number } | null; phrase: string | null };
 
 const revealCitation = ({ root, cite, page }: { root: HTMLElement | null; cite: Citation; page: StoredPage["page"] | undefined }) => {
-  const span = page ? citeSpan({ cite, page }) : null;
-  if (span) revealSpan({ root, span });
+  const spans = page ? citeSpans({ cite, page }) : [];
+  if (spans.length) revealSpans({ root, spans });
   else if (!cite.phrase && !cite.words) revealLines({ root, ...cite });
 };
 
@@ -1403,7 +1407,7 @@ export const ReaderRoute = () => {
       onClose={() => setPanelOpen(false)}
       onGoTo={(span) => {
         if (!wide) setPanelOpen(false);
-        revealSpan({ root: pageRoot.current, span });
+        revealSpans({ root: pageRoot.current, spans: [span] });
       }}
       onRemoveHighlight={removeHighlight}
       onDeleteNote={(id) => void noteWrites.remove(id)}

@@ -81,6 +81,9 @@ const words = Array.from({ length }, (_, i) => (i % 40 === 39 ? "word.\\n\\n" : 
 // "[cite page N]" in the question: the answer cites line 2 of page N.
 const citePage = /\\[cite page (\\d+)\\]/.exec(prompt.split("</reading-context>").at(-1))?.[1];
 if (citePage) words.unshift("See [[page " + citePage + ", line 2]] here. ");
+// "[cite: X]" in the question: the answer opens with the citation [[X]], as written.
+const citeAs = /\\[cite: ([^\\]]+)\\]/.exec(prompt.split("</reading-context>").at(-1))?.[1];
+if (citeAs) words.unshift("See [[" + citeAs + "]] here. ");
 if (prompt.includes("<cut-off-messages>")) words.unshift(prompt.includes("Reader: Stopped first") ? "CUTOFF-SEEN " : "CUTOFF-OTHER ");
 // Names the model it was asked for when that isn't Ask AI's default, so a check can see the reader's choice got through.
 const model = process.argv.includes("--model") ? process.argv[process.argv.indexOf("--model") + 1] : null;

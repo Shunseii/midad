@@ -2,7 +2,7 @@ import { ArrowDown, ArrowLeft, ArrowUp, BookA, Check, ChevronDown, Copy, History
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
-import { ASK_MODELS, askModel, boldRuns, citedGloss, citeSpan, DEFAULT_ASK_MODEL, isArabicLine, parseCitations, type Segment } from "../../../shared/ask";
+import { ASK_MODELS, askModel, boldRuns, citedGloss, citeSpans, DEFAULT_ASK_MODEL, isArabicLine, markedPhrase, parseCitations, type Segment } from "../../../shared/ask";
 import { getPref, usePref } from "../lib/prefs";
 import { Menu } from "@base-ui/react/menu";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
@@ -429,18 +429,22 @@ const CiteChip = ({
     // A citation names its page only when it's not the one the question was asked on.
     const position = cite.page ?? askedOn;
     const page = usePage({ bookId, position });
-    const span = page.data ? citeSpan({ cite, page: page.data.page }) : null;
+    const spans = page.data ? citeSpans({ cite, page: page.data.page }) : [];
+    const span = spans[0] ?? null;
     const { kind: _, ...where } = cite;
     // Naming the page the question was asked on is the same as naming none.
-    const label = citeLabel({ ...where, page: cite.page === askedOn ? undefined : cite.page }, page.data?.number ?? null);
-    if (page.isSuccess && !page.data) return <CiteChip label={label} text={`This book has no page ${position}`} pillText={cite.phrase ?? label} quoted missing />;
-    if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} pillText={cite.phrase ?? label} quoted missing />;
+    const lines = citeLabel({ ...where, page: cite.page === askedOn ? undefined : cite.page }, page.data?.number ?? null);
+    // An unmarked phrase that repeats points at every place it appears, and says so.
+    const label = spans.length > 1 ? `${lines} · in ${spans.length} places` : lines;
+    const phrase = cite.phrase ? markedPhrase(cite.phrase).text : null;
+    if (page.isSuccess && !page.data) return <CiteChip label={label} text={`This book has no page ${position}`} pillText={phrase ?? label} quoted missing />;
+    if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${lines}`} pillText={phrase ?? label} quoted missing />;
     // The page's own words, with its harakat, rather than the AI's spelling of them.
     const words = span && page.data ? quoteSpan({ page: page.data.page, span }) : null;
     // A quoted gloss shows the gloss, with the words it explains in the tooltip.
     const gloss = page.data ? citedGloss({ cite, page: page.data.page }) : null;
     if (gloss) return <CiteChip label={`gloss on ${label}${words ? `: ${words}` : ""}`} text={gloss.text} pillText={gloss.text} quoted onClick={() => onCite({ ...where, position })} />;
-    return <CiteChip label={label} text={words} pillText={words ?? cite.phrase ?? label} quoted onClick={() => onCite({ ...where, position })} />;
+    return <CiteChip label={label} text={words} pillText={words ?? phrase ?? label} quoted onClick={() => onCite({ ...where, position })} />;
   };
 
   /** An answer, one element per line so each line takes its own direction. Citations become quote pills. */

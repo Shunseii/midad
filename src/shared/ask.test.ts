@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { askModel, boldRuns, CORPUS_TOOLS, citedGloss, citeSpan, claudeArgs, cutOffRecap, isArabicLine, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
+import { askModel, boldRuns, CORPUS_TOOLS, citedGloss, citeSpan, citeSpans, claudeArgs, cutOffRecap, isArabicLine, isLostSession, markedPhrase, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -97,14 +97,29 @@ describe("citeSpan", () => {
     expect(quoted("[[line 3: اســم]]")).toBe("اسم،");
   });
 
-  it("takes the first match when a phrase repeats on the line", () => {
-    const span = citeSpan({ cite: cite("[[line 4: قال]]"), page });
-    expect(span).toEqual({ part: "matn", start: { line: 4, word: 1 }, end: { line: 4, word: 1 } });
+  const word = (line: number, w: number) => ({ part: "matn", start: { line, word: w }, end: { line, word: w } });
+
+  it("points at every place an unmarked phrase repeats on the line", () => {
+    expect(citeSpans({ cite: cite("[[line 4: قال]]"), page })).toEqual([word(4, 1), word(4, 3)]);
+    expect(citeSpan({ cite: cite("[[line 4: قال]]"), page })).toEqual(word(4, 1));
+  });
+
+  it("cites only the words in braces, found by the words around them", () => {
+    expect(citeSpans({ cite: cite("[[line 4: والشيخ {قال}]]"), page })).toEqual([word(4, 3)]);
+    expect(citeSpans({ cite: cite("[[line 4: {قال} والشيخ]]"), page })).toEqual([word(4, 1)]);
+    expect(quoted("[[line 1: الكلام {هُوَ اللفظ} المركب]]")).toBe("هو اللفظ");
+  });
+
+  it("counts the words before the braces past punctuation", () => {
+    expect(quoted("[[line 3: ثلاثة: {اسم}، وفعل]]")).toBe("اسم،");
+  });
+
+  it("still finds a phrase whose braces are unbalanced, as if they weren't there", () => {
+    expect(quoted("[[line 1: هو {اللفظ]]")).toBe("هو اللفظ");
   });
 
   it("prefers whole words over a match inside a longer word", () => {
-    const span = citeSpan({ cite: cite("[[line 4: الشيخ]]"), page });
-    expect(span).toEqual({ part: "matn", start: { line: 4, word: 4 }, end: { line: 4, word: 4 } });
+    expect(citeSpans({ cite: cite("[[line 4: الشيخ]]"), page })).toEqual([word(4, 4)]);
   });
 
   it("finds a phrase across the lines it cites", () => {
@@ -287,6 +302,13 @@ describe("sessionRecap", () => {
   });
 });
 
+describe("markedPhrase", () => {
+  it("gives the quote without its braces, for showing when it can't be found", () => {
+    expect(markedPhrase("قال {الكلام} هو")).toEqual({ text: "قال الكلام هو", focus: { from: 1, to: 2 } });
+    expect(markedPhrase("الكلام هو")).toEqual({ text: "الكلام هو", focus: null });
+  });
+});
+
 describe("citing a phrase with a footnote marker in it", () => {
   const page = parsePage("header\n\n---\nجاءت به لسنتين أو أكثر ما لم تُقِرَّ(٢) بانقضاء العدة\n---\n### الحاشية\n(٢) أي تعترف");
   it("finds the words whether or not the citation copies the marker", () => {
@@ -294,6 +316,10 @@ describe("citing a phrase with a footnote marker in it", () => {
     for (const phrase of ["ما لم تُقِرَّ(٢)", "ما لم تُقِرَّ"]) {
       expect(citeSpan({ cite: { part: "matn", from: 1, to: 1, words: null, phrase }, page })).toEqual(words);
     }
+  });
+
+  it("counts the words before braces the same way", () => {
+    expect(citeSpan({ cite: { part: "matn", from: 1, to: 1, words: null, phrase: "لم تُقِرَّ(٢) {بانقضاء}" }, page })).toEqual({ part: "matn", start: { line: 1, word: 9 }, end: { line: 1, word: 9 } });
   });
 });
 
