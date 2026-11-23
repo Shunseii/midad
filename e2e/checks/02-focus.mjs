@@ -83,6 +83,25 @@ export const checks = [
     },
   ],
   [
+    "pressing the Ask AI box's padding keeps the input focused",
+    async (page) => {
+      const composer = '[role=textbox][aria-multiline]';
+      await openReader(page, { bookId: LONG_BOOK, position: 50 });
+      await page.click('[aria-label^="Ask AI"]');
+      await page.waitFor(`!!document.querySelector('${composer}')`, { message: "Ask AI didn't open" });
+      await page.waitStill(composer);
+      await page.click(composer);
+      const box = await page.rectOf("[data-field-box]");
+      // Twice: the first press focuses it, the second must not take focus away.
+      for (let i = 0; i < 2; i++) {
+        await page.clickAt(box.x + 5, box.y + 4);
+        await page.sleep(150);
+        assert.ok(await page.ev(`document.activeElement?.matches('${composer}') ?? false`), `press ${i + 1} on the box's padding left the input`);
+      }
+      await page.click('[aria-label^="Ask AI"]');
+    },
+  ],
+  [
     "the Find field keeps focus and types '?'",
     async (page) => {
       await openReader(page, { bookId: LONG_BOOK, position: 50 });

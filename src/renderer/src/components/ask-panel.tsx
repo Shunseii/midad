@@ -1221,6 +1221,7 @@ const CiteChip = ({
           <QueuedMessages queue={queue} onSendNow={sendQueuedNow} onEdit={editQueued} onRemove={removeQueued} onCite={onCite} />
           <div
             onMouseDown={focusComposer}
+            data-field-box
             className="flex cursor-text items-end gap-2 rounded-xl border border-line bg-surface py-2 pr-2 pl-3 focus-within:border-ink-3"
           >
             <div className="relative min-w-0 flex-1 py-1">

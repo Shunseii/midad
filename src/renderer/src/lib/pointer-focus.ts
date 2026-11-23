@@ -45,6 +45,9 @@ export const dropFocusFromClickedControls = () => {
   document.addEventListener("mousedown", (e) => {
     const field = document.activeElement;
     if (!e.defaultPrevented || field !== focusedBefore || !(field instanceof HTMLElement) || !(e.target instanceof Node) || field.contains(e.target)) return;
+    // A press on the field's own box (its padding, around its pills) is a press on the field.
+    const box = e.target instanceof Element ? e.target.closest("[data-field-box]") : e.target.parentElement?.closest("[data-field-box]");
+    if (box?.contains(field)) return;
     if (field.isContentEditable || field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) field.blur();
   });
   // A menu or popover hands focus back to the button that opened it when it closes.
