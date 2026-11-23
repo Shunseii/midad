@@ -1591,7 +1591,7 @@ export const ReaderRoute = () => {
               width={pageWidth}
               highlightStyle={highlightStyle}
               freshHighlight={freshHighlight}
-              annotations={annotations.data ?? { highlights: [], notes: [], harakat: [] }}
+              annotations={annotations.data ?? { highlights: [], notes: [], pageNote: null, harakat: [] }}
               display={{ showHarakat, showMine, lineNumbers, textScale, target, glosses, hashiyaMarkers, noteIcons }}
               tinted={tinted}
               dimNoteMarks={focusOn}

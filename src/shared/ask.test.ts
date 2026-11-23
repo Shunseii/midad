@@ -149,6 +149,15 @@ describe("readingContext", () => {
   });
 });
 
+describe("readingContext page note", () => {
+  const base = { bookId: "b1", title: "t", position: 3, number: null };
+
+  it("includes the reader's page note on one line, and nothing when there is none", () => {
+    expect(readingContext({ ...base, pageNote: "Opens the chapter.\nCompare p. 12." })).toContain("the reader's note on this page: Opens the chapter. / Compare p. 12.");
+    expect(readingContext(base)).not.toMatch(/note on this page/);
+  });
+});
+
 describe("readingContext quotes", () => {
   const base = { bookId: "b1", title: "t", position: 3, number: null };
 

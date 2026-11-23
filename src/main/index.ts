@@ -138,7 +138,8 @@ const handlers: MidadApi = {
     const book = await library.getBook(bookId);
     const page = await library.getPage({ bookId, position });
     if (!book || !page) throw new Error("That page isn't in the library.");
-    const context = readingContext({ bookId, title: book.title, position, number: page.number, selection, quotes });
+    const { pageNote } = await annotations.listForPage({ bookId, position });
+    const context = readingContext({ bookId, title: book.title, position, number: page.number, selection, quotes, pageNote: pageNote?.body ?? null });
     const cutOff = cutOffRecap(stoppedTurns);
     const prompt = [context, cutOff, question].filter(Boolean).join("\n\n");
     try {

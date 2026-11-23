@@ -43,10 +43,31 @@ export interface Highlight extends Anchored {
   color: HighlightColor;
 }
 
+/** A note on some words, or on a whole line (shown by the line's number instead of on its words). */
 export interface Note extends Anchored {
+  kind: "words" | "line";
   body: string;
   updatedAt: number;
 }
+
+/** The one note a page can have about the page as a whole. */
+export interface PageNote {
+  id: string;
+  bookId: string;
+  position: number;
+  body: string;
+  author: Author;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface LineRef {
+  part: Part;
+  line: number;
+}
+
+/** What a new note is on: some words, a whole line, or the page. */
+export type NoteTarget = { span: Span } | { line: LineRef } | { page: true };
 
 /** The reader's marks on one letter (see harakat.ts). */
 export interface LetterRef {
@@ -74,6 +95,7 @@ export interface UserHarakat extends LetterRef {
 export interface PageAnnotations {
   highlights: Highlight[];
   notes: Note[];
+  pageNote: PageNote | null;
   harakat: UserHarakat[];
 }
 
@@ -81,6 +103,8 @@ export interface PageAnnotations {
 export interface BookMarks {
   highlights: { position: number; color: HighlightColor }[];
   notes: number[];
+  /** The pages with a page note (also in `notes`). */
+  pageNotes: number[];
 }
 
 export type Token = { kind: "word"; text: string; word: number } | { kind: "space"; text: string };
@@ -129,4 +153,10 @@ export const quoteSpan = ({ page, span }: { page: Page; span: Span }): string =>
     picked.push(...words.slice(from - 1, to));
   }
   return picked.join(" ");
+};
+
+/** The span covering every word of a line, or null when the line has no words. */
+export const lineSpan = ({ page, part, line }: { page: Page } & LineRef): Span | null => {
+  const count = wordsOf(lineText({ page, part, line }) ?? "").length;
+  return count === 0 ? null : { part, start: { line, word: 1 }, end: { line, word: count } };
 };

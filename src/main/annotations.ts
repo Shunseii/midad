@@ -7,9 +7,12 @@ import {
   type Highlight,
   type HighlightColor,
   type LetterRef,
+  lineSpan,
   lineText,
   type Note,
+  type NoteTarget,
   type PageAnnotations,
+  type PageNote,
   quoteSpan,
   type Span,
   spanContains,
@@ -76,7 +79,7 @@ interface AnchoredRow {
   created_at: number;
 }
 type HighlightRow = AnchoredRow & { color: HighlightColor };
-type NoteRow = AnchoredRow & { body: string; updated_at: number };
+type NoteRow = AnchoredRow & { kind: "words" | "line" | "page"; body: string; updated_at: number };
 
 interface HarakatRow {
   id: string;
@@ -129,6 +132,9 @@ const requireBody = (body: string): string => {
 
 export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; now?: () => number }) => {
   db.exec(SCHEMA);
+  const noteColumns = db.prepare("PRAGMA table_info(notes)").all() as unknown as { name: string }[];
+  // Page notes have no words: their span and quote are stored as "null" and "".
+  if (!noteColumns.some((c) => c.name === "kind")) db.exec("ALTER TABLE notes ADD COLUMN kind TEXT NOT NULL DEFAULT 'words'");
 
   const pageAt = ({ bookId, position }: { bookId: string; position: number }): PageRow => {
     const row = db
@@ -164,9 +170,14 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
       const highlights = (
         db.prepare("SELECT * FROM highlights WHERE book_id = ? AND file_id = ?").all(bookId, row.file_id) as unknown as HighlightRow[]
       ).map((h): Highlight => ({ ...anchored({ row: h, page, position }), color: h.color }));
-      const notes = (
-        db.prepare("SELECT * FROM notes WHERE book_id = ? AND file_id = ?").all(bookId, row.file_id) as unknown as NoteRow[]
-      ).map((n): Note => ({ ...anchored({ row: n, page, position }), body: n.body, updatedAt: n.updated_at }));
+      const noteRows = db.prepare("SELECT * FROM notes WHERE book_id = ? AND file_id = ?").all(bookId, row.file_id) as unknown as NoteRow[];
+      const notes = noteRows.flatMap((n): Note[] =>
+        n.kind === "page" ? [] : [{ ...anchored({ row: n, page, position }), kind: n.kind, body: n.body, updatedAt: n.updated_at }],
+      );
+      const pageRow = noteRows.find((n) => n.kind === "page");
+      const pageNote: PageNote | null = pageRow
+        ? { id: pageRow.id, bookId, position, body: pageRow.body, author: pageRow.author, createdAt: pageRow.created_at, updatedAt: pageRow.updated_at }
+        : null;
       const inReadingOrder = (a: { span: Span; createdAt: number }, b: { span: Span; createdAt: number }) =>
         compareSpans(a.span, b.span) || a.createdAt - b.createdAt;
       const harakat = (
@@ -189,7 +200,7 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
           createdAt: h.created_at,
         }),
       );
-      return { highlights: highlights.sort(inReadingOrder), notes: notes.sort(inReadingOrder), harakat };
+      return { highlights: highlights.sort(inReadingOrder), notes: notes.sort(inReadingOrder), pageNote, harakat };
     },
 
     /** Which pages of a book have highlights (with the newest one's colour) and notes, for the scrubber's dots. */
@@ -206,8 +217,18 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
            WHERE n.book_id = ? ORDER BY p.position`,
         )
         .all(bookId) as unknown as { position: number }[];
+      const pageNoteRows = db
+        .prepare(
+          `SELECT p.position FROM notes n JOIN pages p ON p.book_id = n.book_id AND p.file_id = n.file_id
+           WHERE n.book_id = ? AND n.kind = 'page' ORDER BY p.position`,
+        )
+        .all(bookId) as unknown as { position: number }[];
       const highlights = highlightRows.filter((h, i) => h.position !== highlightRows[i - 1]?.position);
-      return { highlights: highlights.map((h) => ({ position: h.position, color: h.color })), notes: noteRows.map((n) => n.position) };
+      return {
+        highlights: highlights.map((h) => ({ position: h.position, color: h.color })),
+        notes: noteRows.map((n) => n.position),
+        pageNotes: pageNoteRows.map((n) => n.position),
+      };
     },
 
     async addHighlight({
@@ -236,27 +257,39 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
       deleteOne({ table: "highlights", id, label: "highlight" });
     },
 
+    /** Adds a note on some words, a whole line, or the page. A page has at most one page note. */
     async addNote({
       bookId,
       position,
-      span,
       body,
       author = "me",
-    }: {
+      ...target
+    }: NoteTarget & {
       bookId: string;
       position: number;
-      span: Span;
       body: string;
       author?: Author;
-    }): Promise<Note> {
+    }): Promise<Note | PageNote> {
       const text = requireBody(body);
       const row = pageAt({ bookId, position });
-      const quote = quoteSpan({ page: toPage(row), span });
       const at = now();
-      const note: Note = { id: randomUUID(), bookId, position, span, quote, stale: false, body: text, author, createdAt: at, updatedAt: at };
-      db.prepare(
-        "INSERT INTO notes (id, book_id, file_id, span, quote, body, author, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      ).run(note.id, bookId, row.file_id, JSON.stringify(span), quote, text, author, at, at);
+      const insert = db.prepare(
+        "INSERT INTO notes (id, book_id, file_id, kind, span, quote, body, author, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      );
+      if ("page" in target) {
+        const existing = db.prepare("SELECT id FROM notes WHERE book_id = ? AND file_id = ? AND kind = 'page'").get(bookId, row.file_id) as { id: string } | undefined;
+        if (existing) throw new Error(`Page ${position} already has a page note (${existing.id}). Update it instead.`);
+        const note: PageNote = { id: randomUUID(), bookId, position, body: text, author, createdAt: at, updatedAt: at };
+        insert.run(note.id, bookId, row.file_id, "page", "null", "", text, author, at, at);
+        return note;
+      }
+      const page = toPage(row);
+      const kind = "line" in target ? "line" : "words";
+      const span = "line" in target ? lineSpan({ page, ...target.line }) : target.span;
+      if (!span) throw new Error(`That line of page ${position} has no words to note.`);
+      const quote = quoteSpan({ page, span });
+      const note: Note = { id: randomUUID(), bookId, position, kind, span, quote, stale: false, body: text, author, createdAt: at, updatedAt: at };
+      insert.run(note.id, bookId, row.file_id, kind, JSON.stringify(span), quote, text, author, at, at);
       return note;
     },
 

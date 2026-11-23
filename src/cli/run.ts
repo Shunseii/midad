@@ -1,6 +1,6 @@
 import type { DatabaseSync } from "node:sqlite";
 import { parseArgs } from "node:util";
-import { HIGHLIGHT_COLORS, type HighlightColor, type LetterRef, type PageAnnotations, type Part, type Span, wordsOf } from "../shared/annotations";
+import { HIGHLIGHT_COLORS, type HighlightColor, type LetterRef, type NoteTarget, type PageAnnotations, type Part, type Span, wordsOf } from "../shared/annotations";
 import { MARK, type MarkName } from "../shared/harakat";
 import type { StoredPage } from "../shared/library";
 import { createAnnotations } from "../main/annotations";
@@ -20,6 +20,8 @@ Writing (labelled as written by the agent)
   midad highlight add <book> <page> <span> [--color yellow|green|pink|blue]
   midad highlight remove <id>
   midad note add <book> <page> <span> --body <text>
+  midad note add <book> <page> --line <n> --body <text>     A note on the whole line
+  midad note add <book> <page> --page --body <text>         The page's note (one per page)
   midad note update <id> --body <text>
   midad note delete <id>
   midad harakat set <book> <page> --line <n> --word <n> --letter <n> --marks <names>
@@ -45,6 +47,7 @@ const OPTIONS = {
   from: { type: "string" },
   to: { type: "string" },
   hashiya: { type: "boolean" },
+  page: { type: "boolean" },
   color: { type: "string" },
   body: { type: "string" },
   word: { type: "string" },
@@ -136,7 +139,8 @@ const formatAnnotations = (a: PageAnnotations) => {
   const by = (author: string) => (author === "agent" ? " [agent]" : "");
   const out = [
     ...a.highlights.map((h) => `highlight ${h.id} ${h.color} ${where(h.span)}${by(h.author)}${h.stale ? " (text changed)" : ""}\t${h.quote}`),
-    ...a.notes.map((n) => `note ${n.id} ${where(n.span)}${by(n.author)}${n.stale ? " (text changed)" : ""}\t${n.quote}\t${n.body}`),
+    ...(a.pageNote ? [`note ${a.pageNote.id} page${by(a.pageNote.author)}\t\t${a.pageNote.body}`] : []),
+    ...a.notes.map((n) => `note ${n.id} ${n.kind === "line" ? `line ${n.span.part === "hashiya" ? "ḥ" : ""}${n.span.start.line}` : where(n.span)}${by(n.author)}${n.stale ? " (text changed)" : ""}\t${n.quote}\t${n.body}`),
     ...a.harakat.map((h) => `harakat ${h.part === "hashiya" ? "ḥ" : ""}${h.line}:${h.word} letter ${h.letter}${by(h.author)}\t${h.base}${h.marks}`),
   ];
   return out.length === 0 ? "No annotations on this page.\n" : `${out.join("\n")}\n`;
@@ -252,8 +256,13 @@ export const runCli = async ({
         return 0;
       case "note add": {
         const stored = await findPage({ book: b, position: c });
-        const n = await annotations.addNote({ bookId: stored.bookId, position: stored.position, span: spanFrom(opts), body: opts.body ?? "", author: "agent" });
-        done(`Added a note on "${n.quote}" (${n.id}).`, n);
+        const target: NoteTarget = opts.page
+          ? { page: true }
+          : opts.line && opts.words === undefined && !opts.from
+            ? { line: { part: opts.hashiya ? "hashiya" : "matn", line: int(opts.line, "--line") } }
+            : { span: spanFrom(opts) };
+        const n = await annotations.addNote({ bookId: stored.bookId, position: stored.position, ...target, body: opts.body ?? "", author: "agent" });
+        done("quote" in n ? `Added a note on "${n.quote}" (${n.id}).` : `Added a page note (${n.id}).`, n);
         return 0;
       }
       case "note update":

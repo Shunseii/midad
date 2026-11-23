@@ -16,7 +16,7 @@ Each message starts with a <reading-context> block naming the book, the page and
   midad page <book> <page> --words     numbered matn lines (and ḥāshiya footnotes ḥ1, ḥ2…), words numbered
   midad lines <book> <page> --line 2-3          those lines, words numbered
   midad lines <book> <page> --line 2 --words 3-5   just those words
-  midad annotations <book> <page>      the reader's highlights, notes and harakat
+  midad annotations <book> <page>      the reader's highlights, notes (on words, lines or the page) and harakat
 A line can be followed by "gloss on word…" lines: interlinear glosses the book writes between its lines, explaining those words. They aren't part of the line and aren't numbered. To cite a gloss, quote its words with the line it sits on, as for a phrase: [[line 2: أي ابن آجروم]]; Midad finds them in the line's glosses and points at the words they explain.
 Answer from that page. Don't search for or cite other books.
 
@@ -151,6 +151,7 @@ export const readingContext = ({
   number,
   selection,
   quotes = [],
+  pageNote = null,
 }: {
   bookId: string;
   title: string;
@@ -159,6 +160,8 @@ export const readingContext = ({
   selection?: { span: Span; text: string };
   /** Text the reader pasted into the question: from this page (with its span) or from elsewhere. */
   quotes?: { span: Span | null; text: string }[];
+  /** The reader's own note on the page as a whole. */
+  pageNote?: string | null;
 }): string =>
   [
     "<reading-context>",
@@ -167,6 +170,7 @@ export const readingContext = ({
     `citing: [[line 2: words]] for this page; [[page 42, line 2: words]] for any other page (midad page numbers, not printed ones)`,
     ...(selection ? [`selection: ${describeSpan(selection.span)}: ${selection.text}`] : []),
     ...quotes.map((q, i) => (q.span ? `quote ${i + 1}: ${describeSpan(q.span)}: ${q.text}` : `quote ${i + 1} (pasted): ${q.text}`)),
+    ...(pageNote ? [`the reader's note on this page: ${pageNote.replace(/\s*\n\s*/g, " / ")}`] : []),
     "</reading-context>",
   ].join("\n");
 

@@ -10,7 +10,7 @@ import type {
   SyncPreview,
   SyncResult,
 } from "../shared/library";
-import type { Span } from "../shared/annotations";
+import { lineSpan, type Span } from "../shared/annotations";
 import type { TextEdit } from "../shared/corpus";
 import { bookIndex } from "../shared/fihris";
 import type { SyncInput } from "../shared/ipc";
@@ -213,13 +213,18 @@ export const createLibrary = ({
    */
   const moveMarks = ({ bookId, fileId, before, after, edits }: { bookId: string; fileId: string; before: string; after: string; edits: TextEdit[] | null }) => {
     const realign = realignPage({ before: { source: before, page: parsePage(before) }, after: { source: after, page: parsePage(after) }, edits });
+    const afterPage = parsePage(after);
     for (const table of ["highlights", "notes"]) {
       if (!hasTable(table)) continue;
-      const rows = db.prepare(`SELECT id, span FROM ${table} WHERE book_id = ? AND file_id = ?`).all(bookId, fileId) as unknown as { id: string; span: string }[];
+      const kind = table === "notes" ? "kind" : "'words' AS kind";
+      const rows = db.prepare(`SELECT id, span, ${kind} FROM ${table} WHERE book_id = ? AND file_id = ?`).all(bookId, fileId) as unknown as { id: string; span: string; kind: string }[];
       const update = db.prepare(`UPDATE ${table} SET span = ? WHERE id = ?`);
       for (const row of rows) {
+        if (row.kind === "page") continue;
         const moved = realign.span(JSON.parse(row.span) as Span);
-        if (moved) update.run(JSON.stringify(moved), row.id);
+        // A line note keeps covering its whole line, wherever the line's words went.
+        const span = moved && row.kind === "line" ? (lineSpan({ page: afterPage, part: moved.part, line: moved.start.line }) ?? moved) : moved;
+        if (span) update.run(JSON.stringify(span), row.id);
       }
     }
     if (hasTable("harakat")) {

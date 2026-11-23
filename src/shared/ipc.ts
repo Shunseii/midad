@@ -1,4 +1,4 @@
-import type { BookMarks, Highlight, HighlightColor, LetterRef, Note, PageAnnotations, Part, Span } from "./annotations";
+import type { BookMarks, Highlight, HighlightColor, LetterRef, Note, NoteTarget, PageAnnotations, PageNote, Part, Span } from "./annotations";
 import type { StreamEvent } from "./ask";
 import type { Conversation, ConversationSummary, StoredTurn } from "./conversations";
 import type { CorpusBookListing, TextEdit } from "./corpus";
@@ -48,7 +48,7 @@ export interface MidadApi {
   "annotations.bookMarks": (input: { bookId: string }) => Promise<BookMarks>;
   "highlights.add": (input: { bookId: string; position: number; span: Span; color: HighlightColor }) => Promise<Highlight>;
   "highlights.remove": (input: { id: string }) => Promise<void>;
-  "notes.add": (input: { bookId: string; position: number; span: Span; body: string }) => Promise<Note>;
+  "notes.add": (input: NoteTarget & { bookId: string; position: number; body: string }) => Promise<Note | PageNote>;
   "notes.update": (input: { id: string; body: string }) => Promise<void>;
   "notes.delete": (input: { id: string }) => Promise<void>;
   "harakat.set": (input: LetterRef & { bookId: string; position: number; marks: string }) => Promise<void>;

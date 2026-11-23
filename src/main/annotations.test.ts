@@ -138,6 +138,80 @@ describe("notes", () => {
   });
 });
 
+describe("line notes", () => {
+  it("cover every word of the line, and are listed with the word notes as line notes", async () => {
+    await annotations.addNote({ bookId: "b1", position: 1, line: { part: "matn", line: 2 }, body: "the definition" });
+    await annotations.addNote({ bookId: "b1", position: 1, span: matn(3, 1), body: "word" });
+    const { notes, pageNote } = await onPage();
+    expect(notes.map((n) => [n.kind, n.quote])).toEqual([
+      ["line", "الكلام هو اللفظ المركب المفيد"],
+      ["words", "بالوضع"],
+    ]);
+    expect(notes[0]?.span).toEqual(matn(2, 1, 5));
+    expect(pageNote).toBeNull();
+  });
+
+  it("can be on a ḥāshiya footnote", async () => {
+    await annotations.addNote({ bookId: "b1", position: 1, line: { part: "hashiya", line: 1 }, body: "x" });
+    expect((await onPage()).notes[0]).toMatchObject({ kind: "line", quote: "المراد بالوضع القصد هنا" });
+  });
+
+  it("refuse a line with no words", async () => {
+    await expect(annotations.addNote({ bookId: "b1", position: 1, line: { part: "matn", line: 9 }, body: "x" })).rejects.toThrow(/no words/);
+  });
+
+  it("keep covering the whole line when an overwrite lengthens it", async () => {
+    await annotations.addNote({ bookId: "b1", position: 1, line: { part: "matn", line: 3 }, body: "x" });
+    corpus.files[0] = page("f1", 1, PAGE_1.replace("بالوضع وأقسامه ثلاثة", "بالوضع وأقسامه ثلاثة أقسام"));
+    await library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f1"] });
+    expect((await onPage()).notes[0]?.span).toEqual(matn(3, 1, 4));
+  });
+});
+
+describe("page notes", () => {
+  it("are the page's own note, kept apart from the notes on its words", async () => {
+    const n = await annotations.addNote({ bookId: "b1", position: 1, page: true, body: "  the chapter's opening  " });
+    const { notes, pageNote } = await onPage();
+    expect(notes).toHaveLength(0);
+    expect(pageNote).toEqual({ id: n.id, bookId: "b1", position: 1, body: "the chapter's opening", author: "me", createdAt: 1000, updatedAt: 1000 });
+    expect((await onPage(2)).pageNote).toBeNull();
+  });
+
+  it("are one per page", async () => {
+    await annotations.addNote({ bookId: "b1", position: 1, page: true, body: "a" });
+    await expect(annotations.addNote({ bookId: "b1", position: 1, page: true, body: "b" })).rejects.toThrow(/already has a page note/);
+  });
+
+  it("are edited and deleted like other notes", async () => {
+    const n = await annotations.addNote({ bookId: "b1", position: 1, page: true, body: "a" });
+    clock = 2000;
+    await annotations.updateNote({ id: n.id, body: "b" });
+    expect((await onPage()).pageNote).toMatchObject({ body: "b", updatedAt: 2000 });
+    await annotations.deleteNote({ id: n.id });
+    expect((await onPage()).pageNote).toBeNull();
+  });
+
+  it("stay on their page through an overwrite that changes every line", async () => {
+    await annotations.addNote({ bookId: "b1", position: 1, page: true, body: "a" });
+    corpus.files[0] = page("f1", 1, "header\n\n---\nنص جديد كله");
+    await library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f1"] });
+    expect((await onPage()).pageNote?.body).toBe("a");
+  });
+});
+
+describe("a library from before line and page notes", () => {
+  it("keeps its notes as word notes", async () => {
+    const db = new DatabaseSync(":memory:");
+    const old = createLibrary({ db, corpus, now: () => 1000 });
+    await old.importBook({ corpusBookId: "b1" });
+    db.exec(`CREATE TABLE notes (id TEXT PRIMARY KEY, book_id TEXT NOT NULL, file_id TEXT NOT NULL, span TEXT NOT NULL, quote TEXT NOT NULL,
+      body TEXT NOT NULL, author TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)`);
+    db.prepare("INSERT INTO notes VALUES ('n1', 'b1', 'f1', ?, 'اللفظ', 'x', 'me', 1, 1)").run(JSON.stringify(matn(2, 3)));
+    const migrated = createAnnotations({ db, now: () => 1000 });
+    expect((await migrated.listForPage({ bookId: "b1", position: 1 })).notes[0]).toMatchObject({ id: "n1", kind: "words", quote: "اللفظ" });
+  });
+});
+
 describe("after sync", () => {
   it("follows its page when a new page shifts positions", async () => {
     await annotations.addNote({ bookId: "b1", position: 1, span: matn(2, 1), body: "x" });
@@ -250,10 +324,17 @@ describe("book marks", () => {
     expect(await annotations.bookMarks({ bookId: "b1" })).toEqual({
       highlights: [{ position: 1, color: "pink" }, { position: 3, color: "blue" }],
       notes: [2],
+      pageNotes: [],
     });
   });
 
+  it("lists pages with a page note among the noted pages, and on their own", async () => {
+    await annotations.addNote({ bookId: "b1", position: 3, page: true, body: "summary" });
+    await annotations.addNote({ bookId: "b1", position: 2, line: { part: "matn", line: 1 }, body: "line" });
+    expect(await annotations.bookMarks({ bookId: "b1" })).toMatchObject({ notes: [2, 3], pageNotes: [3] });
+  });
+
   it("is empty for a book without any", async () => {
-    expect(await annotations.bookMarks({ bookId: "b1" })).toEqual({ highlights: [], notes: [] });
+    expect(await annotations.bookMarks({ bookId: "b1" })).toEqual({ highlights: [], notes: [], pageNotes: [] });
   });
 });
