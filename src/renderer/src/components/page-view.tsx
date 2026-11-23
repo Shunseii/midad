@@ -13,7 +13,7 @@ import {
   type WordRef,
 } from "../../../shared/annotations";
 import { stripHarakat } from "../../../shared/arabic";
-import { displayMarks, inContext, isMark, lettersOf } from "../../../shared/harakat";
+import { displayMarks, isMark, lettersOf } from "../../../shared/harakat";
 import type { StoredPage } from "../../../shared/library";
 import type { Gloss } from "../../../shared/page";
 import type { GlossMode, HighlightStyle, NoteIcons, PageWidth } from "../lib/appearance";
@@ -258,27 +258,14 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
       return;
     }
     flush(`run-${letter}`);
-    // Chromium paints a mark in its letter's colour, so the reader's marks are drawn
-    // on a red copy of the letter underneath; the letter itself covers the red base.
-    // With the book's own marks too, the font moves them to make room (a shadda rises over
-    // a kasra), so a copy can't line up: the letter is drawn once, all of it in the reader's colour.
-    const stacked = !!marks.mine && !!marks.corpus;
-    const { before, after } = inContext({ letters, index: i });
+    // Chromium paints a mark in its letter's colour, so a letter the reader has marked is drawn
+    // whole in their colour, with the book's marks and theirs together where the font places them.
     nodes.push(
-      <span key={letter} className={cx("relative isolate", stacked && "text-ink-added", letter === targetLetter && "text-accent")}>
+      <span key={letter} className={cx("relative isolate", marks.mine && "text-ink-added", letter === targetLetter && "text-accent")}>
         {letter === targetLetter && <span data-overlay aria-hidden className={TARGET_TICK} />}
         {l.base}
         {marks.corpus}
-        {stacked && marks.mine}
-        {marks.mine && !stacked && (
-          <span data-overlay aria-hidden className="pointer-events-none absolute right-0 top-0 -z-10 select-none leading-[normal] text-ink-added">
-            {before}
-            {l.base}
-            {marks.corpus}
-            {marks.mine}
-            {after}
-          </span>
-        )}
+        {marks.mine}
       </span>,
     );
   });

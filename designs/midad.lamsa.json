@@ -143,7 +143,7 @@
       "type": "text"
     },
     "03dRXzoq": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "ovISXRJu",
@@ -2518,7 +2518,7 @@
       "type": "text"
     },
     "16Fb94RW": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "9itexmLP",
@@ -2598,7 +2598,7 @@
       "type": "icon"
     },
     "18II3SQD": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "fYVUd3d8",
@@ -3124,7 +3124,7 @@
       "type": "frame"
     },
     "1PyTUIAx": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "Wl4rQnyK",
@@ -3134,7 +3134,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -4441,7 +4441,7 @@
       "type": "frame"
     },
     "244yNNU8": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "22L2Ds3O",
@@ -4670,7 +4670,7 @@
       "type": "text"
     },
     "2BSQj7Xu": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "0BFWvz7D",
@@ -5046,7 +5046,7 @@
       "type": "text"
     },
     "2N3j6eab": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "rpqtfZ4k",
@@ -5056,7 +5056,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -5326,7 +5326,7 @@
       "type": "text"
     },
     "2TuzbD6b": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "QnhKruPH",
@@ -6939,7 +6939,7 @@
       "type": "text"
     },
     "37NMRLDw": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "Wl4rQnyK",
@@ -6949,7 +6949,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -7073,7 +7073,7 @@
       "type": "text"
     },
     "3AQoQY7H": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "zTdY0P4x",
@@ -7083,7 +7083,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -7174,7 +7174,7 @@
       "type": "text"
     },
     "3CycYvnb": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "QnhKruPH",
@@ -7184,13 +7184,13 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
     },
     "3EQQ6FYT": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "V7Ug5WfX",
@@ -7715,7 +7715,7 @@
       "type": "text"
     },
     "3TE1n0Ib": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "KfAPGmaM",
@@ -7725,7 +7725,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -8215,7 +8215,7 @@
       "type": "frame"
     },
     "3jEewdDE": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "nPKPPSyC",
@@ -8441,7 +8441,7 @@
       "type": "text"
     },
     "3pHa7CVq": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "TQaA0ufk",
@@ -8451,7 +8451,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -9508,7 +9508,7 @@
       "type": "text"
     },
     "4IH9BBZD": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "Di7lziKb",
@@ -9518,7 +9518,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -9562,7 +9562,7 @@
       "type": "text"
     },
     "4IoXlOrm": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "vJb20nOg",
@@ -9572,7 +9572,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -10664,7 +10664,7 @@
       "type": "frame"
     },
     "4njx8DQW": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "i7iTFc0O",
@@ -10674,7 +10674,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -10998,7 +10998,7 @@
       "type": "frame"
     },
     "4xer5nMm": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "t7Vny0IW",
@@ -11008,7 +11008,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -11940,7 +11940,7 @@
       "type": "instance"
     },
     "5MRIGo0s": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "usmUNUuR",
@@ -11950,7 +11950,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -12328,7 +12328,7 @@
       "type": "frame"
     },
     "5VP5AgPj": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "eNUbkY4i",
@@ -13018,7 +13018,7 @@
       "type": "frame"
     },
     "5nGm37xK": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "tzhPEkMl",
@@ -13167,7 +13167,7 @@
       "type": "frame"
     },
     "5t589TLi": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "SHQcyKcD",
@@ -13177,7 +13177,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -13499,7 +13499,7 @@
       "type": "frame"
     },
     "65vlQSKk": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "3vIoMGKj",
@@ -13509,7 +13509,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -14276,7 +14276,7 @@
       "type": "text"
     },
     "6SNV3ywY": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "TQaA0ufk",
@@ -15749,7 +15749,7 @@
       "type": "frame"
     },
     "79ciseA1": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "t7Vny0IW",
@@ -16059,7 +16059,7 @@
       "type": "text"
     },
     "7JeITSkr": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "3vIoMGKj",
@@ -16069,7 +16069,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -16107,7 +16107,7 @@
       "type": "frame"
     },
     "7L3RlUGp": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "Hds1KHFA",
@@ -16134,7 +16134,7 @@
       "type": "frame"
     },
     "7LLq0CD8": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "P0qYo6Rh",
@@ -16657,7 +16657,7 @@
       "type": "frame"
     },
     "7YKWEn4j": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "eNUbkY4i",
@@ -17051,7 +17051,7 @@
       "type": "instance"
     },
     "7kCzRNje": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "i7iTFc0O",
@@ -17175,7 +17175,7 @@
       "type": "text"
     },
     "7mSl7VHQ": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "XFvdl608",
@@ -17299,7 +17299,7 @@
       "type": "instance"
     },
     "7pfN3Di4": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "fYVUd3d8",
@@ -17309,7 +17309,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -17330,7 +17330,7 @@
       "type": "text"
     },
     "7plUBgV4": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "ChBGbDZ3",
@@ -17479,7 +17479,7 @@
       "type": "instance"
     },
     "7uuqUa4Q": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "QnhKruPH",
@@ -17721,7 +17721,7 @@
       "type": "frame"
     },
     "84WHwJD7": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "8z5jpQr1",
@@ -18153,7 +18153,7 @@
       "type": "frame"
     },
     "8K3su8OO": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "tzhPEkMl",
@@ -18163,7 +18163,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -19351,7 +19351,7 @@
       "type": "text"
     },
     "8q8pPt2q": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "zTdY0P4x",
@@ -19408,7 +19408,7 @@
       "type": "frame"
     },
     "8rWiyZfW": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "rpqtfZ4k",
@@ -19511,7 +19511,7 @@
       "type": "frame"
     },
     "8upuS7ys": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "d7E8JR3O",
@@ -20565,7 +20565,7 @@
       "type": "text"
     },
     "9LBu8O4e": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "9wD5XsZJ",
@@ -20735,7 +20735,7 @@
       "type": "frame"
     },
     "9TOqFcA8": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "Wl4rQnyK",
@@ -20745,7 +20745,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -20902,7 +20902,7 @@
       "type": "text"
     },
     "9YMySjdB": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "ChBGbDZ3",
@@ -20912,7 +20912,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -21506,7 +21506,7 @@
       "type": "text"
     },
     "9qC8AbvJ": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "ovISXRJu",
@@ -21516,7 +21516,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -22628,7 +22628,7 @@
       "type": "frame"
     },
     "AT5PxT4r": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "TQaA0ufk",
@@ -22638,7 +22638,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -22808,7 +22808,7 @@
       "type": "text"
     },
     "AXHeljIo": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "tzhPEkMl",
@@ -22818,7 +22818,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -23141,7 +23141,7 @@
       "type": "text"
     },
     "AkJjJdlK": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "t7Vny0IW",
@@ -24898,7 +24898,7 @@
       "type": "frame"
     },
     "BTYZFnFH": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "fYVUd3d8",
@@ -25356,7 +25356,7 @@
       "type": "frame"
     },
     "BcPOb5pp": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "eNUbkY4i",
@@ -25366,7 +25366,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -25592,7 +25592,7 @@
       "type": "frame"
     },
     "BjDRLLPY": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "tsjzMzMF",
@@ -26217,7 +26217,7 @@
       "y": 1060
     },
     "BwH8O7Bb": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "95zsrMRr",
@@ -26227,7 +26227,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -26547,7 +26547,7 @@
       "type": "frame"
     },
     "C3Xcy7Dw": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "tsjzMzMF",
@@ -27035,7 +27035,7 @@
       "type": "text"
     },
     "CH8Zf6V0": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "xNFUZJRe",
@@ -27097,7 +27097,7 @@
       "type": "text"
     },
     "CITSUhOS": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "9uOx09pU",
@@ -27107,7 +27107,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -27270,7 +27270,7 @@
       "type": "frame"
     },
     "CO5aWQd9": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "qIBleGPX",
@@ -27280,7 +27280,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -28012,7 +28012,7 @@
       "type": "text"
     },
     "CiwfUqbS": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "3vIoMGKj",
@@ -28022,7 +28022,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -28273,7 +28273,7 @@
       "type": "text"
     },
     "CqvvuKVt": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "tsjzMzMF",
@@ -28861,7 +28861,7 @@
       "type": "text"
     },
     "D7hmSOqs": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "QnhKruPH",
@@ -29978,7 +29978,7 @@
       "type": "text"
     },
     "DgUjXSPd": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "22L2Ds3O",
@@ -30541,7 +30541,7 @@
       "type": "frame"
     },
     "DveTJ7as": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "9uOx09pU",
@@ -30556,7 +30556,7 @@
       "type": "text"
     },
     "DvzNOLW0": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "Wl4rQnyK",
@@ -30571,7 +30571,7 @@
       "type": "text"
     },
     "DvzTmm77": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "rOYWpw5E",
@@ -30969,7 +30969,7 @@
       "type": "instance"
     },
     "E8DOkGxy": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "vJb20nOg",
@@ -31017,7 +31017,7 @@
       "type": "frame"
     },
     "E8V5yHAG": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "XGiPoLzc",
@@ -31027,7 +31027,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -31328,7 +31328,7 @@
       "type": "frame"
     },
     "EFRMJdmN": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "tzhPEkMl",
@@ -31480,7 +31480,7 @@
       "type": "frame"
     },
     "EJvfavCk": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "Wl4rQnyK",
@@ -31912,7 +31912,7 @@
       "type": "text"
     },
     "EZxtcm6G": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "9uOx09pU",
@@ -31922,7 +31922,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -32100,7 +32100,7 @@
       "type": "text"
     },
     "EgnPMm2a": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "Y0AuasTJ",
@@ -33076,7 +33076,7 @@
       "type": "frame"
     },
     "F6oSMr9G": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "XGiPoLzc",
@@ -33189,7 +33189,7 @@
       "type": "frame"
     },
     "F9CT2bDL": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "Y0AuasTJ",
@@ -33199,7 +33199,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -33343,7 +33343,7 @@
       "type": "text"
     },
     "FCYOea7U": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "Hds1KHFA",
@@ -33750,7 +33750,7 @@
       "type": "text"
     },
     "FLIQrGwx": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "SHQcyKcD",
@@ -33760,7 +33760,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -33910,7 +33910,7 @@
       "type": "text"
     },
     "FQdHRQ54": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "usmUNUuR",
@@ -33920,7 +33920,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -34529,7 +34529,7 @@
       "type": "frame"
     },
     "FhzB97GR": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "XGiPoLzc",
@@ -34539,7 +34539,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -34669,7 +34669,7 @@
       "type": "frame"
     },
     "FmciWZrT": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "XFvdl608",
@@ -34679,7 +34679,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -34887,7 +34887,7 @@
       "type": "instance"
     },
     "Fu7lXzqW": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "0BFWvz7D",
@@ -35284,7 +35284,7 @@
       "type": "text"
     },
     "G4VuR3VC": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "qIBleGPX",
@@ -35345,7 +35345,7 @@
       "type": "text"
     },
     "G4y2x36N": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "9wD5XsZJ",
@@ -35355,7 +35355,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -36359,7 +36359,7 @@
       "y": 9880
     },
     "GYN3xl8n": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "fYVUd3d8",
@@ -36369,7 +36369,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -37248,7 +37248,7 @@
       "type": "instance"
     },
     "GyLF4vuO": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "ovISXRJu",
@@ -37521,7 +37521,7 @@
       "type": "frame"
     },
     "H3d4s00t": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "Hds1KHFA",
@@ -37531,7 +37531,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -37657,7 +37657,7 @@
       "type": "text"
     },
     "H6pOGjcu": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "16of3RJ3",
@@ -37667,7 +37667,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -37979,7 +37979,7 @@
       "type": "frame"
     },
     "HGz0tQb3": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "rOYWpw5E",
@@ -37989,7 +37989,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -38073,7 +38073,7 @@
       "y": 1060
     },
     "HIVV8pVj": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "8z5jpQr1",
@@ -38083,7 +38083,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -39628,7 +39628,7 @@
       "type": "frame"
     },
     "I5Dvse90": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "Di7lziKb",
@@ -39638,7 +39638,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -40774,7 +40774,7 @@
       "type": "frame"
     },
     "IZTpFN88": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "8z5jpQr1",
@@ -40784,7 +40784,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -41190,7 +41190,7 @@
       "type": "frame"
     },
     "InnnWELO": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "9itexmLP",
@@ -41393,7 +41393,7 @@
       "type": "frame"
     },
     "IsxEHyyR": {
-      "content": "ِ",
+      "content": "نِ",
       "index": "a1",
       "name": "Harakat · mine",
       "parentId": "MjmJoxGp",
@@ -41403,7 +41403,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -42641,7 +42641,7 @@
       "type": "text"
     },
     "JQEXhO3B": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "7jCV04Xj",
@@ -42651,7 +42651,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -43887,7 +43887,7 @@
       "type": "frame"
     },
     "JywvnOht": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "D8nA8CTj",
@@ -43962,7 +43962,7 @@
       "type": "text"
     },
     "K20CYBJQ": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "8z5jpQr1",
@@ -44198,7 +44198,7 @@
       "type": "icon"
     },
     "K8Y9a7ph": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "95zsrMRr",
@@ -46931,7 +46931,7 @@
       "type": "text"
     },
     "LOssEUZR": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "95zsrMRr",
@@ -47389,7 +47389,7 @@
       "type": "frame"
     },
     "LdlYyODH": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "d7E8JR3O",
@@ -47399,7 +47399,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -47554,7 +47554,7 @@
       "type": "frame"
     },
     "Litp4A5m": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "zTdY0P4x",
@@ -48468,7 +48468,7 @@
       "type": "frame"
     },
     "MBAD6y49": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "t7Vny0IW",
@@ -48478,7 +48478,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -48504,7 +48504,7 @@
       "type": "frame"
     },
     "MBObp6d8": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "qIBleGPX",
@@ -48514,7 +48514,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -48830,7 +48830,7 @@
       "type": "frame"
     },
     "MNfbN7B2": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "tsjzMzMF",
@@ -48840,7 +48840,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -49918,7 +49918,7 @@
       "type": "frame"
     },
     "MqxoA9ro": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "16of3RJ3",
@@ -50241,7 +50241,7 @@
       "type": "frame"
     },
     "MyTk2395": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "9itexmLP",
@@ -50326,7 +50326,7 @@
       "type": "text"
     },
     "N0hztldE": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "fYVUd3d8",
@@ -50336,7 +50336,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -50356,7 +50356,7 @@
       "type": "frame"
     },
     "N0yqesVH": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "9wD5XsZJ",
@@ -50366,7 +50366,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -51116,7 +51116,7 @@
       "type": "icon"
     },
     "NNFRJp4M": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "tzhPEkMl",
@@ -51126,7 +51126,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -51161,7 +51161,7 @@
       "type": "text"
     },
     "NNkTZM9t": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "I9jLVq3e",
@@ -51242,7 +51242,7 @@
       "type": "frame"
     },
     "NPa1ojMQ": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "9itexmLP",
@@ -51252,7 +51252,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -51651,7 +51651,7 @@
       "type": "text"
     },
     "NYVL1zkd": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "xNFUZJRe",
@@ -51661,7 +51661,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -52080,7 +52080,7 @@
       "type": "text"
     },
     "NibVvRTr": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "d7E8JR3O",
@@ -52262,7 +52262,7 @@
       "type": "frame"
     },
     "Nncdif0d": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "KfAPGmaM",
@@ -52272,7 +52272,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -53392,7 +53392,7 @@
       "type": "instance"
     },
     "OJorQ26e": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "QnhKruPH",
@@ -53402,7 +53402,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -54156,7 +54156,7 @@
       "type": "frame"
     },
     "OhBG3Vb6": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "9uOx09pU",
@@ -54527,7 +54527,7 @@
       "type": "frame"
     },
     "OtZ3FbpD": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "95zsrMRr",
@@ -54537,7 +54537,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -54686,7 +54686,7 @@
       "type": "frame"
     },
     "Oxm2M5e5": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "Y0AuasTJ",
@@ -55381,7 +55381,7 @@
       "type": "text"
     },
     "P9eqSvvY": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "qIBleGPX",
@@ -56428,7 +56428,7 @@
       "type": "instance"
     },
     "Ph5tXbvs": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "7jCV04Xj",
@@ -56438,7 +56438,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -56659,7 +56659,7 @@
       "type": "frame"
     },
     "PnFngMB9": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "t7Vny0IW",
@@ -57021,7 +57021,7 @@
       "type": "frame"
     },
     "PzLTebTn": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "XGiPoLzc",
@@ -57031,7 +57031,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -57414,7 +57414,7 @@
       "type": "instance"
     },
     "QCD6opfD": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "vJb20nOg",
@@ -57424,7 +57424,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -57679,7 +57679,7 @@
       "type": "instance"
     },
     "QI2Ac9LC": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "I9jLVq3e",
@@ -59212,7 +59212,7 @@
       "type": "text"
     },
     "R4e5UYSf": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "0BFWvz7D",
@@ -59222,7 +59222,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -61383,7 +61383,7 @@
       "type": "frame"
     },
     "SALNyIxi": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "8z5jpQr1",
@@ -61393,7 +61393,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -62030,7 +62030,7 @@
       "type": "text"
     },
     "SQF6IEby": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "qIBleGPX",
@@ -62040,7 +62040,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -62158,7 +62158,7 @@
       "type": "frame"
     },
     "SSIZBUwO": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "I9jLVq3e",
@@ -62168,7 +62168,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -62384,7 +62384,7 @@
       "type": "text"
     },
     "SYwuBd17": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "ChBGbDZ3",
@@ -62394,7 +62394,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -62799,7 +62799,7 @@
       "type": "instance"
     },
     "Sljo4PFo": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "95zsrMRr",
@@ -63696,7 +63696,7 @@
       "type": "text"
     },
     "T7BohHW2": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "rOYWpw5E",
@@ -64149,7 +64149,7 @@
       "type": "frame"
     },
     "TLPI8cs6": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "vJb20nOg",
@@ -64690,7 +64690,7 @@
       "type": "text"
     },
     "TWLRB78X": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "usmUNUuR",
@@ -64705,7 +64705,7 @@
       "type": "text"
     },
     "TWR1iI7I": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "jydEv22E",
@@ -64715,7 +64715,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -64736,7 +64736,7 @@
       "type": "text"
     },
     "TXUjLf98": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "16of3RJ3",
@@ -65336,7 +65336,7 @@
       "type": "text"
     },
     "Tnk4lbLH": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "jydEv22E",
@@ -65346,7 +65346,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -65854,7 +65854,7 @@
       "type": "instance"
     },
     "TzuUWp7l": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "SHQcyKcD",
@@ -66608,7 +66608,7 @@
       "y": 10940
     },
     "UNiiXZnk": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "7jCV04Xj",
@@ -66896,7 +66896,7 @@
       "type": "frame"
     },
     "UV8R7AVN": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "22L2Ds3O",
@@ -66906,7 +66906,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -68231,7 +68231,7 @@
       "type": "text"
     },
     "V4M14BgL": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "zTdY0P4x",
@@ -68241,7 +68241,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -70185,7 +70185,7 @@
       "type": "instance"
     },
     "Vz6PngKm": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "rpqtfZ4k",
@@ -70307,7 +70307,7 @@
       "type": "frame"
     },
     "W47FeCOM": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "usmUNUuR",
@@ -70322,7 +70322,7 @@
       "type": "text"
     },
     "W4Lx9pDQ": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "3vIoMGKj",
@@ -70779,7 +70779,7 @@
       "type": "text"
     },
     "WIqqCjF4": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "SHQcyKcD",
@@ -70842,7 +70842,7 @@
       "type": "text"
     },
     "WL0TRrdE": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "ovISXRJu",
@@ -70852,7 +70852,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -72464,7 +72464,7 @@
       "type": "text"
     },
     "X6Nv23eY": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "TQaA0ufk",
@@ -73416,7 +73416,7 @@
       "type": "frame"
     },
     "XWBcrWeU": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "7jCV04Xj",
@@ -73426,7 +73426,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -73701,7 +73701,7 @@
       "type": "frame"
     },
     "Xcq0GDsx": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "0BFWvz7D",
@@ -73992,7 +73992,7 @@
       "type": "frame"
     },
     "XixKP9pT": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "nPKPPSyC",
@@ -74153,7 +74153,7 @@
       "type": "text"
     },
     "XoFxwctH": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "jydEv22E",
@@ -74168,7 +74168,7 @@
       "type": "text"
     },
     "XoRIh3rh": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "XFvdl608",
@@ -74178,7 +74178,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -74341,7 +74341,7 @@
       "type": "frame"
     },
     "XuQUFGUF": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "ChBGbDZ3",
@@ -74351,7 +74351,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -74855,7 +74855,7 @@
       "type": "frame"
     },
     "Y8OQKqUS": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "9wD5XsZJ",
@@ -74865,7 +74865,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -77457,7 +77457,7 @@
       "type": "frame"
     },
     "ZQCOHNcJ": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "Di7lziKb",
@@ -77919,7 +77919,7 @@
       "type": "text"
     },
     "ZaW0faJQ": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "t7Vny0IW",
@@ -77929,7 +77929,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -78641,7 +78641,7 @@
       "type": "text"
     },
     "ZsdixDos": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "7jCV04Xj",
@@ -78746,7 +78746,7 @@
       "type": "text"
     },
     "ZxnHl8u6": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "xNFUZJRe",
@@ -78756,7 +78756,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -79909,7 +79909,7 @@
       "type": "frame"
     },
     "aVEPyfD0": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "eNUbkY4i",
@@ -80039,7 +80039,7 @@
       "type": "frame"
     },
     "aYoXzQe7": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "nPKPPSyC",
@@ -80049,7 +80049,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -80364,7 +80364,7 @@
       "type": "frame"
     },
     "al246vJl": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "ovISXRJu",
@@ -81310,7 +81310,7 @@
       "type": "frame"
     },
     "b9TDalrT": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "9uOx09pU",
@@ -81534,7 +81534,7 @@
       "type": "text"
     },
     "bCrNhkKT": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "d7E8JR3O",
@@ -81544,7 +81544,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -81831,7 +81831,7 @@
       "type": "frame"
     },
     "bItpliaA": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "16of3RJ3",
@@ -81841,7 +81841,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -82677,7 +82677,7 @@
       "type": "frame"
     },
     "bkbbUKNU": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "rpqtfZ4k",
@@ -83501,7 +83501,7 @@
       "type": "frame"
     },
     "c7HpY74b": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "16of3RJ3",
@@ -83620,7 +83620,7 @@
       "type": "text"
     },
     "cCeAKBHu": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "P0qYo6Rh",
@@ -83630,7 +83630,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -85487,7 +85487,7 @@
       "type": "text"
     },
     "dADSuK1b": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "zTdY0P4x",
@@ -85579,7 +85579,7 @@
       "type": "frame"
     },
     "dCmL5WIh": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "XGiPoLzc",
@@ -85741,7 +85741,7 @@
       "type": "frame"
     },
     "dHwLtiCV": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "9itexmLP",
@@ -85751,7 +85751,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -86414,7 +86414,7 @@
       "type": "frame"
     },
     "da99l57X": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "95zsrMRr",
@@ -86424,7 +86424,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -87391,7 +87391,7 @@
       "type": "frame"
     },
     "e88YPKuG": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "Wl4rQnyK",
@@ -88000,7 +88000,7 @@
       "type": "instance"
     },
     "eR55Hnr8": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "0BFWvz7D",
@@ -88010,7 +88010,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -88817,7 +88817,7 @@
       "type": "frame"
     },
     "ejTgP9JS": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "V7Ug5WfX",
@@ -88827,7 +88827,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -89188,7 +89188,7 @@
       "type": "frame"
     },
     "eubtVsQ9": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "xNFUZJRe",
@@ -89388,7 +89388,7 @@
       "type": "frame"
     },
     "exobBQ8S": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "22L2Ds3O",
@@ -89398,7 +89398,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -90056,7 +90056,7 @@
       "type": "frame"
     },
     "fBytT8UI": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "jydEv22E",
@@ -90303,7 +90303,7 @@
       "type": "text"
     },
     "fIlycFAn": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "i7iTFc0O",
@@ -91507,7 +91507,7 @@
       "type": "frame"
     },
     "fpXlKeNL": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "KfAPGmaM",
@@ -94342,7 +94342,7 @@
       "type": "instance"
     },
     "h5MZOrTL": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "jydEv22E",
@@ -97439,7 +97439,7 @@
       "type": "frame"
     },
     "iZxan9Vl": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "vJb20nOg",
@@ -97714,7 +97714,7 @@
       "type": "instance"
     },
     "ig2vdOoo": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "ChBGbDZ3",
@@ -97990,7 +97990,7 @@
       "type": "text"
     },
     "ilMxjOua": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "usmUNUuR",
@@ -98000,7 +98000,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -98289,7 +98289,7 @@
       "type": "instance"
     },
     "irZzNw61": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "Di7lziKb",
@@ -99173,7 +99173,7 @@
       "type": "icon"
     },
     "jMVa0Nr7": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "jydEv22E",
@@ -99183,7 +99183,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -100632,7 +100632,7 @@
       "type": "instance"
     },
     "k3m5y2sf": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "XGiPoLzc",
@@ -101006,7 +101006,7 @@
       "type": "instance"
     },
     "kEfNYlRD": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "KfAPGmaM",
@@ -101138,7 +101138,7 @@
       "type": "frame"
     },
     "kHOtafak": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "22L2Ds3O",
@@ -101960,7 +101960,7 @@
       "type": "frame"
     },
     "kaczvirp": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "eNUbkY4i",
@@ -101970,7 +101970,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -102311,7 +102311,7 @@
       "type": "frame"
     },
     "kkkFTIDc": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "rpqtfZ4k",
@@ -102321,7 +102321,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -102564,7 +102564,7 @@
       "type": "text"
     },
     "ktJNnSPo": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "Y0AuasTJ",
@@ -102574,7 +102574,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -103390,7 +103390,7 @@
       "type": "frame"
     },
     "lGPTUZWS": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "3vIoMGKj",
@@ -103809,7 +103809,7 @@
       "type": "frame"
     },
     "lSRKd0P1": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "XFvdl608",
@@ -103819,7 +103819,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -103962,7 +103962,7 @@
       "type": "text"
     },
     "lWXGD7vR": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "xNFUZJRe",
@@ -104275,7 +104275,7 @@
       "type": "frame"
     },
     "leJIfee5": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "I9jLVq3e",
@@ -104285,7 +104285,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -104685,7 +104685,7 @@
       "type": "frame"
     },
     "lnCOsSHN": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "22L2Ds3O",
@@ -104695,7 +104695,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -105016,7 +105016,7 @@
       "type": "frame"
     },
     "lvAu9i0X": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "fYVUd3d8",
@@ -105240,7 +105240,7 @@
       "type": "frame"
     },
     "m08uhv7c": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "P0qYo6Rh",
@@ -105527,7 +105527,7 @@
       "type": "frame"
     },
     "m6Xpiito": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "D8nA8CTj",
@@ -105537,7 +105537,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -105726,7 +105726,7 @@
       "type": "text"
     },
     "mAN0O3lG": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "P0qYo6Rh",
@@ -107475,7 +107475,7 @@
       "type": "text"
     },
     "n1iv94sa": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "V7Ug5WfX",
@@ -108137,7 +108137,7 @@
       "type": "text"
     },
     "nJ8I6wcJ": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "9uOx09pU",
@@ -108147,7 +108147,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -108671,7 +108671,7 @@
       "type": "text"
     },
     "nYSKPJQD": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "Hds1KHFA",
@@ -108910,7 +108910,7 @@
       "type": "instance"
     },
     "neZQ6BVA": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "i7iTFc0O",
@@ -108920,7 +108920,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -109168,7 +109168,7 @@
       "type": "frame"
     },
     "nkxi9621": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "rOYWpw5E",
@@ -109178,7 +109178,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -109389,7 +109389,7 @@
       "type": "frame"
     },
     "nr8fRVpn": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "Di7lziKb",
@@ -109399,7 +109399,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -109421,7 +109421,7 @@
       "type": "text"
     },
     "nrhl5w0I": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "8z5jpQr1",
@@ -110367,7 +110367,7 @@
       "type": "frame"
     },
     "oGWTYxRn": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "eNUbkY4i",
@@ -110377,7 +110377,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -111082,7 +111082,7 @@
       "type": "text"
     },
     "odiQ6rug": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "SHQcyKcD",
@@ -111092,7 +111092,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -111426,7 +111426,7 @@
       "type": "frame"
     },
     "oohxP743": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "qIBleGPX",
@@ -111590,7 +111590,7 @@
       "type": "frame"
     },
     "ovp6lPWa": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "P0qYo6Rh",
@@ -111600,7 +111600,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -112041,7 +112041,7 @@
       "type": "text"
     },
     "p7zI6kH5": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "V7Ug5WfX",
@@ -112051,7 +112051,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -112289,7 +112289,7 @@
       "type": "frame"
     },
     "pDivQzNK": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "d7E8JR3O",
@@ -112299,7 +112299,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -112416,7 +112416,7 @@
       "type": "icon"
     },
     "pJa5XSfO": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "V7Ug5WfX",
@@ -112426,7 +112426,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -113031,7 +113031,7 @@
       "type": "text"
     },
     "pbqEO68k": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "QnhKruPH",
@@ -113041,7 +113041,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -113590,7 +113590,7 @@
       "type": "text"
     },
     "prZuVOPq": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "9itexmLP",
@@ -113600,7 +113600,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -114337,7 +114337,7 @@
       "type": "frame"
     },
     "qAWUWV95": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "7jCV04Xj",
@@ -114918,7 +114918,7 @@
       "type": "frame"
     },
     "qV7ce7pR": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "Hds1KHFA",
@@ -114928,7 +114928,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -115514,7 +115514,7 @@
       "type": "text"
     },
     "qhnS5qgn": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "ovISXRJu",
@@ -115524,7 +115524,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -115796,7 +115796,7 @@
       "type": "text"
     },
     "qsSly1IN": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "I9jLVq3e",
@@ -115806,7 +115806,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -117440,7 +117440,7 @@
       "type": "frame"
     },
     "rXi1Dtqd": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "3vIoMGKj",
@@ -118065,7 +118065,7 @@
       "type": "frame"
     },
     "rp68J05S": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "nPKPPSyC",
@@ -118075,7 +118075,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -118236,7 +118236,7 @@
       "type": "instance"
     },
     "rsiKdBsb": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "vJb20nOg",
@@ -118246,7 +118246,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -118692,7 +118692,7 @@
       "type": "instance"
     },
     "s3MAZtBd": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "nPKPPSyC",
@@ -118702,7 +118702,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -119436,7 +119436,7 @@
       "type": "text"
     },
     "sKNLs9GJ": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "tsjzMzMF",
@@ -119446,7 +119446,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -119924,7 +119924,7 @@
       "type": "text"
     },
     "sYfZp1cL": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "TQaA0ufk",
@@ -119934,7 +119934,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -120127,7 +120127,7 @@
       "type": "text"
     },
     "siGe8R7S": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "16of3RJ3",
@@ -120137,7 +120137,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -121072,7 +121072,7 @@
       "type": "frame"
     },
     "tDGu5ibs": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "I9jLVq3e",
@@ -121734,7 +121734,7 @@
       "type": "frame"
     },
     "tVC5NMId": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "D8nA8CTj",
@@ -121773,7 +121773,7 @@
       "type": "frame"
     },
     "tVQ79iKl": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "XFvdl608",
@@ -121937,7 +121937,7 @@
       "type": "frame"
     },
     "tcTRb1CB": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "9wD5XsZJ",
@@ -122911,7 +122911,7 @@
       "type": "instance"
     },
     "u3bOiOMF": {
-      "content": "ن",
+      "content": "",
       "index": "a0",
       "name": "Letter · ن",
       "parentId": "MjmJoxGp",
@@ -123364,7 +123364,7 @@
       "type": "frame"
     },
     "uGjamdnW": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "d7E8JR3O",
@@ -123638,7 +123638,7 @@
       "type": "text"
     },
     "uOBxTfpz": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "rOYWpw5E",
@@ -123648,7 +123648,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -123983,7 +123983,7 @@
       "type": "text"
     },
     "uafKBLwj": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "rOYWpw5E",
@@ -124045,7 +124045,7 @@
       "type": "frame"
     },
     "ub2gd36S": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "D8nA8CTj",
@@ -124055,7 +124055,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -124290,7 +124290,7 @@
       "type": "instance"
     },
     "uiizCULQ": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "Di7lziKb",
@@ -124343,7 +124343,7 @@
       "type": "text"
     },
     "ulcF1wHN": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "Y0AuasTJ",
@@ -124389,7 +124389,7 @@
       "type": "frame"
     },
     "umwdkoGc": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "ChBGbDZ3",
@@ -124537,7 +124537,7 @@
       "type": "instance"
     },
     "uqWsIiYm": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "Hds1KHFA",
@@ -124547,7 +124547,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -125194,7 +125194,7 @@
       "type": "text"
     },
     "v43RGrUo": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "xNFUZJRe",
@@ -125204,7 +125204,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -125318,7 +125318,7 @@
       "type": "instance"
     },
     "v6eyIsAG": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "SHQcyKcD",
@@ -125691,7 +125691,7 @@
       "type": "text"
     },
     "vL8a5SqU": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "KfAPGmaM",
@@ -125701,7 +125701,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -126885,7 +126885,7 @@
       "type": "frame"
     },
     "vy02V5xj": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "i7iTFc0O",
@@ -127415,7 +127415,7 @@
       "type": "text"
     },
     "wGTb6tCr": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "KfAPGmaM",
@@ -127761,7 +127761,7 @@
       "type": "instance"
     },
     "wNHWwBIe": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "0BFWvz7D",
@@ -127771,7 +127771,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -127822,7 +127822,7 @@
       "type": "frame"
     },
     "wQCWchhY": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "P0qYo6Rh",
@@ -127832,7 +127832,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -128389,7 +128389,7 @@
       "type": "frame"
     },
     "wjSsCAZG": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "i7iTFc0O",
@@ -128399,7 +128399,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -128794,7 +128794,7 @@
       "type": "text"
     },
     "wuDOXui0": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "zTdY0P4x",
@@ -128804,7 +128804,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -129255,7 +129255,7 @@
       "type": "text"
     },
     "x5qPN2je": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "nPKPPSyC",
@@ -130075,7 +130075,7 @@
       "type": "instance"
     },
     "xOlDte0h": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "Y0AuasTJ",
@@ -130085,7 +130085,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -130102,7 +130102,7 @@
       "type": "frame"
     },
     "xP91H555": {
-      "content": "َ",
+      "content": "قَ",
       "index": "a00001",
       "name": "Harakat · mine",
       "parentId": "tsjzMzMF",
@@ -130112,7 +130112,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -130388,7 +130388,7 @@
       "type": "text"
     },
     "xWufXnja": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "XFvdl608",
@@ -131453,7 +131453,7 @@
       "type": "frame"
     },
     "y3yiApbu": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "9wD5XsZJ",
@@ -132228,7 +132228,7 @@
       "type": "frame"
     },
     "yU5aGLZW": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "tzhPEkMl",
@@ -132340,7 +132340,7 @@
       "type": "frame"
     },
     "yZUHOOBx": {
-      "content": "والفعلُ يُعرَفُ: بق",
+      "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
       "name": "والفعلُ يُعرَفُ: بق",
       "parentId": "usmUNUuR",
@@ -133082,7 +133082,7 @@
       "type": "text"
     },
     "ys8aQZaW": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "V7Ug5WfX",
@@ -134212,7 +134212,7 @@
       "type": "frame"
     },
     "zUjn3iDG": {
-      "content": "د",
+      "content": "",
       "index": "a00002",
       "name": "د",
       "parentId": "D8nA8CTj",
@@ -134629,7 +134629,7 @@
       "type": "text"
     },
     "zcdXpmsr": {
-      "content": "ِ",
+      "content": "ةِ",
       "index": "a00007",
       "name": "Harakat · mine",
       "parentId": "rpqtfZ4k",
@@ -134639,7 +134639,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
@@ -134995,7 +134995,7 @@
       "type": "frame"
     },
     "zq1AuzLL": {
-      "content": "، وسوف، وتاء التأنيث الساكنة",
+      "content": "، وسوف، وتاء التأنيث الساكن",
       "index": "a00006",
       "name": "، وسوف، وتاء التأنيث الساكنة",
       "parentId": "TQaA0ufk",
@@ -135373,7 +135373,7 @@
       "type": "text"
     },
     "zzdCyuaK": {
-      "content": "ْ",
+      "content": "دْ",
       "index": "a00003",
       "name": "Harakat · mine",
       "parentId": "D8nA8CTj",
@@ -135383,7 +135383,7 @@
         "display": "inline",
         "font-family": "{font.ar}",
         "font-size": 26,
-        "font-weight": 700,
+        "font-weight": 400,
         "line-height": "52px"
       },
       "type": "text"
