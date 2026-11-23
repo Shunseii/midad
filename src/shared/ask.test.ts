@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CORPUS_TOOLS, citedGloss, citeSpan, claudeArgs, cutOffRecap, isArabicLine, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
+import { askModel, CORPUS_TOOLS, citedGloss, citeSpan, claudeArgs, cutOffRecap, isArabicLine, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -202,6 +202,18 @@ describe("streamEvent", () => {
 });
 
 describe("claudeArgs", () => {
+  it("asks for the chosen model, Opus by default", () => {
+    const at = (args: string[]) => args[args.indexOf("--model") + 1];
+    expect(at(claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: null }))).toBe("claude-opus-5-5");
+    expect(at(claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: "s1", model: "claude-sonnet-5-5" }))).toBe("claude-sonnet-5-5");
+  });
+
+  it("only takes a model Ask AI offers", () => {
+    expect(askModel("claude-sonnet-5-5")).toBe("claude-sonnet-5-5");
+    expect(askModel("claude-haiku-5-5")).toBe("claude-opus-5-5");
+    expect(askModel(undefined)).toBe("claude-opus-5-5");
+  });
+
   it("streams, skips the user's own settings and only allows the midad CLI", () => {
     const args = claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: null });
     expect(args).toEqual(expect.arrayContaining(["-p", "q", "--output-format", "stream-json", "--include-partial-messages", "--setting-sources", "project"]));

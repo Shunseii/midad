@@ -79,6 +79,9 @@ const length = Number([...prompt.matchAll(/\\[(\\d+) words\\]/g)].at(-1)?.[1] ??
 const words = Array.from({ length }, (_, i) => (i % 40 === 39 ? "word.\\n\\n" : "word" + i + " "));
 // Says so when it was told about a stopped earlier message, so a check can see it got through.
 if (prompt.includes("<cut-off-messages>")) words.unshift(prompt.includes("Reader: Stopped first") ? "CUTOFF-SEEN " : "CUTOFF-OTHER ");
+// Names the model it was asked for when that isn't Ask AI's default, so a check can see the reader's choice got through.
+const model = process.argv.includes("--model") ? process.argv[process.argv.indexOf("--model") + 1] : null;
+if (model && model !== "claude-opus-5-5") words.unshift("MODEL-" + model + " ");
 let i = 0;
 const out = (o) => process.stdout.write(JSON.stringify(o) + "\\n");
 const tick = () => {

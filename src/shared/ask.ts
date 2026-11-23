@@ -233,15 +233,30 @@ export const CORPUS_TOOLS = ["corpus_text", "corpus_edit", "corpus_history", "co
 export const corpusMcpConfig = (serverPath: string): string =>
   JSON.stringify({ mcpServers: { corpus: { type: "stdio", command: "node", args: ["--no-warnings", serverPath] } } });
 
+/** The models the reader can pick in Ask AI; the first is the default. */
+export const ASK_MODELS = [
+  { id: "claude-opus-5-5", label: "Opus 5.5", hint: "Most careful" },
+  { id: "claude-sonnet-5-5", label: "Sonnet 5.5", hint: "Faster" },
+] as const;
+
+export type AskModel = (typeof ASK_MODELS)[number]["id"];
+
+export const DEFAULT_ASK_MODEL: AskModel = ASK_MODELS[0].id;
+
+/** A stored or requested model, or the default when it isn't one Ask AI offers. */
+export const askModel = (value: unknown): AskModel => ASK_MODELS.find((m) => m.id === value)?.id ?? DEFAULT_ASK_MODEL;
+
 export const claudeArgs = ({
   prompt,
   systemPrompt,
   sessionId,
+  model = DEFAULT_ASK_MODEL,
   corpusServer = null,
 }: {
   prompt: string;
   systemPrompt: string;
   sessionId: string | null;
+  model?: AskModel;
   /** Path to the corpus MCP server, when Ask AI may fix the corpus text. */
   corpusServer?: string | null;
 }): string[] => [
@@ -249,6 +264,8 @@ export const claudeArgs = ({
   prompt,
   "--output-format",
   "stream-json",
+  "--model",
+  model,
   "--verbose",
   "--include-partial-messages",
   // The reader's own Claude settings (hooks, plugins, output styles) stay out of the reader.

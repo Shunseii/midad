@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
-import { cutOffRecap, isLostSession, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
+import { askModel, cutOffRecap, isLostSession, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
 import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
@@ -133,7 +133,8 @@ const handlers: MidadApi = {
   "bookmarks.list": (input) => bookmarks.list(input),
   "bookmarks.set": (input) => bookmarks.set(input),
   "bookmarks.remove": (input) => bookmarks.remove(input),
-  "ai.ask": async ({ requestId, bookId, position, question, selection, quotes, sessionId, cutOff: stoppedTurns = [] }) => {
+  "ai.ask": async ({ requestId, bookId, position, question, selection, quotes, sessionId, model: requested, cutOff: stoppedTurns = [] }) => {
+    const model = askModel(requested);
     const book = await library.getBook(bookId);
     const page = await library.getPage({ bookId, position });
     if (!book || !page) throw new Error("That page isn't in the library.");
@@ -141,14 +142,14 @@ const handlers: MidadApi = {
     const cutOff = cutOffRecap(stoppedTurns);
     const prompt = [context, cutOff, question].filter(Boolean).join("\n\n");
     try {
-      const result = await ask.ask({ requestId, prompt, sessionId }).then(
+      const result = await ask.ask({ requestId, prompt, sessionId, model }).then(
         (answer) => ({ ...answer, restarted: false }),
         async (err: unknown) => {
           // A session Claude no longer has (cleared or from another machine): carry on in a new one, told what was said so far.
           if (!sessionId || !(err instanceof Error) || !isLostSession(err.message)) throw err;
           streamed.delete(requestId);
           const recap = sessionRecap(await conversations.earlierTurns({ turnId: requestId }));
-          const answer = await ask.ask({ requestId, prompt: recap ? `${recap}\n\n${prompt}` : prompt, sessionId: null });
+          const answer = await ask.ask({ requestId, prompt: recap ? `${recap}\n\n${prompt}` : prompt, sessionId: null, model });
           return { ...answer, restarted: true };
         },
       );

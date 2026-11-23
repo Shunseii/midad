@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, rmSync, symlinkSync } from "node:fs";
 import { homedir } from "node:os";
 import { delimiter, join } from "node:path";
 import { createInterface } from "node:readline";
-import { claudeArgs, cleanTitle, type StreamEvent, streamEvent, SYSTEM_PROMPT, titleArgs } from "../shared/ask";
+import { type AskModel, claudeArgs, cleanTitle, type StreamEvent, streamEvent, SYSTEM_PROMPT, titleArgs } from "../shared/ask";
 
 /**
  * Runs Ask AI questions through the local Claude Code CLI. Claude runs in its
@@ -37,13 +37,13 @@ export const createAsk = ({
   const stopped = new Set<string>();
 
   return {
-    ask({ requestId, prompt, sessionId }: { requestId: string; prompt: string; sessionId: string | null }): Promise<{ sessionId: string; text: string }> {
+    ask({ requestId, prompt, sessionId, model }: { requestId: string; prompt: string; sessionId: string | null; model: AskModel }): Promise<{ sessionId: string; text: string }> {
       if (!existsSync(cliPath)) {
         return Promise.reject(new Error(`The midad CLI isn't built yet (${cliPath}). Run \`pnpm build:cli\`.`));
       }
       const credentials = existsSync(corpusServerPath) ? corpusCredentials() : null;
       return new Promise((resolve, reject) => {
-        const child = spawn("claude", claudeArgs({ prompt, systemPrompt: SYSTEM_PROMPT, sessionId, corpusServer: credentials ? corpusServerPath : null }), {
+        const child = spawn("claude", claudeArgs({ prompt, systemPrompt: SYSTEM_PROMPT, sessionId, model, corpusServer: credentials ? corpusServerPath : null }), {
           cwd: workDir,
           env: {
             ...process.env,

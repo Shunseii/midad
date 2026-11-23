@@ -92,6 +92,8 @@ export interface AskInput {
   quotes?: { span: Span | null; text: string }[];
   /** The conversation's Claude session, to continue it. */
   sessionId: string | null;
+  /** Which Claude model answers; Ask AI's default when missing or not one it offers. */
+  model?: string;
   /** Questions since the last finished answer whose answers were stopped, for Claude to be told about. */
   cutOff?: { question: string; answer: string; status: string; quotes: { text: string }[] }[];
 }

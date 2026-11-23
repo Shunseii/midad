@@ -1,8 +1,10 @@
-import { ArrowDown, ArrowLeft, ArrowUp, BookA, Copy, History, LoaderCircle, Sparkles, Lightbulb, MessageCircleQuestion, NotebookPen, Pencil, PenLine, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, BookA, Check, ChevronDown, Copy, History, LoaderCircle, Sparkles, Lightbulb, MessageCircleQuestion, NotebookPen, Pencil, PenLine, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
-import { citedGloss, citeSpan, isArabicLine, parseCitations, type Segment } from "../../../shared/ask";
+import { ASK_MODELS, askModel, citedGloss, citeSpan, DEFAULT_ASK_MODEL, isArabicLine, parseCitations, type Segment } from "../../../shared/ask";
+import { getPref, usePref } from "../lib/prefs";
+import { Menu } from "@base-ui/react/menu";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
 import type { AskSelection, Conversation, ConversationSummary, Quote, StoredTurn } from "../../../shared/conversations";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -149,6 +151,7 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
       selection: selection && position === selection.position ? { span: selection.span, text: selection.text } : undefined,
       quotes: quotes.map((q) => ({ text: q.text, span: q.position === position ? q.span : null })),
       sessionId: sessionId.current,
+      model: getPref(ASK_MODEL_PREF),
       cutOff,
     })
       .then(
@@ -312,6 +315,8 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
     deleted: deleted !== null,
   };
 };
+
+const ASK_MODEL_PREF = { key: "ask.model", fallback: DEFAULT_ASK_MODEL as string };
 
 const ARABIC_START = /^[^\p{L}]*\p{Script=Arabic}/u;
 
@@ -805,6 +810,50 @@ const CiteChip = ({
     );
   };
 
+  /** Which model answers the next question; it stays the reader's choice until they change it. */
+  const ModelPicker = () => {
+    const [stored, setStored] = usePref<string>(ASK_MODEL_PREF);
+    const current = ASK_MODELS.find((m) => m.id === askModel(stored)) ?? ASK_MODELS[0];
+    return (
+      <Menu.Root modal={false}>
+        <Menu.Trigger
+          aria-label={`Model: ${current.label}`}
+          className="flex shrink-0 items-center gap-0.5 rounded-md py-0.5 pr-1.5 pl-2 text-small font-medium whitespace-nowrap text-ink-3 transition-colors duration-press ease-out hover:bg-surface-2 hover:text-ink-2 data-popup-open:bg-surface-2 data-popup-open:text-ink-2"
+        >
+          {current.label}
+          <ChevronDown aria-hidden className="size-3.5 shrink-0 transition-[rotate] duration-pop ease-out in-data-popup-open:rotate-180" />
+        </Menu.Trigger>
+        <Menu.Portal>
+          <Menu.Positioner side="bottom" align="start" sideOffset={10} className="isolate z-50">
+            <Menu.Popup
+              aria-label="Model"
+              className="flex w-66 origin-(--transform-origin) flex-col gap-0.5 rounded-xl bg-surface-3 p-1 text-ink shadow-float outline-hidden duration-pop ease-out data-closed:duration-pop-exit data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
+            >
+              <Menu.RadioGroup className="flex flex-col gap-0.5" value={current.id} onValueChange={(value: unknown) => setStored(askModel(value))}>
+                {ASK_MODELS.map((m) => (
+                  <Menu.RadioItem
+                    key={m.id}
+                    value={m.id}
+                    label={m.label}
+                    closeOnClick
+                    className="group/model flex cursor-default items-center gap-3 rounded-md py-2 pr-2 pl-3 outline-hidden transition-colors duration-press ease-out select-none data-highlighted:bg-surface-2"
+                  >
+                    <span className="flex flex-1 flex-col">
+                      <span className="text-sm font-medium text-ink">{m.label}</span>
+                      <span className="text-xs text-ink-3">{m.hint}</span>
+                    </span>
+                    <Check aria-hidden className="size-4 shrink-0 text-transparent group-data-checked/model:text-accent" />
+                  </Menu.RadioItem>
+                ))}
+              </Menu.RadioGroup>
+              <p className="-mx-1 mt-0.5 -mb-1 border-t border-line px-3 py-2 text-xs text-ink-3">Applies from your next question</p>
+            </Menu.Popup>
+          </Menu.Positioner>
+        </Menu.Portal>
+      </Menu.Root>
+    );
+  };
+
   /** The Ask AI panel's header: the title and the conversation buttons, or the way back from saved conversations. */
   export const AskHeader = ({ conversation }: { conversation: ReturnType<typeof useAskConversation> }) => {
     const { screen, showScreen, startNew, turns, saved, save } = conversation;
@@ -822,6 +871,7 @@ const CiteChip = ({
         <h2 className="flex items-center gap-2 text-sm font-semibold">
           <Sparkles className="size-4 text-accent" /> Ask AI
         </h2>
+        <ModelPicker />
         <span className="flex-1" />
         <IconButton icon={History} label="Saved conversations" onClick={() => showScreen("history")} />
         {turns.length > 0 && (
