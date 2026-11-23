@@ -36,7 +36,9 @@ export const parseComposer = ({ question, quotes }: { question: string; quotes: 
 
 /** The question for Claude: each pill becomes "[quote N]", numbered like the reading context's quotes. */
 export const questionWithQuoteMarks = ({ question, quotes }: { question: string; quotes: Quote[] }): string => {
-  if (!question || quotes.every((q) => q.offset === undefined)) return question;
+  // A message that is only quotes sends just them: no words of the reader's to add an instruction to.
+  if (!question.trim()) return quotes.map((_, i) => `[quote ${i + 1}]`).join(" ");
+  if (quotes.every((q) => q.offset === undefined)) return question;
   return parseComposer({ question, quotes })
     .map((part) => (part.kind === "text" ? part.text : `[quote ${quotes.indexOf(part.quote) + 1}]`))
     .join("");

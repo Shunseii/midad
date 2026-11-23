@@ -49,6 +49,15 @@ describe("parseComposer", () => {
 });
 
 describe("questionWithQuoteMarks", () => {
+  it("sends a message that is only quotes as just the quotes, with no instruction", () => {
+    expect(questionWithQuoteMarks({ question: "", quotes: [quote("رحمة الله", 0)] })).toBe("[quote 1]");
+    expect(questionWithQuoteMarks({ question: " ", quotes: [quote("a", 0), quote("b", 1)] })).toBe("[quote 1] [quote 2]");
+  });
+
+  it("leaves an empty message empty, for the caller's default", () => {
+    expect(questionWithQuoteMarks({ question: "", quotes: [] })).toBe("");
+  });
+
   it("marks each pill with its number", () => {
     expect(questionWithQuoteMarks({ question: "قارن  مع ", quotes: [quote("a", 5), quote("b", 9)] })).toBe("قارن [quote 1] مع [quote 2]");
   });

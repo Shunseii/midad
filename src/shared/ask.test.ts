@@ -285,6 +285,16 @@ describe("cutOffRecap", () => {
     expect(recap).not.toContain("old");
   });
 
+  it("doesn't turn a stopped message that was only a quote into a request to explain", () => {
+    const recap = cutOffRecap([{ question: "", answer: "", status: "error", quotes: [{ text: "رحمة الله" }] }]);
+    expect(recap).toContain("(quoting: رحمة الله)");
+    expect(recap).not.toContain("Explain this passage");
+  });
+
+  it("asks Claude to read the new message as following on from the stopped one", () => {
+    expect(cutOffRecap([turn("this should be a ligature", "error")])).toMatch(/following on from them/);
+  });
+
   it("covers a new conversation whose first answer was stopped", () => {
     expect(cutOffRecap([turn("first", "error")])).toContain("Reader: first");
   });

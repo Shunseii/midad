@@ -170,7 +170,7 @@ export const sessionRecap = (turns: { question: string; answer: string; quotes: 
     "<earlier-conversation>",
     "Your earlier session with this reader is no longer available. This is what was said so far, for context; don't repeat it.",
     ...carried.flatMap((t) => [
-      `Reader: ${t.question || "Explain this passage."}${t.quotes.length ? ` (quoting: ${t.quotes.map((q) => q.text).join(" / ")})` : ""}`,
+      `Reader: ${t.question || (t.quotes.length ? "" : "Explain this passage.")}${t.quotes.length ? ` (quoting: ${t.quotes.map((q) => q.text).join(" / ")})` : ""}`,
       `You: ${cut(t.answer.trim())}`,
     ]),
     "</earlier-conversation>",
@@ -190,9 +190,9 @@ export const cutOffRecap = (turns: { question: string; answer: string; status: s
   const clip = (text: string) => (text.length > RECAP_ANSWER_CHARS ? `${text.slice(0, RECAP_ANSWER_CHARS)}…` : text);
   return [
     "<cut-off-messages>",
-    "Before this message the reader sent the following, but each answer was stopped before it finished, so it may be missing from your history. Take it into account; don't answer it again unless asked.",
+    "The reader stopped your answer to the message(s) below, then sent the message after this block. They may be missing from your history. Read the new message as following on from them: it may add to, correct or replace what they asked, so answer what the reader wants now, taking them together.",
     ...cut.flatMap((t) => [
-      `Reader: ${t.question || "Explain this passage."}${t.quotes.length ? ` (quoting: ${t.quotes.map((q) => q.text).join(" / ")})` : ""}`,
+      `Reader: ${t.question || (t.quotes.length ? "" : "Explain this passage.")}${t.quotes.length ? ` (quoting: ${t.quotes.map((q) => q.text).join(" / ")})` : ""}`,
       t.answer.trim() ? `You (stopped): ${clip(t.answer.trim())}` : "You: (stopped before answering)",
     ]),
     "</cut-off-messages>",
