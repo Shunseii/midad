@@ -776,6 +776,38 @@ export const ReaderRoute = () => {
     } else selectSpan({ root, span });
   };
 
+  /**
+   * The browser only moves a selection with the keyboard in editable text, so the page does it
+   * for its own selection. Words are the smallest step, since a selection snaps to whole words.
+   */
+  const extendSelection = (step: { direction: "left" | "right" | "backward" | "forward"; granularity: "word" | "lineboundary" } | { lines: 1 | -1 }) => {
+    const root = pageRoot.current;
+    const selection = window.getSelection();
+    if (!root || !selection || selection.isCollapsed || !selection.focusNode || !root.contains(selection.focusNode)) return false;
+    if ("lines" in step) extendByLine({ root, selection, lines: step.lines });
+    else selection.modify("extend", step.direction, step.granularity);
+    onSelectionEnd();
+  };
+
+  /** Moves the selection's end to the text a row above or below it, past any glosses between. */
+  const extendByLine = ({ root, selection, lines }: { root: HTMLElement; selection: Selection; lines: 1 | -1 }) => {
+    const focus = document.createRange();
+    focus.setStart(selection.focusNode as Node, selection.focusOffset);
+    const at = focus.getClientRects()[0] ?? (selection.focusNode as Node).parentElement?.getBoundingClientRect();
+    if (!at) return;
+    const row = at.height || 24;
+    for (let y = lines > 0 ? at.bottom + row / 2 : at.top - row / 2, tries = 0; tries < 12; y += (lines * row) / 2, tries += 1) {
+      const caret = caretNear({ root, x: at.left, y });
+      if (!caret) continue;
+      const probe = document.createRange();
+      probe.setStart(caret.node, caret.offset);
+      const top = probe.getClientRects()[0]?.top ?? (caret.node.parentElement?.getBoundingClientRect().top ?? at.top);
+      if (Math.abs(top - at.top) < row / 2) continue;
+      selection.extend(caret.node, caret.offset);
+      return;
+    }
+  };
+
   const onSelectionEnd = () => {
     const root = pageRoot.current;
     const picked = root && spanFromSelection(root);
@@ -1155,6 +1187,12 @@ export const ReaderRoute = () => {
       // Right-to-left book: the next page is to the left.
       "page.next": () => turnTo(position + 1),
       "page.previous": () => turnTo(position - 1),
+      "selection.extendLeft": () => extendSelection({ direction: "left", granularity: "word" }),
+      "selection.extendRight": () => extendSelection({ direction: "right", granularity: "word" }),
+      "selection.extendUp": () => extendSelection({ lines: -1 }),
+      "selection.extendDown": () => extendSelection({ lines: 1 }),
+      "selection.extendStart": () => extendSelection({ direction: "backward", granularity: "lineboundary" }),
+      "selection.extendEnd": () => extendSelection({ direction: "forward", granularity: "lineboundary" }),
       "harakat.toggle": () => setShowHarakat(!showHarakat),
       "scan.toggle": () => setShowScan(!showScan),
       "reader.dismiss": () => {

@@ -431,10 +431,13 @@ body {
 [data-space]::selection {
   background-color: transparent;
 }
-/* The page's own selection, at the text's height (see useSelectionBoxes): never over the glosses under it. */
+/*
+ * The page's own selection, at the text's height (see useSelectionBoxes): never over the glosses under it.
+ * Painted as an inset shadow so it lands and clears at once: the background colour fades for note tints.
+ */
 [data-w][data-in-selection],
 [data-space][data-in-selection] {
-  background-color: color-mix(in oklab, var(--color-accent) 28%, transparent);
+  box-shadow: inset 0 0 0 100vmax color-mix(in oklab, var(--color-accent) 28%, transparent);
   border-radius: 0;
 }
 /* A footnote ref inside a selected word already sits on the word's colour. */
