@@ -19029,7 +19029,7 @@
       "type": "text"
     },
     "6Ih5eMjw": {
-      "content": "C · Note from the page number",
+      "content": "Note from the page number",
       "index": "a0",
       "name": "Title",
       "parentId": "Q0nxALlA",
@@ -26774,7 +26774,7 @@
       "type": "text"
     },
     "8vRHQIAQ": {
-      "content": "A · Pinned page-note card",
+      "content": "Page notes",
       "index": "a0",
       "name": "Title",
       "parentId": "R1vxMe1M",
@@ -116793,6 +116793,19 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "dqgAd38q": {
+      "content": "Narrow layouts (no margin beside the number): the \"+\" fades in over the number on hover, and a line with a note shows its icon in the number's place. The \"+\" can only be clicked while its line is hovered, so a click in the margin never starts a note by accident.",
+      "index": "a6",
+      "name": "Narrow layouts",
+      "parentId": "3MZ5aFJV",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "line-height": "22px"
+      },
+      "type": "text"
     },
     "dr33wVVm": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
