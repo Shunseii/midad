@@ -260,13 +260,17 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
     flush(`run-${letter}`);
     // Chromium paints a mark in its letter's colour, so the reader's marks are drawn
     // on a red copy of the letter underneath; the letter itself covers the red base.
+    // With the book's own marks too, the font moves them to make room (a shadda rises over
+    // a kasra), so a copy can't line up: the letter is drawn once, all of it in the reader's colour.
+    const stacked = !!marks.mine && !!marks.corpus;
     const { before, after } = inContext({ letters, index: i });
     nodes.push(
-      <span key={letter} className={cx("relative isolate", letter === targetLetter && "text-accent")}>
+      <span key={letter} className={cx("relative isolate", stacked && "text-ink-added", letter === targetLetter && "text-accent")}>
         {letter === targetLetter && <span data-overlay aria-hidden className={TARGET_TICK} />}
         {l.base}
         {marks.corpus}
-        {marks.mine && (
+        {stacked && marks.mine}
+        {marks.mine && !stacked && (
           <span data-overlay aria-hidden className="pointer-events-none absolute right-0 top-0 -z-10 select-none leading-[normal] text-ink-added">
             {before}
             {l.base}
