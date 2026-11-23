@@ -836,7 +836,8 @@ export const PageView = ({
             </div>
           ) : (
             <MarkableLine key={b.line} as="p" {...markable("matn", b.line)} className="page-line ar whitespace-pre-line rounded-lg text-ar-reading">
-              {display.lineNumbers && <LineNumber line={b.line} />}
+              {/* A line that is only a gloss (OCR'd onto its own line) takes no height; its number would sit on the next line's. */}
+              {display.lineNumbers && b.text.trim() !== "" && <LineNumber line={b.line} />}
               <Line part="matn" line={b.line} text={b.text} {...lineProps} />
             </MarkableLine>
           ),
