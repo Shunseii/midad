@@ -1009,8 +1009,8 @@ const CiteChip = ({
     // Starters make the reader do the work: they try and Claude checks, or Claude hints and quizzes.
     const suggestions: { icon: typeof Lightbulb; label: string; question?: string; draft?: string }[] = activeSelection
       ? [
-          { icon: Lightbulb, label: "Explain this", question: "Explain what the selected words mean here." },
-          { icon: MessageCircleQuestion, label: "Quiz me on this", question: "Quiz me on the selected words. Ask one question at a time and wait for my answer before the next. Don't give answers unless I ask." },
+          { icon: Lightbulb, label: "Explain this", question: "Explain this passage." },
+          { icon: MessageCircleQuestion, label: "Quiz me on this", question: "Quiz me on this passage. Ask one question at a time and wait for my answer before the next. Don't give answers unless I ask." },
         ]
       : [
           { icon: MessageCircleQuestion, label: "Quiz me on this page", question: "Quiz me on this page. Ask one question at a time and wait for my answer before the next. Don't give answers unless I ask." },

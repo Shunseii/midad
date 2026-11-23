@@ -51,6 +51,7 @@ export const COMMANDS = {
   "focus.leave": { keys: "Escape", label: "Leave focus mode", group: "Reading" },
   "page.next": { keys: ["ArrowLeft", "PageDown"], label: "Next page", group: "Pages" },
   "page.previous": { keys: ["ArrowRight", "PageUp"], label: "Previous page", group: "Pages" },
+  "selection.all": { keys: "Mod+A", label: "Select the page's text", group: "Reading" },
   "selection.extendLeft": { keys: ["Shift+ArrowLeft", "Mod+Shift+ArrowLeft"], label: "Extend selection a word left", group: "Reading" },
   "selection.extendRight": { keys: ["Shift+ArrowRight", "Mod+Shift+ArrowRight"], label: "Extend selection a word right", group: "Reading" },
   "selection.extendUp": { keys: "Shift+ArrowUp", label: "Extend selection a line up", group: "Reading" },

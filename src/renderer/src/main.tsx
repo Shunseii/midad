@@ -47,7 +47,7 @@ const openLastBook = async () => {
     const books = await queryClient.fetchQuery({ queryKey: keys.library, queryFn: () => midad["library.list"]() });
     const place = launchPlace({ onLaunch, lastScreen: getPref(LAST_SCREEN_PREF), books });
     if (!place) return;
-    const state: ReaderState | null = place.anchor ? { anchor: place.anchor } : null;
+    const state: ReaderState = place.anchor ? { anchor: place.anchor, launched: true } : { launched: true };
     await router.navigate(`/read/${place.bookId}?p=${place.position}`, { replace: true, state });
   } catch (err) {
     console.error("Couldn't reopen the last book:", err);

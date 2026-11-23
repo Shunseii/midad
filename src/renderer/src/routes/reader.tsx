@@ -97,7 +97,8 @@ interface Point {
 }
 
 /** What a link into the reader can ask for: where to scroll the page once it has loaded, by offset or by a word. */
-export type ReaderState = { scrollTop: number } | { anchor: ScrollAnchor };
+/** `launched`: Midad reopened straight into the book, so the layout comes back exactly as it was left. */
+export type ReaderState = ({ scrollTop: number } | { anchor: ScrollAnchor } | { scrollTop?: never; anchor?: never }) & { launched?: boolean };
 
 /** How long scrolling has to settle before the place on the page is saved. */
 const SAVE_PLACE_MS = 400;
@@ -408,11 +409,13 @@ export const ReaderRoute = () => {
   const [askWidth, setAskWidth] = usePref<number | null>({ key: "reader.askWidth", fallback: null });
   const asking = panelTab === "ask";
   // Ask AI only opens when asked for: a book opens with it closed, even if it was open last time.
-  const askOpenAtLoad = useRef({ asking, panelPref, setPanelPref });
-  askOpenAtLoad.current = { asking, panelPref, setPanelPref };
+  // Reopening Midad into the book it was left on keeps it as it was.
+  const launched = (useLocation().state as ReaderState | null)?.launched === true;
+  const askOpenAtLoad = useRef({ asking, panelPref, setPanelPref, launched });
+  askOpenAtLoad.current = { asking, panelPref, setPanelPref, launched };
   useEffect(() => {
-    const { asking: wasAsking, panelPref: wasOpen, setPanelPref: close } = askOpenAtLoad.current;
-    if (wasAsking && wasOpen) close(false);
+    const { asking: wasAsking, panelPref: wasOpen, setPanelPref: close, launched: keep } = askOpenAtLoad.current;
+    if (wasAsking && wasOpen && !keep) close(false);
   }, [bookId]);
   const sideWidth = Math.max(asking ? (askWidth ?? Math.max(ASK_WIDTH, panelWidth + ASK_EXTRA)) : panelWidth, PANEL_MIN);
   const setSideWidth = asking ? setAskWidth : setPanelWidth;
@@ -764,6 +767,14 @@ export const ReaderRoute = () => {
     if (e.button === 0 && pageRoot.current) markDragging(pageRoot.current);
     const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss-label], [role=link], button, a, input, textarea");
     if (e.button === 0 && e.detail === 1 && offText) return startDragSelection(e);
+    if (e.detail === 3 && e.target instanceof Element) {
+      const onLine = e.target.closest<HTMLElement>("[data-w]") ?? e.target.closest("[data-line]")?.querySelector<HTMLElement>("[data-w]");
+      if (onLine) {
+        e.preventDefault();
+        selectLine(onLine);
+        return;
+      }
+    }
     const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
     const root = pageRoot.current;
     if (!word || !root) return;
@@ -783,9 +794,14 @@ export const ReaderRoute = () => {
   const extendSelection = (step: { direction: "left" | "right" | "backward" | "forward"; granularity: "word" | "lineboundary" } | { lines: 1 | -1 }) => {
     const root = pageRoot.current;
     const selection = window.getSelection();
-    if (!root || !selection || selection.isCollapsed || !selection.focusNode || !root.contains(selection.focusNode)) return false;
+    // A selection shrunk back to nothing keeps its place, so it can grow again past where it started, as in a text field.
+    if (!root || !selection || selection.rangeCount === 0 || !selection.focusNode || !root.contains(selection.focusNode)) return false;
     if ("lines" in step) extendByLine({ root, selection, lines: step.lines });
-    else selection.modify("extend", step.direction, step.granularity);
+    else {
+      selection.modify("extend", step.direction, step.granularity);
+      // Landing back on where the selection started selects nothing; carry on to the word past it.
+      if (selection.isCollapsed) selection.modify("extend", step.direction, step.granularity);
+    }
     onSelectionEnd();
   };
 
@@ -806,6 +822,33 @@ export const ReaderRoute = () => {
       selection.extend(caret.node, caret.offset);
       return;
     }
+  };
+
+  /** Selects every word of the page, main text and ḥāshiya, and nothing around it. */
+  const selectPage = () => {
+    const root = pageRoot.current;
+    const words = root?.querySelectorAll<HTMLElement>("[data-w]");
+    const first = words?.[0];
+    const last = words?.[words.length - 1];
+    if (!root || !first || !last) return false;
+    const range = document.createRange();
+    range.setStartBefore(first);
+    range.setEndAfter(last);
+    window.getSelection()?.removeAllRanges();
+    window.getSelection()?.addRange(range);
+    onSelectionEnd();
+  };
+
+  /** Selects a whole line: the browser's triple-click stops at inline pieces such as a note's corners. */
+  const selectLine = (word: HTMLElement) => {
+    const root = pageRoot.current;
+    if (!root) return;
+    const { part, line } = word.dataset;
+    const words = root.querySelectorAll<HTMLElement>(`[data-part="${part}"][data-line="${line}"][data-w]`);
+    const last = words[words.length - 1];
+    if (!last) return;
+    selectSpan({ root, span: { part: part as Span["part"], start: { line: Number(line), word: 1 }, end: { line: Number(line), word: Number(last.dataset.w) } } });
+    onSelectionEnd();
   };
 
   const onSelectionEnd = () => {
@@ -1187,6 +1230,7 @@ export const ReaderRoute = () => {
       // Right-to-left book: the next page is to the left.
       "page.next": () => turnTo(position + 1),
       "page.previous": () => turnTo(position - 1),
+      "selection.all": () => selectPage(),
       "selection.extendLeft": () => extendSelection({ direction: "left", granularity: "word" }),
       "selection.extendRight": () => extendSelection({ direction: "right", granularity: "word" }),
       "selection.extendUp": () => extendSelection({ lines: -1 }),
