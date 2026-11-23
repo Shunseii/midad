@@ -922,8 +922,10 @@ const CiteChip = ({
       if (!root) return;
       const text = document.createRange();
       text.selectNodeContents(root);
-      const lines = Math.ceil(text.getBoundingClientRect().height / COMPOSER_LINE - 0.25);
-      setRows(Math.min(Math.max(lines, 1), COMPOSER_ROWS));
+      const drawn = Math.max(Math.ceil(text.getBoundingClientRect().height / COMPOSER_LINE - 0.25), 1);
+      // A new line with nothing on it yet has no height to measure; it shows as an extra newline at the end.
+      const trailing = root.innerText.match(/\n+$/)?.[0].length ?? 0;
+      setRows(Math.min(drawn + Math.max(trailing - 1, 0), COMPOSER_ROWS));
     }, []);
     useEffect(() => {
       const root = editor.current;

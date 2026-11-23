@@ -195,4 +195,25 @@ export const checks = [
       assert.equal(box.overflow, 0, `the composer overflows by ${box.overflow}px with a pill in it`);
     },
   ],
+  [
+    "a new empty line grows the composer at once, and deleting it shrinks it back",
+    async (page) => {
+      await page.click(COMPOSER);
+      await page.press("a", { code: "KeyA", ctrl: true, commands: ["selectAll"] });
+      await page.press("Backspace", { commands: ["deleteBackward"] });
+      await page.type("first line");
+      const heights = [];
+      for (let i = 0; i < 2; i++) {
+        await page.press("Enter", { shift: true, commands: ["insertLineBreak"] });
+        await page.sleep(400);
+        heights.push(await composerHeight(page));
+      }
+      for (let i = 0; i < 2; i++) {
+        await page.press("Backspace", { commands: ["deleteBackward"] });
+        await page.sleep(400);
+        heights.push(await composerHeight(page));
+      }
+      assert.deepEqual(heights, [48, 72, 48, 24], "composer height after each new line, then each delete");
+    },
+  ],
 ];
