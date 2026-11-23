@@ -23173,6 +23173,23 @@
       },
       "type": "instance"
     },
+    "Aks4FAyW": {
+      "content": "[بيان علامات الاسم]",
+      "index": "a003V",
+      "name": "Section label",
+      "parentId": "TFRou3DQ",
+      "style": {
+        "color": "{color.ink-3}",
+        "direction": "rtl",
+        "display": "block",
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "line-height": "28px",
+        "margin-bottom": -8,
+        "text-align": "right"
+      },
+      "type": "text"
+    },
     "Akx302Pi": {
       "index": "Za000",
       "name": "Line number",

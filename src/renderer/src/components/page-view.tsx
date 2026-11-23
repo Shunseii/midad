@@ -193,6 +193,9 @@ export interface Display {
   noteIcons: NoteIcons;
 }
 
+/** A line that is only a bracketed title, such as [١٢- سكنى المعتدة]: the editor's section label, not part of the text. */
+const isSectionLabel = (text: string) => /^\[[^\]]+\]$/.test(text.trim());
+
 /** The style that times one word's (or the gap after it's) part of the sweep. */
 const sweepStyle = ({ sweep, at }: { sweep: Sweep; at: number }): CSSProperties => {
   const { delay, duration } = sweepTiming({ count: sweep.count, at });
@@ -825,6 +828,11 @@ export const PageView = ({
                 <Line part="matn" line={b.line} text={b.text} {...lineProps} />
               </MarkableLine>
             </div>
+          ) : isSectionLabel(b.text) ? (
+            // A bracketed section title the editor printed small above the line it introduces.
+            <MarkableLine key={b.line} as="p" {...markable("matn", b.line)} className="page-line ar -mb-2 rounded-lg text-ar-small text-ink-3">
+              <Line part="matn" line={b.line} text={b.text} {...lineProps} />
+            </MarkableLine>
           ) : (
             <MarkableLine key={b.line} as="p" {...markable("matn", b.line)} className="page-line ar whitespace-pre-line rounded-lg text-ar-reading">
               {/* A line that is only a gloss (OCR'd onto its own line) takes no height; its number would sit on the next line's. */}
