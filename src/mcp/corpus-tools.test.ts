@@ -6,7 +6,7 @@ import { type CorpusTextApi, createCorpusTools, midadNote, ToolError, validateEd
 const stored: StoredPage = { bookId: "wiqaya-1", position: 21, number: 40, fileId: "file-21", page: { header: null, matn: [], hashiya: [], glosses: [] } };
 
 let corpus: { [K in keyof CorpusTextApi]: ReturnType<typeof vi.fn<CorpusTextApi[K]>> };
-let syncPage: ReturnType<typeof vi.fn<(input: { bookId: string; fileId: string }) => Promise<void>>>;
+let syncPage: ReturnType<typeof vi.fn<(input: { bookId: string; fileId: string; edits: { old: string; new: string }[] | null }) => Promise<void>>>;
 let tools: ReturnType<typeof createCorpusTools>;
 
 const edited = (overrides: Partial<Extract<TextEditResult, { kind: "edited" }>> = {}): TextEditResult => ({
@@ -60,7 +60,7 @@ describe("edit", () => {
     const text = await tools.edit({ book: "الوقاية", page: 21, edits: [{ old: "الماءِ", new: "الماءُ" }], note: "misread haraka" });
 
     expect(corpus.editText).toHaveBeenCalledWith({ bookId: "wiqaya-1", fileId: "file-21", edits: [{ old: "الماءِ", new: "الماءُ" }], note: "midad: misread haraka" });
-    expect(syncPage).toHaveBeenCalledWith({ bookId: "wiqaya-1", fileId: "file-21" });
+    expect(syncPage).toHaveBeenCalledWith({ bookId: "wiqaya-1", fileId: "file-21", edits: [{ old: "الماءِ", new: "الماءُ" }] });
     expect(text).toBe("Edited شرح الوقاية page 21 (printed 40). corpus_restore with rev 12 undoes it. The reader shows the change now.");
   });
 

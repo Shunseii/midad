@@ -41,8 +41,8 @@ const tools = createCorpusTools({
     editText: (input) => client().editText(input),
     textHistory: (input) => client().textHistory(input),
   },
-  syncPage: async ({ bookId, fileId }) => {
-    await library.syncBook({ bookId, mode: "overwrite", fileIds: [fileId] });
+  syncPage: async ({ bookId, fileId, edits }) => {
+    await library.syncBook({ bookId, mode: "overwrite", fileIds: [fileId], ...(edits ? { edits: { [fileId]: edits } } : {}) });
   },
 });
 

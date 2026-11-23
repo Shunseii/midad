@@ -10,7 +10,11 @@ import type {
   SyncPreview,
   SyncResult,
 } from "../shared/library";
+import type { Span } from "../shared/annotations";
+import type { TextEdit } from "../shared/corpus";
 import { bookIndex } from "../shared/fihris";
+import type { SyncInput } from "../shared/ipc";
+import { realignPage, type WordAt } from "../shared/realign";
 import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
 
@@ -200,6 +204,43 @@ export const createLibrary = ({
     }
   };
 
+  const hasTable = (name: string) => db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?").get(name) !== undefined;
+
+  /**
+   * Moves what the reader pinned to words on a page (highlights, notes, harakat, the last-read
+   * marker, the saved reading place) to the same words in its new text. Pins whose words can't be
+   * followed stay where they were, for the "Text changed" check to flag.
+   */
+  const moveMarks = ({ bookId, fileId, before, after, edits }: { bookId: string; fileId: string; before: string; after: string; edits: TextEdit[] | null }) => {
+    const realign = realignPage({ before: { source: before, page: parsePage(before) }, after: { source: after, page: parsePage(after) }, edits });
+    for (const table of ["highlights", "notes"]) {
+      if (!hasTable(table)) continue;
+      const rows = db.prepare(`SELECT id, span FROM ${table} WHERE book_id = ? AND file_id = ?`).all(bookId, fileId) as unknown as { id: string; span: string }[];
+      const update = db.prepare(`UPDATE ${table} SET span = ? WHERE id = ?`);
+      for (const row of rows) {
+        const moved = realign.span(JSON.parse(row.span) as Span);
+        if (moved) update.run(JSON.stringify(moved), row.id);
+      }
+    }
+    if (hasTable("harakat")) {
+      const rows = db.prepare("SELECT id, part, line, word FROM harakat WHERE book_id = ? AND file_id = ?").all(bookId, fileId) as unknown as ({ id: string } & WordAt)[];
+      const update = db.prepare("UPDATE OR REPLACE harakat SET part = ?, line = ?, word = ? WHERE id = ?");
+      for (const row of rows) {
+        const moved = realign.word(row);
+        if (moved) update.run(moved.part, moved.line, moved.word, row.id);
+      }
+    }
+    if (hasTable("markers")) {
+      const row = db.prepare("SELECT part, line, word FROM markers WHERE book_id = ? AND file_id = ?").get(bookId, fileId) as unknown as WordAt | undefined;
+      const moved = row && realign.word(row);
+      if (moved) db.prepare("UPDATE markers SET part = ?, line = ?, word = ? WHERE book_id = ?").run(moved.part, moved.line, moved.word, bookId);
+    }
+    const progress = db.prepare("SELECT anchor FROM progress WHERE book_id = ? AND file_id = ?").get(bookId, fileId) as { anchor: string | null } | undefined;
+    const anchor = progress?.anchor ? parseAnchor(progress.anchor) : null;
+    const movedAnchor = anchor && realign.word(anchor);
+    if (anchor && movedAnchor) db.prepare("UPDATE progress SET anchor = ? WHERE book_id = ?").run(JSON.stringify({ ...anchor, ...movedAnchor }), bookId);
+  };
+
   const renumber = (bookId: string) => {
     const rows = db
       .prepare("SELECT file_id, number, order_hint FROM pages WHERE book_id = ?")
@@ -292,9 +333,7 @@ export const createLibrary = ({
       return previewFrom(bookId, await corpus.exportBook(bookId));
     },
 
-    async syncBook(
-      input: { bookId: string; mode: "new" } | { bookId: string; mode: "overwrite"; fileIds: string[] },
-    ): Promise<SyncResult> {
+    async syncBook(input: SyncInput): Promise<SyncResult> {
       const { bookId } = input;
       if (!bookExists(bookId)) throw new Error(`Book ${bookId} is not in the library.`);
       const files = await corpus.exportBook(bookId);
@@ -313,11 +352,13 @@ export const createLibrary = ({
             }
           }
         } else {
-          const local = new Set(localPages(bookId).map((p) => p.file_id));
+          const local = new Map(localPages(bookId).map((p) => [p.file_id, p.source]));
           for (const fileId of input.fileIds) {
             const f = byId.get(fileId);
-            if (f && local.has(fileId)) {
+            const before = local.get(fileId);
+            if (f && before !== undefined) {
               writePage(bookId, f, "update");
+              if (before !== f.text) moveMarks({ bookId, fileId, before, after: f.text, edits: input.edits?.[fileId] ?? null });
               overwritten += 1;
             }
           }

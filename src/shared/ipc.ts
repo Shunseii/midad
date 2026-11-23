@@ -1,7 +1,7 @@
 import type { BookMarks, Highlight, HighlightColor, LetterRef, Note, PageAnnotations, Part, Span } from "./annotations";
 import type { StreamEvent } from "./ask";
 import type { Conversation, ConversationSummary, StoredTurn } from "./conversations";
-import type { CorpusBookListing } from "./corpus";
+import type { CorpusBookListing, TextEdit } from "./corpus";
 import type {
   BookDetail,
   Bookmark,
@@ -25,7 +25,10 @@ export interface PublicSettings {
   hasKey: boolean;
 }
 
-export type SyncInput = { bookId: string; mode: "new" } | { bookId: string; mode: "overwrite"; fileIds: string[] };
+export type SyncInput =
+  | { bookId: string; mode: "new" }
+  /** `edits`: the agent's find-and-replace edits that changed a page, by file, so its notes and marks move exactly. */
+  | { bookId: string; mode: "overwrite"; fileIds: string[]; edits?: Record<string, TextEdit[]> };
 
 /** Everything the renderer can ask the main process for. Each key is one IPC channel. */
 export interface MidadApi {

@@ -48,15 +48,15 @@ export const createCorpusTools = ({
   findPage: (input: { book: string; position: number }) => Promise<StoredPage>;
   bookTitle: (bookId: string) => Promise<string>;
   corpus: CorpusTextApi;
-  /** Pulls the page's new text into the local library so the reader shows it. */
-  syncPage: (input: PageText) => Promise<void>;
+  /** Pulls the page's new text into the local library so the reader shows it. `edits` made the change, when they're an agent's own find-and-replace. */
+  syncPage: (input: PageText & { edits: TextEdit[] | null }) => Promise<void>;
 }) => {
   const resolve = async ({ book, page }: { book: string; page: number }) => {
     const stored = await findPage({ book, position: page });
     return { stored, where: describePage(stored, await bookTitle(stored.bookId)), target: { bookId: stored.bookId, fileId: stored.fileId } };
   };
 
-  const applied = async ({ result, where, target, undo }: { result: TextEditResult; where: string; target: PageText; undo: boolean }) => {
+  const applied = async ({ result, where, target, undo, edits }: { result: TextEditResult; where: string; target: PageText; undo: boolean; edits: TextEdit[] | null }) => {
     if (result.kind === "failed") {
       throw new ToolError(
         `Edit ${result.failedEdit + 1} didn't apply (${result.reason}), so nothing was changed. Each "old" must match the page's text exactly once, as it stands after the edits before it; read it with corpus_text and include more surrounding text if it isn't unique.`,
@@ -66,7 +66,7 @@ export const createCorpusTools = ({
       throw new ToolError(`The corpus refused the edit: the page isn't finished, or it changed while editing (${result.message}). Nothing was changed. Read the page again with corpus_text and retry.`);
     }
     if (!result.changed) return `Nothing changed on ${where}: the text came out identical.`;
-    const synced = await syncPage(target).then(
+    const synced = await syncPage({ ...target, edits }).then(
       () => "The reader shows the change now.",
       (err: unknown) => `The edit is saved, but the reader couldn't update yet (${err instanceof Error ? err.message : String(err)}); it shows the change after the next sync.`,
     );
@@ -84,7 +84,7 @@ export const createCorpusTools = ({
       const valid = validateEdits(edits);
       const { where, target } = await resolve({ book, page });
       const result = await corpus.editText({ ...target, edits: valid, note: midadNote(note) });
-      return applied({ result, where, target, undo: false });
+      return applied({ result, where, target, undo: false, edits: valid });
     },
 
     async history({ book, page }: { book: string; page: number }): Promise<string> {
@@ -105,7 +105,8 @@ export const createCorpusTools = ({
       if (current === earlier) return `${where} already reads as it did before rev ${rev}; nothing to restore.`;
       if (!current) throw new ToolError(`${where} has no text to replace.`);
       const result = await corpus.editText({ ...target, edits: [{ old: current, new: earlier }], note: midadNote(`restore rev ${rev}`) });
-      return applied({ result, where, target, undo: true });
+      // A restore replaces the whole page in one edit, which says nothing about where words went.
+      return applied({ result, where, target, undo: true, edits: null });
     },
   };
 };
