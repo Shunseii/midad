@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CORPUS_TOOLS, citeSpan, claudeArgs, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
+import { CORPUS_TOOLS, citeSpan, claudeArgs, cutOffRecap, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -257,3 +257,36 @@ describe("sessionRecap", () => {
     expect(recap).toContain(`${"x".repeat(1500)}…`);
   });
 });
+
+describe("citing a phrase with a footnote marker in it", () => {
+  const page = parsePage("header\n\n---\nجاءت به لسنتين أو أكثر ما لم تُقِرَّ(٢) بانقضاء العدة\n---\n### الحاشية\n(٢) أي تعترف");
+  it("finds the words whether or not the citation copies the marker", () => {
+    const words = { part: "matn" as const, start: { line: 1, word: 6 }, end: { line: 1, word: 8 } };
+    for (const phrase of ["ما لم تُقِرَّ(٢)", "ما لم تُقِرَّ"]) {
+      expect(citeSpan({ cite: { part: "matn", from: 1, to: 1, words: null, phrase }, page })).toEqual(words);
+    }
+  });
+});
+
+describe("cutOffRecap", () => {
+  const turn = (question: string, status: string, answer = "") => ({ question, answer, status, quotes: [] });
+
+  it("is empty when the last answer finished", () => {
+    expect(cutOffRecap([turn("q1", "done", "a1")])).toBe("");
+    expect(cutOffRecap([])).toBe("");
+  });
+
+  it("carries every question since the last finished answer, with what its answer had reached", () => {
+    const recap = cutOffRecap([turn("old", "done", "fine"), turn("3 and 4", "error", "Line 3 says"), turn("again", "interrupted")]);
+    expect(recap).toContain("Reader: 3 and 4");
+    expect(recap).toContain("You (stopped): Line 3 says");
+    expect(recap).toContain("Reader: again");
+    expect(recap).toContain("You: (stopped before answering)");
+    expect(recap).not.toContain("old");
+  });
+
+  it("covers a new conversation whose first answer was stopped", () => {
+    expect(cutOffRecap([turn("first", "error")])).toContain("Reader: first");
+  });
+});
+

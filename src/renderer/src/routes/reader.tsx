@@ -693,7 +693,8 @@ export const ReaderRoute = () => {
     clearTimeout(closeTimer.current);
     if (toolbar || focusInNoteEditor() || noteEditor?.note?.id === note.id) return;
     if (noteEditor?.mode === "edit" && pointerInNote.current) return;
-    setNoteEditor({ note, span: note.span, rect: rectWithGlosses(target.element), mode: "peek" });
+    // Right under the word, over any glosses there, so the pointer has no gap to cross into it.
+    setNoteEditor({ note, span: note.span, rect: target.element.getBoundingClientRect(), mode: "peek" });
   };
 
   /** A margin mark's notes as the note layer shows them: one note's peek or editor, or the row's list. */

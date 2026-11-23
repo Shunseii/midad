@@ -38,7 +38,7 @@ const haystackOf = ({ page, part, matchHarakat, lines }: { page: Page; part: Par
 };
 
 const foldQuery = ({ query, matchHarakat }: { query: string; matchHarakat: boolean }) =>
-  foldArabic(query, { keepHarakat: matchHarakat }).trim().split(/\s+/).filter(Boolean).join(" ");
+  foldArabic(query.replace(FOOTNOTE_REFS, ""), { keepHarakat: matchHarakat }).trim().split(/\s+/).filter(Boolean).join(" ");
 
 const CLITIC = /^(?:[وف]?(?:[بلك]|ال|لل)?|[وف]?[بك]?ال)$/;
 

@@ -177,6 +177,28 @@ export const sessionRecap = (turns: { question: string; answer: string; quotes: 
   ].join("\n");
 };
 
+/**
+ * The questions since the last finished answer whose answers were stopped or failed. Claude's
+ * session only holds exchanges that finished, so the next question carries these along.
+ * Empty when the last answer finished.
+ */
+export const cutOffRecap = (turns: { question: string; answer: string; status: string; quotes: { text: string }[] }[]): string => {
+  const since = turns.findLastIndex((t) => t.status === "done");
+  // An earlier answer still streaming is one being stopped for this question.
+  const cut = turns.slice(since + 1);
+  if (cut.length === 0) return "";
+  const clip = (text: string) => (text.length > RECAP_ANSWER_CHARS ? `${text.slice(0, RECAP_ANSWER_CHARS)}…` : text);
+  return [
+    "<cut-off-messages>",
+    "Before this message the reader sent the following, but each answer was stopped before it finished, so it may be missing from your history. Take it into account; don't answer it again unless asked.",
+    ...cut.flatMap((t) => [
+      `Reader: ${t.question || "Explain this passage."}${t.quotes.length ? ` (quoting: ${t.quotes.map((q) => q.text).join(" / ")})` : ""}`,
+      t.answer.trim() ? `You (stopped): ${clip(t.answer.trim())}` : "You: (stopped before answering)",
+    ]),
+    "</cut-off-messages>",
+  ].join("\n");
+};
+
 export const CORPUS_TOOLS = ["corpus_text", "corpus_edit", "corpus_history", "corpus_restore"].map((name) => `mcp__corpus__${name}`);
 
 /** Claude Code starts the corpus server itself; it inherits the corpus credentials from Claude's environment, so they never appear here. */

@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
-import { isLostSession, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
+import { cutOffRecap, isLostSession, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
 import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
@@ -133,12 +133,13 @@ const handlers: MidadApi = {
   "bookmarks.list": (input) => bookmarks.list(input),
   "bookmarks.set": (input) => bookmarks.set(input),
   "bookmarks.remove": (input) => bookmarks.remove(input),
-  "ai.ask": async ({ requestId, bookId, position, question, selection, quotes, sessionId }) => {
+  "ai.ask": async ({ requestId, bookId, position, question, selection, quotes, sessionId, cutOff: stoppedTurns = [] }) => {
     const book = await library.getBook(bookId);
     const page = await library.getPage({ bookId, position });
     if (!book || !page) throw new Error("That page isn't in the library.");
     const context = readingContext({ bookId, title: book.title, position, number: page.number, selection, quotes });
-    const prompt = `${context}\n\n${question}`;
+    const cutOff = cutOffRecap(stoppedTurns);
+    const prompt = [context, cutOff, question].filter(Boolean).join("\n\n");
     try {
       const result = await ask.ask({ requestId, prompt, sessionId }).then(
         (answer) => ({ ...answer, restarted: false }),

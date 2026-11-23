@@ -159,4 +159,23 @@ export const checks = [
       assert.equal((await composerText(page)).trim(), "");
     },
   ],
+  [
+    "a question after a stopped first answer still tells Claude about it",
+    async (page) => {
+      await page.waitFor(`!document.querySelector('[aria-label="Stop"]')`, { timeout: 20_000, message: "an earlier answer never finished" });
+      if (await page.ev(`!!document.querySelector('[aria-label="New conversation"]')`)) await page.click('[aria-label="New conversation"]');
+      await page.sleep(400);
+      await startLongAnswer(page, `Stopped first ${LONG}`);
+      await page.click('[aria-label="Stop"]');
+      await page.waitFor(`!document.querySelector('[aria-label="Stop"]')`, { message: "Stop didn't stop" });
+      await ask(page, `Then this ${SHORT}`);
+      await page.waitFor(lastQuestion(`Then this ${SHORT}`), { message: "the second question wasn't asked" });
+      await waitTurns(page, [
+        { question: `Stopped first ${LONG}`, state: "stopped" },
+        { question: `Then this ${SHORT}`, state: "done" },
+      ]);
+      const answer = await page.ev(`[...document.querySelectorAll("p.self-end")].at(-1).parentElement.textContent`);
+      assert.ok(answer.includes("CUTOFF-SEEN"), `the stopped first question didn't reach Claude with the next one: ${answer.slice(0, 120)}`);
+    },
+  ],
 ];

@@ -52,6 +52,9 @@ export interface QueuedMessage {
 export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A new conversation starts: the reader's selection goes with the old one. */ onNew?: () => void }) => {
   const client = useQueryClient();
   const [turns, setTurns] = useState<Turn[]>([]);
+  // The turns as last drawn, for a question asked from a callback (the queue, Send now).
+  const turnsNow = useRef(turns);
+  turnsNow.current = turns;
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const isSaved = useRef(false);
@@ -117,6 +120,9 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
     }
     const conversation = current.current;
     const started = generation.current;
+    // Claude's session only keeps answers that finished; the stopped ones since go along with this question.
+    const earlier = turnsNow.current;
+    const cutOff = earlier.slice(earlier.findLastIndex((t) => t.status === "done") + 1).map((t) => ({ question: t.question, answer: t.answer, status: t.status, quotes: t.quotes.map((q) => ({ text: q.text })) }));
     const ended = (end: AnswerEnd) => {
       stopped.current.delete(id);
       if (started !== generation.current) return;
@@ -143,6 +149,7 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
       selection: selection && position === selection.position ? { span: selection.span, text: selection.text } : undefined,
       quotes: quotes.map((q) => ({ text: q.text, span: q.position === position ? q.span : null })),
       sessionId: sessionId.current,
+      cutOff,
     })
       .then(
         (result) => {

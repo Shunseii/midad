@@ -74,8 +74,11 @@ process.on("SIGTERM", () => process.exit(143));
 if (process.argv.includes("--output-format") && process.argv[process.argv.indexOf("--output-format") + 1] === "json") {
   setTimeout(() => { process.stdout.write(JSON.stringify({ type: "result", subtype: "success", is_error: false, result: '"Kalam and its parts."' })); process.exit(0); }, 600);
 } else {
-const length = Number(/\\[(\\d+) words\\]/.exec(prompt)?.[1] ?? 1000);
+// The question comes last; earlier ones may be quoted above it.
+const length = Number([...prompt.matchAll(/\\[(\\d+) words\\]/g)].at(-1)?.[1] ?? 1000);
 const words = Array.from({ length }, (_, i) => (i % 40 === 39 ? "word.\\n\\n" : "word" + i + " "));
+// Says so when it was told about a stopped earlier message, so a check can see it got through.
+if (prompt.includes("<cut-off-messages>")) words.unshift(prompt.includes("Reader: Stopped first") ? "CUTOFF-SEEN " : "CUTOFF-OTHER ");
 let i = 0;
 const out = (o) => process.stdout.write(JSON.stringify(o) + "\\n");
 const tick = () => {
