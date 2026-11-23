@@ -2,7 +2,7 @@ import { ArrowDown, ArrowLeft, ArrowUp, BookA, Check, ChevronDown, Copy, History
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
-import { ASK_MODELS, askModel, citedGloss, citeSpan, DEFAULT_ASK_MODEL, isArabicLine, parseCitations, type Segment } from "../../../shared/ask";
+import { ASK_MODELS, askModel, boldRuns, citedGloss, citeSpan, DEFAULT_ASK_MODEL, isArabicLine, parseCitations, type Segment } from "../../../shared/ask";
 import { getPref, usePref } from "../lib/prefs";
 import { Menu } from "@base-ui/react/menu";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
@@ -457,7 +457,15 @@ const CiteChip = ({
                 dir="auto"
                 className={cx("[unicode-bidi:plaintext]", isArabicLine(line) ? "ar text-ar-body" : "text-body leading-relaxed")}
               >
-                {parseCitations(line).map((s, i) => (s.kind === "text" ? <span key={i}>{s.text}</span> : cite(s, i)))}
+                {parseCitations(line).map((s, i) =>
+                  s.kind === "text" ? (
+                    <span key={i}>
+                      {boldRuns(s.text).map((run, r) => (run.bold ? <strong key={r} className="font-semibold">{run.text}</strong> : run.text))}
+                    </span>
+                  ) : (
+                    cite(s, i)
+                  ),
+                )}
               </p>
             ))}
           </div>
@@ -498,7 +506,7 @@ const CiteChip = ({
 
   const plainAnswer = (text: string) =>
     parseCitations(text)
-      .map((s) => (s.kind === "text" ? s.text : citeLabel(s)))
+      .map((s) => (s.kind === "text" ? boldRuns(s.text).map((run) => run.text).join("") : citeLabel(s)))
       .join("")
       .trim();
 

@@ -96,6 +96,14 @@ export const isArabicLine = (line: string): boolean => {
   return /\p{Script=Arabic}/u.test(words) && !/[A-Za-z]/.test(words);
 };
 
+/** Text split into plain and **bold** runs, as Claude writes emphasis. An unclosed ** stays as typed. */
+export const boldRuns = (text: string): { text: string; bold: boolean }[] =>
+  text
+    // As in Markdown, the bold text can't start or end with a space: "2 ** 3" isn't bold.
+    .split(/\*\*([^\s*](?:[^*\n]*?[^\s*])?)\*\*/)
+    .map((run, i) => ({ text: run, bold: i % 2 === 1 }))
+    .filter((run) => run.text !== "");
+
 type CiteTarget = Omit<Extract<Segment, { kind: "cite" }>, "kind">;
 
 const fold = (text: string) => foldArabic(text.replace(/\([٠-٩۰-۹0-9]+\)/g, ""), {}).replace(/\s+/g, " ").trim();

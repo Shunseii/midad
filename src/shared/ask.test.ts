@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { askModel, CORPUS_TOOLS, citedGloss, citeSpan, claudeArgs, cutOffRecap, isArabicLine, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
+import { askModel, boldRuns, CORPUS_TOOLS, citedGloss, citeSpan, claudeArgs, cutOffRecap, isArabicLine, isLostSession, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -349,6 +349,23 @@ describe("citing a gloss", () => {
 
   it("finds nothing for words in neither", () => {
     expect(citeSpan({ cite: cite("كلام آخر"), page })).toBeNull();
+  });
+});
+
+describe("boldRuns", () => {
+  it("splits **bold** runs from plain text", () => {
+    expect(boldRuns("the **iʿrāb** of **الكلام** here")).toEqual([
+      { text: "the ", bold: false },
+      { text: "iʿrāb", bold: true },
+      { text: " of ", bold: false },
+      { text: "الكلام", bold: true },
+      { text: " here", bold: false },
+    ]);
+  });
+
+  it("leaves an unclosed or empty pair as typed", () => {
+    expect(boldRuns("2 ** 3 and **open")).toEqual([{ text: "2 ** 3 and **open", bold: false }]);
+    expect(boldRuns("****")).toEqual([{ text: "****", bold: false }]);
   });
 });
 
