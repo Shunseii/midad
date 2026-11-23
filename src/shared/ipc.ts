@@ -77,6 +77,8 @@ export interface MidadApi {
   /** Saves a conversation that so far lived only in the panel, with all its turns. */
   "conversations.save": (input: { id: string; bookId: string; sessionId: string | null; turns: Omit<StoredTurn, "createdAt">[] }) => Promise<void>;
   "conversations.rename": (input: { id: string; title: string }) => Promise<void>;
+  /** Asks a quick Claude model for a name, saves it and returns it. */
+  "conversations.nameWithClaude": (input: { id: string }) => Promise<string>;
   "app.setTheme": (input: { theme: Theme }) => Promise<void>;
 }
 
@@ -131,6 +133,7 @@ export const CHANNELS = [
   "conversations.remove",
   "conversations.save",
   "conversations.rename",
+  "conversations.nameWithClaude",
   "conversations.addTurn",
   "app.setTheme",
 ] as const satisfies readonly Channel[];

@@ -68,6 +68,12 @@ const FAKE_CLAUDE = `#!/usr/bin/env node
 // Stands in for Claude Code: streams stream-json text deltas slowly, then a result.
 // A question with "[N words]" in it gets an answer that long (about a second per 60 words); others get 1000 words.
 const prompt = process.argv[process.argv.indexOf("-p") + 1] ?? "";
+// Like Claude Code, a stop ends the process with code 143 rather than by the signal.
+process.on("SIGTERM", () => process.exit(143));
+// Naming a conversation: one JSON result, after a moment.
+if (process.argv.includes("--output-format") && process.argv[process.argv.indexOf("--output-format") + 1] === "json") {
+  setTimeout(() => { process.stdout.write(JSON.stringify({ type: "result", subtype: "success", is_error: false, result: '"Kalam and its parts."' })); process.exit(0); }, 600);
+} else {
 const length = Number(/\\[(\\d+) words\\]/.exec(prompt)?.[1] ?? 1000);
 const words = Array.from({ length }, (_, i) => (i % 40 === 39 ? "word.\\n\\n" : "word" + i + " "));
 let i = 0;
@@ -79,6 +85,7 @@ const tick = () => {
   setTimeout(tick, 100);
 };
 setTimeout(tick, 200);
+}
 `;
 
 const cli = ({ dbPath, cliPath, args }) =>

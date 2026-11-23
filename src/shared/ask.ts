@@ -215,3 +215,46 @@ export const claudeArgs = ({
   systemPrompt,
   ...(sessionId ? ["--resume", sessionId] : []),
 ];
+
+const TITLE_TURNS = 4;
+const TITLE_ANSWER_CHARS = 400;
+
+/** What a quick model is asked to name a conversation by. */
+export const titlePrompt = ({ bookTitle, turns }: { bookTitle: string; turns: { question: string; answer: string }[] }): string =>
+  [
+    `A student reading ${bookTitle} had this conversation about the book. Name it in 2 to 6 words, the way a chat app names a conversation: what it was about, not how it went.`,
+    "Use the language the student wrote in. Keep Arabic terms in Arabic script. Reply with the name only: no quotes, no full stop.",
+    "",
+    ...turns.slice(0, TITLE_TURNS).flatMap((t) => [
+      `Student: ${t.question || "Explain this passage."}`,
+      `Answer: ${t.answer.length > TITLE_ANSWER_CHARS ? `${t.answer.slice(0, TITLE_ANSWER_CHARS)}…` : t.answer}`,
+    ]),
+  ].join("\n");
+
+/** A one-off Claude Code run on the quick model, with no tools, settings or saved session. */
+export const titleArgs = (prompt: string): string[] => [
+  "-p",
+  prompt,
+  "--model",
+  "haiku",
+  "--output-format",
+  "json",
+  "--setting-sources",
+  "project",
+  "--strict-mcp-config",
+  "--tools",
+  "",
+  "--no-session-persistence",
+];
+
+/** The name as shown: one line, without the quotes or full stop a model sometimes adds. */
+export const cleanTitle = (raw: string): string =>
+  raw
+    .split("\n")
+    .map((l) => l.trim())
+    .find(Boolean)
+    ?.replace(/^["'«“”]+|["'»“”]+$/g, "")
+    .replace(/[.。]+$/, "")
+    .trim()
+    .slice(0, 80) ?? "";
+

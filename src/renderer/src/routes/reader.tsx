@@ -472,8 +472,8 @@ export const ReaderRoute = () => {
   const arrivedWith = useLocation().state as ReaderState | null;
   const pendingScroll = useRef(arrivedWith && "scrollTop" in arrivedWith ? arrivedWith.scrollTop : null);
   const pendingPlace = useRef(arrivedWith && "anchor" in arrivedWith ? arrivedWith.anchor : null);
-  const conversation = useAskConversation(bookId);
   const [askSelection, setAskSelection] = useState<AskSelection | null>(null);
+  const conversation = useAskConversation({ bookId, onNew: () => setAskSelection(null) });
   const client = useQueryClient();
   const [find, setFind] = useState<FindState>(CLOSED_FIND);
   const [findFocus, setFindFocus] = useState(0);
@@ -653,7 +653,11 @@ export const ReaderRoute = () => {
   };
 
   const openAsk = (selection: AskSelection | null) => {
-    if (selection) setAskSelection(selection);
+    if (selection) {
+      setAskSelection(selection);
+      // Asking about a passage shows the chat, even if the saved conversations were open.
+      if (conversation.screen.name !== "chat") conversation.showScreen("chat");
+    }
     switchPanelTab("ask");
     setPanelOpen(true);
     setAskShown(true);
@@ -671,15 +675,19 @@ export const ReaderRoute = () => {
     // Words the pointer crosses on its way out reschedule the close; they mustn't drop the "left the popover" reason.
     leftNote.current ||= left;
     clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => {
-      if (pointerInNote.current) return;
-      if (leftNote.current || !focusInNoteEditor()) setNoteEditor(null);
-    }, 120);
+    // Leaving a word gives the pointer time to cross the glosses under it into the note.
+    closeTimer.current = setTimeout(
+      () => {
+        if (pointerInNote.current) return;
+        if (leftNote.current || !focusInNoteEditor()) setNoteEditor(null);
+      },
+      leftNote.current ? 120 : 400,
+    );
   };
 
   const onWordHover = (target: WordTarget, note: Note | null) => {
     if (!note) {
-      if (noteEditor) scheduleNoteClose();
+      if (noteEditor && noteEditor.mode !== "edit") scheduleNoteClose();
       return;
     }
     clearTimeout(closeTimer.current);
@@ -1640,7 +1648,8 @@ export const ReaderRoute = () => {
               clearTimeout(closeTimer.current);
               leftNote.current = false;
             }
-            else scheduleNoteClose({ left: true });
+            // A note being written stays until it's saved, dismissed or clicked away from.
+            else if (noteEditor?.mode !== "edit") scheduleNoteClose({ left: true });
           }}
         >
           {(() => {

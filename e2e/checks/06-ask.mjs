@@ -139,4 +139,40 @@ export const checks = [
       assert.equal(p.gap, 0, `reopened ${p.gap}px above the bottom`);
     },
   ],
+  [
+    "Name with Claude gives a saved conversation a name from the quick model",
+    async (page) => {
+      await page.click('[aria-label="Saved conversations"]');
+      await page.sleep(600);
+      const row = `js:[...document.querySelectorAll("[class*='group/row'] > button")].find((b) => b.textContent.includes(${JSON.stringify(QUESTION)}))`;
+      const r = await page.rectOf(row);
+      await page.move(r.cx, r.cy);
+      await page.sleep(300);
+      await page.click(`js:[...document.querySelectorAll('[aria-label="Name with Claude"]')].find((b) => b.closest("[class*='group/row']")?.textContent.includes(${JSON.stringify(QUESTION)}))`);
+      await page.waitFor(`!!document.querySelector('[aria-label="Naming…"]')`, { timeout: 2000, message: "no naming state" });
+      await page.waitFor(`[...document.querySelectorAll("[class*='group/row']")].some((r) => r.textContent.includes("Kalam and its parts"))`, { timeout: 8000, message: "the conversation wasn't renamed" });
+      const titles = await page.ev(`[...document.querySelectorAll("[class*='group/row'] span.truncate.text-sm")].map((s) => s.textContent)`);
+      assert.ok(titles.includes("Kalam and its parts"), `the name kept its quotes or full stop: ${JSON.stringify(titles)}`);
+    },
+  ],
+  [
+    "a new conversation drops the selected passage",
+    async (page) => {
+      await openReader(page, { bookId: LONG_BOOK, position: 12 });
+      const from = await page.rectOf('[data-part=matn][data-line="2"][data-w="2"]');
+      const to = await page.rectOf('[data-part=matn][data-line="2"][data-w="4"]');
+      await page.drag({ from: { x: from.x + from.width - 2, y: from.cy }, to: { x: to.x + 2, y: to.cy } });
+      await page.sleep(400);
+      await page.waitFor(`!!(${buttonByText("Ask").slice(3)})`, { message: `no Ask button after selecting: "${await page.ev(`getSelection().toString()`)}"` });
+      await page.click(buttonByText("Ask"));
+      await page.waitFor(`document.body.textContent.includes("Ask about this passage")`, { message: "the selection didn't reach Ask AI" });
+      // New conversation is always in the saved-conversations screen's header.
+      await page.click('[aria-label="Saved conversations"]');
+      await page.sleep(500);
+      await page.click('[aria-label="New conversation"]');
+      await page.sleep(500);
+      assert.ok(await page.ev(`document.body.textContent.includes("Ask about this page")`), "the selected passage stayed after New conversation");
+      assert.equal(await page.ev(`document.body.textContent.includes("Ask about this passage")`), false);
+    },
+  ],
 ];

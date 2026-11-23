@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowLeft, ArrowUp, BookA, Copy, History, Sparkles, Lightbulb, MessageCircleQuestion, NotebookPen, Pencil, PenLine, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, BookA, Copy, History, LoaderCircle, Sparkles, Lightbulb, MessageCircleQuestion, NotebookPen, Pencil, PenLine, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
@@ -49,7 +49,7 @@ export interface QueuedMessage {
  * A new one lives only in memory until it's saved; once saved, each question is saved as it's asked.
  * Opening the book brings back its most recently used saved one.
  */
-export const useAskConversation = (bookId: string) => {
+export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A new conversation starts: the reader's selection goes with the old one. */ onNew?: () => void }) => {
   const client = useQueryClient();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -228,6 +228,13 @@ export const useAskConversation = (bookId: string) => {
     await midad["conversations.rename"]({ id, title });
     void refreshHistory();
   };
+  const nameWithClaude = async (id: string) => {
+    try {
+      await midad["conversations.nameWithClaude"]({ id });
+    } finally {
+      void refreshHistory();
+    }
+  };
 
   /** Deletes the conversation for good once the chance to undo has passed. */
   const commitDelete = useCallback(() => {
@@ -263,6 +270,7 @@ export const useAskConversation = (bookId: string) => {
   const [composeRequest, setComposeRequest] = useState(0);
   const startNew = () => {
     reset();
+    onNew?.();
     if (screen.name !== "chat") showScreen("chat");
     setComposeRequest((n) => n + 1);
   };
@@ -271,6 +279,7 @@ export const useAskConversation = (bookId: string) => {
     screen,
     showScreen,
     startNew,
+    nameWithClaude,
     composeRequest,
     turns,
     ask,
@@ -561,15 +570,32 @@ const CiteChip = ({
     currentId,
     onOpen,
     onRename,
+    onNameWithClaude,
     onDelete,
   }: {
     history: ConversationSummary[];
     currentId: string | null;
     onOpen: (id: string) => void;
     onRename: (input: { id: string; title: string }) => void;
+    onNameWithClaude: (id: string) => Promise<void>;
     onDelete: (id: string) => void;
   }) => {
     const [editing, setEditing] = useState<string | null>(null);
+    const [naming, setNaming] = useState<Set<string>>(new Set());
+    const [failed, setFailed] = useState<{ id: string; message: string } | null>(null);
+    const nameIt = (id: string) => {
+      setFailed(null);
+      setNaming((all) => new Set(all).add(id));
+      onNameWithClaude(id)
+        .catch((err: unknown) => setFailed({ id, message: err instanceof Error ? err.message : String(err) }))
+        .finally(() =>
+          setNaming((all) => {
+            const next = new Set(all);
+            next.delete(id);
+            return next;
+          }),
+        );
+    };
     // A deleted row folds away before it leaves the list.
     const [leaving, setLeaving] = useState<string | null>(null);
     return (
@@ -584,7 +610,9 @@ const CiteChip = ({
           )}
           {history.map((c) => {
             const page = conversationPage(c);
-            const meta = (
+            const meta = failed?.id === c.id ? (
+              <span className="truncate text-xs text-danger">Couldn't name it: {failed.message}</span>
+            ) : (
               <span className="text-xs text-ink-3">
                 {page && (
                   <>
@@ -626,14 +654,33 @@ const CiteChip = ({
                         type="button"
                         aria-current={c.id === currentId || undefined}
                         onClick={() => onOpen(c.id)}
-                        className="flex w-full flex-col gap-0.5 rounded-lg py-2 pr-20 pl-2.5 text-left transition-colors duration-press hover:bg-ink/6 aria-[current]:bg-accent-soft"
+                        className="flex w-full flex-col gap-0.5 rounded-lg py-2 pr-28 pl-2.5 text-left transition-colors duration-press hover:bg-ink/6 aria-[current]:bg-accent-soft"
                       >
-                        <span dir="auto" className="truncate text-sm [unicode-bidi:plaintext]">
+                        <span
+                          key={c.title}
+                          dir="auto"
+                          className={cx(
+                            "truncate text-sm [unicode-bidi:plaintext] animate-in fade-in duration-pop",
+                            naming.has(c.id) && "animate-pulse motion-reduce:animate-none motion-reduce:opacity-60",
+                          )}
+                        >
                           {c.title || "Untitled"}
                         </span>
                         {meta}
                       </button>
-                      <div className="absolute top-1/2 right-1 flex -translate-y-1/2 items-center opacity-0 transition-opacity duration-press group-hover/row:opacity-100 has-focus-visible:opacity-100">
+                      <div
+                        className={cx(
+                          "absolute top-1/2 right-1 flex -translate-y-1/2 items-center opacity-0 transition-opacity duration-press group-hover/row:opacity-100 has-focus-visible:opacity-100",
+                          naming.has(c.id) && "opacity-100",
+                        )}
+                      >
+                        <IconButton
+                          icon={naming.has(c.id) ? LoaderCircle : Sparkles}
+                          label={naming.has(c.id) ? "Naming…" : "Name with Claude"}
+                          disabled={naming.has(c.id)}
+                          className={naming.has(c.id) ? "[&_svg]:animate-spin" : undefined}
+                          onClick={() => nameIt(c.id)}
+                        />
                         <IconButton icon={Pencil} label="Rename" onClick={() => setEditing(c.id)} />
                         <IconButton icon={Trash2} label="Delete conversation" onClick={() => (reduceMotion() ? onDelete(c.id) : setLeaving(c.id))} />
                       </div>
@@ -795,7 +842,7 @@ const CiteChip = ({
     onCite: (cite: Citation) => void;
     onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
   }) => {
-    const { screen, showScreen, composeRequest, turns, ask, busy, stop, retry, open, conversationId, rename, history, remove, undoDelete, commitDelete, deleted } = conversation;
+    const { screen, showScreen, composeRequest, turns, ask, busy, stop, retry, open, conversationId, rename, nameWithClaude, history, remove, undoDelete, commitDelete, deleted } = conversation;
     const { queue, queueMessage, sendQueuedNow, sendDraftNow, takeQueued, removeQueued } = conversation;
     const [draft, setDraft] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
     const editor = useRef<HTMLDivElement>(null);
@@ -1041,6 +1088,7 @@ const CiteChip = ({
                 showScreen("chat");
               }}
               onRename={(input) => void rename(input)}
+              onNameWithClaude={nameWithClaude}
               onDelete={remove}
             />
           </div>
@@ -1118,19 +1166,16 @@ const CiteChip = ({
               {turn.status !== "streaming" && (
                 <div className="flex items-center gap-1">
                   {turn.status === "done" && turn.selection && (
-                    <Button
-                      variant="secondary"
-                      size="sm"
+                    <IconButton
                       icon={NotebookPen}
+                      label={saved.has(turn.id) ? "Saved as note" : "Save as note"}
                       disabled={saved.has(turn.id)}
                       onClick={() => {
                         if (!turn.selection) return;
                         onSaveNote({ ...turn, selection: turn.selection }, plainAnswer(turn.answer));
                         setSaved((s) => new Set(s).add(turn.id));
                       }}
-                    >
-                      {saved.has(turn.id) ? "Saved as note" : "Save as note"}
-                    </Button>
+                    />
                   )}
                   {turn.status === "done" && <IconButton icon={Copy} label="Copy answer" onClick={() => void navigator.clipboard.writeText(plainAnswer(turn.answer))} />}
                   <IconButton icon={RotateCcw} label="Ask again" onClick={() => retry(turn)} />

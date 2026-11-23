@@ -132,7 +132,7 @@ export const NoteLayer = ({
       <PopoverContent
         anchor={anchor}
         side="bottom"
-        sideOffset={8}
+        sideOffset={4}
         collisionPadding={12}
         // The editor focuses its own text field; a peek takes no focus at all.
         initialFocus={false}

@@ -26,6 +26,8 @@ export const useFocusChrome = ({ mode, held, textHeld }: { mode: FocusChoice; he
     if (mode !== "auto") return;
     let last = 0;
     const onActivity = () => {
+      // The pointer crossing the window while another app has focus isn't the reader coming back.
+      if (!document.hasFocus()) return;
       const now = Date.now();
       if (!hiddenNow.current && now - last < ACTIVITY_THROTTLE_MS) return;
       last = now;
@@ -46,17 +48,23 @@ export const useFocusChrome = ({ mode, held, textHeld }: { mode: FocusChoice; he
         now: Date.now(),
         atEdge: pointerAtEdge({ x: e.clientX, y: e.clientY, width: window.innerWidth, height: window.innerHeight, buttons: e.buttons, leftWindow }),
       });
-    const onMove = (e: MouseEvent) => report({ e, leftWindow: false });
-    // Pushing past the edge into the title bar, a panel or the dock still counts as holding it there.
-    const onLeave = (e: MouseEvent) => {
-      if (e.relatedTarget === null) report({ e, leftWindow: true });
+    const onMove = (e: MouseEvent) => {
+      if (document.hasFocus()) report({ e, leftWindow: false });
     };
+    // Pushing past the edge into the title bar, a panel or the dock still counts as holding it there,
+    // but not leaving for another window: switching apps moves the pointer out too.
+    const onLeave = (e: MouseEvent) => {
+      if (e.relatedTarget === null && document.hasFocus()) report({ e, leftWindow: true });
+    };
+    const onBlur = () => dispatch({ type: "pointer", now: Date.now(), atEdge: false });
+    window.addEventListener("blur", onBlur);
     // Capture, so nothing on the page can keep a move from us by stopping it on the way up.
     window.addEventListener("mousemove", onMove, { passive: true, capture: true });
     window.addEventListener("mouseout", onLeave, { passive: true, capture: true });
     return () => {
       window.removeEventListener("mousemove", onMove, { capture: true });
       window.removeEventListener("mouseout", onLeave, { capture: true });
+      window.removeEventListener("blur", onBlur);
       dispatch({ type: "pointer", now: Date.now(), atEdge: false });
     };
   }, [mode]);

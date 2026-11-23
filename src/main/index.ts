@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
-import { isLostSession, readingContext, sessionRecap } from "../shared/ask";
+import { isLostSession, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
 import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
@@ -168,6 +168,14 @@ const handlers: MidadApi = {
   "conversations.remove": (input) => conversations.remove(input),
   "conversations.save": (input) => conversations.save(input),
   "conversations.rename": (input) => conversations.rename(input),
+  "conversations.nameWithClaude": async ({ id }) => {
+    const conversation = await conversations.get({ id });
+    if (!conversation) throw new Error("That conversation isn't saved.");
+    const book = await library.getBook(conversation.bookId);
+    const title = await ask.nameConversation({ prompt: titlePrompt({ bookTitle: book?.title ?? "a classical Arabic book", turns: conversation.turns }) });
+    await conversations.rename({ id, title });
+    return title;
+  },
   "app.setTheme": async ({ theme }) => {
     settings.saveTheme(theme);
     applyTheme(theme);

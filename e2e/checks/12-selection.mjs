@@ -137,4 +137,22 @@ export const checks = [
       assert.deepEqual(words, Array.from({ length: count }, (_, i) => `5:${i + 1}`), "not the whole line");
     },
   ],
+  [
+    "a new note being written stays open when the pointer moves away",
+    async (page) => {
+      await openReader(page, { bookId: LONG_BOOK, position: 12 });
+      await page.ev(`window.getSelection().removeAllRanges()`);
+      await page.sleep(400);
+      await selectWords(page);
+      await page.click(`js:[...document.querySelectorAll("button")].find((b) => b.textContent.trim() === "Note")`);
+      await page.waitFor(`!!document.querySelector("[data-slot=popover-content] textarea, [data-slot=popover-content] [contenteditable]")`, { message: "the note editor didn't open" });
+      const editor = await page.rectOf(`js:[...document.querySelectorAll("[data-slot=popover-content]")].find((p) => p.querySelector("textarea, [contenteditable]"))`);
+      await page.move(editor.cx, editor.cy);
+      await page.sleep(200);
+      await page.move(editor.cx - 300, editor.cy + 200);
+      await page.sleep(900);
+      assert.ok(await page.ev(`!!document.querySelector("[data-slot=popover-content] textarea, [data-slot=popover-content] [contenteditable]")`), "the note editor closed when the pointer left it");
+      await page.press("Escape");
+    },
+  ],
 ];
