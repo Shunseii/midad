@@ -244,8 +244,8 @@ export const checks = [
       await page.click(COMPOSER);
       await page.type("Where else? [cite page 40] [12 words]");
       await page.press("Enter");
-      const pill = `js:[...document.querySelectorAll("button")].find((b) => b.closest("[dir=ltr]")?.textContent.includes("p. 40 · line 2") || b.getAttribute("aria-label")?.includes("p. 40 · line 2"))`;
-      await page.waitFor(`!!(${pill.slice(3)})`, { timeout: 10_000, message: "no pill naming page 40" });
+      const pill = `js:[...document.querySelectorAll("button")].find((b) => b.closest("[dir=ltr]")?.textContent.includes("p. ٤٢ · line 2") || b.getAttribute("aria-label")?.includes("p. ٤٢ · line 2"))`;
+      await page.waitFor(`!!(${pill.slice(3)})`, { timeout: 10_000, message: "no pill naming printed page ٤٢ (page 40)" });
       const words = await page.ev(`[...document.querySelectorAll('[data-part=matn][data-line="2"][data-w]')].map((w) => w.textContent).join(" ")`);
       await page.click(pill);
       await page.waitFor(`new URLSearchParams(location.hash.split("?")[1]).get("p") === "40"`, { timeout: 5000, message: "the pill didn't go to page 40" });

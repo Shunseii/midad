@@ -328,9 +328,10 @@ type Cite = Extract<Segment, { kind: "cite" }>;
 /** Where a citation or quote points, for jumping to it on the page. */
 export type Citation = Omit<Cite, "kind"> & { position: number };
 
-const citeLabel = (c: Omit<Cite, "kind">) => {
+/** `printed`: the cited page's printed number, shown instead of Midad's page position when there is one. */
+const citeLabel = (c: Omit<Cite, "kind">, printed: number | null = null) => {
   const lines = c.part === "hashiya" ? `ḥāshiya ${arabicNumber(c.from)}${c.to === c.from ? "" : `–${arabicNumber(c.to)}`}` : c.from === c.to ? `line ${c.from}` : `lines ${c.from}–${c.to}`;
-  return c.page === undefined ? lines : `p. ${c.page} · ${lines}`;
+  return c.page === undefined ? lines : `p. ${arabicNumber(printed ?? c.page)} · ${lines}`;
 };
 
 /** A pasted span as a citation: part of one line keeps its words, more than one line cites the lines. */
@@ -431,7 +432,7 @@ const CiteChip = ({
     const span = page.data ? citeSpan({ cite, page: page.data.page }) : null;
     const { kind: _, ...where } = cite;
     // Naming the page the question was asked on is the same as naming none.
-    const label = citeLabel({ ...where, page: cite.page === askedOn ? undefined : cite.page });
+    const label = citeLabel({ ...where, page: cite.page === askedOn ? undefined : cite.page }, page.data?.number ?? null);
     if (page.isSuccess && !page.data) return <CiteChip label={label} text={`This book has no page ${position}`} pillText={cite.phrase ?? label} quoted missing />;
     if (page.data && !span) return <CiteChip label={label} text={`Couldn't find this on ${label}`} pillText={cite.phrase ?? label} quoted missing />;
     // The page's own words, with its harakat, rather than the AI's spelling of them.
