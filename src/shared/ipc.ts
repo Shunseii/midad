@@ -15,6 +15,7 @@ import type {
   SyncResult,
   WaitingBook,
 } from "./library";
+import type { SyncSettings, SyncStatus } from "./sync";
 
 export type { CorpusBookListing };
 
@@ -83,6 +84,13 @@ export interface MidadApi {
   /** Asks a quick Claude model for a name, saves it and returns it. */
   "conversations.nameWithClaude": (input: { id: string }) => Promise<string>;
   "app.setTheme": (input: { theme: Theme }) => Promise<void>;
+  "sync.settings": () => Promise<SyncSettings>;
+  "sync.status": () => Promise<SyncStatus>;
+  /** Saves the server and (when given) a new token, and connects; without a token, the saved one is used. */
+  "sync.connect": (input: { url: string; token?: string }) => Promise<SyncSettings>;
+  /** Stops syncing, keeping the server and token for connecting again. */
+  "sync.disconnect": () => Promise<SyncSettings>;
+  "sync.dismissClockWarning": () => Promise<void>;
 }
 
 export interface AskInput {
@@ -144,6 +152,11 @@ export const CHANNELS = [
   "conversations.nameWithClaude",
   "conversations.addTurn",
   "app.setTheme",
+  "sync.settings",
+  "sync.status",
+  "sync.connect",
+  "sync.disconnect",
+  "sync.dismissClockWarning",
 ] as const satisfies readonly Channel[];
 
 /** Pushed from the main process to the renderer. */
@@ -156,7 +169,11 @@ export interface MidadEvents {
   onImportProgress: (callback: (corpusBookId: string, progress: ImportProgress) => void) => () => void;
   /** Progress of an Ask AI request. Returns an unsubscribe function. */
   onAskEvent: (callback: (requestId: string, event: StreamEvent) => void) => () => void;
+  /** Device sync's status changed. Returns an unsubscribe function. */
+  onSyncStatus: (callback: (status: SyncStatus) => void) => () => void;
 }
+
+export const SYNC_STATUS = "sync.statusChanged";
 
 export const ASK_EVENT = "ai.event";
 

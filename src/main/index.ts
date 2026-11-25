@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
 import { askModel, cutOffRecap, isLostSession, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
-import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, REMOTE_CHANGES, type Theme } from "../shared/ipc";
+import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, REMOTE_CHANGES, SYNC_STATUS, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
@@ -11,6 +11,7 @@ import { createBookmarks } from "./bookmarks";
 import { createMarkers } from "./markers";
 import { createConversations } from "./conversations";
 import { type CorpusSource, createCorpusClient } from "./corpus";
+import { createDeviceSync } from "./device-sync";
 import { createLibrary } from "./library";
 import { createSettings } from "./settings";
 import { startSync } from "./sync-client";
@@ -188,6 +189,11 @@ const handlers: MidadApi = {
     settings.saveTheme(theme);
     applyTheme(theme);
   },
+  "sync.settings": async () => deviceSync.settings(),
+  "sync.status": async () => deviceSync.status(),
+  "sync.connect": (input) => deviceSync.connect(input),
+  "sync.disconnect": () => deviceSync.disconnect(),
+  "sync.dismissClockWarning": async () => deviceSync.dismissClockWarning(),
 };
 
 /** Tells the windows a merge changed the library: first what it changed, so undo forgets it, then to refetch. */
@@ -200,10 +206,14 @@ const announceMerge = () => {
   }
 };
 
-// Cross-device sync, for now configured only from the environment (the prototype has no settings UI).
-if (process.env.MIDAD_SYNC_URL && process.env.MIDAD_SYNC_TOKEN) {
-  startSync({ user, url: process.env.MIDAD_SYNC_URL, token: process.env.MIDAD_SYNC_TOKEN, onRemoteChange: announceMerge });
-}
+const deviceSync = createDeviceSync({
+  settings,
+  env: process.env,
+  start: ({ url, token, onStatus }) => startSync({ user, url, token, onRemoteChange: announceMerge, onStatus }),
+  onStatus: (status) => {
+    for (const win of BrowserWindow.getAllWindows()) win.webContents.send(SYNC_STATUS, status);
+  },
+});
 
 // data_version changes only when another connection (the midad CLI) commits.
 const dataVersion = () => (db.prepare("PRAGMA data_version").get() as { data_version: number }).data_version;
@@ -273,6 +283,8 @@ const createWindow = () => {
 };
 
 void app.whenReady().then(() => {
+  // After ready: safeStorage can't decrypt the token before.
+  void deviceSync.apply();
   protocol.handle("midad-scan", async (request) => {
     const [bookId = "", fileId = ""] = new URL(request.url).pathname.split("/").filter(Boolean).map(decodeURIComponent);
     try {

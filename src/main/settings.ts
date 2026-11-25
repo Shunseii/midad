@@ -10,11 +10,36 @@ interface StoredSettings {
   encrypted: boolean;
   /** Kept here so the window opens in the right colour before the page loads. */
   theme: Theme;
+  /** The device-sync server's WebSocket URL. */
+  syncUrl: string;
+  /** base64; encrypted with the OS keychain when `syncTokenEncrypted` is true. */
+  syncToken: string | null;
+  syncTokenEncrypted: boolean;
+  /** Off after Disconnect, which forgets the token and keeps the URL. */
+  syncEnabled: boolean;
 }
 
-const EMPTY: StoredSettings = { endpoint: "", key: null, encrypted: false, theme: "system" };
+const EMPTY: StoredSettings = {
+  endpoint: "",
+  key: null,
+  encrypted: false,
+  theme: "system",
+  syncUrl: "",
+  syncToken: null,
+  syncTokenEncrypted: false,
+  syncEnabled: false,
+};
 
-export const createSettings = ({ dir }: { dir: string }) => {
+/** Electron's safeStorage, or a stand-in for it in tests. */
+export type Cipher = Pick<typeof safeStorage, "isEncryptionAvailable" | "encryptString" | "decryptString">;
+
+export interface StoredSync {
+  url: string;
+  token: string | null;
+  enabled: boolean;
+}
+
+export const createSettings = ({ dir, cipher = safeStorage }: { dir: string; cipher?: Cipher }) => {
   const file = join(dir, "settings.json");
 
   const read = (): StoredSettings => {
@@ -30,16 +55,23 @@ export const createSettings = ({ dir }: { dir: string }) => {
     renameSync(`${file}.tmp`, file);
   };
 
-  const encodeKey = (key: string): Pick<StoredSettings, "key" | "encrypted"> =>
-    safeStorage.isEncryptionAvailable()
-      ? { key: safeStorage.encryptString(key).toString("base64"), encrypted: true }
-      : { key: Buffer.from(key, "utf8").toString("base64"), encrypted: false };
+  const encodeSecret = (secret: string): { value: string; encrypted: boolean } =>
+    cipher.isEncryptionAvailable()
+      ? { value: cipher.encryptString(secret).toString("base64"), encrypted: true }
+      : { value: Buffer.from(secret, "utf8").toString("base64"), encrypted: false };
 
-  const decodeKey = ({ key, encrypted }: StoredSettings): string | null => {
-    if (!key) return null;
-    const bytes = Buffer.from(key, "base64");
-    return encrypted ? safeStorage.decryptString(bytes) : bytes.toString("utf8");
+  const decodeSecret = ({ value, encrypted }: { value: string | null; encrypted: boolean }): string | null => {
+    if (!value) return null;
+    const bytes = Buffer.from(value, "base64");
+    return encrypted ? cipher.decryptString(bytes) : bytes.toString("utf8");
   };
+
+  const encodeKey = (key: string): Pick<StoredSettings, "key" | "encrypted"> => {
+    const { value, encrypted } = encodeSecret(key);
+    return { key: value, encrypted };
+  };
+
+  const decodeKey = ({ key, encrypted }: StoredSettings): string | null => decodeSecret({ value: key, encrypted });
 
   const toPublic = (s: StoredSettings): PublicSettings => ({ endpoint: s.endpoint, hasKey: s.key !== null });
 
@@ -60,6 +92,33 @@ export const createSettings = ({ dir }: { dir: string }) => {
     theme: (): Theme => read().theme,
 
     saveTheme: (theme: Theme) => write({ ...read(), theme }),
+
+    /** The device-sync setup saved in Settings, token decrypted: for the main process only. */
+    sync: (): StoredSync => {
+      const s = read();
+      let token: string | null = null;
+      try {
+        token = decodeSecret({ value: s.syncToken, encrypted: s.syncTokenEncrypted });
+      } catch {
+        // Encrypted under another keychain (a copied profile): as good as no token.
+      }
+      return { url: s.syncUrl, token, enabled: s.syncEnabled };
+    },
+
+    /** Saves the sync URL and turns sync on, with a new token when given (else the saved one stays). */
+    saveSync: ({ url, token }: { url: string; token?: string }) => {
+      const current = read();
+      const encoded = token?.trim() ? encodeSecret(token.trim()) : null;
+      write({
+        ...current,
+        syncUrl: url.trim(),
+        syncEnabled: true,
+        ...(encoded ? { syncToken: encoded.value, syncTokenEncrypted: encoded.encrypted } : {}),
+      });
+    },
+
+    /** Turns sync off and forgets the token; the URL stays for connecting again. */
+    forgetSync: () => write({ ...read(), syncEnabled: false, syncToken: null, syncTokenEncrypted: false }),
 
     /** The stored endpoint and key, or null when the corpus isn't configured yet. */
     credentials: (): { endpoint: string; key: string } | null => {
