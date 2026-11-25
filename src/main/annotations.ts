@@ -21,6 +21,8 @@ import {
 } from "../shared/annotations";
 import { isArabicLetter, lettersOf, normalizeMarks } from "../shared/harakat";
 import { type Page, parsePage } from "../shared/page";
+import type { Row } from "tinybase";
+import { migrateLegacyTable, openUserStore, textRev } from "./user-store";
 
 /**
  * Highlights and notes, stored against the page's corpus file so they stay on
@@ -28,18 +30,6 @@ import { type Page, parsePage } from "../shared/page";
  */
 
 const SCHEMA = `
-CREATE TABLE IF NOT EXISTS highlights (
-  id TEXT PRIMARY KEY,
-  book_id TEXT NOT NULL,
-  file_id TEXT NOT NULL,
-  span TEXT NOT NULL,
-  quote TEXT NOT NULL,
-  color TEXT NOT NULL,
-  author TEXT NOT NULL,
-  created_at INTEGER NOT NULL,
-  FOREIGN KEY (book_id, file_id) REFERENCES pages (book_id, file_id) ON DELETE CASCADE
-);
-CREATE INDEX IF NOT EXISTS highlights_by_page ON highlights (book_id, file_id);
 CREATE TABLE IF NOT EXISTS notes (
   id TEXT PRIMARY KEY,
   book_id TEXT NOT NULL,
@@ -78,7 +68,6 @@ interface AnchoredRow {
   author: Author;
   created_at: number;
 }
-type HighlightRow = AnchoredRow & { color: HighlightColor };
 type NoteRow = AnchoredRow & { kind: "words" | "line" | "page"; body: string; updated_at: number };
 
 interface HarakatRow {
@@ -101,6 +90,15 @@ interface PageRow {
 }
 
 const toPage = (row: PageRow): Page => parsePage(row.source);
+
+const toAnchoredRow = ({ id, row }: { id: string; row: Row }): AnchoredRow => ({
+  id,
+  book_id: String(row.bookId),
+  span: String(row.span),
+  quote: String(row.quote),
+  author: row.author as Author,
+  created_at: Number(row.createdAt),
+});
 
 const isStale = ({ page, span, quote }: { page: Page; span: Span; quote: string }): boolean => {
   try {
@@ -130,7 +128,30 @@ const requireBody = (body: string): string => {
   return trimmed;
 };
 
+/** Highlights from before the user store, copied in once with their ids, pinned to the page text they were made on. */
+const legacyHighlights = (db: DatabaseSync) =>
+  (
+    db
+      .prepare("SELECT h.*, p.source FROM highlights h LEFT JOIN pages p ON p.book_id = h.book_id AND p.file_id = h.file_id")
+      .all() as unknown as (AnchoredRow & { file_id: string; color: string; source: string | null })[]
+  ).map((h) => ({
+    table: "highlights" as const,
+    id: h.id,
+    row: {
+      bookId: h.book_id,
+      fileId: h.file_id,
+      span: h.span,
+      quote: h.quote,
+      color: h.color,
+      author: h.author,
+      createdAt: h.created_at,
+      textRev: h.source === null ? "" : textRev(h.source),
+    },
+  }));
+
 export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; now?: () => number }) => {
+  const user = openUserStore({ db });
+  migrateLegacyTable({ user, db, table: "highlights", rows: () => legacyHighlights(db) });
   db.exec(SCHEMA);
   const noteColumns = db.prepare("PRAGMA table_info(notes)").all() as unknown as { name: string }[];
   // Page notes have no words: their span and quote are stored as "null" and "".
@@ -167,9 +188,9 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
     async listForPage({ bookId, position }: { bookId: string; position: number }): Promise<PageAnnotations> {
       const row = pageAt({ bookId, position });
       const page = toPage(row);
-      const highlights = (
-        db.prepare("SELECT * FROM highlights WHERE book_id = ? AND file_id = ?").all(bookId, row.file_id) as unknown as HighlightRow[]
-      ).map((h): Highlight => ({ ...anchored({ row: h, page, position }), color: h.color }));
+      const highlights = user
+        .rows({ table: "highlights", ids: user.onPage({ table: "highlights", bookId, fileId: row.file_id }) })
+        .map(([id, h]): Highlight => ({ ...anchored({ row: toAnchoredRow({ id, row: h }), page, position }), color: h.color as HighlightColor }));
       const noteRows = db.prepare("SELECT * FROM notes WHERE book_id = ? AND file_id = ?").all(bookId, row.file_id) as unknown as NoteRow[];
       const notes = noteRows.flatMap((n): Note[] =>
         n.kind === "page" ? [] : [{ ...anchored({ row: n, page, position }), kind: n.kind, body: n.body, updatedAt: n.updated_at }],
@@ -205,12 +226,16 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
 
     /** Which pages of a book have highlights (with the newest one's colour) and notes, for the scrubber's dots. */
     async bookMarks({ bookId }: { bookId: string }): Promise<BookMarks> {
-      const highlightRows = db
-        .prepare(
-          `SELECT p.position, h.color FROM highlights h JOIN pages p ON p.book_id = h.book_id AND p.file_id = h.file_id
-           WHERE h.book_id = ? ORDER BY p.position, h.created_at DESC`,
-        )
-        .all(bookId) as unknown as { position: number; color: HighlightColor }[];
+      const positions = new Map(
+        (db.prepare("SELECT file_id, position FROM pages WHERE book_id = ?").all(bookId) as { file_id: string; position: number }[]).map((p) => [p.file_id, p.position]),
+      );
+      const highlightRows = user
+        .rows({ table: "highlights" })
+        .flatMap(([, h]) => {
+          const position = h.bookId === bookId ? positions.get(String(h.fileId)) : undefined;
+          return position === undefined ? [] : [{ position, color: h.color as HighlightColor, createdAt: Number(h.createdAt) }];
+        })
+        .sort((a, b) => a.position - b.position || b.createdAt - a.createdAt);
       const noteRows = db
         .prepare(
           `SELECT DISTINCT p.position FROM notes n JOIN pages p ON p.book_id = n.book_id AND p.file_id = n.file_id
@@ -247,14 +272,22 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
       const row = pageAt({ bookId, position });
       const quote = quoteSpan({ page: toPage(row), span });
       const highlight: Highlight = { id: randomUUID(), bookId, position, span, quote, stale: false, color, author, createdAt: now() };
-      db.prepare(
-        "INSERT INTO highlights (id, book_id, file_id, span, quote, color, author, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      ).run(highlight.id, bookId, row.file_id, JSON.stringify(span), quote, color, author, highlight.createdAt);
+      user.store.setRow("highlights", highlight.id, {
+        bookId,
+        fileId: row.file_id,
+        span: JSON.stringify(span),
+        quote,
+        color,
+        author,
+        createdAt: highlight.createdAt,
+        textRev: textRev(row.source),
+      });
       return highlight;
     },
 
     async removeHighlight({ id }: { id: string }): Promise<void> {
-      deleteOne({ table: "highlights", id, label: "highlight" });
+      if (!user.row({ table: "highlights", id })) throw new Error(`There is no highlight with id ${id}.`);
+      user.store.delRow("highlights", id);
     },
 
     /** Adds a note on some words, a whole line, or the page. A page has at most one page note. */

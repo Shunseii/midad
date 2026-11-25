@@ -13,6 +13,7 @@ import { createConversations } from "./conversations";
 import { type CorpusSource, createCorpusClient } from "./corpus";
 import { createLibrary } from "./library";
 import { createSettings } from "./settings";
+import { openUserStore } from "./user-store";
 
 app.setName("midad");
 // A separate profile (settings + library) for development and testing.
@@ -58,6 +59,7 @@ const dbPath = join(userData, "midad.db");
 const db = new DatabaseSync(dbPath);
 // The midad CLI (and Ask AI through it) writes to the same file.
 db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
+const user = openUserStore({ db, clientId: "app" });
 const library = createLibrary({ db, corpus });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
@@ -198,6 +200,12 @@ setInterval(() => {
   }
   if (version === seenVersion) return;
   seenVersion = version;
+  // The CLI or the corpus MCP server saved its copy of the user store: merge it in.
+  try {
+    user.mergeOthers();
+  } catch (err) {
+    console.error("Couldn't merge another process's changes:", err);
+  }
   for (const win of BrowserWindow.getAllWindows()) win.webContents.send(LIBRARY_CHANGED);
 }, 1000);
 

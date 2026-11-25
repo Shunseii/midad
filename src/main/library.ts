@@ -17,6 +17,7 @@ import type { SyncInput } from "../shared/ipc";
 import { realignPage, type WordAt } from "../shared/realign";
 import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
+import { openUserStore, textRev } from "./user-store";
 
 /**
  * Midad's local library: imported books and their parsed pages. This is the
@@ -163,11 +164,15 @@ export const createLibrary = ({
   db,
   corpus,
   now = Date.now,
+  onRepinned,
 }: {
   db: DatabaseSync;
   corpus: CorpusSource;
   now?: () => number;
+  /** Called between moving the user store's pins and writing the new text: a seam for crash tests. */
+  onRepinned?: () => void;
 }) => {
+  const user = openUserStore({ db });
   db.exec("PRAGMA foreign_keys = ON;");
   db.exec(SCHEMA);
   migrateProgressToFileId(db);
@@ -211,10 +216,32 @@ export const createLibrary = ({
    * marker, the saved reading place) to the same words in its new text. Pins whose words can't be
    * followed stay where they were, for the "Text changed" check to flag.
    */
+  const realignerFor = ({ before, after, edits }: { before: string; after: string; edits: TextEdit[] | null }) =>
+    realignPage({ before: { source: before, page: parsePage(before) }, after: { source: after, page: parsePage(after) }, edits });
+
+  /**
+   * Moves the pins kept in the user store. Only rows pinned to the "before" text move, and each is
+   * stamped with the "after" text's rev, so running it again (after a crash, or on another device
+   * that already received the moved rows) moves nothing twice.
+   */
+  const repinUserStore = ({ bookId, fileId, before, after, edits }: { bookId: string; fileId: string; before: string; after: string; edits: TextEdit[] | null }) => {
+    const realign = realignerFor({ before, after, edits });
+    const [beforeRev, afterRev] = [textRev(before), textRev(after)];
+    const pinnedBefore = (row: { textRev?: unknown }) => row.textRev === beforeRev || row.textRev === "" || row.textRev === undefined;
+    user.store.transaction(() => {
+      for (const [id, row] of user.rows({ table: "highlights", ids: user.onPage({ table: "highlights", bookId, fileId }) })) {
+        if (!pinnedBefore(row)) continue;
+        const moved = realign.span(JSON.parse(String(row.span)) as Span);
+        if (moved) user.store.setCell("highlights", id, "span", JSON.stringify(moved));
+        user.store.setCell("highlights", id, "textRev", afterRev);
+      }
+    });
+  };
+
   const moveMarks = ({ bookId, fileId, before, after, edits }: { bookId: string; fileId: string; before: string; after: string; edits: TextEdit[] | null }) => {
-    const realign = realignPage({ before: { source: before, page: parsePage(before) }, after: { source: after, page: parsePage(after) }, edits });
+    const realign = realignerFor({ before, after, edits });
     const afterPage = parsePage(after);
-    for (const table of ["highlights", "notes"]) {
+    for (const table of ["notes"]) {
       if (!hasTable(table)) continue;
       const kind = table === "notes" ? "kind" : "'words' AS kind";
       const rows = db.prepare(`SELECT id, span, ${kind} FROM ${table} WHERE book_id = ? AND file_id = ?`).all(bookId, fileId) as unknown as { id: string; span: string; kind: string }[];
@@ -344,6 +371,18 @@ export const createLibrary = ({
       const files = await corpus.exportBook(bookId);
       const preview = previewFrom(bookId, files);
       const byId = new Map(files.filter(isReady).map((f) => [f.file_id, f]));
+
+      // The user store's pins move first: if the process dies before the text is written, the next
+      // sync sees the page still changed and moves only what is still pinned to the old text.
+      if (input.mode === "overwrite") {
+        const local = new Map(localPages(bookId).map((p) => [p.file_id, p.source]));
+        for (const fileId of input.fileIds) {
+          const f = byId.get(fileId);
+          const before = local.get(fileId);
+          if (f && before !== undefined && before !== f.text) repinUserStore({ bookId, fileId, before, after: f.text, edits: input.edits?.[fileId] ?? null });
+        }
+        onRepinned?.();
+      }
 
       return transaction(() => {
         let added = 0;

@@ -7,6 +7,7 @@ import { createCorpusClient } from "../main/corpus";
 import { createPageFinder } from "../main/find-page";
 import { createLibrary } from "../main/library";
 import { createScans } from "../main/scans";
+import { openUserStore } from "../main/user-store";
 import { createCorpusTools, ToolError } from "./corpus-tools";
 
 /**
@@ -30,6 +31,7 @@ if (!dbPath || !existsSync(dbPath)) {
 }
 const db = new DatabaseSync(dbPath);
 db.exec("PRAGMA busy_timeout = 5000;");
+openUserStore({ db, clientId: "corpus" });
 const library = createLibrary({
   db,
   corpus: { getBook: (id) => client().getBook(id), exportBook: (id) => client().exportBook(id) },

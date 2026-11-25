@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { openUserStore } from "../main/user-store";
 import { runCli } from "./run";
 
 /** Where the Midad app keeps its library (Electron's userData folder for an app named "midad"). */
@@ -25,6 +26,7 @@ if (!existsSync(path)) {
 }
 const db = new DatabaseSync(path);
 db.exec("PRAGMA busy_timeout = 5000;");
+openUserStore({ db, clientId: "cli" });
 const code = await runCli({
   argv: process.argv.slice(2),
   db,
