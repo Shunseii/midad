@@ -1,14 +1,17 @@
-import { ArrowLeft, Check, Minus, Plug, Plus } from "lucide-react";
+import { ArrowLeft, Check, KeyRound, Minus, Plug, Plus, Server, TriangleAlert, X } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import type { Theme } from "../../../shared/ipc";
 import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
-import { Badge, Button, IconButton, Segmented, Switch, TextField } from "../components/ui";
+import { Badge, Button, cx, IconButton, Segmented, Switch, TextField } from "../components/ui";
 import { GLOSS_HINTS, GLOSS_MODES, NOTE_MARK_HINTS, NOTE_MARKS, type GlossMode, type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useGlossMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
 import type { FocusChoice } from "../lib/focus";
 import { ariaKeyShortcuts } from "../lib/keymap";
 import { ON_LAUNCH_PREF, type OnLaunch } from "../lib/launch";
-import { midad, useSaveSettings, useSettings } from "../lib/midad";
+import type { SyncStatus } from "../../../shared/sync";
+import { useNow } from "../components/devices";
+import { timeAgo } from "../lib/format";
+import { midad, useConnectSync, useDisconnectSync, useSaveSettings, useSettings, useSyncSettings, useSyncStatus } from "../lib/midad";
 import { usePref } from "../lib/prefs";
 import { useKeybindings } from "../lib/use-keybindings";
 import type { ReaderState } from "./reader";
@@ -25,7 +28,7 @@ export interface BookReturn {
 
 /** What a link into Settings can ask for: the section to land on, and the book to offer a way back to. */
 export interface SettingsState {
-  section: "appearance";
+  section: "appearance" | "devices";
   from?: BookReturn;
 }
 
@@ -248,6 +251,124 @@ const Corpus = () => {
   );
 };
 
+const ENTER = "animate-in fade-in-0 slide-in-from-top-1 duration-200 ease-out";
+
+const DevicesBadge = ({ status, now }: { status: SyncStatus; now: number }) => {
+  switch (status.state) {
+    case "off":
+      return <Badge>Off</Badge>;
+    case "connecting":
+      return (
+        <Badge tone="accent">
+          <span className="size-1.5 animate-pulse rounded-full bg-current" />
+          Connecting…
+        </Badge>
+      );
+    case "synced":
+      return (
+        <Badge tone="ok" dot>
+          Up to date · {timeAgo(Math.min(status.lastSyncedAt ?? now, now), now)}
+        </Badge>
+      );
+    case "offline":
+      return (
+        <Badge tone="warn" dot>
+          Offline · retrying
+        </Badge>
+      );
+    case "refused":
+      return (
+        <Badge tone="danger" dot>
+          Sign-in refused
+        </Badge>
+      );
+  }
+};
+
+const ClockBanner = () => (
+  <div role="status" className={cx("flex items-start gap-3 rounded-lg bg-warn-soft px-4 py-3", ENTER)}>
+    <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0 text-warn" />
+    <div className="flex flex-1 flex-col gap-0.5">
+      <span className="text-sm font-semibold">One of your devices has the wrong clock</span>
+      <span className="text-small text-ink-2">Edits still arrive, but may land out of order until it's fixed. Check the date and time on each device.</span>
+    </div>
+    <IconButton icon={X} label="Dismiss" className="-my-1.5 -mr-2" onClick={() => void midad["sync.dismissClockWarning"]()} />
+  </div>
+);
+
+/** Device sync, called Devices so it never reads like a book's corpus Sync. */
+const Devices = () => {
+  const settings = useSyncSettings();
+  const status = useSyncStatus().data;
+  const connect = useConnectSync();
+  const disconnect = useDisconnectSync();
+  const now = useNow();
+  const [url, setUrl] = useState("");
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    if (settings.data) setUrl(settings.data.url);
+  }, [settings.data]);
+
+  if (!settings.data || !status) return null;
+  const { hasToken, keychain, fromEnvironment } = settings.data;
+  const on = status.state !== "off";
+  const refused = status.state === "refused";
+  const dirty = url.trim() !== settings.data.url || token.trim() !== "";
+  const canConnect = url.trim() !== "" && (token.trim() !== "" || hasToken) && (!on || dirty) && (!refused || token.trim() !== "");
+  const showConnect = !fromEnvironment && (!on || refused || dirty);
+  const tokenError = refused && !token ? "The server refused this token. Paste a new one." : null;
+  const keychainHelper = keychain ? "Stored encrypted with your OS keychain." : "Stored on this device. Your system has no keychain, so it isn't encrypted.";
+  const error = connect.error ?? disconnect.error;
+
+  const onConnect = () =>
+    connect.mutate({ url, ...(token.trim() ? { token } : {}) }, { onSuccess: () => setToken("") });
+
+  return (
+    <Section title="Devices" description="Keep highlights, notes, bookmarks and places the same on all your devices.">
+      <div className="flex flex-col gap-4 p-5">
+        {status.clockAheadUntil !== null && status.state !== "offline" && status.state !== "refused" && <ClockBanner />}
+        <TextField
+          label="Server address"
+          icon={Server}
+          placeholder="https://midad-sync.example.workers.dev"
+          value={url}
+          disabled={fromEnvironment}
+          helper={fromEnvironment ? "Set by MIDAD_SYNC_URL" : status.state === "offline" ? "Can't reach this address. Changes wait on this device." : undefined}
+          onChange={(e) => setUrl(e.target.value)}
+        />
+        <TextField
+          label="Token"
+          type="password"
+          icon={KeyRound}
+          autoComplete="off"
+          placeholder={hasToken ? "Saved. Enter a new token to replace it." : "Paste the token from your server"}
+          value={token}
+          disabled={fromEnvironment}
+          error={tokenError}
+          helper={fromEnvironment ? "Set by MIDAD_SYNC_TOKEN" : keychainHelper}
+          onChange={(e) => setToken(e.target.value)}
+        />
+        {error && <p className={cx("text-sm text-danger", ENTER)}>{error.message}</p>}
+        <div className="flex items-center gap-3">
+          <DevicesBadge status={status} now={now} />
+          <div className="flex-1" />
+          {on && !fromEnvironment && (
+            <Button variant="secondary" onClick={() => disconnect.mutate(undefined, { onSuccess: () => setToken("") })} disabled={disconnect.isPending}>
+              Disconnect
+            </Button>
+          )}
+          {showConnect && (
+            <Button onClick={onConnect} disabled={!canConnect || connect.isPending}>
+              Connect
+            </Button>
+          )}
+        </div>
+      </div>
+    </Section>
+  );
+};
+
 /** Back to the book Settings was opened from, at the same page and scroll. Alt+Left, or Esc outside a field, does the same. */
 const BackToBook = ({ from }: { from: BookReturn }) => {
   const navigate = useNavigate();
@@ -302,11 +423,12 @@ export const SettingsRoute = () => {
     <div className="mx-auto flex max-w-3xl flex-col gap-10 px-12 py-10">
       <header className="flex flex-col gap-1">
         <h1 className="font-display text-display font-semibold">Settings</h1>
-        <p className="text-sm text-ink-2">Appearance, reading and where Midad gets its books.</p>
+        <p className="text-sm text-ink-2">Appearance, reading, books and devices.</p>
       </header>
       <Appearance />
       <Reading />
       <Corpus />
+      <Devices />
     </div>
     </>
   );

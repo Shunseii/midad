@@ -25,6 +25,8 @@ const queryClient = new QueryClient({
 // The midad CLI writes to the same library; show its changes as they land.
 window.midadEvents.onLibraryChanged(() => void queryClient.invalidateQueries({ queryKey: ["library"] }));
 
+window.midadEvents.onSyncStatus((status) => queryClient.setQueryData(keys.syncStatus, status));
+
 passPressesThroughTransitions();
 dropFocusFromClickedControls();
 

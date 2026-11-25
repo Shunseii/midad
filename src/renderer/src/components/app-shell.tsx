@@ -2,6 +2,7 @@ import { Library, Settings } from "lucide-react";
 import type { ReactNode } from "react";
 import { NavLink, Outlet } from "react-router";
 import { useLibrary, useSettings } from "../lib/midad";
+import { DevicesIndicator } from "./devices";
 import { Badge, cx } from "./ui";
 
 const NavItem = ({ to, icon, label, count }: { to: string; icon: ReactNode; label: string; count?: number }) => (
@@ -50,6 +51,9 @@ export const AppShell = () => {
           <span className="text-xs text-ink-3">
             {library.data ? `${library.data.length} ${library.data.length === 1 ? "book" : "books"} imported` : " "}
           </span>
+        </div>
+        <div className="mt-2 empty:hidden">
+          <DevicesIndicator placement="sidebar" />
         </div>
       </aside>
       <main className="min-w-0 flex-1 overflow-y-auto">

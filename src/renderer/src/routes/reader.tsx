@@ -1,3 +1,4 @@
+import { DevicesIndicator } from "../components/devices";
 import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen, PanelLeftClose, PanelLeftOpen, Search, Sparkles, X } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
@@ -1517,6 +1518,10 @@ export const ReaderRoute = () => {
           <IconButton icon={ChevronRight} label="Previous page" onClick={() => go(position - 1)} disabled={position <= 1} />
         </div>
         <div className="flex-1" />
+        <DevicesIndicator
+          placement="toolbar"
+          bookReturn={() => (book.data ? { bookId, title: book.data.title, position, scrollTop: pageRoot.current?.scrollTop ?? 0 } : undefined)}
+        />
         <IconButton
           icon={Bookmark}
           label={withShortcut({ label: pageBookmark ? "Remove bookmark" : "Bookmark page", command: "bookmark.toggle" })}

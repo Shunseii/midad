@@ -14,6 +14,8 @@ export const midad = window.midad;
 
 export const keys = {
   settings: ["settings"] as const,
+  syncSettings: ["sync", "settings"] as const,
+  syncStatus: ["sync", "status"] as const,
   corpusBooks: ["corpus", "books"] as const,
   library: ["library"] as const,
   waiting: ["library", "elsewhere"] as const,
@@ -186,6 +188,27 @@ export const useSaveSettings = () => {
       client.setQueryData(keys.settings, settings);
       void client.invalidateQueries({ queryKey: keys.corpusBooks });
     },
+  });
+};
+
+/** Device sync's status, kept current by the main process's pushes (see main.tsx). */
+export const useSyncStatus = () => useQuery({ queryKey: keys.syncStatus, queryFn: () => midad["sync.status"](), staleTime: Number.POSITIVE_INFINITY });
+
+export const useSyncSettings = () => useQuery({ queryKey: keys.syncSettings, queryFn: () => midad["sync.settings"]() });
+
+export const useConnectSync = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { url: string; token?: string }) => midad["sync.connect"](input),
+    onSuccess: (settings) => client.setQueryData(keys.syncSettings, settings),
+  });
+};
+
+export const useDisconnectSync = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: () => midad["sync.disconnect"](),
+    onSuccess: (settings) => client.setQueryData(keys.syncSettings, settings),
   });
 };
 
