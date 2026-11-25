@@ -180,6 +180,17 @@ describe("migrating notes and harakat from SQLite", () => {
   });
 });
 
+describe("a clock that was set wrong", () => {
+  it("doesn't drop changes stamped while it ran ahead once it is set back", async () => {
+    const ahead = open({ clientId: "cli", getNow: () => Date.now() + 90 * 24 * 60 * 60 * 1000 });
+    const h = await ahead.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 1), color: "green" });
+    const setBack = open({ clientId: "cli" });
+    await setBack.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 2), color: "pink" });
+    const app = open({ clientId: "app" });
+    expect((await app.annotations.listForPage({ bookId: "b1", position: 1 })).highlights.map((x) => x.id)).toContain(h.id);
+  });
+});
+
 describe("the saved format", () => {
   it("round-trips deletes as deletes, not as null cells", () => {
     const user = open({ clientId: "app" }).user;

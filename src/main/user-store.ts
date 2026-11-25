@@ -16,8 +16,12 @@ export type ClientId = "app" | "cli" | "corpus";
 
 export const SCHEMA_VERSION = 1;
 
-/** Stamps from a device whose clock runs ahead are refused until this many seconds have passed. */
-const MAX_CLOCK_SKEW_SECONDS = 24 * 60 * 60;
+/**
+ * TinyBase silently skips stamps further ahead of this clock than this. Skipping one in a client's
+ * own saved copy (after the clock was set back) would drop it from the next save for good, so
+ * accept any skew: a fast clock only makes that device's edits win until real time catches up.
+ */
+const MAX_CLOCK_SKEW_SECONDS = 100 * 365 * 24 * 60 * 60;
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS sync_stores (
