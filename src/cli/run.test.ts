@@ -186,6 +186,13 @@ describe("memory", () => {
     for (const command of ["memory list", "memory search", "memory get", "memory add", "memory update", "memory delete"]) expect(stdout).toContain(command);
   });
 
+  it("prints just the memory help, with an example, for midad memory --help", async () => {
+    const { code, stdout } = await run("memory", "add", "--help");
+    expect(code).toBe(0);
+    expect(stdout).toContain("Example:\n  midad memory add --type preference");
+    expect(stdout).not.toContain("midad highlight add");
+  });
+
   it("adds a memory as the agent and gets it in full", async () => {
     const added = await add("--json");
     expect(added.code).toBe(0);
@@ -241,5 +248,12 @@ describe("memory", () => {
     const { code, stderr } = await run("memory", "add", "--type", "note", "--name", "n", "--description", "d", "--body", "b");
     expect(code).toBe(1);
     expect(stderr).toContain("--type is one of reader, preference, feedback, book");
+  });
+
+  it("names the missing flags and shows the full form, rather than guessing", async () => {
+    const { code, stderr } = await run("memory", "add", "--type", "reader", "--description", "Second-year student", "The reader is a second-year student.");
+    expect(code).toBe(1);
+    expect(stderr).toContain("Missing --name, --body.");
+    expect(stderr).toContain("Use: midad memory add --type <reader|preference|feedback|book> --name <slug>");
   });
 });

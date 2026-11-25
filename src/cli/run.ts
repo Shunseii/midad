@@ -9,6 +9,23 @@ import { createLibrary } from "../main/library";
 import { createMemories } from "../main/memories";
 import { isMemoryType, MEMORY_TYPES, type Memory, type MemoryType } from "../shared/memories";
 
+export const MEMORY_USAGE = `Memory (what Ask AI remembers about the reader across chats; labelled as written by the agent)
+  midad memory list [--type <type>]             Global memories and this book's, newest first (--all: every book's)
+  midad memory search <query> [--limit <n>]     Memories matching any of the words, best match first
+  midad memory get <id>                         One memory in full
+  midad memory add --type <type> --name <slug> --description <line> --body <text>
+  midad memory update <id> [--description <line>] [--body <text>] [--name <slug>] [--type <type>]
+  midad memory delete <id>
+
+Memory types: reader (who they are: level, teacher, madhab), preference (how to
+answer: language, transliteration, length), feedback (a correction, with Why: and
+How to apply: lines), book (goals and context for this book only). One fact per
+memory; the description is one line, written so a later search finds it. A book
+memory belongs to the book Ask AI is open on (or --book <book>); the rest are global.
+Example:
+  midad memory add --type preference --name transliterate-terms --description "Transliterate Arabic terms, in brackets after the Arabic" --body "Write الاسم (ism), not ism or الاسم alone."
+`;
+
 export const USAGE = `Usage: midad <command> [options]
 
 Reading
@@ -30,20 +47,7 @@ Writing (labelled as written by the agent)
   midad harakat remove <book> <page> --line <n> --word <n> --letter <n>
   midad harakat clear <book> <page> <span>      Remove every added mark inside the span
 
-Memory (what Ask AI remembers about the reader across chats; labelled as written by the agent)
-  midad memory list [--type <type>]             Global memories and this book's, newest first (--all: every book's)
-  midad memory search <query> [--limit <n>]     Memories matching any of the words, best match first
-  midad memory get <id>                         One memory in full
-  midad memory add --type <type> --name <slug> --description <line> --body <text>
-  midad memory update <id> [--description <line>] [--body <text>] [--name <slug>] [--type <type>]
-  midad memory delete <id>
-
-Memory types: reader (who they are: level, teacher, madhab), preference (how to
-answer: language, transliteration, length), feedback (a correction, with Why: and
-How to apply: lines), book (goals and context for this book only). One fact per
-memory; the description is one line, written so a later search finds it. A book
-memory belongs to the book Ask AI is open on (or --book <book>); the rest are global.
-
+${MEMORY_USAGE}
 <book> is a book id, the start of one, or part of its title. <page> is the page's
 position in the book (1 = first page), as shown in the reader's pager.
 <span> is --line <n> --words <a[-b]>, or --from <line:word> --to <line:word>.
@@ -239,7 +243,7 @@ export const runCli = async ({
 
   try {
     if (!command || opts.help) {
-      stdout(USAGE);
+      stdout(command === "memory" ? MEMORY_USAGE : USAGE);
       return command || opts.help ? 0 : 2;
     }
     const [a, b, c] = rest;
@@ -365,6 +369,12 @@ export const runCli = async ({
         return 0;
       }
       case "memory add": {
+        const missing = (["type", "name", "description", "body"] as const).filter((flag) => !opts[flag]?.trim());
+        if (missing.length || rest.length > 1) {
+          throw new Error(
+            `${missing.length ? `Missing ${missing.map((f) => `--${f}`).join(", ")}. ` : "Pass every value with its flag. "}Use: midad memory add --type <${MEMORY_TYPES.join("|")}> --name <slug> --description <one line> --body <text>`,
+          );
+        }
         const m = await memories.add({
           type: memoryType(opts.type),
           name: opts.name ?? "",
