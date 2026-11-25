@@ -3,6 +3,7 @@ import type { DatabaseSync } from "node:sqlite";
 import { type Cell, createIndexes, createMergeableStore, type Indexes, type MergeableContent, type MergeableStore, type Row } from "tinybase";
 import type { LetterRef } from "../shared/annotations";
 import type { RemoteChanges } from "../shared/ipc";
+import { MAX_CLOCK_SKEW_SECONDS } from "../shared/sync";
 
 /**
  * The reader's own data (library membership, highlights, notes, harakat, bookmarks, the
@@ -18,12 +19,6 @@ export type ClientId = "app" | "cli" | "corpus";
 
 export const SCHEMA_VERSION = 1;
 
-/**
- * TinyBase silently skips stamps further ahead of this clock than this. Skipping one in a client's
- * own saved copy (after the clock was set back) would drop it from the next save for good, so
- * accept any skew: a fast clock only makes that device's edits win until real time catches up.
- */
-const MAX_CLOCK_SKEW_SECONDS = 100 * 365 * 24 * 60 * 60;
 
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS sync_stores (

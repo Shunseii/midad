@@ -8,6 +8,8 @@ import { mkdirSync, rmSync } from "node:fs";
 import { createServer as createHttpServer } from "node:http";
 import { createServer } from "node:net";
 import { join } from "node:path";
+import { createMergeableStore } from "tinybase";
+import { createWsSynchronizer } from "tinybase/synchronizers/synchronizer-ws-client";
 import { assertBuilt, createTemplate, launchApp, ROOT } from "./lib/app.mjs";
 import { LONG_BOOK, SHORT_BOOK, SHORT_PAGES } from "./lib/fixture.mjs";
 import { clickPageArea, openReader } from "./lib/reader.mjs";
@@ -113,6 +115,15 @@ const check = async (name, run) => {
 };
 
 console.log("\nSync");
+
+/** A bare TinyBase client on the server (not the app), for checks that need control of its clock. */
+const rawClient = async ({ name, getNow, path = "/sync" }) => {
+  const store = createMergeableStore(name, getNow, 100 * 365 * 24 * 60 * 60);
+  const ws = new WebSocket(`ws://127.0.0.1:${port}${path}`, { headers: { authorization: `Bearer ${TOKENS.a}` } });
+  const synchronizer = await createWsSynchronizer(store, ws, 15);
+  await synchronizer.startSync();
+  return { store, stop: () => synchronizer.destroy() };
+};
 
 await check("each profile sees the other's highlights, notes and bookmarks, and the reader shows them", async () => {
   const h = await api(a.page, "highlights.add", { bookId: LONG_BOOK, position: 33, span: span(2, 1, 3), color: "green" });
@@ -299,6 +310,22 @@ await check("a new device with an empty library sees the books waiting from the 
 
 await a.close();
 await b.close();
+
+// Last, with the apps closed: a fast clock's stamps move every other clock forward with them, which
+// would reorder the checks above, and with no app online only the server's stored copy can carry the edit.
+await check("a device whose clock runs an hour fast still gets its edits to the others through the server's copy", async () => {
+  const fast = await rawClient({ name: "fast-clock", getNow: () => Date.now() + 60 * 60 * 1000 });
+  fast.store.setRow("skew-check", "row", { from: "the fast clock" });
+  await sleep(1500);
+  await fast.stop();
+  const later = await rawClient({ name: "normal-clock" });
+  try {
+    await waitFor(() => later.store.getCell("skew-check", "row", "from") === "the fast clock", "the server dropped the fast clock's edit", 10_000);
+  } finally {
+    await later.stop();
+  }
+});
+
 await server.stop();
 rmSync(root, { recursive: true, force: true });
 

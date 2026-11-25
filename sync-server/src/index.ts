@@ -1,6 +1,7 @@
 import { createMergeableStore } from "tinybase";
 import { createDurableObjectSqlStoragePersister } from "tinybase/persisters/persister-durable-object-sql-storage";
 import { WsServerDurableObject } from "tinybase/synchronizers/synchronizer-ws-server-durable-object";
+import { MAX_CLOCK_SKEW_SECONDS } from "../../src/shared/sync";
 
 /**
  * Midad's sync server: one Durable Object per user holds that user's MergeableStore in its SQLite
@@ -18,7 +19,9 @@ const USER_HEADER = "x-midad-user";
 
 export class MidadSync extends WsServerDurableObject<Env> {
   createPersister() {
-    return createDurableObjectSqlStoragePersister(createMergeableStore(), this.ctx.storage.sql, { mode: "fragmented" });
+    // The same unlimited skew as the clients: with TinyBase's default, a device more than five
+    // minutes fast would have its edits silently dropped here.
+    return createDurableObjectSqlStoragePersister(createMergeableStore(undefined, undefined, MAX_CLOCK_SKEW_SECONDS), this.ctx.storage.sql, { mode: "fragmented" });
   }
 
   authorize(pathId: string, request: Request) {
