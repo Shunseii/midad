@@ -11,7 +11,7 @@ import { MAX_CLOCK_SKEW_SECONDS } from "../../src/shared/sync";
 
 interface Env {
   MIDAD_SYNC: DurableObjectNamespace<MidadSync>;
-  /** JSON object from the SHA-256 hex of each device token to its user id. */
+  /** JSON object from the SHA-256 hex of each device token to its user id. A secret (`wrangler secret put SYNC_TOKENS`), never a [vars] entry. */
   SYNC_TOKENS: string;
 }
 
