@@ -2,6 +2,7 @@ import type { BookMarks, Highlight, HighlightColor, LetterRef, Note, NoteTarget,
 import type { StreamEvent } from "./ask";
 import type { Conversation, ConversationSummary, StoredTurn } from "./conversations";
 import type { CorpusBookListing, TextEdit } from "./corpus";
+import type { Memory } from "./memories";
 import type {
   BookDetail,
   Bookmark,
@@ -83,6 +84,13 @@ export interface MidadApi {
   "conversations.rename": (input: { id: string; title: string }) => Promise<void>;
   /** Asks a quick Claude model for a name, saves it and returns it. */
   "conversations.nameWithClaude": (input: { id: string }) => Promise<string>;
+  /** Every memory Ask AI keeps, every book's included, newest first. */
+  "memories.list": () => Promise<Memory[]>;
+  /** The reader's edit: the memory is then labelled as theirs. */
+  "memories.update": (input: { id: string; description: string; body: string }) => Promise<Memory>;
+  "memories.remove": (input: { id: string }) => Promise<void>;
+  /** Puts a deleted memory back, for undo. */
+  "memories.restore": (input: { memory: Memory }) => Promise<void>;
   "app.setTheme": (input: { theme: Theme }) => Promise<void>;
   "sync.settings": () => Promise<SyncSettings>;
   "sync.status": () => Promise<SyncStatus>;
@@ -151,6 +159,10 @@ export const CHANNELS = [
   "conversations.rename",
   "conversations.nameWithClaude",
   "conversations.addTurn",
+  "memories.list",
+  "memories.update",
+  "memories.remove",
+  "memories.restore",
   "app.setTheme",
   "sync.settings",
   "sync.status",

@@ -127,6 +127,10 @@ export const seedUserData = ({ dir, cliPath }) => {
     cli({ dbPath, cliPath, args: ["note", "add", LONG_BOOK, String(page), "--line", "5", "--words", "2-3", "--body", "ملاحظة تجريبية"] });
   }
 
+  // What Ask AI remembers: one global preference, one memory about the long book.
+  cli({ dbPath, cliPath, args: ["memory", "add", "--type", "preference", "--name", "transliterate", "--description", "Transliterate Arabic terms", "--body", "Write الاسم (ism)."] });
+  cli({ dbPath, cliPath, args: ["memory", "add", "--book", LONG_BOOK, "--type", "book", "--name", "goal", "--description", "Reading for the exam", "--body", "Exam in spring."] });
+
   const bin = join(dir, "ask", "bin");
   mkdirSync(bin, { recursive: true });
   writeFileSync(join(bin, "claude"), FAKE_CLAUDE);

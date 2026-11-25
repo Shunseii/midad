@@ -82,6 +82,16 @@ describe("Ask AI memory", () => {
     await expect(memories.remove({ id: m.id })).rejects.toThrow("no memory");
   });
 
+  it("restores a deleted memory exactly, searchable again, for undo", async () => {
+    const m = await memories.add(fact("transliterate", "Always transliterate Arabic terms"));
+    await memories.remove({ id: m.id });
+    await memories.restore({ memory: m });
+    expect(await memories.get({ id: m.id })).toEqual(m);
+    expect((await memories.search({ query: "transliterate" })).map((x) => x.id)).toEqual([m.id]);
+    await memories.restore({ memory: m });
+    expect(await memories.list()).toHaveLength(1);
+  });
+
   it("keeps facts short and refuses page text", async () => {
     await expect(memories.add(fact("page", "The page", "ك".repeat(1001)))).rejects.toThrow("Don't save page text");
     await expect(memories.add(fact("x", "two\nlines"))).resolves.toMatchObject({ description: "two lines" });

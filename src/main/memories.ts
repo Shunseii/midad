@@ -197,6 +197,18 @@ export const createMemories = ({ db, now = Date.now }: { db: DatabaseSync; now?:
       return toMemory(saved);
     },
 
+    /** Puts a deleted memory back as it was, for undo. Gone for good if its book was deleted meanwhile. */
+    async restore({ memory }: { memory: Memory }): Promise<void> {
+      if (row(memory.id)) return;
+      if (memory.bookId && !db.prepare("SELECT 1 FROM books WHERE book_id = ?").get(memory.bookId)) return;
+      const clean = checked(memory);
+      assertNameFree({ name: clean.name, bookId: memory.bookId });
+      db.prepare(
+        "INSERT INTO memories (id, name, description, type, body, book_id, source, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      ).run(memory.id, clean.name, clean.description, clean.type, clean.body, memory.bookId, memory.source, memory.createdAt, memory.updatedAt);
+      reindex(row(memory.id) as MemoryRow);
+    },
+
     async remove({ id }: { id: string }): Promise<void> {
       if (db.prepare("DELETE FROM memories WHERE id = ?").run(id).changes === 0) throw new Error(`There is no memory ${id}.`);
     },

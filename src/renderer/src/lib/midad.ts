@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { HighlightColor, LetterRef, NoteTarget, PageAnnotations, Part, Span } from "../../../shared/annotations";
 import type { MidadApi, MidadEvents, SyncInput } from "../../../shared/ipc";
+import type { Memory } from "../../../shared/memories";
 import type { BookmarkState } from "./undo";
 
 declare global {
@@ -28,6 +29,34 @@ export const keys = {
   bookMarks: (bookId: string) => ["library", bookId, "book-marks"] as const,
   firstLine: (bookId: string, position: number) => ["library", bookId, "first-line", position] as const,
   bookmarks: (bookId: string) => ["library", bookId, "bookmarks"] as const,
+  // Under "library" so Ask AI's writes through the CLI refresh it.
+  memories: ["library", "memories"] as const,
+};
+
+export const useMemories = () => useQuery({ queryKey: keys.memories, queryFn: () => midad["memories.list"]() });
+
+export const useUpdateMemory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { id: string; description: string; body: string }) => midad["memories.update"](input),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: keys.memories }),
+  });
+};
+
+export const useRemoveMemory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { id: string }) => midad["memories.remove"](input),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: keys.memories }),
+  });
+};
+
+export const useRestoreMemory = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { memory: Memory }) => midad["memories.restore"](input),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: keys.memories }),
+  });
 };
 
 export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: () => midad["settings.get"]() });

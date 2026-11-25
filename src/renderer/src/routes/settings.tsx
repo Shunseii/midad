@@ -1,17 +1,20 @@
-import { ArrowLeft, Check, KeyRound, Minus, Plug, Plus, Server, TriangleAlert, X } from "lucide-react";
+import { ArrowLeft, Brain, Check, KeyRound, Minus, Pencil, Plug, Plus, Search, Server, Trash2, TriangleAlert, X } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
+import { foldArabic } from "../../../shared/arabic";
+import type { Memory, MemoryType } from "../../../shared/memories";
 import { useLocation, useNavigate } from "react-router";
 import type { Theme } from "../../../shared/ipc";
 import { LARGEST, SMALLEST, stepScale } from "../components/display-menu";
-import { Badge, Button, cx, IconButton, Segmented, Switch, TextField } from "../components/ui";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge, Button, cx, IconButton, Segmented, Switch, TextField, Toast, ToastAction } from "../components/ui";
 import { GLOSS_HINTS, GLOSS_MODES, NOTE_MARK_HINTS, NOTE_MARKS, type GlossMode, type HighlightStyle, type NoteIcons, type PageWidth, useFocusMode, useGlossMode, useHighlightStyle, useNoteIcons, usePageWidth, useTheme } from "../lib/appearance";
 import type { FocusChoice } from "../lib/focus";
 import { ariaKeyShortcuts } from "../lib/keymap";
 import { ON_LAUNCH_PREF, type OnLaunch } from "../lib/launch";
 import type { SyncStatus } from "../../../shared/sync";
 import { useNow } from "../components/devices";
-import { timeAgo } from "../lib/format";
-import { midad, useConnectSync, useDisconnectSync, useSaveSettings, useSettings, useSyncSettings, useSyncStatus } from "../lib/midad";
+import { plural, timeAgo } from "../lib/format";
+import { midad, useConnectSync, useDisconnectSync, useMemories, useRemoveMemory, useRestoreMemory, useSaveSettings, useSettings, useSyncSettings, useSyncStatus, useUpdateMemory } from "../lib/midad";
 import { usePref } from "../lib/prefs";
 import { useKeybindings } from "../lib/use-keybindings";
 import type { ReaderState } from "./reader";
@@ -28,7 +31,7 @@ export interface BookReturn {
 
 /** What a link into Settings can ask for: the section to land on, and the book to offer a way back to. */
 export interface SettingsState {
-  section: "appearance" | "devices";
+  section: "appearance" | "devices" | "memory";
   from?: BookReturn;
 }
 
@@ -369,6 +372,187 @@ const Devices = () => {
   );
 };
 
+const MEMORY_TYPE_LABELS: Record<MemoryType, string> = { reader: "Reader", preference: "Preference", feedback: "Feedback", book: "Book" };
+
+const DAY = new Intl.DateTimeFormat("en", { day: "numeric", month: "short" });
+
+const memoryDate = (at: number) => (new Date(at).toDateString() === new Date().toDateString() ? "Today" : DAY.format(at));
+
+const searchable = (text: string) => foldArabic(text).toLowerCase();
+
+const matchesSearch = ({ memory, query }: { memory: Memory; query: string }) => {
+  const words = searchable(query).split(/\s+/).filter(Boolean);
+  const text = searchable([memory.description, memory.body, memory.name, MEMORY_TYPE_LABELS[memory.type], memory.bookTitle ?? ""].join(" "));
+  return words.every((w) => text.includes(w));
+};
+
+/** How long a deleted row takes to fade before it leaves the list. */
+const ROW_EXIT_MS = 200;
+
+const MemoryMeta = ({ memory }: { memory: Memory }) => (
+  <span className="flex items-center gap-1 text-xs text-ink-3">
+    <span data-memory-source={memory.source}>{memory.source === "reader" ? "You" : "Ask AI"}</span>
+    <span aria-hidden>·</span>
+    {memory.bookId ? (
+      <span dir="rtl" className="ar">
+        {memory.bookTitle ?? memory.bookId}
+      </span>
+    ) : (
+      <span>All books</span>
+    )}
+    <span aria-hidden>·</span>
+    <span>{memoryDate(memory.updatedAt)}</span>
+  </span>
+);
+
+const MemoryEditor = ({ memory, onDone }: { memory: Memory; onDone: () => void }) => {
+  const update = useUpdateMemory();
+  const [description, setDescription] = useState(memory.description);
+  const [body, setBody] = useState(memory.body);
+  const changed = description.trim() !== memory.description || body.trim() !== memory.body;
+  const save = () => update.mutate({ id: memory.id, description, body }, { onSuccess: onDone });
+  return (
+    <form
+      aria-label="Edit memory"
+      className="flex flex-col gap-3 bg-bg px-5 py-4 last:rounded-b-2xl transition-colors duration-pop ease-out starting:bg-surface [&>*]:transition-[opacity,translate] [&>*]:duration-pop [&>*]:ease-out starting:[&>*]:-translate-y-1 starting:[&>*]:opacity-0 motion-reduce:[&>*]:transition-none"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (changed) save();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          e.stopPropagation();
+          onDone();
+        }
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <Badge>{MEMORY_TYPE_LABELS[memory.type]}</Badge>
+        <MemoryMeta memory={memory} />
+      </div>
+      <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} autoFocus />
+      <label className="flex flex-col gap-1.5">
+        <span className="text-sm font-medium text-ink-2">Memory</span>
+        <Textarea value={body} onChange={(e) => setBody(e.target.value)} className="min-h-19" />
+      </label>
+      {update.error && <p className="text-sm text-danger">{update.error.message}</p>}
+      <div className="flex items-center gap-2">
+        <span className="flex-1 text-xs text-ink-3">Saving marks it as written by you.</span>
+        <Button variant="ghost" size="sm" onClick={onDone}>
+          Cancel
+        </Button>
+        <Button type="submit" size="sm" disabled={!changed || update.isPending}>
+          Save
+        </Button>
+      </div>
+    </form>
+  );
+};
+
+const MemoryRow = ({ memory, leaving, onEdit, onDelete }: { memory: Memory; leaving: boolean; onEdit: () => void; onDelete: () => void }) => (
+  <div
+    data-memory={memory.id}
+    data-state={leaving ? "deleting" : undefined}
+    className="flex items-start gap-4 px-5 py-3 last:rounded-b-2xl transition-[background-color,opacity] duration-press ease-out hover:bg-bg data-[state=deleting]:opacity-0 data-[state=deleting]:duration-pop motion-reduce:transition-none"
+  >
+    <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div className="flex items-center gap-2">
+        <Badge>{MEMORY_TYPE_LABELS[memory.type]}</Badge>
+        <span className="text-sm font-medium [unicode-bidi:plaintext]">{memory.description}</span>
+      </div>
+      <p className="text-small whitespace-pre-line text-ink-2 [unicode-bidi:plaintext]">{memory.body}</p>
+      <MemoryMeta memory={memory} />
+    </div>
+    <div className="flex items-center gap-0.5">
+      <IconButton icon={Pencil} label="Edit memory" onClick={onEdit} />
+      <IconButton icon={Trash2} label="Delete memory" onClick={onDelete} />
+    </div>
+  </div>
+);
+
+const MemorySection = () => {
+  const memories = useMemories();
+  const remove = useRemoveMemory();
+  const restore = useRestoreMemory();
+  const [query, setQuery] = useState("");
+  const [editing, setEditing] = useState<string | null>(null);
+  const [leaving, setLeaving] = useState<string | null>(null);
+  const [removed, setRemoved] = useState<Memory | null>(null);
+
+  const all = memories.data ?? [];
+  const shown = query.trim() ? all.filter((memory) => matchesSearch({ memory, query })) : all;
+
+  const onDelete = (memory: Memory) => {
+    setLeaving(memory.id);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(
+      () =>
+        remove.mutate(
+          { id: memory.id },
+          {
+            onSuccess: () => setRemoved(memory),
+            onSettled: () => setLeaving(null),
+          },
+        ),
+      reduced ? 0 : ROW_EXIT_MS,
+    );
+  };
+
+  return (
+    <Section title="Memory" description="What Ask AI remembers about you between chats: who you are, how you like answers, corrections you gave it, and your goals for a book.">
+      {all.length === 0 ? (
+        memories.isPending ? (
+          <div className="h-24" />
+        ) : (
+          <div className="flex flex-col items-center gap-1 px-5 py-8 text-center transition-opacity duration-pop ease-out starting:opacity-0">
+            <Brain className="mb-1 size-5 text-ink-3" aria-hidden />
+            <span className="text-sm font-medium">Nothing remembered yet</span>
+            <span className="max-w-105 text-xs text-ink-3">Tell Ask AI about yourself or how you like answers, or correct it, and it keeps that here for later chats.</span>
+          </div>
+        )
+      ) : (
+        <>
+          <div className="flex items-center gap-3 px-5 py-3">
+            <TextField icon={Search} aria-label="Search memories" placeholder="Search memories" value={query} onChange={(e) => setQuery(e.target.value)} className="w-72" />
+            <span className="flex-1 text-right text-xs text-ink-3" aria-live="polite">
+              {query.trim() && shown.length === 0 ? `No memories match “${query.trim()}”` : plural({ count: shown.length, one: "memory", many: "memories" })}
+            </span>
+          </div>
+          {shown.length === 0 && (
+            <div className="flex flex-col items-center gap-1 px-5 py-8 text-center transition-opacity duration-pop ease-out starting:opacity-0">
+              <span className="text-sm font-medium">No memories match</span>
+              <span className="text-xs text-ink-3">Try other words, or clear the search.</span>
+            </div>
+          )}
+          {shown.map((memory) =>
+            editing === memory.id ? (
+              <MemoryEditor key={memory.id} memory={memory} onDone={() => setEditing(null)} />
+            ) : (
+              <MemoryRow key={memory.id} memory={memory} leaving={leaving === memory.id} onEdit={() => setEditing(memory.id)} onDelete={() => onDelete(memory)} />
+            ),
+          )}
+        </>
+      )}
+      {remove.error && <p className="px-5 py-3 text-sm text-danger">{remove.error.message}</p>}
+      {removed && (
+        <Toast key={removed.id} onDone={() => setRemoved(null)}>
+          <span className="flex items-center gap-3">
+            Memory deleted
+            <ToastAction
+              onClick={() => {
+                restore.mutate({ memory: removed });
+                setRemoved(null);
+              }}
+            >
+              Undo
+            </ToastAction>
+          </span>
+        </Toast>
+      )}
+    </Section>
+  );
+};
+
 /** Back to the book Settings was opened from, at the same page and scroll. Alt+Left, or Esc outside a field, does the same. */
 const BackToBook = ({ from }: { from: BookReturn }) => {
   const navigate = useNavigate();
@@ -423,10 +607,11 @@ export const SettingsRoute = () => {
     <div className="mx-auto flex max-w-3xl flex-col gap-10 px-12 py-10">
       <header className="flex flex-col gap-1">
         <h1 className="font-display text-display font-semibold">Settings</h1>
-        <p className="text-sm text-ink-2">Appearance, reading, books and devices.</p>
+        <p className="text-sm text-ink-2">Appearance, reading, what Ask AI remembers, books and devices.</p>
       </header>
       <Appearance />
       <Reading />
+      <MemorySection />
       <Corpus />
       <Devices />
     </div>

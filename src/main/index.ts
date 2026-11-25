@@ -189,6 +189,10 @@ const handlers: MidadApi = {
     await conversations.rename({ id, title });
     return title;
   },
+  "memories.list": () => memories.list({ all: true }),
+  "memories.update": ({ id, description, body }) => memories.update({ id, description, body, source: "reader" }),
+  "memories.remove": (input) => memories.remove(input),
+  "memories.restore": (input) => memories.restore(input),
   "app.setTheme": async ({ theme }) => {
     settings.saveTheme(theme);
     applyTheme(theme);
