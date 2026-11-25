@@ -288,6 +288,64 @@ describe("a device whose clock runs a year ahead", () => {
   });
 });
 
+describe("saving one row at a time", () => {
+  const rowsOf = (db: DatabaseSync) => db.prepare("SELECT client_id, kind, table_id, row_id, seq FROM sync_rows ORDER BY client_id, kind, table_id, row_id").all() as { client_id: string; kind: string; table_id: string; row_id: string; seq: number }[];
+
+  it("loads, in a new process, exactly the copy that was saved: every stamp, hash, delete and value", async () => {
+    const cli = open({ clientId: "cli" });
+    const a = await cli.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 1), color: "green" });
+    const b = await cli.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 2), color: "pink" });
+    await cli.annotations.addNote({ bookId: "b1", position: 1, page: true, body: "صفحة" });
+    await cli.annotations.removeHighlight({ id: b.id });
+    cli.user.store.setValue("schemaVersion", 1);
+    const reopened = open({ clientId: "cli" });
+    expect(reopened.user.store.getMergeableContent()).toEqual(cli.user.store.getMergeableContent());
+    expect(reopened.user.row({ table: "highlights", id: a.id })).not.toBeNull();
+    expect(reopened.user.store.getRow("highlights", b.id)).toEqual({});
+  });
+
+  it("writes only the row a change touched", async () => {
+    const app = open({ clientId: "app" });
+    for (let i = 1; i <= 4; i++) await app.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, i), color: "green" });
+    const before = rowsOf(app.db);
+    const latest = Math.max(...before.map((r) => r.seq));
+    const h = await app.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 5), color: "blue" });
+    const written = rowsOf(app.db).filter((r) => r.seq > latest);
+    expect(written).toEqual([{ client_id: "app", kind: "row", table_id: "highlights", row_id: h.id, seq: latest + 1 }]);
+  });
+
+  it("keeps both processes' cells when two of the same kind save the same row at once", async () => {
+    const first = open({ clientId: "cli" });
+    const h = await first.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 1), color: "green" });
+    const second = open({ clientId: "cli" });
+    first.user.store.setCell("highlights", h.id, "color", "pink");
+    second.user.store.setCell("highlights", h.id, "quote", "edited elsewhere");
+    const app = open({ clientId: "app" });
+    expect(app.user.store.getRow("highlights", h.id)).toMatchObject({ color: "pink", quote: "edited elsewhere" });
+    // Each process catches up with the other's save: the second as it saved, the first on its next merge.
+    await Promise.resolve();
+    expect(second.user.store.getCell("highlights", h.id, "color")).toBe("pink");
+    first.user.mergeOthers();
+    expect(first.user.store.getCell("highlights", h.id, "quote")).toBe("edited elsewhere");
+  });
+
+  it("converts a copy saved as one blob into rows once, keeping every stamp", async () => {
+    const source = open({ clientId: "app" });
+    await source.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 1), color: "green" });
+    await source.annotations.addNote({ bookId: "b1", position: 1, span: matn(1, 2), body: "x" });
+    const content = source.user.store.getMergeableContent();
+    // As a build that saved one blob per client left it.
+    source.db.exec("DELETE FROM sync_rows");
+    source.db.prepare("UPDATE sync_stores SET content = ?, rev = 7 WHERE client_id = 'app'").run(encodeContent(content));
+    const converted = open({ clientId: "cli" });
+    expect(converted.user.store.getMergeableContent()).toEqual(content);
+    expect(converted.db.prepare("SELECT content, rev FROM sync_stores WHERE client_id = 'app'").get()).toEqual({ content: "", rev: 7 });
+    const rows = rowsOf(converted.db);
+    expect(new Set(rows.map((r) => r.seq))).toEqual(new Set([7]));
+    expect(rowsOf(open({ clientId: "corpus" }).db)).toEqual(rows);
+  });
+});
+
 describe("the saved format", () => {
   it("round-trips deletes as deletes, not as null cells", () => {
     const user = open({ clientId: "app" }).user;

@@ -62,7 +62,9 @@ const writeMs = writes.length ? median(writes) / 2 : null;
 
 const db = new DatabaseSync(dbPath);
 const after = snapshot(db);
-const clients = db.prepare("SELECT client_id, length(content) AS bytes, content FROM sync_stores").all();
+// Each client's copy is saved row by row (src/main/user-store-rows.ts): put each back together as changes.
+const clients = db.prepare("SELECT client_id, SUM(length(content)) AS bytes, COUNT(*) AS rows FROM sync_rows GROUP BY client_id").all();
+const savedRows = db.prepare("SELECT client_id, kind, table_id, row_id, content FROM sync_rows").all();
 const sessions = new Map(db.prepare("SELECT * FROM conversation_sessions").all().map((r) => [r.conversation_id, r.session_id]));
 db.close();
 
@@ -73,7 +75,15 @@ const decode = (text) => {
 };
 const store = createMergeableStore("check");
 const mergeStart = process.hrtime.bigint();
-for (const c of clients) store.applyMergeableChanges(decode(c.content));
+for (const c of clients) {
+  const tables = {};
+  const values = {};
+  for (const r of savedRows.filter((row) => row.client_id === c.client_id)) {
+    if (r.kind === "value") values[r.row_id] = decode(r.content);
+    else (tables[r.table_id] ??= [{}, "", 0])[0][r.row_id] = [decode(r.content), "", 0];
+  }
+  store.applyMergeableChanges([[tables, "", 0], [values, "", 0], 1]);
+}
 const mergeMs = Number(process.hrtime.bigint() - mergeStart) / 1e6;
 
 const problems = [];
@@ -138,7 +148,7 @@ for (const c of before.conversations) {
 
 for (const table of legacyTables) if (digest(before[table]) !== digest(after[table])) problems.push(`legacy table ${table} changed`);
 
-console.log(JSON.stringify({ counts, clients: clients.map((c) => ({ client: c.client_id, bytes: c.bytes })), appStartMs, cliBooksMedianMs: booksMs, cliWriteMedianMs: writeMs, mergeAllClientsMs: mergeMs }, null, 2));
+console.log(JSON.stringify({ counts, clients: clients.map((c) => ({ client: c.client_id, bytes: c.bytes, rows: c.rows })), appStartMs, cliBooksMedianMs: booksMs, cliWriteMedianMs: writeMs, mergeAllClientsMs: mergeMs }, null, 2));
 rmSync(root, { recursive: true, force: true });
 if (problems.length) {
   console.log(`\n${problems.length} problems:\n${problems.slice(0, 50).join("\n")}`);

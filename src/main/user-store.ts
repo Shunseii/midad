@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
-import { type Cell, createIndexes, createMergeableStore, type Indexes, type MergeableContent, type MergeableStore, type Row } from "tinybase";
+import { type Cell, createIndexes, createMergeableStore, type Indexes, type MergeableChanges, type MergeableContent, type MergeableStore, type Row } from "tinybase";
+import { decodeContent, readChanges, ROWS_SCHEMA, writeChanges, writeContent } from "./user-store-rows";
 import type { LetterRef } from "../shared/annotations";
 import type { RemoteChanges } from "../shared/ipc";
 import { MAX_CLOCK_SKEW_SECONDS } from "../shared/sync";
@@ -11,15 +12,18 @@ import { MAX_CLOCK_SKEW_SECONDS } from "../shared/sync";
  * written by different processes and devices merge cell by cell, newest change first.
  *
  * Each process that writes it (the app, the midad CLI, the corpus MCP server) is its own
- * client: it saves only its own row of `sync_stores` and merges everyone else's. Book text
- * and pages stay in SQLite.
+ * client: it saves only its own rows of `sync_rows` (see user-store-rows.ts) and merges everyone
+ * else's. Book text and pages stay in SQLite.
  */
 
 export type ClientId = "app" | "cli" | "corpus";
 
 export const SCHEMA_VERSION = 1;
 
-
+/**
+ * `sync_stores` has a row per client: `rev` is the seq of its latest save. `content` held the
+ * whole copy as one blob before the copy was saved row by row; it's emptied once converted.
+ */
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS sync_stores (
   client_id TEXT PRIMARY KEY,
@@ -30,7 +34,7 @@ CREATE TABLE IF NOT EXISTS sync_stores (
 CREATE TABLE IF NOT EXISTS sync_device (
   device_id TEXT NOT NULL
 );
-`;
+${ROWS_SCHEMA}`;
 
 /** This library file's device id, shared by its app, CLI and MCP server, and never synced. */
 const deviceIdOf = (db: DatabaseSync): string => {
@@ -43,23 +47,7 @@ const deviceIdOf = (db: DatabaseSync): string => {
 /** A short hash of a page's source, stamped on everything pinned to its words. */
 export const textRev = (source: string): string => createHash("sha256").update(source).digest("hex").slice(0, 16);
 
-/**
- * A deleted cell is `undefined` in a MergeableStore, which plain JSON writes as `null`, a real
- * value, bringing deleted rows back. TinyBase's own persisters write it as this character instead.
- */
-const UNDEFINED = "￼";
-
-export const encodeContent = (content: MergeableContent): string =>
-  JSON.stringify(content, (_key, value: unknown) => (value === undefined ? UNDEFINED : value));
-
-const restoreUndefined = (value: unknown): unknown => {
-  if (value === UNDEFINED) return undefined;
-  if (Array.isArray(value)) return value.map(restoreUndefined);
-  if (typeof value === "object" && value !== null) return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, restoreUndefined(v)]));
-  return value;
-};
-
-export const decodeContent = (text: string): MergeableContent => restoreUndefined(JSON.parse(text)) as MergeableContent;
+export { decodeContent, encodeContent } from "./user-store-rows";
 
 export const pageKey =({ bookId, fileId }: { bookId: string; fileId: string }) => `${bookId}\u0000${fileId}`;
 
@@ -95,9 +83,7 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
   let saving = 0;
   let applying = 0;
 
-  const parse = decodeContent;
-
-  const apply = (content: MergeableContent) => {
+  const apply = (content: MergeableContent | MergeableChanges) => {
     applying++;
     try {
       store.applyMergeableChanges(content);
@@ -126,48 +112,69 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
     for (const hook of mergeHooks.values()) hook();
   };
 
-  /** Merges every other client's saved copy that changed since it was last merged. Returns whether any did. */
+  /**
+   * Merges the rows other processes saved since they were last merged: other clients', and this
+   * client's own saved by another process of the same kind (this process's saves move its seen seq
+   * past its own rows). Returns whether any were merged.
+   */
   const mergeOthers = (): boolean => {
-    const rows = db.prepare("SELECT client_id, rev FROM sync_stores WHERE client_id != ?").all(clientId) as { client_id: string; rev: number }[];
-    const changed = rows.filter((r) => seen.get(r.client_id) !== r.rev);
-    for (const { client_id, rev } of changed) {
-      const row = db.prepare("SELECT content FROM sync_stores WHERE client_id = ?").get(client_id) as { content: string };
-      apply(parse(row.content));
-      seen.set(client_id, rev);
+    const clients = db.prepare("SELECT client_id, rev FROM sync_stores").all() as { client_id: string; rev: number }[];
+    let merged = false;
+    for (const { client_id, rev } of clients) {
+      if ((seen.get(client_id) ?? 0) >= rev) continue;
+      const { changes, seq, count } = readChanges({ db, clientId: client_id, after: seen.get(client_id) ?? 0 });
+      if (count > 0) {
+        apply(changes);
+        merged = true;
+      }
+      seen.set(client_id, Math.max(seq, rev));
     }
-    if (changed.length > 0) afterMerge();
-    return changed.length > 0;
+    if (merged) afterMerge();
+    return merged;
   };
 
   /**
-   * Writes this client's copy. Another process of the same kind (two CLI runs at once) may have
-   * saved since, so its copy is merged in first, under the write lock, and nothing is lost.
+   * Saves what a transaction changed as this client's rows. Another process of the same kind (two
+   * CLI runs at once) may have saved some since: they're merged cell by cell on disk, under the
+   * write lock, so nothing is lost, and this process catches up with them straight after.
    */
-  const save = () => {
+  const save = (changes: MergeableChanges<true>) => {
     saving++;
     try {
       locked(() => {
-        const own = db.prepare("SELECT content, rev FROM sync_stores WHERE client_id = ?").get(clientId) as { content: string; rev: number } | undefined;
-        let content = store.getMergeableContent();
-        if (own && seen.get(clientId) !== own.rev) {
-          // TinyBase ignores changes made while a transaction is finishing, so merge in a scratch
-          // store, save that, and catch the live store up straight after.
-          const theirs = parse(own.content);
-          const merged = createMergeableStore(undefined, getNow, MAX_CLOCK_SKEW_SECONDS).setMergeableContent(theirs).applyMergeableChanges(content);
-          content = merged.getMergeableContent();
-          queueMicrotask(() => apply(theirs));
+        const own = db.prepare("SELECT rev FROM sync_stores WHERE client_id = ?").get(clientId) as { rev: number } | undefined;
+        const lastSeen = seen.get(clientId) ?? 0;
+        if (own && own.rev > lastSeen) {
+          // TinyBase ignores changes made while a transaction is finishing, so apply them just after.
+          const siblings = readChanges({ db, clientId, after: lastSeen });
+          if (siblings.count > 0) queueMicrotask(() => apply(siblings.changes));
         }
-        const rev = (own?.rev ?? 0) + 1;
+        const seq = (own?.rev ?? 0) + 1;
+        writeChanges({ db, clientId, changes, seq });
         db.prepare(
-          `INSERT INTO sync_stores (client_id, content, rev, saved_at) VALUES (?, ?, ?, ?)
-           ON CONFLICT (client_id) DO UPDATE SET content = excluded.content, rev = excluded.rev, saved_at = excluded.saved_at`,
-        ).run(clientId, encodeContent(content), rev, Date.now());
-        seen.set(clientId, rev);
+          `INSERT INTO sync_stores (client_id, content, rev, saved_at) VALUES (?, '', ?, ?)
+           ON CONFLICT (client_id) DO UPDATE SET rev = excluded.rev, saved_at = excluded.saved_at`,
+        ).run(clientId, seq, Date.now());
+        seen.set(clientId, seq);
       });
     } finally {
       saving--;
     }
   };
+
+  /**
+   * Copies saved as one blob (by builds before row-by-row saving) become rows, once, under the
+   * write lock: blob in, rows out, stamps byte for byte. A crash before the commit leaves the blob
+   * to convert next time; a second process finds it already converted.
+   */
+  const convertBlobs = () =>
+    locked(() => {
+      const blobs = db.prepare("SELECT client_id, content, rev FROM sync_stores WHERE content != ''").all() as { client_id: string; content: string; rev: number }[];
+      for (const { client_id, content, rev } of blobs) {
+        writeContent({ db, clientId: client_id, content: decodeContent(content), seq: rev });
+        db.prepare("UPDATE sync_stores SET content = '' WHERE client_id = ?").run(client_id);
+      }
+    });
 
   // Rows a merge changed, with where they were and are, for undo to forget (see remoteChanges).
   const mergeSources = new Set<() => boolean>();
@@ -185,18 +192,20 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
     touched.push({ table, id, before, after });
   });
 
-  const own = db.prepare("SELECT content, rev FROM sync_stores WHERE client_id = ?").get(clientId) as { content: string; rev: number } | undefined;
-  if (own) {
-    apply(parse(own.content));
-    seen.set(clientId, own.rev);
-  }
+  if ((db.prepare("SELECT COUNT(*) AS n FROM sync_stores WHERE content != ''").get() as { n: number }).n > 0) convertBlobs();
+  const own = readChanges({ db, clientId });
+  if (own.count > 0) apply(own.changes);
+  const ownRev = (db.prepare("SELECT rev FROM sync_stores WHERE client_id = ?").get(clientId) as { rev: number } | undefined)?.rev ?? 0;
+  seen.set(clientId, Math.max(own.seq, ownRev));
   mergeOthers();
   touched = [];
 
   // Every local change is saved before the call that made it returns, so a CLI run can exit straight after.
+  // These are the transaction's mergeable changes, as TinyBase hands them to its custom persisters.
   store.addDidFinishTransactionListener(() => {
-    const [tables, values] = store.getTransactionChanges();
-    if (saving === 0 && applying === 0 && Object.keys(tables).length + Object.keys(values).length > 0) save();
+    if (saving > 0 || applying > 0) return;
+    const changes = store.getTransactionMergeableChanges(true);
+    if (Object.keys(changes[0][0]).length + Object.keys(changes[1][0]).length > 0) save(changes);
   });
 
   const isComplete = ({ table, row }: { table: UserTable; row: Row }) => REQUIRED[table]?.every((cell) => row[cell] !== undefined) ?? false;
