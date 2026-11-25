@@ -256,6 +256,21 @@ describe("a clock that was set wrong", () => {
   });
 });
 
+describe("re-pinning a row that doesn't say which text it was pinned to", () => {
+  it("leaves it where it was, for the text-changed check, instead of moving it as if it were on the old text", async () => {
+    const corpus = new FakeCorpus();
+    const app = open({ clientId: "app", corpus });
+    const known = await app.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 4, 5), color: "green" });
+    // As migrated from an old row whose page wasn't in the library then.
+    app.user.store.setRow("highlights", "unknown-text", { ...app.user.store.getRow("highlights", known.id), textRev: "" });
+    corpus.text = PAGE.replace("الكلام هو", "إن الكلام هو");
+    await app.library.syncBook({ bookId: "b1", mode: "overwrite", fileIds: ["f1"] });
+    const { highlights } = await app.annotations.listForPage({ bookId: "b1", position: 1 });
+    expect(highlights.find((h) => h.id === known.id)).toMatchObject({ span: matn(1, 5, 6), stale: false });
+    expect(highlights.find((h) => h.id === "unknown-text")).toMatchObject({ span: matn(1, 4, 5), stale: true });
+  });
+});
+
 describe("a device whose clock runs a year ahead", () => {
   it("doesn't win every later edit: a device that has seen its change and edits after it wins", async () => {
     const yearAhead = open({ clientId: "cli", getNow: () => Date.now() + 365 * 24 * 60 * 60 * 1000 });

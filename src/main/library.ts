@@ -249,7 +249,10 @@ export const createLibrary = ({
   const repinUserStore = ({ bookId, fileId, before, after, edits }: { bookId: string; fileId: string; before: string; after: string; edits: TextEdit[] | null }) => {
     const realign = realignerFor({ before, after, edits });
     const [beforeRev, afterRev] = [textRev(before), textRev(after)];
-    const pinnedBefore = (row: { textRev?: unknown }) => row.textRev === beforeRev || row.textRev === "" || row.textRev === undefined;
+    // Every row is stamped with its page's rev when it's written. One without (copied from an old
+    // row whose page wasn't in the library) may be pinned to any text, so it stays put, and the
+    // text-changed check flags it if the words under it changed.
+    const pinnedBefore = (row: { textRev?: unknown }) => row.textRev === beforeRev;
     const afterPage = parsePage(after);
     const pinned = (table: "highlights" | "notes" | "harakat") => user.rows({ table, ids: user.onPage({ table, bookId, fileId }) }).filter(([, row]) => pinnedBefore(row));
     user.store.transaction(() => {
