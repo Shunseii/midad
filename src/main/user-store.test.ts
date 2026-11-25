@@ -256,6 +256,23 @@ describe("a clock that was set wrong", () => {
   });
 });
 
+describe("a device whose clock runs a year ahead", () => {
+  it("doesn't win every later edit: a device that has seen its change and edits after it wins", async () => {
+    const yearAhead = open({ clientId: "cli", getNow: () => Date.now() + 365 * 24 * 60 * 60 * 1000 });
+    const h = await yearAhead.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 1), color: "green" });
+    const normal = open({ clientId: "app" });
+    // Merging the future stamp moves this device's clock past it, so its next edit is stamped later.
+    normal.user.store.setCell("highlights", h.id, "color", "pink");
+    yearAhead.user.mergeOthers();
+    for (const client of [normal, yearAhead]) expect(client.user.store.getCell("highlights", h.id, "color")).toBe("pink");
+    // A process started afterwards loads those stamps from disk, which moves its clock the same way.
+    const restarted = open({ clientId: "corpus" });
+    restarted.user.store.setCell("highlights", h.id, "color", "blue");
+    yearAhead.user.mergeOthers();
+    expect(yearAhead.user.store.getCell("highlights", h.id, "color")).toBe("blue");
+  });
+});
+
 describe("the saved format", () => {
   it("round-trips deletes as deletes, not as null cells", () => {
     const user = open({ clientId: "app" }).user;
