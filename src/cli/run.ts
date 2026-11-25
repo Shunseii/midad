@@ -6,6 +6,8 @@ import type { StoredPage } from "../shared/library";
 import { createAnnotations } from "../main/annotations";
 import { createPageFinder } from "../main/find-page";
 import { createLibrary } from "../main/library";
+import { createMemories } from "../main/memories";
+import { isMemoryType, MEMORY_TYPES, type Memory, type MemoryType } from "../shared/memories";
 
 export const USAGE = `Usage: midad <command> [options]
 
@@ -27,6 +29,20 @@ Writing (labelled as written by the agent)
   midad harakat set <book> <page> --line <n> --word <n> --letter <n> --marks <names>
   midad harakat remove <book> <page> --line <n> --word <n> --letter <n>
   midad harakat clear <book> <page> <span>      Remove every added mark inside the span
+
+Memory (what Ask AI remembers about the reader across chats; labelled as written by the agent)
+  midad memory list [--type <type>]             Global memories and this book's, newest first (--all: every book's)
+  midad memory search <query> [--limit <n>]     Memories matching any of the words, best match first
+  midad memory get <id>                         One memory in full
+  midad memory add --type <type> --name <slug> --description <line> --body <text>
+  midad memory update <id> [--description <line>] [--body <text>] [--name <slug>] [--type <type>]
+  midad memory delete <id>
+
+Memory types: reader (who they are: level, teacher, madhab), preference (how to
+answer: language, transliteration, length), feedback (a correction, with Why: and
+How to apply: lines), book (goals and context for this book only). One fact per
+memory; the description is one line, written so a later search finds it. A book
+memory belongs to the book Ask AI is open on (or --book <book>); the rest are global.
 
 <book> is a book id, the start of one, or part of its title. <page> is the page's
 position in the book (1 = first page), as shown in the reader's pager.
@@ -53,6 +69,12 @@ const OPTIONS = {
   word: { type: "string" },
   letter: { type: "string" },
   marks: { type: "string" },
+  book: { type: "string" },
+  all: { type: "boolean" },
+  type: { type: "string" },
+  name: { type: "string" },
+  description: { type: "string" },
+  limit: { type: "string" },
   help: { type: "boolean", short: "h" },
 } as const;
 
@@ -100,6 +122,29 @@ const color = (value: string | undefined): HighlightColor => {
   if (!HIGHLIGHT_COLORS.includes(c)) throw new Error(`--color is one of ${HIGHLIGHT_COLORS.join(", ")}.`);
   return c;
 };
+
+const memoryType = (value: string | undefined): MemoryType => {
+  if (!isMemoryType(value)) throw new Error(`--type is one of ${MEMORY_TYPES.join(", ")}.`);
+  return value;
+};
+
+const memoryLine = (m: Memory) =>
+  `${m.id}  ${m.type}  ${m.name}  ${m.description}${m.bookId ? ` [book: ${m.bookTitle ?? m.bookId}]` : ""}${m.source === "reader" ? " (by the reader)" : ""}`;
+
+const formatMemories = ({ found, empty }: { found: Memory[]; empty: string }) => (found.length === 0 ? `${empty}\n` : `${found.map(memoryLine).join("\n")}\n`);
+
+const formatMemory = (m: Memory) =>
+  [
+    `id: ${m.id}`,
+    `name: ${m.name}`,
+    `type: ${m.type}`,
+    `scope: ${m.bookId ? `book ${m.bookId} (${m.bookTitle ?? "?"})` : "global"}`,
+    `written by: ${m.source === "reader" ? "the reader" : "Ask AI"}, updated ${new Date(m.updatedAt).toISOString().slice(0, 10)}`,
+    `description: ${m.description}`,
+    "",
+    m.body,
+    "",
+  ].join("\n");
 
 const numberWords = (text: string) => wordsOf(text).map((w, i) => `${i + 1}:${w}`).join(" ");
 
@@ -151,11 +196,14 @@ export const runCli = async ({
   db,
   stdout,
   stderr,
+  currentBook,
 }: {
   argv: string[];
   db: DatabaseSync;
   stdout: (s: string) => void;
   stderr: (s: string) => void;
+  /** The book Ask AI is open on (MIDAD_BOOK), which memory commands are scoped to unless --book names another. */
+  currentBook?: string;
 }): Promise<number> => {
   const library = createLibrary({
     db,
@@ -165,6 +213,8 @@ export const runCli = async ({
     },
   });
   const annotations = createAnnotations({ db });
+
+  const memories = createMemories({ db });
 
   const finder = createPageFinder({ library });
 
@@ -200,7 +250,12 @@ export const runCli = async ({
       letter: int(opts.letter, "--letter"),
     });
 
-    switch (`${command} ${["highlight", "note", "harakat"].includes(command) ? (a ?? "") : ""}`.trim()) {
+    const memoryBook = async () => {
+      const query = opts.book ?? currentBook;
+      return query ? (await finder.findBook(query)).bookId : null;
+    };
+
+    switch (`${command} ${["highlight", "note", "harakat", "memory"].includes(command) ? (a ?? "") : ""}`.trim()) {
       case "books": {
         const books = await library.listBooks();
         print({
@@ -291,6 +346,52 @@ export const runCli = async ({
         done(removed.length === 0 ? "There were no added harakat in that span." : `Removed harakat from ${removed.length} letter${removed.length === 1 ? "" : "s"}.`, { removed });
         return 0;
       }
+      case "memory list": {
+        const found = await memories.list({ bookId: await memoryBook(), all: opts.all, ...(opts.type ? { type: memoryType(opts.type) } : {}) });
+        print({ json: found, text: formatMemories({ found, empty: "No memories saved yet." }) });
+        return 0;
+      }
+      case "memory search": {
+        const query = rest.slice(1).join(" ");
+        if (!query.trim()) throw new UsageError("Say what to search for: midad memory search <words>.");
+        const found = await memories.search({ query, bookId: await memoryBook(), ...(opts.limit ? { limit: int(opts.limit, "--limit") } : {}) });
+        print({ json: found, text: formatMemories({ found, empty: "No memories match." }) });
+        return 0;
+      }
+      case "memory get": {
+        const found = await memories.get({ id: b ?? "" });
+        if (!found) throw new Error(`There is no memory ${b ?? ""}. Run \`midad memory list\` to see them.`);
+        print({ json: found, text: formatMemory(found) });
+        return 0;
+      }
+      case "memory add": {
+        const m = await memories.add({
+          type: memoryType(opts.type),
+          name: opts.name ?? "",
+          description: opts.description ?? "",
+          body: opts.body ?? "",
+          bookId: await memoryBook(),
+          source: "agent",
+        });
+        done(`Saved memory ${m.id} (${m.name}).`, m);
+        return 0;
+      }
+      case "memory update": {
+        const m = await memories.update({
+          id: b ?? "",
+          source: "agent",
+          ...(opts.type ? { type: memoryType(opts.type), bookId: await memoryBook() } : {}),
+          ...(opts.name !== undefined ? { name: opts.name } : {}),
+          ...(opts.description !== undefined ? { description: opts.description } : {}),
+          ...(opts.body !== undefined ? { body: opts.body } : {}),
+        });
+        done(`Updated memory ${m.id} (${m.name}).`, m);
+        return 0;
+      }
+      case "memory delete":
+        await memories.remove({ id: b ?? "" });
+        done("Deleted the memory.");
+        return 0;
       default:
         throw new UsageError(`Unknown command "${[command, a].filter(Boolean).join(" ")}".`);
     }

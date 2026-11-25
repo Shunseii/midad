@@ -43,12 +43,14 @@ beforeEach(async () => {
   await library.importBook({ corpusBookId: "b2" });
 });
 
-const run = async (...argv: string[]) => {
+const runIn = async ({ currentBook, argv }: { currentBook?: string; argv: string[] }) => {
   let stdout = "";
   let stderr = "";
-  const code = await runCli({ argv, db, stdout: (s) => (stdout += s), stderr: (s) => (stderr += s) });
+  const code = await runCli({ argv, db, stdout: (s) => (stdout += s), stderr: (s) => (stderr += s), ...(currentBook ? { currentBook } : {}) });
   return { code, stdout, stderr };
 };
+
+const run = (...argv: string[]) => runIn({ argv });
 
 const annotations = () => createAnnotations({ db }).listForPage({ bookId: "b1", position: 1 });
 
@@ -172,5 +174,72 @@ describe("refusals", () => {
     const { code, stderr } = await run("frobnicate");
     expect(code).toBe(2);
     expect(stderr).toMatch(/Usage/);
+  });
+});
+
+describe("memory", () => {
+  const add = (...extra: string[]) =>
+    run("memory", "add", "--type", "preference", "--name", "transliterate", "--description", "Always transliterate Arabic terms", "--body", "Write kalām after الكلام.", ...extra);
+
+  it("documents the memory commands in the help", async () => {
+    const { stdout } = await run("--help");
+    for (const command of ["memory list", "memory search", "memory get", "memory add", "memory update", "memory delete"]) expect(stdout).toContain(command);
+  });
+
+  it("adds a memory as the agent and gets it in full", async () => {
+    const added = await add("--json");
+    expect(added.code).toBe(0);
+    const memory = JSON.parse(added.stdout) as { id: string; source: string; bookId: string | null };
+    expect(memory).toMatchObject({ source: "agent", bookId: null });
+    const { stdout } = await run("memory", "get", memory.id);
+    expect(stdout).toContain("name: transliterate");
+    expect(stdout).toContain("scope: global");
+    expect(stdout).toContain("written by: Ask AI");
+    expect(stdout).toContain("Write kalām after الكلام.");
+  });
+
+  it("refuses a duplicate name and points at the memory to update", async () => {
+    await add();
+    const again = await add();
+    expect(again.code).toBe(1);
+    expect(again.stderr).toMatch(/already exists \([0-9a-f]{8}\)\. Update it/);
+  });
+
+  it("updates and deletes a memory", async () => {
+    const id = (JSON.parse((await add("--json")).stdout) as { id: string }).id;
+    expect((await run("memory", "update", id, "--body", "Write kalām (الكلام).")).stdout).toContain(`Updated memory ${id}`);
+    expect((await run("memory", "get", id)).stdout).toContain("Write kalām (الكلام).");
+    expect((await run("memory", "delete", id)).code).toBe(0);
+    const gone = await run("memory", "get", id);
+    expect(gone.code).toBe(1);
+    expect(gone.stderr).toContain(`There is no memory ${id}`);
+  });
+
+  it("searches by any of the words, best match first", async () => {
+    await add();
+    await run("memory", "add", "--type", "reader", "--name", "level", "--description", "Second-year student of nahw", "--body", "Studies with a teacher.");
+    const { stdout } = await run("memory", "search", "how", "to", "write", "terms");
+    expect(stdout.split("\n")[0]).toContain("transliterate");
+    expect(stdout).not.toContain("level");
+    expect((await run("memory", "search", "zzz")).stdout).toBe("No memories match.\n");
+    expect((await run("memory", "search")).code).toBe(2);
+  });
+
+  it("scopes book memories to the book Ask AI is open on", async () => {
+    const added = await runIn({ currentBook: "b1", argv: ["memory", "add", "--type", "book", "--name", "goal", "--description", "Memorising the definitions for an exam", "--body", "Exam in spring."] });
+    expect(added.code).toBe(0);
+    expect((await runIn({ currentBook: "b1", argv: ["memory", "list"] })).stdout).toContain("[book: الآجرومية]");
+    expect((await runIn({ currentBook: "b2", argv: ["memory", "list"] })).stdout).toBe("No memories saved yet.\n");
+    expect((await run("memory", "list", "--book", "b1")).stdout).toContain("goal");
+    expect((await run("memory", "list", "--all")).stdout).toContain("goal");
+    expect((await run("memory", "search", "exam")).stdout).toBe("No memories match.\n");
+    const noBook = await run("memory", "add", "--type", "book", "--name", "g", "--description", "d", "--body", "b");
+    expect(noBook.stderr).toContain("needs the book");
+  });
+
+  it("rejects an unknown type", async () => {
+    const { code, stderr } = await run("memory", "add", "--type", "note", "--name", "n", "--description", "d", "--body", "b");
+    expect(code).toBe(1);
+    expect(stderr).toContain("--type is one of reader, preference, feedback, book");
   });
 });

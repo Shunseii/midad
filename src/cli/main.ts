@@ -32,6 +32,7 @@ const code = await runCli({
   db,
   stdout: (s) => process.stdout.write(s),
   stderr: (s) => process.stderr.write(s),
+  ...(process.env.MIDAD_BOOK ? { currentBook: process.env.MIDAD_BOOK } : {}),
 });
 db.close();
 process.exitCode = code;
