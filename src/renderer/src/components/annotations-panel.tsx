@@ -3,7 +3,7 @@ import { type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "re
 import type { Highlight, LineRef, Note, NoteTarget, PageAnnotations, PageNote, Span } from "../../../shared/annotations";
 import { shortcutKeys } from "../lib/keymap";
 import { timeAgo } from "../lib/format";
-import { noteEditOutcome } from "../lib/note-edit";
+import { noteEditOutcome, refreshedDraft } from "../lib/note-edit";
 import { handleKeys } from "../lib/use-keybindings";
 import { switchListInTransition } from "../lib/view-transition";
 import { MARK_BG } from "./page-view";
@@ -100,9 +100,19 @@ const NoteBody = ({
   const [saved, setSaved] = useState<string | null>(null);
   useEffect(() => setSaved(null), [note.body]);
   const finished = useRef(false);
+  // The saved text the open draft started from, to tell unsaved typing from a stale copy.
+  const base = useRef<string | null>(null);
+  useEffect(() => {
+    if (draft === null || base.current === null || note.body === base.current) return;
+    const next = refreshedDraft({ draft, base: base.current, incoming: note.body });
+    base.current = next.base;
+    if (next.draft !== draft) setDraft(next.draft);
+    // Only a new saved text (a merge, or this editor's own save landing) refreshes the draft, not typing.
+  }, [note.body]);
 
   const start = () => {
     finished.current = false;
+    base.current = saved ?? note.body;
     setDraft(saved ?? note.body);
     onEditing(note.id);
   };

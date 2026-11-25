@@ -1802,6 +1802,7 @@ export const ReaderRoute = () => {
               <NoteEditor
                 key={shown.note?.id ?? "new"}
                 note={shown.note}
+                savedBody={shown.note ? annotations.data?.notes.find((n) => n.id === shown.note?.id)?.body : undefined}
                 lineLabel={lineLabel}
                 onCreate={(body) => noteWrites.create({ span: shown.span, body })}
                 onUpdate={noteWrites.update}

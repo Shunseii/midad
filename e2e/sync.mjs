@@ -225,6 +225,27 @@ await check("Ctrl+Z never puts back an old value over a newer edit from the othe
   }
 });
 
+await check("an open note editor shows the other device's edit until something is typed, then keeps the typing", async () => {
+  const note = await api(a.page, "notes.add", { bookId: LONG_BOOK, position: 44, page: true, body: "كما كتبت" });
+  await waitFor(async () => (await onPage(b.page, 44)).pageNote?.body === "كما كتبت", "B never got the page note");
+  await openReader(a.page, { bookId: LONG_BOOK, position: 44 });
+  await a.page.click('[aria-label^="Show highlights and notes"]');
+  const tab = `js:[...document.querySelectorAll("[role=tab]")].find((t) => t.textContent.trim() === "Notes")`;
+  await a.page.waitStill(tab);
+  await a.page.click(tab);
+  await a.page.waitFor(`!!document.querySelector('[data-page-note] [aria-label="Edit note"]')`, { message: "no page note to edit in the panel" });
+  await a.page.click('[data-page-note] [aria-label="Edit note"]');
+  const box = `document.querySelector('textarea[aria-label="Note"]')`;
+  await a.page.waitFor(`!!${box}`, { message: "the note editor didn't open" });
+  await api(b.page, "notes.update", { id: note.id, body: "عدلها ب" });
+  await waitFor(() => a.page.ev(`${box}?.value === "عدلها ب"`), "A's open editor never showed B's edit", 15_000, () => a.page.ev(`${box}?.value`));
+  await a.page.type(" وأضفت");
+  await api(b.page, "notes.update", { id: note.id, body: "عدلها ب مرة أخرى" });
+  await waitFor(async () => (await onPage(a.page, 44)).pageNote?.body === "عدلها ب مرة أخرى", "A never got B's second edit");
+  await sleep(500);
+  assert.equal(await a.page.ev(`${box}?.value`), "عدلها ب وأضفت", "A's unsaved typing was replaced");
+});
+
 await a.close();
 await b.close();
 await server.stop();

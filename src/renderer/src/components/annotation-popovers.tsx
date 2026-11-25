@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { HIGHLIGHT_COLORS, type HighlightColor, type Note } from "../../../shared/annotations";
 import { timeAgo } from "../lib/format";
 import { shortcutKeys } from "../lib/keymap";
+import { refreshedDraft } from "../lib/note-edit";
 import { MARK_BG } from "./page-view";
 import { HighlighterOff } from "./icons";
 import { Popover, PopoverArrow, PopoverContent } from "./ui/popover";
@@ -198,6 +199,7 @@ export const NoteRowPeek = ({ notes, onEdit, onTint }: { notes: Note[]; onEdit: 
  */
 export const NoteEditor = ({
   note,
+  savedBody,
   lineLabel,
   onCreate,
   onUpdate,
@@ -205,6 +207,8 @@ export const NoteEditor = ({
   onClose,
 }: {
   note: Note | null;
+  /** The note's text as saved now, which another device or the agent may have changed since the editor opened. */
+  savedBody?: string;
   lineLabel: string;
   onCreate: (body: string) => Promise<{ id: string }>;
   onUpdate: (input: { id: string; body: string }) => Promise<void>;
@@ -216,9 +220,20 @@ export const NoteEditor = ({
   const id = useRef(note?.id ?? null);
   const pending = useRef<Promise<unknown>>(Promise.resolve());
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  // The saved text the box last matched; typing that hasn't been saved yet differs from it.
+  const base = useRef(note?.body ?? "");
+
+  useEffect(() => {
+    if (savedBody === undefined || savedBody === base.current || timer.current) return;
+    const next = refreshedDraft({ draft: body, base: base.current, incoming: savedBody });
+    base.current = next.base;
+    if (next.draft !== body) setBody(next.draft);
+    // Only a new saved text refreshes the box, not typing.
+  }, [savedBody]);
 
   const persist = (text: string) => {
     if (!text.trim()) return;
+    base.current = text;
     setSave("saving");
     pending.current = pending.current
       .then(async () => {
@@ -232,7 +247,10 @@ export const NoteEditor = ({
   const change = (text: string) => {
     setBody(text);
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => persist(text), 500);
+    timer.current = setTimeout(() => {
+      timer.current = undefined;
+      persist(text);
+    }, 500);
   };
 
   const latest = useRef({ body, persist });
