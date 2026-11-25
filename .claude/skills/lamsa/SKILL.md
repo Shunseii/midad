@@ -15,9 +15,13 @@ A design is a **spec**, not code. To build a designed screen, read its JSON and 
 2. Make the change: `lamsa add --tree` for new subtrees, `lamsa move` / `lamsa delete` for structure, direct JSON edits for property tweaks.
 3. `lamsa validate` (exit 1 on errors; each error names the node ID and a fix).
 4. `lamsa render <id|name|file>` and look at the PNG(s) it prints (`.lamsa/render/`). Fix what looks wrong and render again.
-5. Optional: `lamsa open <file> --select <id>` shows the result to the user in the desktop editor. Never required.
+5. Optional: `lamsa open <file> --select <id>[,<id>…]` shows the result to the user in the desktop editor with those layers selected (any files they're in open too). Never required.
+
+Before starting, and whenever the user says "the comments" or "my notes": `lamsa comments --open --json` lists comment threads people pinned to layers in the editor (each has `nodeId`, `text`, `replies` and `node`, which is null when the layer was deleted). Treat open comments as requests: make the change, validate and render as usual, then resolve each one with a one-line reply saying what you did: `lamsa comments resolve <id> --reply "Pay button is now full width"`. If a comment is unclear or you disagree, reply instead of resolving (`lamsa comments reply <id> "…"`) and leave it open for the user. Never edit or delete comment files by hand.
 
 Add `--json` to any command for machine-readable output. If the user has the editor open, `lamsa selection --json` tells you what they have selected; "this", "the selected button" etc. usually mean that. It also lists the design files open in the editor (`open`); the editor only shows those. A file you create while the editor runs opens by itself; to show the user an existing file, run `lamsa open <file>`.
+
+While the editor is open, the user watches you work: layers you add or change are highlighted for a moment, and a labelled cursor follows the layers your commands write (`add`, `move`, `delete`) and, faintly, the ones you read (`tree <id>`, `render <id>`). The CLI names you from `LAMSA_AGENT_NAME` (else "Claude" under Claude Code, else "Agent"). Nothing to do for this; prefer targeted reads (`lamsa tree <id>`) so the cursor shows where you are.
 
 ## File format
 
@@ -99,14 +103,18 @@ Use it with `{ "type": "instance", "componentId": "Bt9xQ2mL", "props": { "varian
 | `lamsa split <id> --to <file>` | Move a top-level node into another file |
 | `lamsa validate` / `lamsa fmt [--fix]` | Check; normalise (flatten nested input, fill indexes, sort keys; `--fix` drops orphans) |
 | `lamsa render [targets] [--mode dark] [--scale 2] [--out dir] [--animate [n]] [--state s]` | PNGs of top-level frames; `--animate` captures motion as a strip, `--state` forces hover/press/focus/a data-state |
-| `lamsa diff [ref]` | Semantic changes since a git ref and the screens they affect |
-| `lamsa report [--base ref]` | Before/after PNGs of affected screens plus a markdown summary (`.lamsa/report/report.md`) |
+| `lamsa diff [base] [head] [--text] [--open] [--file <path>]` | What changed since a git ref (default HEAD), value by value, and before/after renders of each changed screen with changed layers outlined (`.lamsa/diff/index.html`, plus `report.md` for PRs). `--text` skips rendering |
 | `lamsa selection` | What the user has selected in the editor |
-| `lamsa open [file] [--select id]` | Show the user (optional) |
+| `lamsa comments [--open\|--resolved] [--node <id>]` | Comment threads pinned to layers (`node: null` = the layer was deleted) |
+| `lamsa comments add --node <id> [--offset x,y] "<text>"` | Pin a new comment to a layer |
+| `lamsa comments reply <id> "<text>"` | Reply to a thread |
+| `lamsa comments resolve <id> [--reply "<text>"]` / `reopen <id>` | Close a thread, saying what you did; reopen it |
+| `lamsa open [file] [--select id,id…]` | Show the user, with layers selected (optional) |
 
 ## Rules
 
 - Prefer editing over recreating: keep IDs stable so diffs and references stay meaningful.
 - One file per page or board; put shared components in their own file.
-- After every change: `lamsa validate`, then `lamsa render` and look at the image before saying you're done.
+- After every change: `lamsa validate`, then `lamsa render` and look at the image before saying you're done. Before handing back a larger change, run `lamsa diff --text` to check you changed only what you meant to.
 - Never write to `.lamsa/` (editor session state) except via the CLI.
+- Comments live in `designs/comments/` (`commentsDir` in config), one file per thread, committed with the designs. Change them only with `lamsa comments`; replies and resolves show up live in the editor. Replies are signed as you when lamsa can tell you're an agent (Claude Code, or `LAMSA_AGENT_NAME` set); otherwise pass `--author <your name>` so they aren't signed as the user.
