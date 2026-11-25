@@ -3,10 +3,10 @@
 // deployed): `pnpm build && pnpm build:cli`, then `pnpm test:sync`.
 import assert from "node:assert/strict";
 import { execFileSync, spawn } from "node:child_process";
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { mkdirSync, rmSync } from "node:fs";
 import { createServer as createHttpServer } from "node:http";
-import { createServer } from "node:net";
+import { connect, createServer, createServer as createNetServer } from "node:net";
 import { join } from "node:path";
 import { createMergeableStore } from "tinybase";
 import { createWsSynchronizer } from "tinybase/synchronizers/synchronizer-ws-client";
@@ -310,6 +310,59 @@ await check("a new device with an empty library sees the books waiting from the 
 
 await a.close();
 await b.close();
+
+/** A TCP proxy to the server that sends the server's replies at `bytesPerSecond`, like a slow link. */
+const slowLink = async ({ bytesPerSecond }) => {
+  const proxy = createNetServer((client) => {
+    const upstream = connect(port, "127.0.0.1");
+    client.pipe(upstream);
+    upstream.on("data", (chunk) => {
+      upstream.pause();
+      let at = 0;
+      const step = Math.max(1, Math.floor(bytesPerSecond / 20));
+      const next = () => {
+        if (client.destroyed) return;
+        client.write(chunk.subarray(at, at + step));
+        at += step;
+        if (at < chunk.length) setTimeout(next, 50);
+        else upstream.resume();
+      };
+      next();
+    });
+    const close = () => {
+      client.destroy();
+      upstream.destroy();
+    };
+    client.on("error", close);
+    upstream.on("error", close);
+    client.on("close", close);
+    upstream.on("close", close);
+  });
+  await new Promise((done) => proxy.listen(0, "127.0.0.1", done));
+  return { port: proxy.address().port, close: () => proxy.close() };
+};
+
+await check("a new device on a slow link gets a large library in full, without its first sync timing out", async () => {
+  const seed = await rawClient({ name: "big-library" });
+  const titles = 1500;
+  seed.store.transaction(() => {
+    // Random text, so the WebSocket's compression can't shrink it: about 400 KB, like a real library's first sync.
+    for (let i = 0; i < titles; i++) seed.store.setRow("library", `slow-link-${i}`, { addedAt: i, title: randomBytes(150).toString("base64"), author: randomBytes(30).toString("base64") });
+  });
+  await sleep(2000);
+  await seed.stop();
+  const link = await slowLink({ bytesPerSecond: 25_000 });
+  const emptyTemplate = join(root, "empty-template-slow");
+  mkdirSync(emptyTemplate, { recursive: true });
+  const d = await launchApp({ root, template: emptyTemplate, name: "d", keep: true, env: { MIDAD_SYNC_URL: `ws://127.0.0.1:${link.port}/sync`, MIDAD_SYNC_TOKEN: TOKENS.a } });
+  try {
+    const arrived = () => api(d.page, "library.elsewhere").then((list) => list.filter((bk) => bk.bookId.startsWith("slow-link-")).length);
+    await waitFor(async () => (await arrived()) === titles, "the slow device never got the whole library", 120_000, arrived);
+  } finally {
+    await d.close();
+    link.close();
+  }
+});
 
 // Last, with the apps closed: a fast clock's stamps move every other clock forward with them, which
 // would reorder the checks above, and with no app online only the server's stored copy can carry the edit.

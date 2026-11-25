@@ -15,6 +15,13 @@ type NodeWebSocket = new (url: string, init: { headers: Record<string, string> }
 
 const MAX_DELAY_MS = 30_000;
 
+/**
+ * How long one sync request may take. A new device's first sync brings the whole library (about
+ * 400 KB today) in a few replies; on a slow link a short timeout fails them, and the retry fails
+ * the same way, so the device never catches up.
+ */
+const REQUEST_TIMEOUT_SECONDS = 15;
+
 export const startSync = ({
   user,
   url,
@@ -69,7 +76,7 @@ export const startSync = ({
     try {
       const ws = new (WebSocket as unknown as NodeWebSocket)(url, { headers: { authorization: `Bearer ${token}` } });
       ws.addEventListener("close", reconnect);
-      const next = await createWsSynchronizer(user.store, ws, 1);
+      const next = await createWsSynchronizer(user.store, ws, REQUEST_TIMEOUT_SECONDS);
       if (stopped) {
         await next.destroy();
         return;
