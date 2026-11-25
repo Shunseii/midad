@@ -30,7 +30,18 @@ CREATE TABLE IF NOT EXISTS sync_stores (
   rev INTEGER NOT NULL,
   saved_at INTEGER NOT NULL
 );
+CREATE TABLE IF NOT EXISTS sync_device (
+  device_id TEXT NOT NULL
+);
 `;
+
+/** This library file's device id, shared by its app, CLI and MCP server, and never synced. */
+const deviceIdOf = (db: DatabaseSync): string => {
+  const existing = db.prepare("SELECT device_id FROM sync_device LIMIT 1").get() as { device_id: string } | undefined;
+  if (existing) return existing.device_id;
+  db.prepare("INSERT INTO sync_device (device_id) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM sync_device)").run(randomUUID());
+  return (db.prepare("SELECT device_id FROM sync_device LIMIT 1").get() as { device_id: string }).device_id;
+};
 
 /** A short hash of a page's source, stamped on everything pinned to its words. */
 export const textRev = (source: string): string => createHash("sha256").update(source).digest("hex").slice(0, 16);
@@ -175,6 +186,7 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
 
   return {
     clientId,
+    deviceId: deviceIdOf(db),
     store,
     indexes,
     save,

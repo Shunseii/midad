@@ -4,6 +4,7 @@ import type { ExportFile } from "../shared/corpus";
 import type { CorpusSource } from "./corpus";
 import { createConversations, type Conversations } from "./conversations";
 import { createLibrary, type Library } from "./library";
+import { openUserStore } from "./user-store";
 
 const file: ExportFile = { file_id: "f1", page_number: 1, role: null, order_hint: null, state: "done", text: "h\n\n---\nالكلام هو اللفظ" };
 
@@ -21,6 +22,7 @@ const question = (id: string, text = `question ${id}`) => ({
 });
 
 let db: DatabaseSync;
+const rowCount = (table: string) => openUserStore({ db }).store.getRowCount(table);
 let library: Library;
 let conversations: Conversations;
 let clock = 1000;
@@ -99,7 +101,7 @@ describe("Ask AI conversations", () => {
     await conversations.addTurn({ conversationId: "c2", bookId: "b1", turn: question("t2") });
     await conversations.remove({ id: "c1" });
     expect((await conversations.list({ bookId: "b1" })).map((c) => c.id)).toEqual(["c2"]);
-    expect(db.prepare("SELECT COUNT(*) AS n FROM turns").get()).toEqual({ n: 1 });
+    expect(rowCount("turns")).toBe(1);
   });
 
   it("gives the turns asked before a question, for carrying them into a new session", async () => {
@@ -108,11 +110,11 @@ describe("Ask AI conversations", () => {
     expect(await conversations.earlierTurns({ turnId: "missing" })).toEqual([]);
   });
 
-  it("deletes a book's conversations and turns with the book", async () => {
+  it("leaves another device's answer streaming when it reopens", async () => {
     await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question("t1") });
-    db.prepare("DELETE FROM books WHERE book_id = ?").run("b1");
-    expect(await conversations.list({ bookId: "b1" })).toEqual([]);
-    expect(db.prepare("SELECT COUNT(*) AS n FROM turns").get()).toEqual({ n: 0 });
+    openUserStore({ db }).store.setCell("turns", "t1", "askedOn", "another-device");
+    const reopened = createConversations({ db });
+    expect((await reopened.get({ id: "c1" }))?.turns[0]?.status).toBe("streaming");
   });
 });
 
@@ -121,8 +123,8 @@ describe("saving a conversation", () => {
 
   it("writes nothing for an answer to a conversation that was never saved", async () => {
     await conversations.finishTurn({ id: "t1", answer: "It is [[line 1]].", sessionId: "s1" });
-    expect(db.prepare("SELECT COUNT(*) AS n FROM conversations").get()).toEqual({ n: 0 });
-    expect(db.prepare("SELECT COUNT(*) AS n FROM turns").get()).toEqual({ n: 0 });
+    expect(rowCount("conversations")).toBe(0);
+    expect(rowCount("turns")).toBe(0);
   });
 
   it("writes the conversation with every turn so far, its session and the page it started on", async () => {

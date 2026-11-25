@@ -1,35 +1,20 @@
 import type { DatabaseSync } from "node:sqlite";
+import type { Row } from "tinybase";
 import type { AskSelection, Conversation, ConversationSummary, Quote, StoredTurn, TurnStatus } from "../shared/conversations";
+import { migrateLegacyTable, openUserStore } from "./user-store";
 
 /**
- * Ask AI conversations: each is one Claude session about a book, with its
- * questions and answers. Requires the library's schema.
+ * Ask AI conversations: each is one Claude session about a book, with its questions and answers,
+ * kept in the user store. The Claude session belongs to this device, so its id stays in SQLite and
+ * isn't synced (a conversation continued elsewhere starts a new session with a recap).
+ * Requires the library's schema.
  */
 
 const SCHEMA = `
-CREATE TABLE IF NOT EXISTS conversations (
-  id TEXT PRIMARY KEY,
-  book_id TEXT NOT NULL REFERENCES books(book_id) ON DELETE CASCADE,
-  session_id TEXT,
-  title TEXT NOT NULL,
-  position INTEGER,
-  created_at INTEGER NOT NULL,
-  updated_at INTEGER NOT NULL
+CREATE TABLE IF NOT EXISTS conversation_sessions (
+  conversation_id TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL
 );
-CREATE INDEX IF NOT EXISTS conversations_by_book ON conversations (book_id, updated_at);
-CREATE TABLE IF NOT EXISTS turns (
-  id TEXT PRIMARY KEY,
-  conversation_id TEXT NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
-  question TEXT NOT NULL,
-  quotes TEXT NOT NULL,
-  position INTEGER NOT NULL,
-  selection TEXT,
-  answer TEXT NOT NULL DEFAULT '',
-  status TEXT NOT NULL,
-  error TEXT,
-  created_at INTEGER NOT NULL
-);
-CREATE INDEX IF NOT EXISTS turns_by_conversation ON turns (conversation_id, created_at);
 `;
 
 const TITLE_MAX = 80;
@@ -49,8 +34,9 @@ const addPositionColumn = (db: DatabaseSync) => {
   );
 };
 
-interface TurnRow {
+interface LegacyTurnRow {
   id: string;
+  conversation_id: string;
   question: string;
   quotes: string;
   position: number;
@@ -61,70 +47,133 @@ interface TurnRow {
   created_at: number;
 }
 
-const toTurn = (row: TurnRow): StoredTurn => ({
-  id: row.id,
-  question: row.question,
-  quotes: JSON.parse(row.quotes) as Quote[],
-  position: row.position,
-  selection: row.selection ? (JSON.parse(row.selection) as AskSelection) : null,
-  answer: row.answer,
-  status: row.status,
-  error: row.error,
-  createdAt: row.created_at,
+/**
+ * Conversations and turns from before the user store, copied in once with their ids. A turn's
+ * order among turns saved at the same moment was SQLite's rowid; it becomes `seq`.
+ */
+const legacyConversations = ({ db, deviceId }: { db: DatabaseSync; deviceId: string }) => {
+  addPositionColumn(db);
+  const conversations = db.prepare("SELECT * FROM conversations ORDER BY rowid").all() as {
+    id: string;
+    book_id: string;
+    session_id: string | null;
+    title: string;
+    position: number | null;
+    created_at: number;
+    updated_at: number;
+  }[];
+  const turns = db.prepare("SELECT * FROM turns ORDER BY created_at, rowid").all() as unknown as LegacyTurnRow[];
+  const keepSession = db.prepare("INSERT OR IGNORE INTO conversation_sessions (conversation_id, session_id) VALUES (?, ?)");
+  for (const c of conversations) if (c.session_id) keepSession.run(c.id, c.session_id);
+  return [
+    ...conversations.map((c, i) => ({
+      table: "conversations" as const,
+      id: c.id,
+      row: { bookId: c.book_id, title: c.title, position: c.position, createdAt: c.created_at, updatedAt: c.updated_at, seq: i },
+    })),
+    ...turns.map((t, i) => ({
+      table: "turns" as const,
+      id: t.id,
+      row: {
+        conversationId: t.conversation_id,
+        question: t.question,
+        quotes: t.quotes,
+        position: t.position,
+        selection: t.selection,
+        answer: t.answer,
+        status: t.status,
+        error: t.error,
+        createdAt: t.created_at,
+        seq: i,
+        askedOn: deviceId,
+      },
+    })),
+  ];
+};
+
+const toTurn = ([id, row]: [string, Row]): StoredTurn => ({
+  id,
+  question: String(row.question),
+  quotes: JSON.parse(String(row.quotes)) as Quote[],
+  position: Number(row.position),
+  selection: typeof row.selection === "string" ? (JSON.parse(row.selection) as AskSelection) : null,
+  answer: String(row.answer),
+  status: row.status as TurnStatus,
+  error: typeof row.error === "string" ? row.error : null,
+  createdAt: Number(row.createdAt),
 });
 
+const inOrder = ([, a]: [string, Row], [, b]: [string, Row]) => Number(a.createdAt) - Number(b.createdAt) || Number(a.seq) - Number(b.seq);
+
+/** Newest activity first; among equals, the one started last. */
+const byActivity = ([idA, a]: [string, Row], [idB, b]: [string, Row]) =>
+  Number(b.updatedAt) - Number(a.updatedAt) || Number(b.createdAt) - Number(a.createdAt) || Number(b.seq ?? 0) - Number(a.seq ?? 0) || (idA < idB ? 1 : -1);
+
 export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; now?: () => number }) => {
+  const user = openUserStore({ db });
   db.exec(SCHEMA);
-  addPositionColumn(db);
+  migrateLegacyTable({ user, db, table: "conversations", rows: () => legacyConversations({ db, deviceId: user.deviceId }) });
+
+  const turnsOf = (conversationId: string) => user.rows({ table: "turns", ids: user.indexes.getSliceRowIds("turns", conversationId) }).sort(inOrder);
+  const sessionOf = (id: string) =>
+    (db.prepare("SELECT session_id FROM conversation_sessions WHERE conversation_id = ?").get(id) as { session_id: string } | undefined)?.session_id ?? null;
+  const keepSession = ({ id, sessionId }: { id: string; sessionId: string | null }) => {
+    if (sessionId) db.prepare("INSERT INTO conversation_sessions VALUES (?, ?) ON CONFLICT (conversation_id) DO UPDATE SET session_id = excluded.session_id").run(id, sessionId);
+  };
+
   // Nothing streams across a restart: an answer cut off by closing the app can be asked again.
-  db.prepare("UPDATE turns SET status = 'interrupted' WHERE status = 'streaming'").run();
+  // Only this device's: another device may be streaming an answer right now.
+  user.store.transaction(() => {
+    for (const [id, turn] of user.rows({ table: "turns" })) {
+      if (turn.status === "streaming" && (turn.askedOn === user.deviceId || turn.askedOn === undefined)) user.store.setCell("turns", id, "status", "interrupted");
+    }
+  });
 
   const get = async ({ id }: { id: string }): Promise<Conversation | null> => {
-    const row = db.prepare("SELECT id, book_id, session_id, title FROM conversations WHERE id = ?").get(id) as
-      | { id: string; book_id: string; session_id: string | null; title: string }
-      | undefined;
+    const row = user.row({ table: "conversations", id });
     if (!row) return null;
-    const turns = db.prepare("SELECT * FROM turns WHERE conversation_id = ? ORDER BY created_at, rowid").all(id) as unknown as TurnRow[];
-    return { id: row.id, bookId: row.book_id, sessionId: row.session_id, title: row.title, turns: turns.map(toTurn) };
+    return { id, bookId: String(row.bookId), sessionId: sessionOf(id), title: String(row.title), turns: turnsOf(id).map(toTurn) };
   };
+
+  const ofBook = (bookId: string) => user.rows({ table: "conversations", ids: user.indexes.getSliceRowIds("conversations", bookId) }).sort(byActivity);
+
+  const turnRow = ({ conversationId, turn, at, seq }: { conversationId: string; turn: Omit<StoredTurn, "createdAt">; at: number; seq: number }) => ({
+    conversationId,
+    question: turn.question,
+    quotes: JSON.stringify(turn.quotes),
+    position: turn.position,
+    selection: turn.selection ? JSON.stringify(turn.selection) : null,
+    answer: turn.answer,
+    status: turn.status,
+    error: turn.error,
+    createdAt: at,
+    seq,
+    askedOn: user.deviceId,
+  });
 
   return {
     get,
 
     async list({ bookId }: { bookId: string }): Promise<ConversationSummary[]> {
-      const rows = db
-        .prepare(
-          `SELECT c.id, c.title, c.position, c.created_at, c.updated_at, COUNT(t.id) AS turn_count,
-             (SELECT number FROM pages WHERE book_id = c.book_id AND position = c.position LIMIT 1) AS page_number
-           FROM conversations c
-           LEFT JOIN turns t ON t.conversation_id = c.id
-           WHERE c.book_id = ? GROUP BY c.id ORDER BY c.updated_at DESC, c.rowid DESC`,
-        )
-        .all(bookId) as {
-        id: string;
-        title: string;
-        position: number | null;
-        page_number: number | null;
-        created_at: number;
-        updated_at: number;
-        turn_count: number;
-      }[];
-      return rows.map((r) => ({
-        id: r.id,
-        title: r.title,
-        position: r.position,
-        pageNumber: r.page_number,
-        createdAt: r.created_at,
-        updatedAt: r.updated_at,
-        turnCount: r.turn_count,
-      }));
+      const pageNumber = db.prepare("SELECT number FROM pages WHERE book_id = ? AND position = ? LIMIT 1");
+      return ofBook(bookId).map(([id, c]) => {
+        const position = typeof c.position === "number" ? c.position : null;
+        const page = position === null ? undefined : (pageNumber.get(bookId, position) as { number: number | null } | undefined);
+        return {
+          id,
+          title: String(c.title),
+          position,
+          pageNumber: page?.number ?? null,
+          createdAt: Number(c.createdAt),
+          updatedAt: Number(c.updatedAt),
+          turnCount: turnsOf(id).length,
+        };
+      });
     },
 
     async latest({ bookId }: { bookId: string }): Promise<Conversation | null> {
-      const row = db.prepare("SELECT id FROM conversations WHERE book_id = ? ORDER BY updated_at DESC, rowid DESC LIMIT 1").get(bookId) as
-        | { id: string }
-        | undefined;
-      return row ? get({ id: row.id }) : null;
+      const first = ofBook(bookId)[0];
+      return first ? get({ id: first[0] }) : null;
     },
 
     /** Saves a conversation kept only in memory until now, with every turn asked so far. */
@@ -142,41 +191,22 @@ export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; 
       const first = turns[0];
       if (!first) return;
       const at = now();
-      const insertTurn = db.prepare(
-        `INSERT INTO turns (id, conversation_id, question, quotes, position, selection, answer, status, error, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO NOTHING`,
-      );
-      db.exec("BEGIN");
-      try {
-        db.prepare(
-          `INSERT INTO conversations (id, book_id, session_id, title, position, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)
-           ON CONFLICT (id) DO NOTHING`,
-        ).run(id, bookId, sessionId, defaultTitle(first), first.position, at, at);
-        for (const turn of turns) {
-          insertTurn.run(
-            turn.id,
-            id,
-            turn.question,
-            JSON.stringify(turn.quotes),
-            turn.position,
-            turn.selection ? JSON.stringify(turn.selection) : null,
-            turn.answer,
-            turn.status,
-            turn.error,
-            at,
-          );
+      user.store.transaction(() => {
+        if (!user.row({ table: "conversations", id })) {
+          user.store.setRow("conversations", id, { bookId, title: defaultTitle(first), position: first.position, createdAt: at, updatedAt: at, seq: user.store.getRowCount("conversations") });
+          keepSession({ id, sessionId });
         }
-        db.exec("COMMIT");
-      } catch (err) {
-        db.exec("ROLLBACK");
-        throw err;
-      }
+        const existing = new Set(turnsOf(id).map(([turnId]) => turnId));
+        turns.forEach((turn, i) => {
+          if (!existing.has(turn.id)) user.store.setRow("turns", turn.id, turnRow({ conversationId: id, turn, at, seq: i }));
+        });
+      });
     },
 
     /** Renames a conversation; a blank title keeps the old one. */
     async rename({ id, title }: { id: string; title: string }): Promise<void> {
       const trimmed = title.trim().slice(0, TITLE_MAX);
-      if (trimmed) db.prepare("UPDATE conversations SET title = ? WHERE id = ?").run(trimmed, id);
+      if (trimmed && user.row({ table: "conversations", id })) user.store.setCell("conversations", id, "title", trimmed);
     },
 
     /** Adds a question to a saved conversation as it's asked, starting the conversation (titled by it) if this is the first. */
@@ -190,26 +220,35 @@ export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; 
       turn: Omit<StoredTurn, "answer" | "status" | "error" | "createdAt">;
     }): Promise<void> {
       const at = now();
-      db.prepare(
-        `INSERT INTO conversations (id, book_id, session_id, title, position, created_at, updated_at) VALUES (?, ?, NULL, ?, ?, ?, ?)
-         ON CONFLICT (id) DO UPDATE SET updated_at = excluded.updated_at`,
-      ).run(conversationId, bookId, defaultTitle(turn), turn.position, at, at);
-      db.prepare(
-        `INSERT INTO turns (id, conversation_id, question, quotes, position, selection, answer, status, error, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, '', 'streaming', NULL, ?)`,
-      ).run(turn.id, conversationId, turn.question, JSON.stringify(turn.quotes), turn.position, turn.selection ? JSON.stringify(turn.selection) : null, at);
+      user.store.transaction(() => {
+        if (user.row({ table: "conversations", id: conversationId })) user.store.setCell("conversations", conversationId, "updatedAt", at);
+        else
+          user.store.setRow("conversations", conversationId, {
+            bookId,
+            title: defaultTitle(turn),
+            position: turn.position,
+            createdAt: at,
+            updatedAt: at,
+            seq: user.store.getRowCount("conversations"),
+          });
+        const seq = turnsOf(conversationId).reduce((max, [, t]) => Math.max(max, Number(t.seq) + 1), 0);
+        user.store.setRow("turns", turn.id, turnRow({ conversationId, turn: { ...turn, answer: "", status: "streaming", error: null }, at, seq }));
+      });
     },
 
     /** Deletes a conversation and its turns. */
     async remove({ id }: { id: string }): Promise<void> {
-      db.prepare("DELETE FROM turns WHERE conversation_id = ?").run(id);
-      db.prepare("DELETE FROM conversations WHERE id = ?").run(id);
+      user.store.transaction(() => {
+        for (const turnId of user.indexes.getSliceRowIds("turns", id)) user.store.delRow("turns", turnId);
+        user.store.delRow("conversations", id);
+      });
+      db.prepare("DELETE FROM conversation_sessions WHERE conversation_id = ?").run(id);
     },
 
     /** The conversation a question belongs to, with the turns asked before it. */
     async earlierTurns({ turnId }: { turnId: string }): Promise<StoredTurn[]> {
-      const row = db.prepare("SELECT conversation_id FROM turns WHERE id = ?").get(turnId) as { conversation_id: string } | undefined;
-      const conversation = row ? await get({ id: row.conversation_id }) : null;
+      const turn = user.row({ table: "turns", id: turnId });
+      const conversation = turn ? await get({ id: String(turn.conversationId) }) : null;
       const at = conversation?.turns.findIndex((t) => t.id === turnId) ?? -1;
       return conversation && at >= 0 ? conversation.turns.slice(0, at) : [];
     },
@@ -226,11 +265,14 @@ export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; 
       error?: string | null;
       sessionId?: string | null;
     }): Promise<void> {
-      const at = now();
-      const row = db.prepare("SELECT conversation_id FROM turns WHERE id = ?").get(id) as { conversation_id: string } | undefined;
-      if (!row) return;
-      db.prepare("UPDATE turns SET answer = ?, status = ?, error = ? WHERE id = ?").run(answer, error === null ? "done" : "error", error, id);
-      db.prepare("UPDATE conversations SET session_id = COALESCE(?, session_id), updated_at = ? WHERE id = ?").run(sessionId || null, at, row.conversation_id);
+      const turn = user.row({ table: "turns", id });
+      if (!turn) return;
+      const conversationId = String(turn.conversationId);
+      user.store.transaction(() => {
+        user.store.setPartialRow("turns", id, { answer, status: error === null ? "done" : "error", error });
+        if (user.row({ table: "conversations", id: conversationId })) user.store.setCell("conversations", conversationId, "updatedAt", now());
+      });
+      keepSession({ id: conversationId, sessionId: sessionId || null });
     },
   };
 };
