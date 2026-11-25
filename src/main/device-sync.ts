@@ -18,15 +18,6 @@ type SyncEnv = { MIDAD_SYNC_URL?: string | undefined; MIDAD_SYNC_TOKEN?: string 
 const fromEnv = (env: SyncEnv): SyncConfig | null =>
   env.MIDAD_SYNC_URL && env.MIDAD_SYNC_TOKEN ? { url: env.MIDAD_SYNC_URL, token: env.MIDAD_SYNC_TOKEN } : null;
 
-/** What sync should connect with, or null when it should be off. */
-export const resolveSyncConfig = ({ env, stored }: { env: SyncEnv; stored: ReturnType<Settings["sync"]> }): SyncConfig | null => {
-  const overridden = fromEnv(env);
-  if (overridden) return overridden;
-  return stored.enabled && stored.url && stored.token ? { url: stored.url, token: stored.token } : null;
-};
-
-const OFF: SyncStatus = { state: "off", lastSyncedAt: null, retryAt: null, clockAheadUntil: null };
-
 /** The server's WebSocket URL; an http(s) address, as a Worker's URL is usually copied, becomes ws(s). Null when it isn't a URL. */
 export const normalizeSyncUrl = (input: string): string | null => {
   try {
@@ -36,6 +27,17 @@ export const normalizeSyncUrl = (input: string): string | null => {
     return null;
   }
 };
+
+/** What sync should connect with, or null when it should be off. */
+export const resolveSyncConfig = ({ env, stored }: { env: SyncEnv; stored: ReturnType<Settings["sync"]> }): SyncConfig | null => {
+  const overridden = fromEnv(env);
+  if (overridden) return overridden;
+  const url = normalizeSyncUrl(stored.url);
+  return stored.enabled && url && stored.token ? { url, token: stored.token } : null;
+};
+
+const OFF: SyncStatus = { state: "off", lastSyncedAt: null, retryAt: null, clockAheadUntil: null };
+
 
 export const createDeviceSync = ({
   settings,
@@ -74,7 +76,7 @@ export const createDeviceSync = ({
   const publicSettings = (): SyncSettings => {
     const stored = settings.sync();
     const overridden = fromEnv(env);
-    return { url: overridden?.url ?? stored.url, hasToken: (overridden?.token ?? stored.token) !== null, enabled: overridden !== null || stored.enabled, fromEnvironment: overridden !== null };
+    return { url: overridden?.url ?? stored.url, hasToken: (overridden?.token ?? stored.token) !== null, enabled: overridden !== null || stored.enabled, keychain: stored.keychain, fromEnvironment: overridden !== null };
   };
 
   return {
@@ -83,10 +85,9 @@ export const createDeviceSync = ({
     status: () => status,
     connect: async ({ url, token }: { url: string; token?: string }): Promise<SyncSettings> => {
       if (fromEnv(env)) throw new Error("Sync is set by MIDAD_SYNC_URL and MIDAD_SYNC_TOKEN, which override Settings.");
-      const normalized = normalizeSyncUrl(url);
-      if (!normalized) throw new Error("Enter the server's address, starting with https:// or wss://.");
+      if (!normalizeSyncUrl(url)) throw new Error("Enter the server's address, starting with https:// or wss://.");
       if (!token?.trim() && !settings.sync().token) throw new Error("Enter the sync token.");
-      settings.saveSync({ url: normalized, ...(token?.trim() ? { token } : {}) });
+      settings.saveSync({ url, ...(token?.trim() ? { token } : {}) });
       await apply({ restart: true });
       return publicSettings();
     },

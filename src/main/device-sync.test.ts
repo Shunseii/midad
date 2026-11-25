@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { SyncStatus } from "../shared/sync";
 import { createDeviceSync, normalizeSyncUrl, resolveSyncConfig, type SyncConfig } from "./device-sync";
-import { type Cipher, createSettings } from "./settings";
+import { type Cipher, createSettings, hasKeychain } from "./settings";
 import type { SyncClient } from "./sync-client";
 
 const TOKEN = "device-token-0123456789";
@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 afterEach(() => rmSync(dir, { recursive: true, force: true }));
 
-const stored = (over: Partial<{ url: string; token: string | null; enabled: boolean }> = {}) => ({ url: "", token: null, enabled: false, ...over });
+const stored = (over: Partial<{ url: string; token: string | null; enabled: boolean }> = {}) => ({ url: "", token: null, enabled: false, keychain: true, ...over });
 
 describe("resolveSyncConfig", () => {
   it("is off with nothing set", () => {
@@ -101,7 +101,7 @@ describe("createDeviceSync", () => {
     await sync.disconnect();
     expect(started[0]?.stopped).toBe(true);
     expect(statuses.at(-1)?.state).toBe("off");
-    expect(sync.settings()).toEqual({ url: "wss://sync.example.dev", hasToken: false, enabled: false, fromEnvironment: false });
+    expect(sync.settings()).toEqual({ url: "https://sync.example.dev", hasToken: false, enabled: false, keychain: true, fromEnvironment: false });
   });
 
   it("reconnects with the saved token when only the address changes", async () => {
@@ -124,7 +124,7 @@ describe("createDeviceSync", () => {
     const { started, sync } = setup({ MIDAD_SYNC_URL: "ws://127.0.0.1:1/sync", MIDAD_SYNC_TOKEN: "env-token" });
     await sync.apply();
     expect(started).toEqual([{ url: "ws://127.0.0.1:1/sync", token: "env-token", stopped: false }]);
-    expect(sync.settings()).toEqual({ url: "ws://127.0.0.1:1/sync", hasToken: true, enabled: true, fromEnvironment: true });
+    expect(sync.settings()).toEqual({ url: "ws://127.0.0.1:1/sync", hasToken: true, enabled: true, keychain: true, fromEnvironment: true });
     await expect(sync.connect({ url: "wss://other.dev", token: "x" })).rejects.toThrow("MIDAD_SYNC_URL");
     await expect(sync.disconnect()).rejects.toThrow("MIDAD_SYNC_URL");
   });
@@ -152,5 +152,30 @@ describe("createDeviceSync", () => {
     await sync.connect({ url: "wss://saved.dev", token: TOKEN });
     await sync.disconnect();
     expect(settings.credentials()).toEqual({ endpoint: "https://corpus.dev", key: "corpus-key" });
+  });
+});
+
+describe("hasKeychain", () => {
+  it("is true for a real keyring, and on macOS and Windows", () => {
+    expect(hasKeychain({ cipher: { ...cipher, getSelectedStorageBackend: () => "gnome_libsecret" }, platform: "linux" })).toBe(true);
+    expect(hasKeychain({ cipher: { ...cipher, getSelectedStorageBackend: () => "kwallet6" }, platform: "linux" })).toBe(true);
+    expect(hasKeychain({ cipher, platform: "darwin" })).toBe(true);
+    expect(hasKeychain({ cipher, platform: "win32" })).toBe(true);
+  });
+
+  it("is false on Linux without a keyring, or with no encryption at all", () => {
+    expect(hasKeychain({ cipher: { ...cipher, getSelectedStorageBackend: () => "basic_text" }, platform: "linux" })).toBe(false);
+    expect(hasKeychain({ cipher: { ...cipher, isEncryptionAvailable: () => false }, platform: "darwin" })).toBe(false);
+  });
+
+  it("still saves and reads back the token without a keychain, and tells the renderer", async () => {
+    const plain: Cipher = { ...cipher, getSelectedStorageBackend: () => "basic_text" };
+    const settings = createSettings({ dir, cipher: plain });
+    const { start } = fakeStart();
+    const sync = createDeviceSync({ settings, env: {}, start, onStatus: () => {} });
+    const reply = await sync.connect({ url: "wss://saved.dev", token: TOKEN });
+    expect(reply.keychain).toBe(false);
+    expect(settings.sync().token).toBe(TOKEN);
+    expect(JSON.stringify(reply)).not.toContain(TOKEN);
   });
 });

@@ -31,12 +31,29 @@ const EMPTY: StoredSettings = {
 };
 
 /** Electron's safeStorage, or a stand-in for it in tests. */
-export type Cipher = Pick<typeof safeStorage, "isEncryptionAvailable" | "encryptString" | "decryptString">;
+export type Cipher = Pick<typeof safeStorage, "isEncryptionAvailable" | "encryptString" | "decryptString"> &
+  Partial<Pick<typeof safeStorage, "getSelectedStorageBackend">>;
+
+/**
+ * Whether secrets are really encrypted by an OS keychain. On Linux without a keyring, safeStorage
+ * still "encrypts" with a hardcoded password (the basic_text backend), which protects nothing.
+ */
+export const hasKeychain = ({ cipher, platform = process.platform }: { cipher: Cipher; platform?: NodeJS.Platform }) => {
+  if (!cipher.isEncryptionAvailable()) return false;
+  if (platform !== "linux") return true;
+  try {
+    return cipher.getSelectedStorageBackend?.() !== "basic_text";
+  } catch {
+    return false;
+  }
+};
 
 export interface StoredSync {
   url: string;
   token: string | null;
   enabled: boolean;
+  /** Whether the token is (or would be) stored encrypted by an OS keychain. */
+  keychain: boolean;
 }
 
 export const createSettings = ({ dir, cipher = safeStorage }: { dir: string; cipher?: Cipher }) => {
@@ -102,7 +119,7 @@ export const createSettings = ({ dir, cipher = safeStorage }: { dir: string; cip
       } catch {
         // Encrypted under another keychain (a copied profile): as good as no token.
       }
-      return { url: s.syncUrl, token, enabled: s.syncEnabled };
+      return { url: s.syncUrl, token, enabled: s.syncEnabled, keychain: hasKeychain({ cipher }) };
     },
 
     /** Saves the sync URL and turns sync on, with a new token when given (else the saved one stays). */

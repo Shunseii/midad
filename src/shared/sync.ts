@@ -27,6 +27,8 @@ export interface SyncSettings {
   url: string;
   hasToken: boolean;
   enabled: boolean;
+  /** The OS keychain encrypts the saved token; false on Linux without a keyring, where it is saved unencrypted. */
+  keychain: boolean;
   /** MIDAD_SYNC_URL and MIDAD_SYNC_TOKEN are set, and override what Settings saved. */
   fromEnvironment: boolean;
 }
