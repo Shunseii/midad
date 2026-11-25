@@ -1086,11 +1086,14 @@ export const ReaderRoute = () => {
     finishToolbar();
   };
 
+  // Saved when the book loads or the page changes, not on every refetch: a refetch after another
+  // device's change would save this device's place again, and two open readers would bounce it forever.
+  const bookLoaded = book.data !== undefined;
   useEffect(() => {
-    if (book.data && position >= 1 && position <= total) {
+    if (bookLoaded && position >= 1 && position <= total) {
       void midad["library.setProgress"]({ bookId, position });
     }
-  }, [book.data, bookId, position, total]);
+  }, [bookLoaded, bookId, position, total]);
 
   const shownPosition = useRef<number | null>(null);
   shownPosition.current = page.data?.position ?? null;
