@@ -13,6 +13,7 @@ import { createConversations } from "./conversations";
 import { type CorpusSource, createCorpusClient } from "./corpus";
 import { createLibrary } from "./library";
 import { createSettings } from "./settings";
+import { startSync } from "./sync-client";
 import { openUserStore } from "./user-store";
 
 app.setName("midad");
@@ -187,6 +188,18 @@ const handlers: MidadApi = {
     applyTheme(theme);
   },
 };
+
+// Cross-device sync, for now configured only from the environment (the prototype has no settings UI).
+if (process.env.MIDAD_SYNC_URL && process.env.MIDAD_SYNC_TOKEN) {
+  startSync({
+    user,
+    url: process.env.MIDAD_SYNC_URL,
+    token: process.env.MIDAD_SYNC_TOKEN,
+    onRemoteChange: () => {
+      for (const win of BrowserWindow.getAllWindows()) win.webContents.send(LIBRARY_CHANGED);
+    },
+  });
+}
 
 // data_version changes only when another connection (the midad CLI) commits.
 const dataVersion = () => (db.prepare("PRAGMA data_version").get() as { data_version: number }).data_version;
