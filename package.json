@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:app": "node --no-warnings e2e/run.mjs",
-    "build:cli": "vite build -c vite.cli.config.ts && chmod +x out/cli/midad.mjs"
+    "build:cli": "vite build -c vite.cli.config.ts && node -e \"require('fs').chmodSync('out/cli/midad.mjs', 0o755)\"",
+    "dist": "pnpm build && pnpm build:cli && electron-builder --publish never"
   },
   "devDependencies": {
     "@base-ui/react": "^1.9.0",
@@ -29,6 +30,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "electron": "^45.3.3",
+    "electron-builder": "^26.18.0",
     "electron-vite": "^6.0.0",
     "lucide-react": "^1.73.0",
     "react": "^19.3.1",
