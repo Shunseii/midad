@@ -112,7 +112,7 @@ const byActivity = ([idA, a]: [string, Row], [idB, b]: [string, Row]) =>
 export const createConversations = ({ db, now = Date.now }: { db: DatabaseSync; now?: () => number }) => {
   const user = openUserStore({ db });
   db.exec(SCHEMA);
-  migrateLegacyTable({ user, db, table: "conversations", rows: () => legacyConversations({ db, deviceId: user.deviceId }) });
+  migrateLegacyTable({ user, db, table: "conversations", alsoCopies: ["turns"], rows: () => legacyConversations({ db, deviceId: user.deviceId }) });
 
   const turnsOf = (conversationId: string) => user.rows({ table: "turns", ids: user.indexes.getSliceRowIds("turns", conversationId) }).sort(inOrder);
   const sessionOf = (id: string) =>

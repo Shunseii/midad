@@ -243,6 +243,24 @@ export const openUserStore = ({ db, clientId = "app", getNow }: { db: DatabaseSy
 
 const hasTable = (db: DatabaseSync, name: string) => db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?").get(name) !== undefined;
 
+/** The user-data tables from before the user store. `books` isn't one: it still holds the books' metadata. */
+const LEGACY_USER_TABLES = new Set(["highlights", "notes", "harakat", "markers", "bookmarks", "progress", "conversations", "turns"]);
+
+export const LEGACY_WRITE_ERROR = "Midad was updated, and this data has moved. Restart Midad (or update this build) to keep saving.";
+
+/**
+ * Once copied in, an old table is a backup nobody reads. A Midad build from before the user store
+ * (an app left running across an update, or an old midad CLI) would keep writing to it and its
+ * changes would silently vanish, so every write to it fails with a message saying why.
+ */
+const guardLegacyTable = ({ db, table }: { db: DatabaseSync; table: string }) => {
+  if (!LEGACY_USER_TABLES.has(table)) return;
+  for (const op of ["INSERT", "UPDATE", "DELETE"]) {
+    db.exec(`CREATE TRIGGER IF NOT EXISTS midad_legacy_${table}_${op.toLowerCase()} BEFORE ${op} ON ${table}
+      BEGIN SELECT RAISE(ABORT, '${LEGACY_WRITE_ERROR}'); END`);
+  }
+};
+
 /**
  * Copies a table from before the user store, once, keeping its ids, so two processes doing it at
  * once write the same rows. The copy happens under the write lock after merging the other clients,
@@ -254,20 +272,33 @@ export const migrateLegacyTable = ({
   db,
   table,
   rows,
+  alsoCopies = [],
 }: {
   user: UserStore;
   db: DatabaseSync;
   table: string;
   rows: () => { table: UserTable; id: string; row: Record<string, Cell> }[];
+  /** Other old tables this copy reads (turns, with conversations), guarded with it. */
+  alsoCopies?: string[];
 }) => {
-  if (user.migrated(table) || !hasTable(db, table)) return;
+  if (!hasTable(db, table)) return;
+  const guard = () => {
+    for (const name of [table, ...alsoCopies]) if (hasTable(db, name)) guardLegacyTable({ db, table: name });
+  };
+  if (user.migrated(table)) {
+    guard();
+    return;
+  }
   user.locked(() => {
     user.mergeOthers();
-    if (user.migrated(table)) return;
-    user.store.transaction(() => {
-      for (const { table: target, id, row } of rows()) user.store.setRow(target, id, row);
-      user.store.setValue(`migrated:${table}`, Date.now());
-      user.store.setValue("schemaVersion", SCHEMA_VERSION);
-    });
+    if (!user.migrated(table)) {
+      user.store.transaction(() => {
+        for (const { table: target, id, row } of rows()) user.store.setRow(target, id, row);
+        user.store.setValue(`migrated:${table}`, Date.now());
+        user.store.setValue("schemaVersion", SCHEMA_VERSION);
+      });
+    }
+    // In the same transaction as the copy, so no old write can land between the two.
+    guard();
   });
 };
