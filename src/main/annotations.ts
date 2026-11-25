@@ -244,8 +244,10 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
     harakatByLetter({ user, bookId, fileId }).get(letterKey(ref)) ?? [];
 
   return {
+    /** A page this device doesn't have (a book in the library elsewhere, not imported here) has nothing to list. */
     async listForPage({ bookId, position }: { bookId: string; position: number }): Promise<PageAnnotations> {
-      const row = pageAt({ bookId, position });
+      const row = db.prepare("SELECT file_id, position, source FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as unknown as PageRow | undefined;
+      if (!row) return { highlights: [], notes: [], pageNote: null, harakat: [] };
       const page = toPage(row);
       const onPage = (table: "highlights" | "notes") => user.rows({ table, ids: user.onPage({ table, bookId, fileId: row.file_id }) });
       const highlights = onPage("highlights").map(([id, h]): Highlight => ({ ...anchored({ row: toAnchoredRow({ id, row: h }), page, position }), color: h.color as HighlightColor }));

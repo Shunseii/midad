@@ -90,6 +90,10 @@ describe("highlights", () => {
     expect((await onPage()).highlights).toHaveLength(0);
   });
 
+  it("lists nothing, without failing, for a page this device doesn't have", async () => {
+    expect(await annotations.listForPage({ bookId: "not-imported", position: 3 })).toEqual({ highlights: [], notes: [], pageNote: null, harakat: [] });
+  });
+
   it("refuses a page that isn't in the library", async () => {
     await expect(annotations.addHighlight({ bookId: "b1", position: 7, span: matn(2, 1), color: "yellow" })).rejects.toThrow(
       /page 7/,
