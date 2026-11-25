@@ -154,6 +154,7 @@ const legacyProgress = (db: DatabaseSync) => {
     table: "progress" as const,
     id: r.book_id,
     row: { fileId: r.file_id, updatedAt: r.updated_at, anchor: r.anchor, textRev: r.source === null ? "" : textRev(r.source) },
+    at: r.updated_at,
   }));
 };
 
@@ -163,6 +164,7 @@ const legacyMembership = (db: DatabaseSync) =>
     table: "library" as const,
     id: b.book_id,
     row: { addedAt: b.imported_at },
+    at: b.imported_at,
   }));
 
 const byCorpusOrder = (

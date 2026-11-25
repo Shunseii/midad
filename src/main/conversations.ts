@@ -65,13 +65,17 @@ const legacyConversations = ({ db, deviceId }: { db: DatabaseSync; deviceId: str
   const turns = db.prepare("SELECT * FROM turns ORDER BY created_at, rowid").all() as unknown as LegacyTurnRow[];
   const keepSession = db.prepare("INSERT OR IGNORE INTO conversation_sessions (conversation_id, session_id) VALUES (?, ?)");
   for (const c of conversations) if (c.session_id) keepSession.run(c.id, c.session_id);
+  const updatedAt = new Map(conversations.map((c) => [c.id, c.updated_at]));
   return [
     ...conversations.map((c, i) => ({
       table: "conversations" as const,
       id: c.id,
       row: { bookId: c.book_id, title: c.title, position: c.position, createdAt: c.created_at, updatedAt: c.updated_at, seq: i },
+      at: c.updated_at,
     })),
     ...turns.map((t, i) => ({
+      // A turn kept no time for its answer; finishing it touched its conversation's updated_at.
+      at: Math.max(t.created_at, updatedAt.get(t.conversation_id) ?? 0),
       table: "turns" as const,
       id: t.id,
       row: {
@@ -81,7 +85,9 @@ const legacyConversations = ({ db, deviceId }: { db: DatabaseSync; deviceId: str
         position: t.position,
         selection: t.selection,
         answer: t.answer,
-        status: t.status,
+        // Settled here, at the copy's old time, rather than at startup with a new one that would
+        // beat another device's finished answer to the same turn.
+        status: t.status === "streaming" ? "interrupted" : t.status,
         error: t.error,
         createdAt: t.created_at,
         seq: i,

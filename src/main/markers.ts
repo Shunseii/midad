@@ -28,6 +28,7 @@ const legacyMarkers = (db: DatabaseSync) => {
     table: "markers" as const,
     id: m.book_id,
     row: { fileId: m.file_id, part: m.part, line: m.line, word: m.word, setAt: m.set_at, textRev: m.source === null ? "" : textRev(m.source) },
+    at: m.set_at,
   }));
 };
 

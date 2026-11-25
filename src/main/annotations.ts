@@ -127,6 +127,7 @@ const legacyHighlights = (db: DatabaseSync) =>
     table: "highlights" as const,
     id: h.id,
     row: { bookId: h.book_id, fileId: h.file_id, span: h.span, quote: h.quote, color: h.color, author: h.author, createdAt: h.created_at, textRev: revOf(h.source) },
+    at: h.created_at,
   }));
 
 /** Notes from before the user store. Page notes take the page's own id, so a page note made on another device lands on the same row. */
@@ -151,6 +152,7 @@ const legacyNotes = (db: DatabaseSync) => {
       updatedAt: n.updated_at,
       textRev: revOf(n.source),
     },
+    at: Math.max(n.created_at, n.updated_at),
   }));
 };
 
@@ -172,6 +174,8 @@ const legacyHarakat = (db: DatabaseSync) =>
       updatedAt: h.created_at,
       textRev: revOf(h.source),
     },
+    // The old table kept no time for changing a letter's marks, only for first setting them.
+    at: h.created_at,
   }));
 
 /** The harakat rows on a page, grouped by the letter they sit on, newest first. */

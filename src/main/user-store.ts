@@ -320,6 +320,24 @@ const guardLegacyTable = ({ db, table }: { db: DatabaseSync; table: string }) =>
  * so a copy another client already made (and anything deleted since) is never brought back. The old
  * table is left as it was, as a backup.
  */
+/**
+ * The copied rows as mergeable content stamped with when each row last changed, not with now. A
+ * device migrating an older copy of the same library (from a backup, or one that sat unopened)
+ * must not overrule edits and deletes made since on a device that migrated first. Rows are stamped
+ * oldest first, because a TinyBase clock never runs backwards. The HLC id is this device's, so
+ * rows stamped at the same moment on two devices settle the same way everywhere, and identical
+ * copies, having identical values, agree whichever wins.
+ */
+const stampedAtLastChange = ({ user, rows }: { user: UserStore; rows: { table: UserTable; id: string; row: Record<string, Cell>; at: number }[] }) => {
+  let clock = 0;
+  const scratch = createMergeableStore(`legacy-${user.deviceId}`, () => clock, MAX_CLOCK_SKEW_SECONDS);
+  for (const { table, id, row, at } of [...rows].sort((x, y) => x.at - y.at)) {
+    clock = Number.isFinite(at) ? at : 0;
+    scratch.setRow(table, id, row);
+  }
+  return scratch.getMergeableContent();
+};
+
 export const migrateLegacyTable = ({
   user,
   db,
@@ -330,7 +348,8 @@ export const migrateLegacyTable = ({
   user: UserStore;
   db: DatabaseSync;
   table: string;
-  rows: () => { table: UserTable; id: string; row: Record<string, Cell> }[];
+  /** Each row with `at`, when it last changed as far as its own columns tell. */
+  rows: () => { table: UserTable; id: string; row: Record<string, Cell>; at: number }[];
   /** Other old tables this copy reads (turns, with conversations), guarded with it. */
   alsoCopies?: string[];
 }) => {
@@ -345,8 +364,9 @@ export const migrateLegacyTable = ({
   user.locked(() => {
     user.mergeOthers();
     if (!user.migrated(table)) {
+      const copied = stampedAtLastChange({ user, rows: rows() });
       user.store.transaction(() => {
-        for (const { table: target, id, row } of rows()) user.store.setRow(target, id, row);
+        user.store.applyMergeableChanges(copied);
         user.store.setValue(`migrated:${table}`, Date.now());
         user.store.setValue("schemaVersion", SCHEMA_VERSION);
       });

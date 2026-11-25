@@ -24,6 +24,8 @@ const legacyBookmarks = (db: DatabaseSync) =>
     table: "bookmarks" as const,
     id: bookmarkId({ bookId: b.book_id, fileId: b.file_id }),
     row: { bookId: b.book_id, fileId: b.file_id, name: b.name, createdAt: b.created_at },
+    // The old table kept no time for renames.
+    at: b.created_at,
   }));
 
 export const createBookmarks = ({ db, now = Date.now }: { db: DatabaseSync; now?: () => number }) => {
