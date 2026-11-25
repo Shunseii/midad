@@ -45,7 +45,20 @@ export const createAsk = ({
   const stopped = new Set<string>();
 
   return {
-    ask({ requestId, prompt, sessionId, model }: { requestId: string; prompt: string; sessionId: string | null; model: AskModel }): Promise<{ sessionId: string; text: string }> {
+    ask({
+      requestId,
+      bookId,
+      prompt,
+      sessionId,
+      model,
+    }: {
+      requestId: string;
+      /** The book the chat is about: `midad memory` commands see its memories. */
+      bookId: string;
+      prompt: string;
+      sessionId: string | null;
+      model: AskModel;
+    }): Promise<{ sessionId: string; text: string }> {
       if (!existsSync(cliPath)) {
         return Promise.reject(new Error(`The midad CLI isn't built yet (${cliPath}). Run \`pnpm build:cli\`.`));
       }
@@ -57,6 +70,7 @@ export const createAsk = ({
             ...process.env,
             PATH: [binDir, join(homedir(), ".local", "bin"), process.env.PATH].filter(Boolean).join(delimiter),
             MIDAD_DB: dbPath,
+            MIDAD_BOOK: bookId,
             ...(credentials ? { MIDAD_CORPUS_URL: credentials.endpoint, MIDAD_CORPUS_KEY: credentials.key, MIDAD_SCANS: scansDir } : {}),
           },
           stdio: ["ignore", "pipe", "pipe"],

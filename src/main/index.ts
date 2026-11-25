@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, renameSync } from "node:fs";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
-import { askModel, cutOffRecap, isLostSession, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
+import { askModel, cutOffRecap, isLostSession, memoryIndex, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
 import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, REMOTE_CHANGES, SYNC_STATUS, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
@@ -13,6 +13,7 @@ import { createConversations } from "./conversations";
 import { type CorpusSource, createCorpusClient } from "./corpus";
 import { createDeviceSync } from "./device-sync";
 import { createLibrary } from "./library";
+import { createMemories } from "./memories";
 import { createSettings } from "./settings";
 import { startSync } from "./sync-client";
 import { openUserStore } from "./user-store";
@@ -67,6 +68,7 @@ const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
 const bookmarks = createBookmarks({ db });
 const conversations = createConversations({ db });
+const memories = createMemories({ db });
 const scans = createScans({ dir: join(userData, "scans"), fetchScan: (input) => corpusClient().fetchScan(input) });
 
 /** Each running answer so far, so an error or stop still saves what Claude wrote. */
@@ -148,15 +150,17 @@ const handlers: MidadApi = {
     const context = readingContext({ bookId, title: book.title, position, number: page.number, selection, quotes, pageNote: pageNote?.body ?? null });
     const cutOff = cutOffRecap(stoppedTurns);
     const prompt = [context, cutOff, question].filter(Boolean).join("\n\n");
+    // A new Claude session starts knowing what Ask AI remembers about the reader.
+    const opening = async (before: string) => [before, memoryIndex(await memories.list({ bookId })), prompt].filter(Boolean).join("\n\n");
     try {
-      const result = await ask.ask({ requestId, prompt, sessionId, model }).then(
+      const result = await ask.ask({ requestId, bookId, prompt: sessionId ? prompt : await opening(""), sessionId, model }).then(
         (answer) => ({ ...answer, restarted: false }),
         async (err: unknown) => {
           // A session Claude no longer has (cleared or from another machine): carry on in a new one, told what was said so far.
           if (!sessionId || !(err instanceof Error) || !isLostSession(err.message)) throw err;
           streamed.delete(requestId);
           const recap = sessionRecap(await conversations.earlierTurns({ turnId: requestId }));
-          const answer = await ask.ask({ requestId, prompt: recap ? `${recap}\n\n${prompt}` : prompt, sessionId: null, model });
+          const answer = await ask.ask({ requestId, bookId, prompt: await opening(recap), sessionId: null, model });
           return { ...answer, restarted: true };
         },
       );

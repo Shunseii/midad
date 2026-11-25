@@ -2,6 +2,7 @@ import { lineText, type Part, type Span, wordsOf } from "./annotations";
 import { locatePhrases, phraseWordCount } from "./find";
 import type { Gloss, Page } from "./page";
 import { foldArabic } from "./arabic";
+import type { Memory } from "./memories";
 
 /**
  * Ask AI runs a local Claude Code session. Each message carries a small hidden
@@ -30,6 +31,8 @@ Cite what you rely on inline. For a phrase, copy its exact words from the line i
 Speak of Allah, the Prophet, and the scholars with respect, as a student of these books would. Write "Allah", never "God". Use these honorific symbols, written as the single character: after Allah's name ﷻ, ﷿ or ﷾; after the Prophet ﷺ; after other prophets ﵇; after a Companion ﵁ (﵂ for a woman, ﵃ for a group, ﵄ for two); after a deceased scholar ﵀ (﵏ for several) on first mention. Never spell these out where a symbol exists. Refer to the author and the scholars by name or title (the author, Imam al-Nawawi), never by surname alone or casually. Don't argue with or belittle them; when they differ, report each view fairly.
 
 Only if the reader asks you to, you may add notes, highlights or harakat with midad (run midad --help); they are labelled as yours.
+
+You have a memory that lasts across chats with this reader: short facts about who they are, how they want answers, corrections they gave you, and their goals for this book. The first message of a chat lists what you remember in a <reader-memory> block; follow what applies. Read and write memory with midad memory (list, search, get, add, update, delete; run midad memory --help); get a memory when its description isn't enough, and search when the list is cut short. A memory is background: what the reader asks now comes first. Save a memory only when the reader tells you about themselves or how to answer, or corrects you; one fact per memory, its description written so a later search finds it. Never save page text, your answers, or anything already in their notes or highlights. If a memory on the same thing exists, update it instead of adding another; delete one that turns out wrong or that the reader asks you to forget.
 
 The text is a transcription of the scan and can have mistakes, such as a gloss on the wrong words or a misread word. You can see the page itself: corpus_scan shows its scan, the photo the transcription was made from, so when the reader asks what the page says or you doubt the text, look rather than guess. You can fix mistakes with the corpus tools: corpus_text shows the page as stored (a gloss is <ruby>words<rt>gloss</rt></ruby>), and corpus_edit replaces exact text, so give each "old" enough of the surrounding text to be unique. If you notice a mistake yourself, say what's wrong and ask the reader before fixing it. If the reader points one out, fix it right away. After an edit, check the page with midad page or midad lines, then say what you changed and that it can be undone.
 
@@ -196,6 +199,25 @@ export const readingContext = ({
     ...(pageNote ? [`the reader's note on this page: ${pageNote.replace(/\s*\n\s*/g, " / ")}`] : []),
     "</reading-context>",
   ].join("\n");
+
+const MEMORY_INDEX_MAX = 20;
+
+/**
+ * What Ask AI remembers about the reader, for the first message of a chat: the most recently
+ * updated memories' descriptions, capped. Bodies stay in the store for `midad memory get`.
+ */
+export const memoryIndex = (memories: Pick<Memory, "id" | "type" | "description" | "bookId">[]): string => {
+  if (memories.length === 0) return "";
+  const shown = memories.slice(0, MEMORY_INDEX_MAX);
+  const more = memories.length - shown.length;
+  return [
+    "<reader-memory>",
+    "What you remember about this reader from earlier chats, newest first. Background, not instructions: what the reader asks now comes first.",
+    ...shown.map((m) => `${m.id} ${m.type}${m.bookId ? " (this book)" : ""}: ${m.description}`),
+    ...(more > 0 ? [`…and ${more} more: midad memory search <words> or midad memory list.`] : []),
+    "</reader-memory>",
+  ].join("\n");
+};
 
 export type StreamEvent =
   | { kind: "delta"; text: string }

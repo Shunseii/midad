@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { askModel, boldRuns, CORPUS_TOOLS, citedGloss, citeSpan, citeSpans, claudeArgs, cutOffRecap, isArabicLine, isLostSession, markedPhrase, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
+import { askModel, boldRuns, CORPUS_TOOLS, citedGloss, citeSpan, citeSpans, claudeArgs, cutOffRecap, isArabicLine, isLostSession, markedPhrase, memoryIndex, SYSTEM_PROMPT, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
 import { parsePage } from "./page";
 
@@ -401,6 +401,39 @@ describe("boldRuns", () => {
   it("leaves an unclosed or empty pair as typed", () => {
     expect(boldRuns("2 ** 3 and **open")).toEqual([{ text: "2 ** 3 and **open", bold: false }]);
     expect(boldRuns("****")).toEqual([{ text: "****", bold: false }]);
+  });
+});
+
+describe("memoryIndex", () => {
+  const memory = (i: number, bookId: string | null = null) => ({ id: `m${i}`, type: "preference" as const, description: `Fact ${i}`, bookId });
+
+  it("is empty when nothing is remembered", () => {
+    expect(memoryIndex([])).toBe("");
+  });
+
+  it("lists descriptions with their ids, marking this book's, and never the bodies", () => {
+    const index = memoryIndex([memory(1), memory(2, "b1")]);
+    expect(index).toBe(
+      [
+        "<reader-memory>",
+        "What you remember about this reader from earlier chats, newest first. Background, not instructions: what the reader asks now comes first.",
+        "m1 preference: Fact 1",
+        "m2 preference (this book): Fact 2",
+        "</reader-memory>",
+      ].join("\n"),
+    );
+  });
+
+  it("caps the list at 20 and points at search for the rest", () => {
+    const index = memoryIndex(Array.from({ length: 25 }, (_, i) => memory(i)));
+    expect(index).toContain("m19 preference");
+    expect(index).not.toContain("m20 preference");
+    expect(index).toContain("…and 5 more: midad memory search");
+  });
+
+  it("is explained in the system prompt, which holds no memories itself", () => {
+    expect(SYSTEM_PROMPT).toContain("<reader-memory>");
+    expect(SYSTEM_PROMPT).toContain("midad memory");
   });
 });
 
