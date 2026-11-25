@@ -1,21 +1,12 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { Bookmark } from "../shared/library";
+import { migrateLegacyTable, openUserStore } from "./user-store";
 
 /**
- * Page bookmarks: at most one per page, with an optional name. Stored against the page's corpus
- * file so a bookmark stays on its page when a sync renumbers the book. Requires the library's schema.
+ * Page bookmarks: at most one per page, with an optional name. Kept in the user store against the
+ * page's corpus file so a bookmark stays on its page when a sync renumbers the book. Requires the
+ * library's schema.
  */
-
-const SCHEMA = `
-CREATE TABLE IF NOT EXISTS bookmarks (
-  book_id TEXT NOT NULL,
-  file_id TEXT NOT NULL,
-  name TEXT,
-  created_at INTEGER NOT NULL,
-  PRIMARY KEY (book_id, file_id),
-  FOREIGN KEY (book_id, file_id) REFERENCES pages (book_id, file_id) ON DELETE CASCADE
-);
-`;
 
 /** Bookmark names are kept short; blank names mean "no name". */
 export const BOOKMARK_NAME_MAX = 120;
@@ -25,8 +16,19 @@ export const cleanBookmarkName = (name: string | null | undefined): string | nul
   return trimmed === "" ? null : trimmed;
 };
 
+/** One bookmark per page, under the same id on every device. */
+const bookmarkId = ({ bookId, fileId }: { bookId: string; fileId: string }) => `${bookId}:${fileId}`;
+
+const legacyBookmarks = (db: DatabaseSync) =>
+  (db.prepare("SELECT * FROM bookmarks").all() as { book_id: string; file_id: string; name: string | null; created_at: number }[]).map((b) => ({
+    table: "bookmarks" as const,
+    id: bookmarkId({ bookId: b.book_id, fileId: b.file_id }),
+    row: { bookId: b.book_id, fileId: b.file_id, name: b.name, createdAt: b.created_at },
+  }));
+
 export const createBookmarks = ({ db, now = Date.now }: { db: DatabaseSync; now?: () => number }) => {
-  db.exec(SCHEMA);
+  const user = openUserStore({ db });
+  migrateLegacyTable({ user, db, table: "bookmarks", rows: () => legacyBookmarks(db) });
 
   const fileAt = ({ bookId, position }: { bookId: string; position: number }) => {
     const row = db.prepare("SELECT file_id FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as { file_id: string } | undefined;
@@ -37,14 +39,16 @@ export const createBookmarks = ({ db, now = Date.now }: { db: DatabaseSync; now?
   return {
     /** The book's bookmarks in page order. */
     async list({ bookId }: { bookId: string }): Promise<Bookmark[]> {
-      const rows = db
-        .prepare(
-          `SELECT p.position, b.name, b.created_at FROM bookmarks b
-           JOIN pages p ON p.book_id = b.book_id AND p.file_id = b.file_id
-           WHERE b.book_id = ? ORDER BY p.position`,
-        )
-        .all(bookId) as { position: number; name: string | null; created_at: number }[];
-      return rows.map((r) => ({ position: r.position, name: r.name, createdAt: r.created_at }));
+      const positions = new Map(
+        (db.prepare("SELECT file_id, position FROM pages WHERE book_id = ?").all(bookId) as { file_id: string; position: number }[]).map((p) => [p.file_id, p.position]),
+      );
+      return user
+        .rows({ table: "bookmarks" })
+        .flatMap(([, b]) => {
+          const position = b.bookId === bookId ? positions.get(String(b.fileId)) : undefined;
+          return position === undefined ? [] : [{ position, name: b.name === null ? null : String(b.name), createdAt: Number(b.createdAt) }];
+        })
+        .sort((a, b) => a.position - b.position);
     },
 
     /**
@@ -54,17 +58,15 @@ export const createBookmarks = ({ db, now = Date.now }: { db: DatabaseSync; now?
     async set({ bookId, position, name, createdAt }: { bookId: string; position: number; name?: string | null; createdAt?: number }): Promise<Bookmark> {
       const fileId = fileAt({ bookId, position });
       const clean = cleanBookmarkName(name);
-      db.prepare(
-        `INSERT INTO bookmarks (book_id, file_id, name, created_at) VALUES (?, ?, ?, ?)
-         ON CONFLICT (book_id, file_id) DO UPDATE SET name = excluded.name,
-           created_at = CASE WHEN ? THEN excluded.created_at ELSE bookmarks.created_at END`,
-      ).run(bookId, fileId, clean, createdAt ?? now(), createdAt === undefined ? 0 : 1);
-      const row = db.prepare("SELECT created_at FROM bookmarks WHERE book_id = ? AND file_id = ?").get(bookId, fileId) as { created_at: number };
-      return { position, name: clean, createdAt: row.created_at };
+      const id = bookmarkId({ bookId, fileId });
+      const existing = user.row({ table: "bookmarks", id });
+      const date = createdAt ?? (existing ? Number(existing.createdAt) : now());
+      user.store.setRow("bookmarks", id, { bookId, fileId, name: clean, createdAt: date });
+      return { position, name: clean, createdAt: date };
     },
 
     async remove({ bookId, position }: { bookId: string; position: number }): Promise<void> {
-      db.prepare("DELETE FROM bookmarks WHERE book_id = ? AND file_id = ?").run(bookId, fileAt({ bookId, position }));
+      user.store.delRow("bookmarks", bookmarkId({ bookId, fileId: fileAt({ bookId, position }) }));
     },
   };
 };

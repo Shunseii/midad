@@ -2,6 +2,7 @@ import { DatabaseSync } from "node:sqlite";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { CorpusSource, ExportProgress } from "./corpus";
 import { createLibrary, type Library } from "./library";
+import { openUserStore } from "./user-store";
 import { parsePage } from "../shared/page";
 import type { ExportFile } from "../shared/corpus";
 
@@ -328,9 +329,10 @@ describe("place on the page", () => {
 
   it("ignores a stored anchor it can't read", async () => {
     await library.setProgress({ bookId: "b1", position: 2, anchor });
-    db.prepare("UPDATE progress SET anchor = ?").run('{"part":"elsewhere","line":1}');
+    const { store } = openUserStore({ db });
+    store.setCell("progress", "b1", "anchor", '{"part":"elsewhere","line":1}');
     expect(await anchorOf()).toBeNull();
-    db.prepare("UPDATE progress SET anchor = ?").run("not json");
+    store.setCell("progress", "b1", "anchor", "not json");
     expect(await anchorOf()).toBeNull();
   });
 

@@ -18,7 +18,7 @@ import { realignPage, type WordAt } from "../shared/realign";
 import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
 import { tidyHarakat } from "./annotations";
-import { openUserStore, textRev } from "./user-store";
+import { migrateLegacyTable, openUserStore, textRev } from "./user-store";
 
 /**
  * Midad's local library: imported books and their parsed pages. This is the
@@ -56,12 +56,6 @@ CREATE TABLE IF NOT EXISTS pages (
   PRIMARY KEY (book_id, file_id)
 );
 CREATE INDEX IF NOT EXISTS pages_by_position ON pages (book_id, position);
-CREATE TABLE IF NOT EXISTS progress (
-  book_id TEXT PRIMARY KEY REFERENCES books(book_id) ON DELETE CASCADE,
-  file_id TEXT NOT NULL,
-  updated_at INTEGER NOT NULL,
-  anchor TEXT
-);
 `;
 
 const addProgressAnchor = (db: DatabaseSync) => {
@@ -100,7 +94,9 @@ const migrateProgressToFileId = (db: DatabaseSync) => {
   const nearestPage = db.prepare(
     "SELECT file_id FROM pages WHERE book_id = ? ORDER BY ABS(position - ?), position LIMIT 1",
   );
-  db.exec("BEGIN");
+  // Runs inside the user store migration's transaction.
+  const own = !db.isTransaction;
+  if (own) db.exec("BEGIN");
   try {
     db.exec(`CREATE TABLE progress_by_page (
       book_id TEXT PRIMARY KEY REFERENCES books(book_id) ON DELETE CASCADE,
@@ -114,9 +110,9 @@ const migrateProgressToFileId = (db: DatabaseSync) => {
     }
     db.exec("DROP TABLE progress");
     db.exec("ALTER TABLE progress_by_page RENAME TO progress");
-    db.exec("COMMIT");
+    if (own) db.exec("COMMIT");
   } catch (err) {
-    db.exec("ROLLBACK");
+    if (own) db.exec("ROLLBACK");
     throw err;
   }
 };
@@ -141,10 +137,33 @@ interface BookRow {
   imported_at: number;
   synced_at: number;
   page_count: number;
-  progress_position: number | null;
-  progress_updated_at: number | null;
-  progress_anchor: string | null;
 }
+
+/** Reading progress from before the user store, brought up to date and copied in once. */
+const legacyProgress = (db: DatabaseSync) => {
+  migrateProgressToFileId(db);
+  addProgressAnchor(db);
+  const rows = db.prepare("SELECT pr.*, p.source FROM progress pr LEFT JOIN pages p ON p.book_id = pr.book_id AND p.file_id = pr.file_id").all() as {
+    book_id: string;
+    file_id: string;
+    updated_at: number;
+    anchor: string | null;
+    source: string | null;
+  }[];
+  return rows.map((r) => ({
+    table: "progress" as const,
+    id: r.book_id,
+    row: { fileId: r.file_id, updatedAt: r.updated_at, anchor: r.anchor, textRev: r.source === null ? "" : textRev(r.source) },
+  }));
+};
+
+/** Which books are in the library, from the books imported before the user store. Their text stays in SQLite. */
+const legacyMembership = (db: DatabaseSync) =>
+  (db.prepare("SELECT book_id, imported_at FROM books").all() as { book_id: string; imported_at: number }[]).map((b) => ({
+    table: "library" as const,
+    id: b.book_id,
+    row: { addedAt: b.imported_at },
+  }));
 
 const byCorpusOrder = (
   a: { number: number | null; orderHint: number | null; fileId: string },
@@ -176,8 +195,8 @@ export const createLibrary = ({
   const user = openUserStore({ db });
   db.exec("PRAGMA foreign_keys = ON;");
   db.exec(SCHEMA);
-  migrateProgressToFileId(db);
-  addProgressAnchor(db);
+  migrateLegacyTable({ user, db, table: "progress", rows: () => legacyProgress(db) });
+  migrateLegacyTable({ user, db, table: "books", rows: () => legacyMembership(db) });
 
   const transaction = <T>(fn: () => T): T => {
     db.exec("BEGIN");
@@ -209,8 +228,6 @@ export const createLibrary = ({
       updatePage.run(f.page_number, f.order_hint, page.header, ...fields, bookId, f.file_id);
     }
   };
-
-  const hasTable = (name: string) => db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?").get(name) !== undefined;
 
   /**
    * Moves what the reader pinned to words on a page (highlights, notes, harakat, the last-read
@@ -248,22 +265,20 @@ export const createLibrary = ({
         if (moved) user.store.setPartialRow("harakat", id, { part: moved.part, line: moved.line, word: moved.word });
         user.store.setCell("harakat", id, "textRev", afterRev);
       }
+      const marker = user.row({ table: "markers", id: bookId });
+      if (marker && marker.fileId === fileId && pinnedBefore(marker)) {
+        const moved = realign.word({ part: marker.part as WordAt["part"], line: Number(marker.line), word: Number(marker.word) });
+        user.store.setPartialRow("markers", bookId, { ...(moved ?? {}), textRev: afterRev });
+      }
+      const progress = user.row({ table: "progress", id: bookId });
+      if (progress && progress.fileId === fileId && pinnedBefore(progress)) {
+        const anchor = typeof progress.anchor === "string" ? parseAnchor(progress.anchor) : null;
+        const moved = anchor && realign.word(anchor);
+        user.store.setPartialRow("progress", bookId, { ...(anchor && moved ? { anchor: JSON.stringify({ ...anchor, ...moved }) } : {}), textRev: afterRev });
+      }
     });
     // Two marks can land on one letter, as SQLite's UNIQUE used to settle with UPDATE OR REPLACE.
     tidyHarakat(user);
-  };
-
-  const moveMarks = ({ bookId, fileId, before, after, edits }: { bookId: string; fileId: string; before: string; after: string; edits: TextEdit[] | null }) => {
-    const realign = realignerFor({ before, after, edits });
-    if (hasTable("markers")) {
-      const row = db.prepare("SELECT part, line, word FROM markers WHERE book_id = ? AND file_id = ?").get(bookId, fileId) as unknown as WordAt | undefined;
-      const moved = row && realign.word(row);
-      if (moved) db.prepare("UPDATE markers SET part = ?, line = ?, word = ? WHERE book_id = ?").run(moved.part, moved.line, moved.word, bookId);
-    }
-    const progress = db.prepare("SELECT anchor FROM progress WHERE book_id = ? AND file_id = ?").get(bookId, fileId) as { anchor: string | null } | undefined;
-    const anchor = progress?.anchor ? parseAnchor(progress.anchor) : null;
-    const movedAnchor = anchor && realign.word(anchor);
-    if (anchor && movedAnchor) db.prepare("UPDATE progress SET anchor = ? WHERE book_id = ?").run(JSON.stringify({ ...anchor, ...movedAnchor }), bookId);
   };
 
   const renumber = (bookId: string) => {
@@ -286,6 +301,14 @@ export const createLibrary = ({
   const bookExists = (bookId: string) =>
     db.prepare("SELECT 1 FROM books WHERE book_id = ?").get(bookId) !== undefined;
 
+  const progressOf = (bookId: string): LibraryBook["progress"] => {
+    const progress = user.row({ table: "progress", id: bookId });
+    if (!progress) return null;
+    const page = db.prepare("SELECT position FROM pages WHERE book_id = ? AND file_id = ?").get(bookId, String(progress.fileId)) as { position: number } | undefined;
+    if (!page) return null;
+    return { position: page.position, updatedAt: Number(progress.updatedAt), anchor: typeof progress.anchor === "string" ? parseAnchor(progress.anchor) : null };
+  };
+
   const toBook = (r: BookRow): LibraryBook => ({
     bookId: r.book_id,
     title: r.title,
@@ -294,19 +317,10 @@ export const createLibrary = ({
     pageCount: r.page_count,
     importedAt: r.imported_at,
     syncedAt: r.synced_at,
-    progress:
-      r.progress_position === null || r.progress_updated_at === null
-        ? null
-        : { position: r.progress_position, updatedAt: r.progress_updated_at, anchor: parseAnchor(r.progress_anchor) },
+    progress: progressOf(r.book_id),
   });
 
-  const BOOK_SELECT = `
-    SELECT b.*, (SELECT COUNT(*) FROM pages p WHERE p.book_id = b.book_id) AS page_count,
-           pp.position AS progress_position, pr.updated_at AS progress_updated_at,
-           pr.anchor AS progress_anchor
-    FROM books b
-    LEFT JOIN progress pr ON pr.book_id = b.book_id
-    LEFT JOIN pages pp ON pp.book_id = pr.book_id AND pp.file_id = pr.file_id`;
+  const BOOK_SELECT = `SELECT b.*, (SELECT COUNT(*) FROM pages p WHERE p.book_id = b.book_id) AS page_count FROM books b`;
 
   const previewFrom = (bookId: string, files: ExportFile[]): SyncPreview => {
     const local = new Map(localPages(bookId).map((p) => [p.file_id, p]));
@@ -351,6 +365,7 @@ export const createLibrary = ({
         for (const f of ready) writePage(corpusBookId, f, "insert");
         renumber(corpusBookId);
       });
+      user.store.setRow("library", corpusBookId, { addedAt: now() });
       return { bookId: corpusBookId, imported: ready.length, pending: files.length - ready.length };
     },
 
@@ -395,7 +410,6 @@ export const createLibrary = ({
             const before = local.get(fileId);
             if (f && before !== undefined) {
               writePage(bookId, f, "update");
-              if (before !== f.text) moveMarks({ bookId, fileId, before, after: f.text, edits: input.edits?.[fileId] ?? null });
               overwritten += 1;
             }
           }
@@ -407,8 +421,9 @@ export const createLibrary = ({
     },
 
     async listBooks(): Promise<LibraryBook[]> {
-      const rows = db.prepare(`${BOOK_SELECT} ORDER BY COALESCE(pr.updated_at, b.imported_at) DESC`).all();
-      return (rows as unknown as BookRow[]).map(toBook);
+      const books = (db.prepare(BOOK_SELECT).all() as unknown as BookRow[]).map(toBook);
+      const lastOpened = (b: LibraryBook) => b.progress?.updatedAt ?? b.importedAt;
+      return books.sort((a, b) => lastOpened(b) - lastOpened(a));
     },
 
     async getBook(bookId: string): Promise<BookDetail | null> {
@@ -468,17 +483,18 @@ export const createLibrary = ({
      * reopening a book doesn't forget where on the page the reader was.
      */
     async setProgress({ bookId, position, anchor }: { bookId: string; position: number; anchor?: ScrollAnchor }): Promise<void> {
-      const page = db.prepare("SELECT file_id FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
-        | Pick<PageRow, "file_id">
+      const page = db.prepare("SELECT file_id, source FROM pages WHERE book_id = ? AND position = ?").get(bookId, position) as
+        | Pick<PageRow, "file_id" | "source">
         | undefined;
       if (!page) throw new Error(`Book ${bookId} has no page ${position} in the library.`);
-      db.prepare(
-        `INSERT INTO progress (book_id, file_id, updated_at, anchor) VALUES (?, ?, ?, ?)
-         ON CONFLICT(book_id) DO UPDATE SET
-           anchor = CASE WHEN excluded.anchor IS NULL AND progress.file_id = excluded.file_id THEN progress.anchor ELSE excluded.anchor END,
-           file_id = excluded.file_id,
-           updated_at = excluded.updated_at`,
-      ).run(bookId, page.file_id, now(), anchor ? JSON.stringify(anchor) : null);
+      const stored = user.row({ table: "progress", id: bookId });
+      const keep = !anchor && stored?.fileId === page.file_id;
+      user.store.setRow("progress", bookId, {
+        fileId: page.file_id,
+        updatedAt: now(),
+        anchor: keep ? (stored.anchor ?? null) : anchor ? JSON.stringify(anchor) : null,
+        textRev: keep ? String(stored.textRev ?? "") : textRev(page.source),
+      });
     },
   };
 };

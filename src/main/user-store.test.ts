@@ -180,6 +180,26 @@ describe("migrating notes and harakat from SQLite", () => {
   });
 });
 
+describe("migrating the marker, bookmarks, progress and library from SQLite", () => {
+  it("copies each row once, keyed as before", async () => {
+    const db = new DatabaseSync(dbPath);
+    db.exec(`CREATE TABLE markers (book_id TEXT PRIMARY KEY, file_id TEXT NOT NULL, part TEXT NOT NULL DEFAULT 'matn', line INTEGER NOT NULL, word INTEGER NOT NULL DEFAULT 1, set_at INTEGER NOT NULL);
+      CREATE TABLE bookmarks (book_id TEXT NOT NULL, file_id TEXT NOT NULL, name TEXT, created_at INTEGER NOT NULL, PRIMARY KEY (book_id, file_id));
+      CREATE TABLE progress (book_id TEXT PRIMARY KEY, file_id TEXT NOT NULL, updated_at INTEGER NOT NULL, anchor TEXT);
+      INSERT INTO markers VALUES ('b1', 'f1', 'matn', 2, 3, 7);
+      INSERT INTO bookmarks VALUES ('b1', 'f1', NULL, 8);
+      INSERT INTO progress VALUES ('b1', 'f1', 9, '{"part":"matn","line":1,"word":2,"offset":0.5}');`);
+    db.close();
+    const app = open({ clientId: "app" });
+    const { createMarkers } = await import("./markers");
+    const { createBookmarks } = await import("./bookmarks");
+    expect(await createMarkers({ db: app.db }).get({ bookId: "b1" })).toEqual({ position: 1, part: "matn", line: 2, word: 3, setAt: 7 });
+    expect(await createBookmarks({ db: app.db }).list({ bookId: "b1" })).toEqual([{ position: 1, name: null, createdAt: 8 }]);
+    expect((await app.library.getBook("b1"))?.progress).toEqual({ position: 1, updatedAt: 9, anchor: { part: "matn", line: 1, word: 2, offset: 0.5 } });
+    expect(app.user.row({ table: "library", id: "b1" })).toMatchObject({ addedAt: expect.any(Number) });
+  });
+});
+
 describe("a clock that was set wrong", () => {
   it("doesn't drop changes stamped while it ran ahead once it is set back", async () => {
     const ahead = open({ clientId: "cli", getNow: () => Date.now() + 90 * 24 * 60 * 60 * 1000 });
@@ -198,7 +218,7 @@ describe("the saved format", () => {
     user.store.delRow("highlights", "x");
     const copy = open({ clientId: "cli" }).user;
     copy.store.applyMergeableChanges(decodeContent(encodeContent(user.store.getMergeableContent())));
-    expect(copy.store.getTables()).toEqual({});
+    expect(copy.store.getTable("highlights")).toEqual({});
   });
 });
 
