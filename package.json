@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:app": "node --no-warnings e2e/run.mjs",
+    "test:sync": "node --no-warnings e2e/sync.mjs",
     "build:cli": "vite build -c vite.cli.config.ts && node -e \"require('fs').chmodSync('out/cli/midad.mjs', 0o755)\"",
     "dist": "pnpm build && pnpm build:cli && electron-builder --publish never"
   },

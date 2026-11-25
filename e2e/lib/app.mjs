@@ -43,13 +43,14 @@ export const createTemplate = () => {
  * Starts the built app headless on a copy of the template library and connects to its window.
  * The app runs in its own process group, so stopping it kills exactly what was started here.
  */
-export const launchApp = async ({ root, template, name, width = 1280, height = 820 }) => {
+export const launchApp = async ({ root, template, name, width = 1280, height = 820, keep = false, env = {} }) => {
   const userData = join(root, name);
-  cpSync(template, userData, { recursive: true });
+  // A kept profile is reopened as it was left, for checks that close and restart the app.
+  if (!keep || !existsSync(userData)) cpSync(template, userData, { recursive: true });
   const port = await freePort();
   const child = spawn(ELECTRON, ["--ozone-platform=headless", `--remote-debugging-port=${port}`, MOUSE_POINTER, "."], {
     cwd: ROOT,
-    env: { ...process.env, MIDAD_USER_DATA: userData, NODE_ENV: "production", ELECTRON_RENDERER_URL: "" },
+    env: { ...process.env, ...env, MIDAD_USER_DATA: userData, NODE_ENV: "production", ELECTRON_RENDERER_URL: "" },
     detached: true,
     stdio: ["ignore", "ignore", "pipe"],
   });
@@ -72,7 +73,9 @@ export const launchApp = async ({ root, template, name, width = 1280, height = 8
       close: async () => {
         page.close();
         stop();
-        rmSync(userData, { recursive: true, force: true });
+        if (!keep) rmSync(userData, { recursive: true, force: true });
+        // Wait for the process to exit, so a kept profile isn't reopened while it is still writing.
+        while (child.exitCode === null && child.signalCode === null) await new Promise((r) => setTimeout(r, 50));
       },
     };
   } catch (err) {
