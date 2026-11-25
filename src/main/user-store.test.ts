@@ -124,6 +124,8 @@ describe("notes from two clients", () => {
     const app = open({ clientId: "app", getNow: () => t });
     const n = await app.annotations.addNote({ bookId: "b1", position: 1, span: matn(1, 1, 2), body: "first" });
     const cli = open({ clientId: "cli", getNow: () => t });
+    // Opened before the delete, and never merges it before editing.
+    const offline = open({ clientId: "corpus", getNow: () => t });
     t += 1000;
     await cli.annotations.updateNote({ id: n.id, body: "edited before the delete" });
     t += 1000;
@@ -131,11 +133,9 @@ describe("notes from two clients", () => {
     app.user.mergeOthers();
     expect((await app.annotations.listForPage({ bookId: "b1", position: 1 })).notes).toEqual([]);
 
-    // An edit made after the delete (on a client that hadn't seen it) brings the whole note back.
-    const offline = open({ clientId: "corpus", getNow: () => t - 1500 });
-    offline.user.store.setRow("notes", n.id, { ...cli.user.store.getRow("notes", n.id) });
+    // An edit made after the delete, on a client that hadn't seen it, brings the whole note back.
     t += 1000;
-    offline.user.store.setRow("notes", n.id, { ...offline.user.store.getRow("notes", n.id), body: "edited after the delete", updatedAt: t });
+    await offline.annotations.updateNote({ id: n.id, body: "edited after the delete" });
     app.user.mergeOthers();
     expect((await app.annotations.listForPage({ bookId: "b1", position: 1 })).notes).toMatchObject([{ id: n.id, body: "edited after the delete", quote: "الكلام هو" }]);
   });

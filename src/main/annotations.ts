@@ -375,7 +375,7 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
       const text = requireBody(body);
       const existing = user.row({ table: "notes", id });
       if (!existing) throw new Error(`There is no note with id ${id}.`);
-      user.store.setRow("notes", id, { ...existing, body: text, updatedAt: now() });
+      user.rewriteRow({ table: "notes", id, row: { ...existing, body: text, updatedAt: now() } });
     },
 
     async deleteNote({ id }: { id: string }): Promise<void> {
@@ -405,7 +405,9 @@ export const createAnnotations = ({ db, now = Date.now }: { db: DatabaseSync; no
       const at = now();
       user.store.transaction(() => {
         for (const [id] of others) user.store.delRow("harakat", id);
-        user.store.setRow("harakat", current?.[0] ?? randomUUID(), {
+        const id = current?.[0] ?? randomUUID();
+        user.store.delRow("harakat", id);
+        user.store.setRow("harakat", id, {
           bookId,
           fileId: row.file_id,
           ...ref,

@@ -68,7 +68,7 @@ export const createMarkers = ({ db, now = Date.now }: { db: DatabaseSync; now?: 
       if (text === null) throw new Error(`Page ${position} has no ${name} line ${line}.`);
       const count = wordsOf(text).length;
       if (word < 1 || word > count) throw new Error(`The ${name} line ${line} has ${count} words; there is no word ${word}.`);
-      user.store.setRow("markers", bookId, { fileId: row.file_id, part, line, word, setAt: now(), textRev: textRev(row.source) });
+      user.rewriteRow({ table: "markers", id: bookId, row: { fileId: row.file_id, part, line, word, setAt: now(), textRev: textRev(row.source) } });
     },
 
     async clear({ bookId }: { bookId: string }): Promise<void> {

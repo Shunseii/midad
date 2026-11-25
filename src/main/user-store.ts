@@ -192,6 +192,17 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
     save,
     locked,
     mergeOthers,
+    /**
+     * Writes a whole row with every cell freshly stamped. TinyBase only stamps cells whose value
+     * changes, so a plain setRow over a row another device deleted would bring back only the changed
+     * cells; deleting and setting it in one transaction stamps them all.
+     */
+    rewriteRow: ({ table, id, row }: { table: UserTable; id: string; row: Row }) => {
+      store.transaction(() => {
+        store.delRow(table, id);
+        store.setRow(table, id, row);
+      });
+    },
     /** Registers a tidy-up to run after merging other clients' or devices' changes. */
     afterMerge: ({ name, hook }: { name: string; hook: () => void }) => {
       mergeHooks.set(name, hook);

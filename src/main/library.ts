@@ -489,11 +489,15 @@ export const createLibrary = ({
       if (!page) throw new Error(`Book ${bookId} has no page ${position} in the library.`);
       const stored = user.row({ table: "progress", id: bookId });
       const keep = !anchor && stored?.fileId === page.file_id;
-      user.store.setRow("progress", bookId, {
-        fileId: page.file_id,
-        updatedAt: now(),
-        anchor: keep ? (stored.anchor ?? null) : anchor ? JSON.stringify(anchor) : null,
-        textRev: keep ? String(stored.textRev ?? "") : textRev(page.source),
+      user.rewriteRow({
+        table: "progress",
+        id: bookId,
+        row: {
+          fileId: page.file_id,
+          updatedAt: now(),
+          anchor: keep ? (stored.anchor ?? null) : anchor ? JSON.stringify(anchor) : null,
+          textRev: keep ? String(stored.textRev ?? "") : textRev(page.source),
+        },
       });
     },
   };

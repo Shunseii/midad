@@ -61,7 +61,7 @@ export const createBookmarks = ({ db, now = Date.now }: { db: DatabaseSync; now?
       const id = bookmarkId({ bookId, fileId });
       const existing = user.row({ table: "bookmarks", id });
       const date = createdAt ?? (existing ? Number(existing.createdAt) : now());
-      user.store.setRow("bookmarks", id, { bookId, fileId, name: clean, createdAt: date });
+      user.rewriteRow({ table: "bookmarks", id, row: { bookId, fileId, name: clean, createdAt: date } });
       return { position, name: clean, createdAt: date };
     },
 
