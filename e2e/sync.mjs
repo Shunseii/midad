@@ -2,32 +2,22 @@
 // Two app profiles syncing through the sync server under `wrangler dev` (local only, nothing is
 // deployed): `pnpm build && pnpm build:cli`, then `pnpm test:sync`.
 import assert from "node:assert/strict";
-import { execFileSync, spawn } from "node:child_process";
-import { createHash, randomBytes } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import { mkdirSync, rmSync } from "node:fs";
 import { createServer as createHttpServer } from "node:http";
-import { connect, createServer, createServer as createNetServer } from "node:net";
+import { connect, createServer as createNetServer } from "node:net";
 import { join } from "node:path";
 import { createMergeableStore } from "tinybase";
 import { createWsSynchronizer } from "tinybase/synchronizers/synchronizer-ws-client";
 import { assertBuilt, createTemplate, launchApp, ROOT } from "./lib/app.mjs";
 import { LONG_BOOK, SHORT_BOOK, SHORT_PAGES } from "./lib/fixture.mjs";
 import { clickPageArea, openReader } from "./lib/reader.mjs";
+import { freePort, startSyncServer } from "./lib/sync-server.mjs";
 
 const CLI = join(ROOT, "out/cli/midad.mjs");
-const WRANGLER = join(ROOT, "sync-server/node_modules/.bin/wrangler");
 const TOKENS = { a: "e2e-device-a-token", b: "e2e-device-b-token" };
-const sha256 = (s) => createHash("sha256").update(s).digest("hex");
-
-const freePort = () =>
-  new Promise((done, fail) => {
-    const server = createServer();
-    server.once("error", fail);
-    server.listen(0, "127.0.0.1", () => {
-      const { port } = server.address();
-      server.close(() => done(port));
-    });
-  });
+const startServer = ({ port, persistTo }) => startSyncServer({ port, persistTo, tokens: { [TOKENS.a]: "e2e-user", [TOKENS.b]: "e2e-user" } });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -40,33 +30,6 @@ const waitFor = async (check, message, timeout = 45_000, state = null) => {
     await sleep(200);
   }
   throw new Error(`${message} (waited ${timeout / 1000}s)${state ? `\nlast seen: ${JSON.stringify(await state())}` : ""}`);
-};
-
-/** The sync server under wrangler dev, in its own process group so stopping it kills exactly what was started here. */
-const startServer = async ({ port, persistTo }) => {
-  const users = JSON.stringify({ [sha256(TOKENS.a)]: "e2e-user", [sha256(TOKENS.b)]: "e2e-user" });
-  const child = spawn(WRANGLER, ["dev", "--ip", "127.0.0.1", "--port", String(port), "--persist-to", persistTo, "--var", `SYNC_TOKENS:${users}`], {
-    cwd: join(ROOT, "sync-server"),
-    env: { ...process.env, WRANGLER_SEND_METRICS: "false", CI: "1" },
-    detached: true,
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-  let log = "";
-  const collect = (d) => {
-    log = (log + d).slice(-8000);
-  };
-  child.stdout.on("data", collect);
-  child.stderr.on("data", collect);
-  await waitFor(() => log.includes("Ready on") || child.exitCode !== null, "wrangler dev didn't start", 90_000);
-  if (child.exitCode !== null) throw new Error(`wrangler dev exited:\n${log}`);
-  return {
-    stop: async () => {
-      try {
-        process.kill(-child.pid, "SIGTERM");
-      } catch {}
-      await waitFor(() => child.exitCode !== null || child.signalCode !== null, "wrangler dev didn't stop", 20_000);
-    },
-  };
 };
 
 const cli = ({ userData, args }) =>
