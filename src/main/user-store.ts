@@ -105,6 +105,12 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
     }
   };
 
+  const mergeHooks = new Map<string, () => void>();
+  /** Tidies what a merge can leave behind (two harakat on one letter). Writes made here are saved like any other. */
+  const afterMerge = () => {
+    for (const hook of mergeHooks.values()) hook();
+  };
+
   /** Merges every other client's saved copy that changed since it was last merged. Returns whether any did. */
   const mergeOthers = (): boolean => {
     const rows = db.prepare("SELECT client_id, rev FROM sync_stores WHERE client_id != ?").all(clientId) as { client_id: string; rev: number }[];
@@ -114,6 +120,7 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
       apply(parse(row.content));
       seen.set(client_id, rev);
     }
+    if (changed.length > 0) afterMerge();
     return changed.length > 0;
   };
 
@@ -169,6 +176,11 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
     save,
     locked,
     mergeOthers,
+    /** Registers a tidy-up to run after merging other clients' or devices' changes. */
+    afterMerge: ({ name, hook }: { name: string; hook: () => void }) => {
+      mergeHooks.set(name, hook);
+    },
+    runAfterMerge: afterMerge,
     /** The row, or null when it doesn't exist or is missing cells (a delete that raced an edit). */
     row: ({ table, id }: { table: UserTable; id: string }): Row | null => {
       const row = store.getRow(table, id);

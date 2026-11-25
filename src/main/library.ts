@@ -17,6 +17,7 @@ import type { SyncInput } from "../shared/ipc";
 import { realignPage, type WordAt } from "../shared/realign";
 import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
+import { tidyHarakat } from "./annotations";
 import { openUserStore, textRev } from "./user-store";
 
 /**
@@ -228,40 +229,32 @@ export const createLibrary = ({
     const realign = realignerFor({ before, after, edits });
     const [beforeRev, afterRev] = [textRev(before), textRev(after)];
     const pinnedBefore = (row: { textRev?: unknown }) => row.textRev === beforeRev || row.textRev === "" || row.textRev === undefined;
+    const afterPage = parsePage(after);
+    const pinned = (table: "highlights" | "notes" | "harakat") => user.rows({ table, ids: user.onPage({ table, bookId, fileId }) }).filter(([, row]) => pinnedBefore(row));
     user.store.transaction(() => {
-      for (const [id, row] of user.rows({ table: "highlights", ids: user.onPage({ table: "highlights", bookId, fileId }) })) {
-        if (!pinnedBefore(row)) continue;
-        const moved = realign.span(JSON.parse(String(row.span)) as Span);
-        if (moved) user.store.setCell("highlights", id, "span", JSON.stringify(moved));
-        user.store.setCell("highlights", id, "textRev", afterRev);
+      for (const table of ["highlights", "notes"] as const) {
+        for (const [id, row] of pinned(table)) {
+          if (row.kind !== "page") {
+            const moved = realign.span(JSON.parse(String(row.span)) as Span);
+            // A line note keeps covering its whole line, wherever the line's words went.
+            const span = moved && row.kind === "line" ? (lineSpan({ page: afterPage, part: moved.part, line: moved.start.line }) ?? moved) : moved;
+            if (span) user.store.setCell(table, id, "span", JSON.stringify(span));
+          }
+          user.store.setCell(table, id, "textRev", afterRev);
+        }
+      }
+      for (const [id, row] of pinned("harakat")) {
+        const moved = realign.word({ part: row.part as WordAt["part"], line: Number(row.line), word: Number(row.word) });
+        if (moved) user.store.setPartialRow("harakat", id, { part: moved.part, line: moved.line, word: moved.word });
+        user.store.setCell("harakat", id, "textRev", afterRev);
       }
     });
+    // Two marks can land on one letter, as SQLite's UNIQUE used to settle with UPDATE OR REPLACE.
+    tidyHarakat(user);
   };
 
   const moveMarks = ({ bookId, fileId, before, after, edits }: { bookId: string; fileId: string; before: string; after: string; edits: TextEdit[] | null }) => {
     const realign = realignerFor({ before, after, edits });
-    const afterPage = parsePage(after);
-    for (const table of ["notes"]) {
-      if (!hasTable(table)) continue;
-      const kind = table === "notes" ? "kind" : "'words' AS kind";
-      const rows = db.prepare(`SELECT id, span, ${kind} FROM ${table} WHERE book_id = ? AND file_id = ?`).all(bookId, fileId) as unknown as { id: string; span: string; kind: string }[];
-      const update = db.prepare(`UPDATE ${table} SET span = ? WHERE id = ?`);
-      for (const row of rows) {
-        if (row.kind === "page") continue;
-        const moved = realign.span(JSON.parse(row.span) as Span);
-        // A line note keeps covering its whole line, wherever the line's words went.
-        const span = moved && row.kind === "line" ? (lineSpan({ page: afterPage, part: moved.part, line: moved.start.line }) ?? moved) : moved;
-        if (span) update.run(JSON.stringify(span), row.id);
-      }
-    }
-    if (hasTable("harakat")) {
-      const rows = db.prepare("SELECT id, part, line, word FROM harakat WHERE book_id = ? AND file_id = ?").all(bookId, fileId) as unknown as ({ id: string } & WordAt)[];
-      const update = db.prepare("UPDATE OR REPLACE harakat SET part = ?, line = ?, word = ? WHERE id = ?");
-      for (const row of rows) {
-        const moved = realign.word(row);
-        if (moved) update.run(moved.part, moved.line, moved.word, row.id);
-      }
-    }
     if (hasTable("markers")) {
       const row = db.prepare("SELECT part, line, word FROM markers WHERE book_id = ? AND file_id = ?").get(bookId, fileId) as unknown as WordAt | undefined;
       const moved = row && realign.word(row);

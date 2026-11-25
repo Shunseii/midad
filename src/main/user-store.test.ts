@@ -35,7 +35,7 @@ const open = ({ clientId, getNow, corpus = new FakeCorpus() }: { clientId: Clien
   db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
   connections.push(db);
   const user = openUserStore({ db, clientId, ...(getNow ? { getNow } : {}) });
-  return { db, user, library: createLibrary({ db, corpus }), annotations: createAnnotations({ db }) };
+  return { db, user, library: createLibrary({ db, corpus, ...(getNow ? { now: getNow } : {}) }), annotations: createAnnotations({ db, ...(getNow ? { now: getNow } : {}) }) };
 };
 
 beforeEach(async () => {
@@ -82,7 +82,7 @@ describe("clients sharing a library file", () => {
   });
 
   it("settle a recolour racing a delete by whichever happened last", async () => {
-    let t = 1_800_000_000_000;
+    let t = Date.now();
     const app = open({ clientId: "app", getNow: () => t });
     const h = await app.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 1), color: "green" });
     const cli = open({ clientId: "cli", getNow: () => t });
@@ -98,6 +98,85 @@ describe("clients sharing a library file", () => {
     app.user.mergeOthers();
     expect(app.user.store.getCell("highlights", h.id, "color")).toBe("blue");
     expect((await app.annotations.listForPage({ bookId: "b1", position: 1 })).highlights).toEqual([]);
+  });
+});
+
+describe("notes from two clients", () => {
+  it("make one page note when both add it, keeping the newer text", async () => {
+    let t = Date.now();
+    const app = open({ clientId: "app", getNow: () => t });
+    const cli = open({ clientId: "cli", getNow: () => t });
+    const fromCli = await cli.annotations.addNote({ bookId: "b1", position: 1, page: true, body: "from the agent", author: "agent" });
+    t += 1000;
+    const fromApp = await app.annotations.addNote({ bookId: "b1", position: 1, page: true, body: "from the reader" });
+    expect(fromApp.id).toBe(fromCli.id);
+    app.user.mergeOthers();
+    cli.user.mergeOthers();
+    for (const client of [app, cli]) {
+      const { pageNote } = await client.annotations.listForPage({ bookId: "b1", position: 1 });
+      expect(pageNote).toMatchObject({ id: "b1:f1", body: "from the reader", author: "me" });
+      expect(client.user.rows({ table: "notes" })).toHaveLength(1);
+    }
+  });
+
+  it("settle a delete racing an edit by whichever came last, never leaving half a note", async () => {
+    let t = Date.now();
+    const app = open({ clientId: "app", getNow: () => t });
+    const n = await app.annotations.addNote({ bookId: "b1", position: 1, span: matn(1, 1, 2), body: "first" });
+    const cli = open({ clientId: "cli", getNow: () => t });
+    t += 1000;
+    await cli.annotations.updateNote({ id: n.id, body: "edited before the delete" });
+    t += 1000;
+    await app.annotations.deleteNote({ id: n.id });
+    app.user.mergeOthers();
+    expect((await app.annotations.listForPage({ bookId: "b1", position: 1 })).notes).toEqual([]);
+
+    // An edit made after the delete (on a client that hadn't seen it) brings the whole note back.
+    const offline = open({ clientId: "corpus", getNow: () => t - 1500 });
+    offline.user.store.setRow("notes", n.id, { ...cli.user.store.getRow("notes", n.id) });
+    t += 1000;
+    offline.user.store.setRow("notes", n.id, { ...offline.user.store.getRow("notes", n.id), body: "edited after the delete", updatedAt: t });
+    app.user.mergeOthers();
+    expect((await app.annotations.listForPage({ bookId: "b1", position: 1 })).notes).toMatchObject([{ id: n.id, body: "edited after the delete", quote: "الكلام هو" }]);
+  });
+});
+
+describe("harakat from two clients on one letter", () => {
+  it("show the newest, and the older row is deleted the same way on every client", async () => {
+    let t = Date.now();
+    const app = open({ clientId: "app", getNow: () => t });
+    const cli = open({ clientId: "cli", getNow: () => t });
+    await app.annotations.setHarakat({ bookId: "b1", position: 1, part: "matn", line: 1, word: 1, letter: 2, marks: "َ" });
+    t += 1000;
+    await cli.annotations.setHarakat({ bookId: "b1", position: 1, part: "matn", line: 1, word: 1, letter: 2, marks: "ُ", author: "agent" });
+    expect(app.user.store.getRowCount("harakat") + cli.user.store.getRowCount("harakat")).toBe(2);
+    app.user.mergeOthers();
+    cli.user.mergeOthers();
+    for (const client of [app, cli]) {
+      expect((await client.annotations.listForPage({ bookId: "b1", position: 1 })).harakat).toMatchObject([{ letter: 2, marks: "ُ", author: "agent" }]);
+      expect(client.user.rows({ table: "harakat" })).toHaveLength(1);
+    }
+    const reopened = open({ clientId: "app" });
+    expect(reopened.user.rows({ table: "harakat" })).toHaveLength(1);
+  });
+});
+
+describe("migrating notes and harakat from SQLite", () => {
+  it("keeps every id, except a page note, which takes its page's id", async () => {
+    const db = new DatabaseSync(dbPath);
+    db.exec(`CREATE TABLE notes (id TEXT PRIMARY KEY, book_id TEXT NOT NULL, file_id TEXT NOT NULL, span TEXT NOT NULL, quote TEXT NOT NULL,
+        body TEXT NOT NULL, author TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL, kind TEXT NOT NULL DEFAULT 'words');
+      CREATE TABLE harakat (id TEXT PRIMARY KEY, book_id TEXT NOT NULL, file_id TEXT NOT NULL, part TEXT NOT NULL, line INTEGER NOT NULL,
+        word INTEGER NOT NULL, letter INTEGER NOT NULL, marks TEXT NOT NULL, base TEXT NOT NULL, author TEXT NOT NULL, created_at INTEGER NOT NULL)`);
+    db.prepare("INSERT INTO notes VALUES ('n1', 'b1', 'f1', ?, 'الكلام', 'words', 'me', 1, 2, 'words')").run(JSON.stringify(matn(1, 1)));
+    db.prepare("INSERT INTO notes VALUES ('n2', 'b1', 'f1', 'null', '', 'page', 'agent', 3, 4, 'page')").run();
+    db.prepare("INSERT INTO harakat VALUES ('k1', 'b1', 'f1', 'matn', 1, 1, 2, ?, 'ل', 'me', 5)").run("َ");
+    db.close();
+    const app = open({ clientId: "app" });
+    const found = await app.annotations.listForPage({ bookId: "b1", position: 1 });
+    expect(found.notes).toMatchObject([{ id: "n1", body: "words", createdAt: 1, updatedAt: 2 }]);
+    expect(found.pageNote).toMatchObject({ id: "b1:f1", body: "page", author: "agent", createdAt: 3, updatedAt: 4 });
+    expect(found.harakat).toMatchObject([{ id: "k1", base: "ل", marks: "َ", createdAt: 5, stale: false }]);
   });
 });
 
