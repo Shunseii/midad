@@ -1,0 +1,11 @@
+name = "midad-sync"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+[[durable_objects.bindings]]
+name = "MIDAD_SYNC"
+class_name = "MidadSync"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["MidadSync"]

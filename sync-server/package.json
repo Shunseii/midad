@@ -1,0 +1,18 @@
+{
+  "name": "midad-sync",
+  "private": true,
+  "type": "module",
+  "description": "Midad's sync server: a Cloudflare Worker and one TinyBase Durable Object per user. Local only for now: run it with `pnpm dev`.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "tinybase": "10.1.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261125.1",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.168.0"
+  }
+}
