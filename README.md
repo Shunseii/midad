@@ -1,35 +1,69 @@
+<p align="center"><img src="docs/banner.png" alt="Midad (مداد): a desktop reader for classical Arabic books" width="100%"></p>
+
 # Midad (مداد)
 
-A reader for the Arabic digitization corpus. You import books from the `arabic-digitization` API into Midad's own local library, then read them right to left in a reader where you can:
+A desktop reader for classical Arabic books. You import books from the `arabic-digitization` corpus into Midad's own local library, then read them right to left, with the interlinear glosses and the ḥāshiya where the book puts them. While you read you can:
 
 - highlight passages in four colours,
-- write notes on a word or phrase, edited in place in a popover,
-- add your own harakat to the text,
-- mark where you last read,
-- ask Claude about a selected passage, with answers that link to lines on the page,
-- export highlights and notes to Obsidian.
+- write notes on a word or phrase, a whole line, or the whole page,
+- add your own harakat to the text, drawn in red so they stand apart from the book's,
+- bookmark pages, browse the book's contents, and jump anywhere with the page scrubber,
+- open the scan a page was transcribed from,
+- read in focus mode, which hides the toolbars while you read,
+- ask Claude about the page, with answers that link to the lines they cite.
+
+Midad runs on Windows and Linux, in light and dark.
+
+![The reader with highlights, your own harakat, and the notes on the page](docs/screenshots/reader-notes.png)
+
+| | |
+|---|---|
+| ![The library](docs/screenshots/library.png) | ![Interlinear glosses printed under their words](docs/screenshots/reader-glosses.png) |
+| ![Ask AI answering with links to lines on the page](docs/screenshots/ask-ai.png) | ![The reader in dark mode](docs/screenshots/reader-dark.png) |
+
+## Install
+
+Download the installer for your system from the [Releases page](https://github.com/Shunseii/midad/releases):
+
+- **Windows:** `Midad-<version>-win-x64.exe`. Run it and follow the installer.
+- **Linux:** `Midad-<version>-linux-x86_64.AppImage`. Make it executable, then run it:
+
+  ```sh
+  chmod +x Midad-*.AppImage
+  ./Midad-*.AppImage
+  ```
+
+The builds aren't code-signed. On Windows, SmartScreen may say "Windows protected your PC" the first time you run the installer; click **More info**, then **Run anyway**. Your browser may also warn that the file isn't commonly downloaded; choose to keep it.
+
+To import books, open Settings and enter the corpus API URL and key.
+
+**Ask AI** needs two things on your `PATH`:
+
+- [Claude Code](https://docs.claude.com/en/docs/claude-code), as the `claude` command, signed in. Midad uses your local Claude Code session, not an API key.
+- Node.js 22.13 or later. Claude reads the page through Midad's `midad` command, which runs on Node and its built-in SQLite module.
+
+The rest of Midad works without either.
 
 ## Product decisions
 
 - **Books are imported, then read locally.** Importing pulls every transcribed page of a corpus book, parses it (rules below) and stores the result in Midad's local library, a SQLite database in the app's data folder. From then on the reader, the agent tools and Ask AI read only that local copy; the corpus is not queried while reading. The corpus is the only import source for now.
 - **Syncing is explicit.** For an imported book you can pull pages the corpus has gained since import (existing pages are left alone), or overwrite chosen pages with the corpus's current text. Pages the corpus hasn't finished transcribing are skipped and counted as pending.
 - **Pages:** Library, Reader and Settings. There is no search page and no page that lists every note.
-- **Page text is the matn plus the ḥāshiya, nothing else.** Corpus pages are markdown: the matn first, then `---` and a `### الحاشية` heading before the footnotes. Interlinear glosses (small text written between the lines) come as `<ruby>base<rt>gloss</rt></ruby>`. Midad keeps the base words and drops the `<rt>` gloss everywhere, in the matn and in the ḥāshiya. Highlights, notes and harakat are positioned against this cleaned text, and `midad page` returns the same text.
-- **Highlights and notes are separate.** A highlight is a colour on a range of text. A note is text anchored to a word or phrase, shown with a dotted underline. Hovering the anchor opens a popover above or below it, where the note is edited directly and saves itself.
-- **The side panel has three tabs:** Highlights, Notes and Ask AI. The Highlights and Notes tabs show only the current page.
+- **Page text is the matn, the ḥāshiya and their glosses.** Corpus pages are markdown: the matn first, then `---` and a `### الحاشية` heading before the footnotes. Interlinear glosses (small text written between the lines) come as `<ruby>base<rt>gloss</rt></ruby>`. Midad keeps the base words in the text and attaches each gloss to the words it explains. The reader prints glosses small under their words, shows them on hover, or hides them (a setting). Highlights, notes and harakat are positioned against the text without the glosses. `midad page` returns the same text, with each line's glosses listed under it.
+- **Highlights and notes are separate.** A highlight is a colour on a range of text. A note is text anchored to a word or phrase, shown with a dotted underline. Hovering the anchor opens a popover above or below it, where the note is edited directly and saves itself. A note can also cover a whole line (shown by the line's number) or the whole page.
+- **The left panel is about the whole book, the right panel about this page.** The left panel holds the contents and bookmarks, and collapses with a toggle next to the back button; the page re-centres in the freed space. The right panel has the Highlights and Notes tabs, which show only the current page, and Ask AI.
 - **Your harakat never change the corpus.** They are stored as a separate layer (position in the page text plus the mark) and drawn over the corpus text in `ink-added` red, so they are easy to tell apart from the corpus's own marks.
 - **Adding harakat works like typing.** Click a letter, or select one, to put a caret after it. Type the haraka with the normal Arabic layout (Shift+Q fatha, Shift+E damma, Shift+A kasra, Shift+X sukun, Shift+\` shadda, Shift+W/R/S tanwīn) and it attaches to that letter. Backspace removes your mark, ← → move one letter, Esc leaves. The typed character is used when the OS layout is Arabic. Otherwise Midad maps the physical key (`KeyboardEvent.code`) to its position on the standard Arabic layout, so the same keys work on an English layout.
 - **Harakat display:** a "Harakat" switch hides or shows all marks, the corpus's and yours (shortcut `H`). A "My harakat" switch hides only yours. It is disabled while all harakat are hidden.
-- **Agent access:** a `midad` command-line tool reads pages from the local library and adds or removes harakat, notes and highlights, so Claude (or any agent with a shell) can work with it. There is no MCP server. Spans are named by line and word (`--line 4 --words 6-8`), the same anchors the app uses. Notes an agent writes are labelled with the agent's name.
-- **Ask AI cites the page, not the corpus.** Answers link to lines of the matn and ḥāshiya on the current page as inline chips (`line 1`, `ḥāshiya ١`). Clicking one scrolls to that line and highlights it. There are no links to other books.
-- **The contents sidebar collapses** with a toggle next to the back button. The page re-centres in the freed space.
-- **Ask AI uses a local Claude Code session**, not an API key. Settings holds the path to the `claude` binary and the folder it starts in, so it can use the corpus search tools.
+- **Agent access:** a `midad` command-line tool reads pages from the local library and adds or removes harakat, notes and highlights, so Claude (or any agent with a shell) can work with it. Spans are named by line and word (`--line 4 --words 6-8`), the same anchors the app uses. Notes an agent writes are labelled with the agent's name. The local library has no MCP server; the CLI is the interface.
+- **Ask AI cites the page, not the corpus.** Answers link to lines of the matn and ḥāshiya on the current page as inline chips. Clicking one scrolls to that line and highlights it. There are no links to other books.
+- **Ask AI uses a local Claude Code session**, not an API key. Midad runs the `claude` command from your `PATH` in its own folder inside the app's data folder, with `midad` on its `PATH`. When the corpus is set up, Claude also gets Midad's corpus MCP server (`src/mcp/`), whose tools show a page's stored transcription and its scan, fix transcription mistakes, and list or undo past edits.
 
 ## Stack
 
-- **Electron, not Tauri.** Electron ships its own Chromium, so Arabic shaping renders the same on every OS. Tauri uses the system webview (WebKitGTK on Linux), which caused Arabic rendering problems in the past. The harakat layer depends on Chromium's behaviour: a mark in its own coloured span stays attached and the letters stay joined.
+- **Electron, not Tauri.** Electron ships its own Chromium, so Arabic shaping renders the same on every OS. Tauri uses the system webview (WebKitGTK on Linux), which caused Arabic rendering problems in the past. The harakat layer depends on Chromium's behaviour: a letter wrapped in its own coloured span keeps joining to its neighbours, and its marks take its colour, so a letter you've marked is drawn whole in red.
 - The Electron main process (Node) starts the local Claude Code session. The `midad` CLI opens the same SQLite library directly.
-- Same base as the Qiraa desktop app in `arabic-digitization/apps/desktop` (Electron, Vite, React, bundled Noto Naskh Arabic). Its markdown reader, which handles `### الحاشية` and `<ruby>`, can be shared through `@qiraa/shared`.
+- React, Tailwind CSS v4 and Vite (electron-vite), with bundled Noto Naskh Arabic, Inter and Source Serif 4.
 
 ## Ask AI behaviour
 
@@ -48,22 +82,7 @@ Claude pulls everything else itself through the CLI (`midad page`, `midad lines`
 
 The renderer gives each line or paragraph its own direction (`dir="auto"`, `unicode-bidi: plaintext`). An Arabic line then sets right to left and an English line left to right, whatever direction the panel is in.
 
-## Status
-
-Built so far:
-- Library: import and sync from the corpus.
-- Reader:
-  - contents rail and pager
-  - harakat show/hide
-  - highlights and notes
-  - your own harakat in red, with undo
-  - last-read marker
-- The `midad` CLI.
-
-Not built yet:
-- Ask AI
-- Obsidian export
-- the Settings cards for Claude and agent access
+## Development
 
 ```sh
 pnpm install
@@ -72,9 +91,19 @@ pnpm test         # vitest
 pnpm typecheck
 ```
 
+### Building and releasing
+
+```sh
+pnpm dist         # builds the app and the CLI, then the installers for this OS into dist/
+```
+
+`pnpm dist` runs electron-builder (config in `electron-builder.yml`): an NSIS `.exe` on Windows, an `.AppImage` on Linux. Pass `--win` or `--linux` to pick the target.
+
+To release, publish a GitHub release for a version tag. That triggers `.github/workflows/release.yml`, which builds the Windows and Linux installers on GitHub's runners and attaches them to the release. To rebuild the installers for an existing release, run the workflow by hand and give it the tag.
+
 ### End-to-end checks
 
-`pnpm test:app` drives the built app the way a person does: it starts Electron headless, then clicks, drags, scrolls and types through the Chrome DevTools Protocol, and checks what happens on screen (the scrubber, focus rings, shortcuts, contents, Ask AI and its queue, library transitions, focus mode). It doesn't build anything, so build first:
+`pnpm test:app` drives the built app the way a person does: it starts Electron headless, then clicks, drags, scrolls and types through the Chrome DevTools Protocol, and checks what happens on screen (the scrubber, focus rings, shortcuts, contents, Ask AI and its queue, library transitions, import, selection, focus mode, page and line notes). It doesn't build anything, so build first:
 
 ```sh
 pnpm build && pnpm build:cli
@@ -87,7 +116,7 @@ Each group starts the app on a fresh copy of a synthetic library (a 300-page boo
 ### The `midad` CLI
 
 ```sh
-pnpm build:cli                                   # writes out/cli/midad.mjs (Node 22+)
+pnpm build:cli                                   # writes out/cli/midad.mjs (Node 22.13+)
 ln -s "$PWD/out/cli/midad.mjs" ~/.local/bin/midad
 
 midad books
@@ -97,7 +126,7 @@ midad harakat set الآجرومية 3 --line 2 --word 3 --letter 4 --marks shad
 midad --help
 ```
 
-It opens the library the app uses: `~/.config/midad/midad.db` on Linux, or `~/Library/Application Support/midad/midad.db` on macOS. To use a different one, set `MIDAD_DB`. Everything it writes is labelled as the agent's. An open Midad window shows the change within a second.
+It opens the library the app uses: `~/.config/midad/midad.db` on Linux, or `%APPDATA%\midad\midad.db` on Windows. To use a different one, set `MIDAD_DB`. Everything it writes is labelled as the agent's. An open Midad window shows the change within a second.
 
 ### Designs
 
