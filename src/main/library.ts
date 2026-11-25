@@ -9,6 +9,7 @@ import type {
   StoredPage,
   SyncPreview,
   SyncResult,
+  WaitingBook,
 } from "../shared/library";
 import { lineSpan, type Span } from "../shared/annotations";
 import type { TextEdit } from "../shared/corpus";
@@ -160,10 +161,11 @@ const legacyProgress = (db: DatabaseSync) => {
 
 /** Which books are in the library, from the books imported before the user store. Their text stays in SQLite. */
 const legacyMembership = (db: DatabaseSync) =>
-  (db.prepare("SELECT book_id, imported_at FROM books").all() as { book_id: string; imported_at: number }[]).map((b) => ({
+  (db.prepare("SELECT book_id, title, author, imported_at FROM books").all() as { book_id: string; title: string; author: string | null; imported_at: number }[]).map((b) => ({
     table: "library" as const,
     id: b.book_id,
-    row: { addedAt: b.imported_at },
+    // The title and author let a device without the book's text name it.
+    row: { addedAt: b.imported_at, title: b.title, author: b.author },
     at: b.imported_at,
   }));
 
@@ -367,7 +369,7 @@ export const createLibrary = ({
         for (const f of ready) writePage(corpusBookId, f, "insert");
         renumber(corpusBookId);
       });
-      user.store.setRow("library", corpusBookId, { addedAt: now() });
+      user.store.setRow("library", corpusBookId, { addedAt: now(), title: meta.work?.name ?? meta.title, author: meta.work?.author ?? null });
       return { bookId: corpusBookId, imported: ready.length, pending: files.length - ready.length };
     },
 
@@ -420,6 +422,20 @@ export const createLibrary = ({
         db.prepare("UPDATE books SET synced_at = ? WHERE book_id = ?").run(now(), bookId);
         return { added, overwritten, pending: preview.pending };
       });
+    },
+
+    /** Books in the library (on any device) whose text isn't on this one: synced membership with nothing to read yet. */
+    async waitingBooks(): Promise<WaitingBook[]> {
+      return user
+        .rows({ table: "library" })
+        .filter(([bookId]) => !bookExists(bookId))
+        .map(([bookId, row]) => ({
+          bookId,
+          title: typeof row.title === "string" ? row.title : null,
+          author: typeof row.author === "string" ? row.author : null,
+          addedAt: Number(row.addedAt),
+        }))
+        .sort((a, b) => b.addedAt - a.addedAt);
     },
 
     async listBooks(): Promise<LibraryBook[]> {

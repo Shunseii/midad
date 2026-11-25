@@ -25,7 +25,7 @@ import { tintWords } from "../lib/reveal";
 import { entryIndexFor, visibleEntries } from "../lib/contents";
 import { arabicNumber } from "../lib/format";
 import { type BookmarkState, createUndoStack, type MarkerAt, type UndoStack } from "../lib/undo";
-import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookmarks, useBookMarks, useMarker, usePage, useSetBookmark, useSetMarker } from "../lib/midad";
+import { midad, keys, useAnnotationActions, useAnnotations, useBook, useBookmarks, useBookMarks, useMarker, usePage, useSetBookmark, useSetMarker, useWaitingBooks } from "../lib/midad";
 import { BookmarkList, BookmarkRibbon } from "../components/bookmarks";
 import { COVER_TRANSITION_MS, markClosingBook } from "../components/book-cover";
 import { bookmarkFolio } from "../lib/bookmarks";
@@ -382,6 +382,7 @@ export const ReaderRoute = () => {
   const { bookId = "" } = useParams();
   const [search, setSearch] = useSearchParams();
   const book = useBook(bookId);
+  const waiting = useWaitingBooks();
   // Wide windows show contents and the side panel beside the text (remembered);
   // narrower ones slide them over the page, closed until asked for.
   const wide = useMediaQuery("(min-width: 80rem)");
@@ -1401,9 +1402,10 @@ export const ReaderRoute = () => {
 
 
   if (book.isSuccess && book.data === null) {
+    const elsewhere = waiting.data?.some((b) => b.bookId === bookId);
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3 text-sm text-ink-2">
-        This book isn't in your library.
+        {elsewhere ? "This book is in your library on another device. Import it from the Library to read it here." : "This book isn't in your library."}
         <Link to="/" viewTransition className="text-accent">
           Back to Library
         </Link>

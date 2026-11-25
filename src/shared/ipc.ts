@@ -13,6 +13,7 @@ import type {
   StoredPage,
   SyncPreview,
   SyncResult,
+  WaitingBook,
 } from "./library";
 
 export type { CorpusBookListing };
@@ -37,6 +38,8 @@ export interface MidadApi {
   "settings.test": (input: { endpoint: string; key?: string }) => Promise<{ ok: true } | { ok: false; message: string }>;
   "corpus.listBooks": () => Promise<CorpusBookListing[]>;
   "library.list": () => Promise<LibraryBook[]>;
+  /** Books in the library on other devices that aren't on this one yet. */
+  "library.elsewhere": () => Promise<WaitingBook[]>;
   "library.get": (bookId: string) => Promise<BookDetail | null>;
   "library.page": (input: { bookId: string; position: number }) => Promise<StoredPage | null>;
   "library.import": (input: { corpusBookId: string }) => Promise<ImportResult>;
@@ -106,6 +109,7 @@ export const CHANNELS = [
   "settings.test",
   "corpus.listBooks",
   "library.list",
+  "library.elsewhere",
   "library.get",
   "library.page",
   "library.import",

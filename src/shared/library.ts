@@ -10,6 +10,14 @@ export interface ScrollAnchor {
   offset: number;
 }
 
+/** A book in the library on another device whose text this device hasn't imported yet. Older entries carry no title. */
+export interface WaitingBook {
+  bookId: string;
+  title: string | null;
+  author: string | null;
+  addedAt: number;
+}
+
 export interface ReadingProgress {
   position: number;
   updatedAt: number;

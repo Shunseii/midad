@@ -7,7 +7,8 @@ import { ImportDialog } from "../components/import-dialog";
 import { SyncDialog } from "../components/sync-dialog";
 import { Button, IconButton, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
 import { plural, timeAgo } from "../lib/format";
-import { useLibrary, useSettings } from "../lib/midad";
+import { WaitingBooks } from "../components/waiting-books";
+import { useLibrary, useSettings, useWaitingBooks } from "../lib/midad";
 import { switchListInTransition } from "../lib/view-transition";
 
 type Shelf = "all" | "reading" | "finished";
@@ -83,6 +84,7 @@ const ContinueCard = ({ book }: { book: LibraryBook }) => {
 
 export const LibraryRoute = () => {
   const library = useLibrary();
+  const waiting = useWaitingBooks();
   const settings = useSettings();
   const [shelf, setShelf] = useState<Shelf>("all");
   useClosingCover();
@@ -125,7 +127,8 @@ export const LibraryRoute = () => {
         </Button>
       </header>
 
-      {!configured && settings.isSuccess && (
+      {/* With books waiting from other devices, their panel says the same, next to them. */}
+      {!configured && settings.isSuccess && waiting.isSuccess && waiting.data.length === 0 && (
         <div className="flex items-center gap-4 rounded-xl bg-warn-soft px-5 py-4 text-sm text-warn">
           <span className="flex-1">Set up the corpus connection to import books.</span>
           <Link to="/settings" viewTransition>
@@ -147,7 +150,9 @@ export const LibraryRoute = () => {
 
       {library.error && <p className="text-sm text-danger">Couldn't open the library: {library.error.message}</p>}
 
-      {library.isSuccess && books.length === 0 && (
+      <WaitingBooks books={waiting.data ?? []} configured={configured} onImported={setToast} />
+
+      {library.isSuccess && books.length === 0 && waiting.isSuccess && waiting.data.length === 0 && (
         <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-line px-6 py-16 text-center">
           <span className="ar text-ar-display text-ink-3">مداد</span>
           <p className="max-w-sm text-sm text-ink-2">Your library is empty. Import a book from the corpus to start reading.</p>

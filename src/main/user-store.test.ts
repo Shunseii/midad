@@ -233,6 +233,18 @@ describe("what a merge changed, for undo to forget", () => {
   });
 });
 
+describe("books in the library on another device only", () => {
+  it("are listed as waiting, with their names, and their pages list no annotations rather than failing", async () => {
+    const app = open({ clientId: "app" });
+    const other = open({ clientId: "cli" });
+    other.user.store.setRow("library", "elsewhere", { addedAt: 5, title: "قطر الندى", author: "ابن هشام" });
+    other.user.store.setRow("highlights", "h-elsewhere", { bookId: "elsewhere", fileId: "e1", span: JSON.stringify(matn(1, 1)), quote: "x", color: "green", author: "me", createdAt: 5 });
+    app.user.mergeOthers();
+    expect(await app.library.waitingBooks()).toEqual([{ bookId: "elsewhere", title: "قطر الندى", author: "ابن هشام", addedAt: 5 }]);
+    expect(await app.annotations.listForPage({ bookId: "elsewhere", position: 1 })).toEqual({ highlights: [], notes: [], pageNote: null, harakat: [] });
+  });
+});
+
 describe("a clock that was set wrong", () => {
   it("doesn't drop changes stamped while it ran ahead once it is set back", async () => {
     const ahead = open({ clientId: "cli", getNow: () => Date.now() + 90 * 24 * 60 * 60 * 1000 });

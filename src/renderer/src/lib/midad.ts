@@ -16,6 +16,7 @@ export const keys = {
   settings: ["settings"] as const,
   corpusBooks: ["corpus", "books"] as const,
   library: ["library"] as const,
+  waiting: ["library", "elsewhere"] as const,
   book: (bookId: string) => ["library", bookId] as const,
   page: (bookId: string, position: number) => ["library", bookId, "page", position] as const,
   syncPreview: (bookId: string) => ["library", bookId, "sync-preview"] as const,
@@ -30,6 +31,9 @@ export const keys = {
 export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: () => midad["settings.get"]() });
 
 export const useLibrary = () => useQuery({ queryKey: keys.library, queryFn: () => midad["library.list"]() });
+
+/** Books in the library on other devices that this one hasn't imported. Refetched with the library. */
+export const useWaitingBooks = () => useQuery({ queryKey: keys.waiting, queryFn: () => midad["library.elsewhere"]() });
 
 export const useBook = (bookId: string) =>
   useQuery({ queryKey: keys.book(bookId), queryFn: () => midad["library.get"](bookId) });

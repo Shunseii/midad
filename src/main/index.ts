@@ -108,6 +108,7 @@ const handlers: MidadApi = {
   },
   "corpus.listBooks": async () => corpusClient().listBooks(),
   "library.list": () => library.listBooks(),
+  "library.elsewhere": () => library.waitingBooks(),
   "library.get": (bookId) => library.getBook(bookId),
   "library.page": (input) => library.getPage(input),
   "library.import": (input) =>

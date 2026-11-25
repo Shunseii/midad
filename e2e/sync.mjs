@@ -4,11 +4,12 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { rmSync } from "node:fs";
+import { mkdirSync, rmSync } from "node:fs";
+import { createServer as createHttpServer } from "node:http";
 import { createServer } from "node:net";
 import { join } from "node:path";
 import { assertBuilt, createTemplate, launchApp, ROOT } from "./lib/app.mjs";
-import { LONG_BOOK } from "./lib/fixture.mjs";
+import { LONG_BOOK, SHORT_BOOK, SHORT_PAGES } from "./lib/fixture.mjs";
 import { clickPageArea, openReader } from "./lib/reader.mjs";
 
 const CLI = join(ROOT, "out/cli/midad.mjs");
@@ -244,6 +245,56 @@ await check("an open note editor shows the other device's edit until something i
   await waitFor(async () => (await onPage(a.page, 44)).pageNote?.body === "عدلها ب مرة أخرى", "A never got B's second edit");
   await sleep(500);
   assert.equal(await a.page.ev(`${box}?.value`), "عدلها ب وأضفت", "A's unsaved typing was replaced");
+});
+
+await check("a new device with an empty library sees the books waiting from the others, and imports one from the corpus", async () => {
+  // Stands in for the corpus Worker, for the short book only: its metadata and its batched export.
+  const corpus = createHttpServer((req, res) => {
+    const url = new URL(req.url, "http://corpus");
+    const reply = (status, body) => {
+      res.writeHead(status, { "content-type": "application/json" });
+      res.end(JSON.stringify(body));
+    };
+    const book = { id: SHORT_BOOK, title: "رسالة قصيرة", created_at: 0, files_total: SHORT_PAGES, counts: { done: SHORT_PAGES } };
+    if (url.pathname === "/api/works") return reply(200, { success: true, works: [] });
+    if (url.pathname === "/api/books") return reply(200, { success: true, books: [book] });
+    if (url.pathname === `/api/books/${SHORT_BOOK}`) return reply(200, { success: true, book });
+    if (url.pathname === `/api/books/${SHORT_BOOK}/export`) {
+      const files = Array.from({ length: SHORT_PAGES }, (_, i) => ({ file_id: `${SHORT_BOOK}-f${i + 1}`, page_number: i + 1, role: null, order_hint: i + 1, state: "done", text: `صفحة ${i + 1}` }));
+      return reply(200, { success: true, book_id: SHORT_BOOK, files, files_total: SHORT_PAGES, next_cursor: null });
+    }
+    reply(404, { success: false, error: "not found" });
+  });
+  await new Promise((done) => corpus.listen(0, "127.0.0.1", done));
+  const emptyTemplate = join(root, "empty-template");
+  mkdirSync(emptyTemplate, { recursive: true });
+  const c = await launchApp({ root, template: emptyTemplate, name: "c", keep: true, env: { MIDAD_SYNC_URL: url, MIDAD_SYNC_TOKEN: TOKENS.a } });
+  try {
+    const waitingRow = (bookId) => `document.querySelector('[data-waiting-book="${bookId}"]')`;
+    await c.page.go("#/", `!!document.querySelector("h1")`);
+    await waitFor(() => c.page.ev(`!!${waitingRow(LONG_BOOK)} && !!${waitingRow(SHORT_BOOK)}`), "C's library never listed the two books from the other devices");
+    assert.equal(await c.page.ev(`document.body.textContent.includes("Your library is empty")`), false, "C still says its library is empty");
+    const rowText = await c.page.ev(`${waitingRow(SHORT_BOOK)}.textContent`);
+    assert.ok(rowText.includes("رسالة قصيرة") && rowText.includes("Needs the corpus"), `the row should name the book and say it needs the corpus: ${rowText}`);
+
+    assert.equal(await c.page.ev(`document.body.textContent.includes("Set up the corpus connection to import books")`), false, "the panel already says to set up the corpus");
+    await c.page.go(`#/read/${LONG_BOOK}?p=60`, `document.body.textContent.includes("on another device")`);
+    assert.deepEqual(await api(c.page, "annotations.list", { bookId: LONG_BOOK, position: 60 }), { highlights: [], notes: [], pageNote: null, harakat: [] });
+
+    // Saved behind the Settings screen's back, so reload for the window to read it.
+    await api(c.page, "settings.save", { endpoint: `http://127.0.0.1:${corpus.address().port}`, key: "e2e-key" });
+    await c.page.go("#/", `!!document.querySelector("h1")`);
+    await c.page.ev("location.reload()");
+    await waitFor(() => c.page.ev(`!!${waitingRow(SHORT_BOOK)}`).catch(() => false), "the waiting books didn't come back after reloading");
+    const importButton = `[...${waitingRow(SHORT_BOOK)}.querySelectorAll("button")].find((b) => b.textContent.trim() === "Import")`;
+    await c.page.waitFor(`!!(${importButton})`, { timeout: 10_000, message: "no Import button once the corpus is set up" });
+    await c.page.ev(`(${importButton}).click()`);
+    await waitFor(async () => (await api(c.page, "library.list")).some((bk) => bk.bookId === SHORT_BOOK && bk.pageCount === SHORT_PAGES), "the short book never landed in C's library");
+    await waitFor(() => c.page.ev(`!${waitingRow(SHORT_BOOK)} && !!${waitingRow(LONG_BOOK)}`), "the imported book's row didn't leave the panel, or the other one went too");
+  } finally {
+    await c.close();
+    corpus.close();
+  }
 });
 
 await a.close();
