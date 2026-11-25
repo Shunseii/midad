@@ -37,13 +37,16 @@ export const startSync = ({
   // The synchronizer reports Loading (1) while it applies what the server sent.
   const unmark = user.mergingWhile(() => synchronizer?.getStatus() === 1);
   const listener = user.store.addDidFinishTransactionListener(() => {
-    if (synchronizer?.getStatus() !== 1 || remotePending) return;
+    if (synchronizer?.getStatus() !== 1) return;
+    // At once, so the windows hear of the change before the reply to any later request: undo must
+    // already have forgotten what changed by the time a Ctrl+Z could act on it.
+    onRemoteChange();
+    if (remotePending) return;
     remotePending = true;
     // Outside the transaction, where tidying writes are allowed.
     setTimeout(() => {
       remotePending = false;
       user.runAfterMerge();
-      onRemoteChange();
     }, 0);
   });
 
