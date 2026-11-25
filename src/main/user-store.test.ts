@@ -7,7 +7,9 @@ import type { Span } from "../shared/annotations";
 import type { ExportFile } from "../shared/corpus";
 import { createAnnotations } from "./annotations";
 import type { CorpusSource } from "./corpus";
+import { createBookmarks } from "./bookmarks";
 import { createLibrary } from "./library";
+import { createMarkers } from "./markers";
 import { type ClientId, decodeContent, encodeContent, openUserStore, textRev } from "./user-store";
 
 const PAGE = ["h", "", "---", "الكلام هو اللفظ المركب المفيد", "بالوضع وأقسامه ثلاثة"].join("\n");
@@ -35,7 +37,15 @@ const open = ({ clientId, getNow, corpus = new FakeCorpus() }: { clientId: Clien
   db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
   connections.push(db);
   const user = openUserStore({ db, clientId, ...(getNow ? { getNow } : {}) });
-  return { db, user, library: createLibrary({ db, corpus, ...(getNow ? { now: getNow } : {}) }), annotations: createAnnotations({ db, ...(getNow ? { now: getNow } : {}) }) };
+  const clock = getNow ? { now: getNow } : {};
+  return {
+    db,
+    user,
+    library: createLibrary({ db, corpus, ...clock }),
+    annotations: createAnnotations({ db, ...clock }),
+    markers: createMarkers({ db, ...clock }),
+    bookmarks: createBookmarks({ db, ...clock }),
+  };
 };
 
 beforeEach(async () => {
@@ -191,12 +201,35 @@ describe("migrating the marker, bookmarks, progress and library from SQLite", ()
       INSERT INTO progress VALUES ('b1', 'f1', 9, '{"part":"matn","line":1,"word":2,"offset":0.5}');`);
     db.close();
     const app = open({ clientId: "app" });
-    const { createMarkers } = await import("./markers");
-    const { createBookmarks } = await import("./bookmarks");
-    expect(await createMarkers({ db: app.db }).get({ bookId: "b1" })).toEqual({ position: 1, part: "matn", line: 2, word: 3, setAt: 7 });
-    expect(await createBookmarks({ db: app.db }).list({ bookId: "b1" })).toEqual([{ position: 1, name: null, createdAt: 8 }]);
+    expect(await app.markers.get({ bookId: "b1" })).toEqual({ position: 1, part: "matn", line: 2, word: 3, setAt: 7 });
+    expect(await app.bookmarks.list({ bookId: "b1" })).toEqual([{ position: 1, name: null, createdAt: 8 }]);
     expect((await app.library.getBook("b1"))?.progress).toEqual({ position: 1, updatedAt: 9, anchor: { part: "matn", line: 1, word: 2, offset: 0.5 } });
     expect(app.user.row({ table: "library", id: "b1" })).toMatchObject({ addedAt: expect.any(Number) });
+  });
+});
+
+describe("what a merge changed, for undo to forget", () => {
+  it("names the rows another process changed, deleted marks by where they were, and not this process's own writes", async () => {
+    const app = open({ clientId: "app" });
+    const mine = await app.annotations.addHighlight({ bookId: "b1", position: 1, span: matn(1, 1), color: "green" });
+    const note = await app.annotations.addNote({ bookId: "b1", position: 1, span: matn(1, 2), body: "x" });
+    await app.annotations.setHarakat({ bookId: "b1", position: 1, part: "matn", line: 1, word: 1, letter: 2, marks: "َ" });
+    await app.markers.set({ bookId: "b1", position: 1, line: 1, word: 1 });
+    expect(app.user.takeRemoteChanges()).toEqual({ highlights: [], notes: [], harakat: [], markers: [], bookmarks: [] });
+
+    const cli = open({ clientId: "cli" });
+    await cli.annotations.updateNote({ id: note.id, body: "from the agent" });
+    await cli.annotations.removeHarakat({ bookId: "b1", position: 1, part: "matn", line: 1, word: 1, letter: 2 });
+    await cli.markers.clear({ bookId: "b1" });
+    await cli.bookmarks.set({ bookId: "b1", position: 1, name: "b" });
+    app.user.mergeOthers();
+    const changes = app.user.takeRemoteChanges();
+    expect(changes.notes).toEqual([note.id]);
+    expect(changes.highlights).not.toContain(mine.id);
+    expect(changes.harakat).toContainEqual({ bookId: "b1", position: 1, part: "matn", line: 1, word: 1, letter: 2 });
+    expect(changes.markers).toEqual(["b1"]);
+    expect(changes.bookmarks).toContainEqual({ bookId: "b1", position: 1 });
+    expect(app.user.takeRemoteChanges().notes).toEqual([]);
   });
 });
 

@@ -9,6 +9,7 @@ import { createServer } from "node:net";
 import { join } from "node:path";
 import { assertBuilt, createTemplate, launchApp, ROOT } from "./lib/app.mjs";
 import { LONG_BOOK } from "./lib/fixture.mjs";
+import { clickPageArea, openReader } from "./lib/reader.mjs";
 
 const CLI = join(ROOT, "out/cli/midad.mjs");
 const WRANGLER = join(ROOT, "sync-server/node_modules/.bin/wrangler");
@@ -197,6 +198,30 @@ await check("with the app closed, the CLI's writes are merged on the next start,
       const found = await onPage(page, 37);
       return found.highlights.some((x) => x.id === h.id) && found.pageNote?.body === "من القارئ" && found.pageNote.author === "me";
     }, `${who} should have the CLI's highlight and the reader's newer page note`);
+  }
+});
+
+await check("Ctrl+Z never puts back an old value over a newer edit from the other device", async () => {
+  const bookmarkOn = (page, position) => api(page, "bookmarks.list", { bookId: LONG_BOOK }).then((list) => list.find((x) => x.position === position) ?? null);
+  const ctrl = (key) => a.page.press(key, { code: `Key${key.toUpperCase()}`, ctrl: true });
+  // Undo works as before on what only this device touched.
+  await openReader(a.page, { bookId: LONG_BOOK, position: 41 });
+  await clickPageArea(a.page);
+  await ctrl("d");
+  await waitFor(async () => (await bookmarkOn(a.page, 41)) !== null, "Ctrl+D didn't bookmark page 41");
+  await ctrl("z");
+  await waitFor(async () => (await bookmarkOn(a.page, 41)) === null, "Ctrl+Z didn't take back the bookmark");
+
+  await openReader(a.page, { bookId: LONG_BOOK, position: 42 });
+  await clickPageArea(a.page);
+  await ctrl("d");
+  await waitFor(async () => (await bookmarkOn(b.page, 42)) !== null, "B never got A's bookmark");
+  await api(b.page, "bookmarks.set", { bookId: LONG_BOOK, position: 42, name: "أعاد ب تسميتها" });
+  await waitFor(async () => (await bookmarkOn(a.page, 42))?.name === "أعاد ب تسميتها", "A never got B's rename");
+  await ctrl("z");
+  await sleep(1500);
+  for (const [who, page] of [["A", a.page], ["B", b.page]]) {
+    assert.equal((await bookmarkOn(page, 42))?.name, "أعاد ب تسميتها", `${who}: Ctrl+Z on A undid the bookmark over B's newer rename`);
   }
 });
 

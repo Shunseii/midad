@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
 import { askModel, cutOffRecap, isLostSession, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
-import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, type Theme } from "../shared/ipc";
+import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, REMOTE_CHANGES, type Theme } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
@@ -189,16 +189,19 @@ const handlers: MidadApi = {
   },
 };
 
+/** Tells the windows a merge changed the library: first what it changed, so undo forgets it, then to refetch. */
+const announceMerge = () => {
+  const changes = user.takeRemoteChanges();
+  const any = Object.values(changes).some((list) => list.length > 0);
+  for (const win of BrowserWindow.getAllWindows()) {
+    if (any) win.webContents.send(REMOTE_CHANGES, changes);
+    win.webContents.send(LIBRARY_CHANGED);
+  }
+};
+
 // Cross-device sync, for now configured only from the environment (the prototype has no settings UI).
 if (process.env.MIDAD_SYNC_URL && process.env.MIDAD_SYNC_TOKEN) {
-  startSync({
-    user,
-    url: process.env.MIDAD_SYNC_URL,
-    token: process.env.MIDAD_SYNC_TOKEN,
-    onRemoteChange: () => {
-      for (const win of BrowserWindow.getAllWindows()) win.webContents.send(LIBRARY_CHANGED);
-    },
-  });
+  startSync({ user, url: process.env.MIDAD_SYNC_URL, token: process.env.MIDAD_SYNC_TOKEN, onRemoteChange: announceMerge });
 }
 
 // data_version changes only when another connection (the midad CLI) commits.
@@ -219,7 +222,7 @@ setInterval(() => {
   } catch (err) {
     console.error("Couldn't merge another process's changes:", err);
   }
-  for (const win of BrowserWindow.getAllWindows()) win.webContents.send(LIBRARY_CHANGED);
+  announceMerge();
 }, 1000);
 
 for (const [channel, handler] of Object.entries(handlers)) {

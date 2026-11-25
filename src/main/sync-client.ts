@@ -35,6 +35,7 @@ export const startSync = ({
   let remotePending = false;
 
   // The synchronizer reports Loading (1) while it applies what the server sent.
+  const unmark = user.mergingWhile(() => synchronizer?.getStatus() === 1);
   const listener = user.store.addDidFinishTransactionListener(() => {
     if (synchronizer?.getStatus() !== 1 || remotePending) return;
     remotePending = true;
@@ -86,6 +87,7 @@ export const startSync = ({
       stopped = true;
       if (retry) clearTimeout(retry);
       user.store.delListener(listener);
+      unmark();
       await synchronizer?.destroy().catch(() => {});
     },
   };

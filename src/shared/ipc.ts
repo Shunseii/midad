@@ -146,6 +146,8 @@ export const CHANNELS = [
 export interface MidadEvents {
   /** Another process (the midad CLI) changed the library. Returns an unsubscribe function. */
   onLibraryChanged: (callback: () => void) => () => void;
+  /** What a merge from another process or device changed, so undo can forget it. Returns an unsubscribe function. */
+  onRemoteChanges: (callback: (changes: RemoteChanges) => void) => () => void;
   /** Progress of a book being imported from the corpus. Returns an unsubscribe function. */
   onImportProgress: (callback: (corpusBookId: string, progress: ImportProgress) => void) => () => void;
   /** Progress of an Ask AI request. Returns an unsubscribe function. */
@@ -155,5 +157,21 @@ export interface MidadEvents {
 export const ASK_EVENT = "ai.event";
 
 export const LIBRARY_CHANGED = "library.changed";
+
+/**
+ * The rows a merge from another process (the CLI, the corpus MCP server) or another device changed
+ * or deleted, by what undo history names them by: ids, letters and pages. Letters list where a
+ * mark was and where it is now.
+ */
+export interface RemoteChanges {
+  highlights: string[];
+  notes: string[];
+  harakat: (LetterRef & { bookId: string; position: number })[];
+  /** Books whose last-read marker changed. */
+  markers: string[];
+  bookmarks: { bookId: string; position: number }[];
+}
+
+export const REMOTE_CHANGES = "library.remoteChanges";
 
 export const IMPORT_PROGRESS = "library.importProgress";

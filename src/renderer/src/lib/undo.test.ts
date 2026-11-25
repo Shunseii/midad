@@ -274,3 +274,66 @@ describe("undo stack", () => {
     expect(page.harakat.size).toBe(0);
   });
 });
+
+describe("undo after a change from elsewhere", () => {
+  const nothing = { highlights: new Set<string>(), notes: new Set<string>(), letters: [], marker: false, bookmarkPositions: new Set<number>() };
+
+  it("never writes an old note body over a newer edit made by another device", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    const id = await stack.addNote({ target: { span: SPAN }, body: "first" });
+    await stack.updateNote({ id, before: "first", after: "mine" });
+    // Another device edits the note; the merge reaches this page.
+    await page.writes.updateNote({ id, body: "theirs, newer" });
+    await stack.forget({ ...nothing, notes: new Set([id]) });
+    expect(await stack.undo()).toBeNull();
+    expect(await stack.redo()).toBeNull();
+    expect(page.notes.get(id)?.body).toBe("theirs, newer");
+  });
+
+  it("keeps the entries for everything that wasn't changed elsewhere", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    const kept = await stack.addHighlight({ span: SPAN, color: "green" });
+    const touched = await stack.addHighlight({ span: SPAN, color: "pink" });
+    await stack.setMarks({ ref: REF, before: "", after: "َ" });
+    await stack.setMarks({ ref: { ...REF, letter: 3 }, before: "", after: "ُ" });
+    await stack.forget({ ...nothing, highlights: new Set([touched]), letters: [REF] });
+    await stack.undo();
+    expect(page.harakat.get(JSON.stringify(REF))).toBe("َ");
+    expect(page.harakat.has(JSON.stringify({ ...REF, letter: 3 }))).toBe(false);
+    await stack.undo();
+    expect([...page.highlights.keys()]).toEqual([touched]);
+    expect(page.highlights.has(kept)).toBe(false);
+  });
+
+  it("forgets a note that came back under a new id by either id", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    const id = await stack.addNote({ target: { span: SPAN }, body: "x" });
+    await stack.deleteNote({ id, target: { span: SPAN }, body: "x" });
+    await stack.undo();
+    const newId = [...page.notes.keys()][0] ?? "";
+    await stack.forget({ ...nothing, notes: new Set([newId]) });
+    expect(await stack.undo()).toBeNull();
+    expect(page.notes.has(newId)).toBe(true);
+  });
+
+  it("forgets marker and bookmark entries the other device changed, after any step in flight", async () => {
+    const page = fakePage();
+    const stack = createUndoStack(page.writes);
+    await stack.setMarker({ before: null, after: { position: 1, part: "matn", line: 2, word: 1 } });
+    await stack.setBookmark({ position: 1, before: null, after: { name: null } });
+    await stack.setBookmark({ position: 2, before: null, after: { name: "kept" } });
+    const undoing = stack.undo();
+    const forgetting = stack.forget({ ...nothing, marker: true, bookmarkPositions: new Set([1]) });
+    await Promise.all([undoing, forgetting]);
+    expect(page.book.bookmarks.has(2)).toBe(false);
+    await stack.redo();
+    expect(page.book.bookmarks.get(2)?.name).toBe("kept");
+    await stack.undo();
+    expect(await stack.undo()).toBeNull();
+    expect(page.book.bookmarks.has(1)).toBe(true);
+    expect(page.book.marker).not.toBeNull();
+  });
+});

@@ -96,6 +96,31 @@ export const createUndoStack = (writes: PageWrites) => {
     }
   };
 
+  const forgetNow = (changed: ChangedElsewhere) => {
+    const named = (id: string, ids: ReadonlySet<string>) => ids.has(id) || ids.has(current(id));
+    const onLetter = (ref: LetterRef) => changed.letters.some((l) => l.part === ref.part && l.line === ref.line && l.word === ref.word && l.letter === ref.letter);
+    const stale = (c: Change): boolean => {
+      switch (c.kind) {
+        case "highlight":
+          return named(c.id, changed.highlights);
+        case "highlights-clear":
+          return c.removed.some((h) => named(h.id, changed.highlights));
+        case "note":
+        case "note-edit":
+          return named(c.id, changed.notes);
+        case "harakat":
+          return onLetter(c.ref);
+        case "harakat-clear":
+          return c.removed.some((m) => onLetter(m.ref));
+        case "marker":
+          return changed.marker;
+        case "bookmark":
+          return changed.bookmarkPositions.has(c.position);
+      }
+    };
+    history = { done: history.done.filter((c) => !stale(c)), undone: history.undone.filter((c) => !stale(c)) };
+  };
+
   const step = (direction: "undo" | "redo"): Promise<Change | null> => serial(async () => {
     const next = (direction === "undo" ? undo : redo)(history);
     if (!next.entry) return null;
@@ -183,7 +208,24 @@ export const createUndoStack = (writes: PageWrites) => {
     },
     undo: () => step("undo"),
     redo: () => step("redo"),
+    /**
+     * Drops every entry that names something another process or device has since changed, so
+     * Ctrl+Z and Ctrl+Shift+Z never write this page's old value over a newer edit from elsewhere.
+     */
+    forget(changed: ChangedElsewhere): Promise<void> {
+      // Queued behind any step in flight, which would otherwise put the forgotten entries back.
+      return serial(async () => forgetNow(changed));
+    },
   };
 };
+
+/** What changed elsewhere, as one page's undo stack names it: ids, this page's letters, the book's marker and bookmarked pages. */
+export interface ChangedElsewhere {
+  highlights: ReadonlySet<string>;
+  notes: ReadonlySet<string>;
+  letters: readonly LetterRef[];
+  marker: boolean;
+  bookmarkPositions: ReadonlySet<number>;
+}
 
 export type UndoStack = ReturnType<typeof createUndoStack>;

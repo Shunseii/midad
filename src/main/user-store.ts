@@ -1,6 +1,8 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
 import { type Cell, createIndexes, createMergeableStore, type Indexes, type MergeableContent, type MergeableStore, type Row } from "tinybase";
+import type { LetterRef } from "../shared/annotations";
+import type { RemoteChanges } from "../shared/ipc";
 
 /**
  * The reader's own data (library membership, highlights, notes, harakat, bookmarks, the
@@ -80,6 +82,9 @@ const REQUIRED: Record<string, readonly string[]> = {
 };
 
 export type UserTable = keyof typeof REQUIRED;
+
+/** The cells that say where a row sits, which undo history refers to. */
+const LOCATION_CELLS = ["bookId", "fileId", "part", "line", "word", "letter"];
 
 export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: DatabaseSync; clientId: ClientId; getNow?: () => number }) => {
   db.exec(SCHEMA);
@@ -169,12 +174,29 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
     }
   };
 
+  // Rows a merge changed, with where they were and are, for undo to forget (see remoteChanges).
+  const mergeSources = new Set<() => boolean>();
+  const merging = () => applying > 0 || [...mergeSources].some((isMerging) => isMerging());
+  let touched: { table: string; id: string; before: Row; after: Row }[] = [];
+  store.addRowListener(null, null, (_store, table, id, getCellChange) => {
+    if (!merging() || !getCellChange) return;
+    const before: Row = {};
+    const after: Row = {};
+    for (const cell of LOCATION_CELLS) {
+      const [, was, is] = getCellChange(table, id, cell);
+      if (was !== undefined) before[cell] = was;
+      if (is !== undefined) after[cell] = is;
+    }
+    touched.push({ table, id, before, after });
+  });
+
   const own = db.prepare("SELECT content, rev FROM sync_stores WHERE client_id = ?").get(clientId) as { content: string; rev: number } | undefined;
   if (own) {
     apply(parse(own.content));
     seen.set(clientId, own.rev);
   }
   mergeOthers();
+  touched = [];
 
   // Every local change is saved before the call that made it returns, so a CLI run can exit straight after.
   store.addDidFinishTransactionListener(() => {
@@ -208,6 +230,37 @@ export const createUserStore = ({ db, clientId, getNow = Date.now }: { db: Datab
       mergeHooks.set(name, hook);
     },
     runAfterMerge: afterMerge,
+    /** Marks changes applied while `isMerging` is true (a synchronizer loading) as coming from elsewhere. */
+    mergingWhile: (isMerging: () => boolean) => {
+      mergeSources.add(isMerging);
+      return () => mergeSources.delete(isMerging);
+    },
+    /**
+     * What merges changed since the last call, named the way undo history names things. A page a
+     * row is on is looked up now, so a mark on a page this device doesn't have is left out.
+     */
+    takeRemoteChanges: (): RemoteChanges => {
+      const taken = touched;
+      touched = [];
+      const positionOf = db.prepare("SELECT position FROM pages WHERE book_id = ? AND file_id = ?");
+      const position = (row: Row) =>
+        typeof row.bookId === "string" && typeof row.fileId === "string"
+          ? ((positionOf.get(row.bookId, row.fileId) as { position: number } | undefined)?.position ?? null)
+          : null;
+      const changes: RemoteChanges = { highlights: [], notes: [], harakat: [], markers: [], bookmarks: [] };
+      for (const { table, id, before, after } of taken) {
+        if (table === "highlights" || table === "notes") changes[table].push(id);
+        if (table === "markers") changes.markers.push(id);
+        for (const row of [before, after]) {
+          const at = position(row);
+          if (at === null) continue;
+          if (table === "bookmarks") changes.bookmarks.push({ bookId: String(row.bookId), position: at });
+          if (table === "harakat")
+            changes.harakat.push({ bookId: String(row.bookId), position: at, part: row.part as LetterRef["part"], line: Number(row.line), word: Number(row.word), letter: Number(row.letter) });
+        }
+      }
+      return changes;
+    },
     /** The row, or null when it doesn't exist or is missing cells (a delete that raced an edit). */
     row: ({ table, id }: { table: UserTable; id: string }): Row | null => {
       const row = store.getRow(table, id);

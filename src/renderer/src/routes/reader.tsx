@@ -1001,6 +1001,23 @@ export const ReaderRoute = () => {
     return undoStack.current.stack;
   };
 
+  // A merge from the CLI or another device changed something: undo forgets entries naming it.
+  useEffect(
+    () =>
+      window.midadEvents.onRemoteChanges((changes) => {
+        const open = undoStack.current;
+        if (!open) return;
+        void open.stack.forget({
+          highlights: new Set(changes.highlights),
+          notes: new Set(changes.notes),
+          letters: changes.harakat.filter((l) => l.bookId === bookId && l.position === open.position),
+          marker: changes.markers.includes(bookId),
+          bookmarkPositions: new Set(changes.bookmarks.filter((b) => b.bookId === bookId).map((b) => b.position)),
+        });
+      }),
+    [bookId],
+  );
+
   const editMarks = (ref: LetterRef, after: string) => void edits().setMarks({ ref, before: mineAt(ref), after });
 
   const typeMark = (ref: LetterRef, typed: string) => editMarks(ref, mergeMarks({ existing: mineAt(ref), typed }));
