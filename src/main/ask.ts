@@ -1,5 +1,5 @@
 import { type ChildProcess, spawn } from "node:child_process";
-import { existsSync, mkdirSync, rmSync, symlinkSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { delimiter, join } from "node:path";
 import { createInterface } from "node:readline";
@@ -31,9 +31,14 @@ export const createAsk = ({
 }) => {
   const binDir = join(workDir, "bin");
   mkdirSync(binDir, { recursive: true });
-  const link = join(binDir, "midad");
-  rmSync(link, { force: true });
-  symlinkSync(cliPath, link);
+  if (process.platform === "win32") {
+    // Windows can't run a script by its shebang, and symlinks need admin rights there.
+    writeFileSync(join(binDir, "midad.cmd"), `@node --no-warnings "${cliPath}" %*\r\n`);
+  } else {
+    const link = join(binDir, "midad");
+    rmSync(link, { force: true });
+    symlinkSync(cliPath, link);
+  }
 
   const running = new Map<string, ChildProcess>();
   // Claude Code exits with code 143 when stopped, rather than by the signal, so a stop is remembered here.
