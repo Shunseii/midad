@@ -12,6 +12,7 @@ import { createMarkers } from "./markers";
 import { createConversations } from "./conversations";
 import { type CorpusSource, createCorpusClient } from "./corpus";
 import { createDeviceSync } from "./device-sync";
+import { createBookRemoval } from "./book-removal";
 import { createLibrary } from "./library";
 import { createMemories } from "./memories";
 import { createSettings } from "./settings";
@@ -65,13 +66,15 @@ const db = new DatabaseSync(dbPath);
 // The midad CLI (and Ask AI through it) writes to the same file.
 db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
 const user = openUserStore({ db, clientId: "app" });
-const library = createLibrary({ db, corpus });
+const scansDir = join(userData, "scans");
+const library = createLibrary({ db, corpus, scansDir });
+const removal = createBookRemoval({ db, scansDir });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
 const bookmarks = createBookmarks({ db });
 const conversations = createConversations({ db });
 const memories = createMemories({ db });
-const scans = createScans({ dir: join(userData, "scans"), fetchScan: (input) => corpusClient().fetchScan(input) });
+const scans = createScans({ dir: scansDir, fetchScan: (input) => corpusClient().fetchScan(input) });
 
 const updaterOn = updaterMode({ isPackaged: app.isPackaged, platform: process.platform, env: process.env }) === "on";
 const updater = createUpdater({
@@ -144,6 +147,8 @@ const handlers: MidadApi = {
   "library.sync": (input) => library.syncBook(input),
   "library.setProgress": (input) => library.setProgress(input),
   "library.firstLine": (input) => library.getFirstLine(input),
+  "library.removalPreview": (input) => removal.preview(input),
+  "library.remove": (input) => removal.remove(input),
   "annotations.list": (input) => annotations.listForPage(input),
   "annotations.bookMarks": (input) => annotations.bookMarks(input),
   "highlights.add": (input) => annotations.addHighlight(input),

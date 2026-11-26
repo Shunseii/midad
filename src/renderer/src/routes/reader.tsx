@@ -4,7 +4,7 @@ import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, FileImage, NotebookPen,
 import { useQueryClient } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation, useParams, useSearchParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
 import { type Highlight, type LetterRef, lineText, type Note, type NoteTarget, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
 import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, Bookmark as SavedBookmark, ScrollAnchor, StoredPage } from "../../../shared/library";
@@ -385,6 +385,16 @@ export const ReaderRoute = () => {
   const [search, setSearch] = useSearchParams();
   const book = useBook(bookId);
   const waiting = useWaitingBooks();
+  const navigate = useNavigate();
+  // A book removed while open (from the midad CLI, or on another device) goes back to the library.
+  const hadBook = useRef(false);
+  useEffect(() => {
+    hadBook.current = false;
+  }, [bookId]);
+  useEffect(() => {
+    if (book.data) hadBook.current = true;
+    else if (book.data === null && hadBook.current) void navigate("/", { replace: true, viewTransition: true });
+  }, [book.data, navigate]);
   // Wide windows show contents and the side panel beside the text (remembered);
   // narrower ones slide them over the page, closed until asked for.
   const wide = useMediaQuery("(min-width: 80rem)");

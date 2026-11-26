@@ -105,6 +105,13 @@ export const useSyncBook = () => {
   });
 };
 
+/** What removing a book would delete, counted fresh each time the dialog opens. */
+export const useRemovalPreview = (bookId: string) =>
+  useQuery({ queryKey: ["library", bookId, "removal"], queryFn: () => midad["library.removalPreview"]({ bookId }), gcTime: 0 });
+
+/** Removes a book. The caller refetches the library once the book's card has folded away. */
+export const useRemoveBook = () => useMutation({ mutationFn: (bookId: string) => midad["library.remove"]({ bookId }) });
+
 export const useMarker = (bookId: string) =>
   useQuery({ queryKey: keys.marker(bookId), queryFn: () => midad["marker.get"]({ bookId }) });
 

@@ -1,14 +1,18 @@
-import { BookOpen, Download, RefreshCw, Search } from "lucide-react";
+import { Menu } from "@base-ui/react/menu";
+import { BookOpen, Download, Ellipsis, RefreshCw, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Button as ButtonBase } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router";
 import type { LibraryBook } from "../../../shared/library";
 import { BookCover, markOpeningCover, useClosingCover } from "../components/book-cover";
 import { ImportDialog } from "../components/import-dialog";
+import { RemoveBookDialog } from "../components/remove-book-dialog";
 import { SyncDialog } from "../components/sync-dialog";
-import { Button, IconButton, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
+import { Button, cx, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
 import { plural, timeAgo } from "../lib/format";
 import { WaitingBooks } from "../components/waiting-books";
-import { useLibrary, useSettings, useWaitingBooks } from "../lib/midad";
+import { keys, useLibrary, useSettings, useWaitingBooks } from "../lib/midad";
 import { switchListInTransition } from "../lib/view-transition";
 
 type Shelf = "all" | "reading" | "finished";
@@ -21,10 +25,49 @@ const SHELVES: { value: Shelf; label: string }[] = [
 
 const isFinished = (b: LibraryBook) => b.progress !== null && b.progress.position >= b.pageCount;
 
-const BookCard = ({ book, onSync }: { book: LibraryBook; onSync: () => void }) => {
+/** How long a removed book's card takes to fold away before the shelf drops it (duration-panel-exit). */
+const FOLD_MS = 180;
+
+const MENU_ITEM = "flex cursor-default items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm outline-hidden transition-colors duration-press ease-out select-none data-highlighted:bg-surface-2 [&_svg]:size-4 [&_svg]:shrink-0";
+
+/** A book's actions, from the button on its card. */
+const BookMenu = ({ book, onSync, onRemove }: { book: LibraryBook; onSync: () => void; onRemove: () => void }) => (
+  <Menu.Root modal={false}>
+    <Menu.Trigger
+      render={<ButtonBase variant="outline" size="icon" aria-label={`Actions for ${book.title}`} data-book-actions />}
+      className="absolute top-3 right-3 text-ink-2 opacity-0 transition-opacity duration-press ease-out group-hover:opacity-100 hover:text-ink focus-visible:opacity-100 data-popup-open:opacity-100"
+    >
+      <Ellipsis />
+    </Menu.Trigger>
+    <Menu.Portal>
+      <Menu.Positioner side="bottom" align="end" sideOffset={6} className="isolate z-50">
+        <Menu.Popup
+          aria-label="Book actions"
+          className="flex w-55 origin-(--transform-origin) flex-col gap-0.5 rounded-xl bg-surface-3 p-1 text-ink shadow-float outline-hidden duration-pop ease-out data-closed:duration-pop-exit data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 motion-reduce:data-open:zoom-in-100 motion-reduce:data-closed:zoom-out-100"
+        >
+          <Menu.Item onClick={onSync} className={cx(MENU_ITEM, "[&_svg]:text-ink-2")}>
+            <RefreshCw aria-hidden />
+            Sync with corpus…
+          </Menu.Item>
+          <Menu.Separator className="my-1 h-px bg-line" />
+          <Menu.Item onClick={onRemove} data-remove-book-item className={cx(MENU_ITEM, "text-danger")}>
+            <Trash2 aria-hidden />
+            Remove book…
+          </Menu.Item>
+        </Menu.Popup>
+      </Menu.Positioner>
+    </Menu.Portal>
+  </Menu.Root>
+);
+
+const BookCard = ({ book, leaving, onSync, onRemove }: { book: LibraryBook; leaving: boolean; onSync: () => void; onRemove: () => void }) => {
   const position = book.progress?.position ?? 0;
   return (
-    <div data-book={book.bookId} className="group relative flex flex-col gap-3">
+    <div
+      data-book={book.bookId}
+      data-state={leaving ? "leaving" : undefined}
+      className="group relative flex flex-col gap-3 transition-[opacity,scale] duration-panel-exit ease-out data-[state=leaving]:scale-95 data-[state=leaving]:opacity-0 motion-reduce:data-[state=leaving]:scale-100"
+    >
       <Link
         to={`/read/${book.bookId}`}
         viewTransition
@@ -34,7 +77,7 @@ const BookCard = ({ book, onSync }: { book: LibraryBook; onSync: () => void }) =
       >
         <BookCover title={book.title} author={[book.author, book.edition].filter(Boolean).join(" · ") || null} size="sm" />
       </Link>
-      <IconButton icon={RefreshCw} label="Sync with corpus" variant="outline" onClick={onSync} className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 focus-visible:opacity-100" />
+      <BookMenu book={book} onSync={onSync} onRemove={onRemove} />
       <Progress value={book.pageCount ? position / book.pageCount : 0} />
       <span className="flex justify-between text-xs text-ink-3">
         <span>{position ? `Page ${position} of ${book.pageCount}` : "Not started"}</span>
@@ -91,6 +134,9 @@ export const LibraryRoute = () => {
   const [filter, setFilter] = useState("");
   const [importing, setImporting] = useState(false);
   const [syncing, setSyncing] = useState<LibraryBook | null>(null);
+  const [removing, setRemoving] = useState<LibraryBook | null>(null);
+  const [leaving, setLeaving] = useState<string | null>(null);
+  const client = useQueryClient();
   const [toast, setToast] = useState<string | null>(null);
 
   const books = library.data ?? [];
@@ -177,7 +223,7 @@ export const LibraryRoute = () => {
           ) : (
             <div className="grid grid-cols-shelf gap-6">
               {shown.map((b) => (
-                <BookCard key={b.bookId} book={b} onSync={() => setSyncing(b)} />
+                <BookCard key={b.bookId} book={b} leaving={leaving === b.bookId} onSync={() => setSyncing(b)} onRemove={() => setRemoving(b)} />
               ))}
             </div>
           )}
@@ -202,6 +248,20 @@ export const LibraryRoute = () => {
             setSyncing(null);
             setToast(message);
             void library.refetch();
+          }}
+        />
+      )}
+      {removing && (
+        <RemoveBookDialog
+          book={removing}
+          onClose={() => setRemoving(null)}
+          onRemoved={(message) => {
+            setRemoving(null);
+            setToast(message);
+            setLeaving(removing.bookId);
+            setTimeout(() => {
+              void client.invalidateQueries({ queryKey: keys.library }).finally(() => setLeaving(null));
+            }, FOLD_MS);
           }}
         />
       )}

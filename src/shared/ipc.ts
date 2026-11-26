@@ -5,6 +5,7 @@ import type { CorpusBookListing, TextEdit } from "./corpus";
 import type { Memory } from "./memories";
 import type {
   BookDetail,
+  BookRemoval,
   Bookmark,
   ImportProgress,
   ImportResult,
@@ -50,6 +51,9 @@ export interface MidadApi {
   "library.sync": (input: SyncInput) => Promise<SyncResult>;
   "library.setProgress": (input: { bookId: string; position: number; anchor?: ScrollAnchor }) => Promise<void>;
   "library.firstLine": (input: { bookId: string; position: number }) => Promise<string | null>;
+  /** What removing the book would delete, or null when it isn't in the library. */
+  "library.removalPreview": (input: { bookId: string }) => Promise<BookRemoval | null>;
+  "library.remove": (input: { bookId: string }) => Promise<BookRemoval>;
   "annotations.list": (input: { bookId: string; position: number }) => Promise<PageAnnotations>;
   "annotations.bookMarks": (input: { bookId: string }) => Promise<BookMarks>;
   "highlights.add": (input: { bookId: string; position: number; span: Span; color: HighlightColor }) => Promise<Highlight>;
@@ -139,6 +143,8 @@ export const CHANNELS = [
   "library.sync",
   "library.setProgress",
   "library.firstLine",
+  "library.removalPreview",
+  "library.remove",
   "annotations.list",
   "annotations.bookMarks",
   "highlights.add",

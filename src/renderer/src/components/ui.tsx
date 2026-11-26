@@ -61,6 +61,7 @@ export const Button = ({
   /** Makes it a toggle button: `aria-pressed`, tinted with the accent while on. */
   pressed?: boolean;
   tooltip?: string;
+  ref?: Ref<HTMLButtonElement>;
 }) => (
   <WithTooltip label={tooltip}>
     <ButtonBase

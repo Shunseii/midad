@@ -49,7 +49,7 @@ for (const group of groups) {
     const t = Date.now();
     const errorsBefore = open.page.errors.length;
     try {
-      await run(open.page);
+      await run(open.page, open);
       const uncaught = open.page.errors.slice(errorsBefore);
       if (uncaught.length) throw new Error(`uncaught error in the app: ${uncaught[0]}`);
       results.push({ group: group.name, name, ok: true });
