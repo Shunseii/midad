@@ -8,7 +8,7 @@ import { MAX_CLOCK_SKEW_SECONDS } from "../shared/sync";
 
 /**
  * The reader's own data (library membership, highlights, notes, harakat, bookmarks, the
- * last-read marker, progress, conversations) lives in a TinyBase MergeableStore, so copies
+ * last-read marker, progress, conversations, Ask AI's memories) lives in a TinyBase MergeableStore, so copies
  * written by different processes and devices merge cell by cell, newest change first.
  *
  * Each process that writes it (the app, the midad CLI, the corpus MCP server) is its own
@@ -62,6 +62,7 @@ const REQUIRED: Record<string, readonly string[]> = {
   progress: ["fileId", "updatedAt", "anchor"],
   conversations: ["bookId", "title", "createdAt", "updatedAt"],
   turns: ["conversationId", "question", "quotes", "position", "selection", "answer", "status", "error", "createdAt", "seq"],
+  memories: ["name", "description", "type", "body", "bookId", "author", "editedAt", "createdAt", "updatedAt"],
 };
 
 export type UserTable = keyof typeof REQUIRED;
@@ -301,7 +302,7 @@ export const openUserStore = ({ db, clientId = "app", getNow }: { db: DatabaseSy
 const hasTable = (db: DatabaseSync, name: string) => db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?").get(name) !== undefined;
 
 /** The user-data tables from before the user store. `books` isn't one: it still holds the books' metadata. */
-const LEGACY_USER_TABLES = new Set(["highlights", "notes", "harakat", "markers", "bookmarks", "progress", "conversations", "turns"]);
+const LEGACY_USER_TABLES = new Set(["highlights", "notes", "harakat", "markers", "bookmarks", "progress", "conversations", "turns", "memories"]);
 
 export const LEGACY_WRITE_ERROR = "Midad was updated, and this data has moved. Restart Midad (or update this build) to keep saving.";
 

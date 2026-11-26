@@ -1,13 +1,13 @@
 /**
  * Ask AI's memory: short facts about the reader that carry over from one chat to the next.
  * `reader`: who they are. `preference`: how they want answers. `feedback`: a correction they gave.
- * `book`: their goals and context for one book; the only kind that belongs to a book.
+ * `book`: their goals and context for one book. A memory is global, or tied to one book.
  */
 export const MEMORY_TYPES = ["reader", "preference", "feedback", "book"] as const;
 
 export type MemoryType = (typeof MEMORY_TYPES)[number];
 
-export type MemorySource = "reader" | "agent";
+export type MemoryAuthor = "reader" | "agent";
 
 export interface Memory {
   id: string;
@@ -18,8 +18,10 @@ export interface Memory {
   /** Null for a memory every chat sees. */
   bookId: string | null;
   bookTitle: string | null;
-  /** Who last wrote it. */
-  source: MemorySource;
+  /** Who first wrote it. */
+  author: MemoryAuthor;
+  /** When anyone last changed it after it was written, or null if nobody has. */
+  editedAt: number | null;
   createdAt: number;
   updatedAt: number;
 }
@@ -35,3 +37,4 @@ export interface MemoryInput {
 export const MEMORY_LIMITS = { name: 60, description: 200, body: 1000 } as const;
 
 export const isMemoryType = (value: unknown): value is MemoryType => MEMORY_TYPES.includes(value as MemoryType);
+

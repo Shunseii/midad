@@ -391,7 +391,7 @@ const ROW_EXIT_MS = 200;
 
 const MemoryMeta = ({ memory }: { memory: Memory }) => (
   <span className="flex items-center gap-1 text-xs text-ink-3">
-    <span data-memory-source={memory.source}>{memory.source === "reader" ? "You" : "Ask AI"}</span>
+    <span data-memory-author={memory.author}>{memory.author === "reader" ? "You" : "Ask AI"}{memory.editedAt === null ? "" : " · edited"}</span>
     <span aria-hidden>·</span>
     {memory.bookId ? (
       <span dir="rtl" className="ar">
@@ -410,7 +410,7 @@ const MemoryEditor = ({ memory, onDone }: { memory: Memory; onDone: () => void }
   const [description, setDescription] = useState(memory.description);
   const [body, setBody] = useState(memory.body);
   const changed = description.trim() !== memory.description || body.trim() !== memory.body;
-  const save = () => update.mutate({ id: memory.id, description, body }, { onSuccess: onDone });
+  const save = () => update.mutate({ id: memory.id, description, body, bookId: memory.bookId }, { onSuccess: onDone });
   return (
     <form
       aria-label="Edit memory"

@@ -38,7 +38,7 @@ export const useMemories = () => useQuery({ queryKey: keys.memories, queryFn: ()
 export const useUpdateMemory = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (input: { id: string; description: string; body: string }) => midad["memories.update"](input),
+    mutationFn: (input: { id: string; description: string; body: string; bookId: string | null }) => midad["memories.update"](input),
     onSettled: () => queryClient.invalidateQueries({ queryKey: keys.memories }),
   });
 };

@@ -10,18 +10,23 @@ import { createMemories } from "../main/memories";
 import { isMemoryType, MEMORY_TYPES, type Memory, type MemoryType } from "../shared/memories";
 
 export const MEMORY_USAGE = `Memory (what Ask AI remembers about the reader across chats; labelled as written by the agent)
-  midad memory list [--type <type>]             Global memories and this book's, newest first (--all: every book's)
-  midad memory search <query> [--limit <n>]     Memories matching any of the words, best match first
+  midad memory list [--type <type>] [--global | --book <book> | --all]
+                                                Newest first: global memories and this book's, unless a flag narrows it
+  midad memory search <query> [--global | --book <book>] [--limit <n>]
+                                                Memories matching any of the words, best match first
   midad memory get <id>                         One memory in full
-  midad memory add --type <type> --name <slug> --description <line> --body <text>
-  midad memory update <id> [--description <line>] [--body <text>] [--name <slug>] [--type <type>]
+  midad memory add --type <type> --name <slug> --description <line> --body <text> [--book <book>]
+  midad memory update <id> [--description <line>] [--body <text>] [--name <slug>] [--type <type>] [--book <book> | --global]
   midad memory delete <id>
 
+A memory is global unless added with --book: then only chats about that book see it.
+Global: who the reader is and how they want answers in general. --book: about that
+book's text, its author's terms, or how to read it. "This book" is the book in the
+chat's <reading-context>; --book takes its id as other commands do.
 Memory types: reader (who they are: level, teacher, madhab), preference (how to
 answer: language, transliteration, length), feedback (a correction, with Why: and
-How to apply: lines), book (goals and context for this book only). One fact per
-memory; the description is one line, written so a later search finds it. A book
-memory belongs to the book Ask AI is open on (or --book <book>); the rest are global.
+How to apply: lines), book (goals and context for one book; needs --book). One fact
+per memory; the description is one line, written so a later search finds it.
 Example:
   midad memory add --type preference --name transliterate-terms --description "Transliterate Arabic terms, in brackets after the Arabic" --body "Write الاسم (ism), not ism or الاسم alone."
 `;
@@ -75,6 +80,7 @@ const OPTIONS = {
   marks: { type: "string" },
   book: { type: "string" },
   all: { type: "boolean" },
+  global: { type: "boolean" },
   type: { type: "string" },
   name: { type: "string" },
   description: { type: "string" },
@@ -132,8 +138,10 @@ const memoryType = (value: string | undefined): MemoryType => {
   return value;
 };
 
+const writtenBy = (m: Memory) => `${m.author === "reader" ? "the reader" : "Ask AI"}${m.editedAt === null ? "" : ", edited"}`;
+
 const memoryLine = (m: Memory) =>
-  `${m.id}  ${m.type}  ${m.name}  ${m.description}${m.bookId ? ` [book: ${m.bookTitle ?? m.bookId}]` : ""}${m.source === "reader" ? " (by the reader)" : ""}`;
+  `${m.id}  ${m.type}  ${m.name}  ${m.description}  [${m.bookId ? `book: ${m.bookTitle ?? m.bookId}` : "global"}]${m.author === "reader" || m.editedAt !== null ? ` (${writtenBy(m)})` : ""}`;
 
 const formatMemories = ({ found, empty }: { found: Memory[]; empty: string }) => (found.length === 0 ? `${empty}\n` : `${found.map(memoryLine).join("\n")}\n`);
 
@@ -143,7 +151,7 @@ const formatMemory = (m: Memory) =>
     `name: ${m.name}`,
     `type: ${m.type}`,
     `scope: ${m.bookId ? `book ${m.bookId} (${m.bookTitle ?? "?"})` : "global"}`,
-    `written by: ${m.source === "reader" ? "the reader" : "Ask AI"}, updated ${new Date(m.updatedAt).toISOString().slice(0, 10)}`,
+    `written by: ${writtenBy(m)}, updated ${new Date(m.updatedAt).toISOString().slice(0, 10)}`,
     `description: ${m.description}`,
     "",
     m.body,
@@ -254,9 +262,14 @@ export const runCli = async ({
       letter: int(opts.letter, "--letter"),
     });
 
-    const memoryBook = async () => {
-      const query = opts.book ?? currentBook;
-      return query ? (await finder.findBook(query)).bookId : null;
+    const bookNamed = async (query: string) => (await finder.findBook(query)).bookId;
+    /** What list and search look at: --global or --book narrow it; otherwise the chat's book and the global memories, or everything outside a chat. */
+    const memoryFilter = async () => {
+      if (opts.global && opts.book) throw new UsageError("Pass --global or --book, not both.");
+      if (opts.all) return undefined;
+      if (opts.global) return { global: true };
+      if (opts.book) return { bookId: await bookNamed(opts.book) };
+      return currentBook ? { global: true, bookId: await bookNamed(currentBook) } : undefined;
     };
 
     switch (`${command} ${["highlight", "note", "harakat", "memory"].includes(command) ? (a ?? "") : ""}`.trim()) {
@@ -351,14 +364,16 @@ export const runCli = async ({
         return 0;
       }
       case "memory list": {
-        const found = await memories.list({ bookId: await memoryBook(), all: opts.all, ...(opts.type ? { type: memoryType(opts.type) } : {}) });
+        const filter = await memoryFilter();
+        const found = await memories.list({ ...(filter ? { filter } : {}), ...(opts.type ? { type: memoryType(opts.type) } : {}) });
         print({ json: found, text: formatMemories({ found, empty: "No memories saved yet." }) });
         return 0;
       }
       case "memory search": {
         const query = rest.slice(1).join(" ");
         if (!query.trim()) throw new UsageError("Say what to search for: midad memory search <words>.");
-        const found = await memories.search({ query, bookId: await memoryBook(), ...(opts.limit ? { limit: int(opts.limit, "--limit") } : {}) });
+        const filter = await memoryFilter();
+        const found = await memories.search({ query, ...(filter ? { filter } : {}), ...(opts.limit ? { limit: int(opts.limit, "--limit") } : {}) });
         print({ json: found, text: formatMemories({ found, empty: "No memories match." }) });
         return 0;
       }
@@ -380,17 +395,18 @@ export const runCli = async ({
           name: opts.name ?? "",
           description: opts.description ?? "",
           body: opts.body ?? "",
-          bookId: await memoryBook(),
-          source: "agent",
+          bookId: opts.book ? await bookNamed(opts.book) : null,
+          author: "agent",
         });
-        done(`Saved memory ${m.id} (${m.name}).`, m);
+        done(`Saved memory ${m.id} (${m.name}, ${m.bookId ? `for ${m.bookTitle ?? m.bookId}` : "global"}).`, m);
         return 0;
       }
       case "memory update": {
+        if (opts.global && opts.book) throw new UsageError("Pass --global or --book, not both.");
         const m = await memories.update({
           id: b ?? "",
-          source: "agent",
-          ...(opts.type ? { type: memoryType(opts.type), bookId: await memoryBook() } : {}),
+          ...(opts.type ? { type: memoryType(opts.type) } : {}),
+          ...(opts.book ? { bookId: await bookNamed(opts.book) } : opts.global ? { bookId: null } : {}),
           ...(opts.name !== undefined ? { name: opts.name } : {}),
           ...(opts.description !== undefined ? { description: opts.description } : {}),
           ...(opts.body !== undefined ? { body: opts.body } : {}),

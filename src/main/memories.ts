@@ -1,66 +1,32 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
+import type { Row } from "tinybase";
 import { foldArabic } from "../shared/arabic";
-import { isMemoryType, MEMORY_LIMITS, MEMORY_TYPES, type Memory, type MemoryInput, type MemorySource, type MemoryType } from "../shared/memories";
+import { isMemoryType, MEMORY_LIMITS, MEMORY_TYPES, type Memory, type MemoryAuthor, type MemoryInput, type MemoryType } from "../shared/memories";
+import { migrateLegacyTable, openUserStore } from "./user-store";
 
 /**
- * Ask AI's memory. A `book` memory belongs to its book and goes when the book does; the rest are
- * global. Searched by full text: the index holds each memory's words folded as Arabic search
+ * Ask AI's memory, kept in the user store so it syncs between devices like notes do. A memory is
+ * global or tied to a book. Search runs on a local FTS5 index derived from the store and never
+ * synced: before each search it is brought in line with the store, whoever changed it (this
+ * process, another one, another device). It holds each memory's words folded as Arabic search
  * folds them, so harakat and hamza seats don't matter. Requires the library's schema.
  */
 
-const SCHEMA = `
-CREATE TABLE IF NOT EXISTS memories (
-  id TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
-  description TEXT NOT NULL,
-  type TEXT NOT NULL CHECK (type IN (${MEMORY_TYPES.map((t) => `'${t}'`).join(", ")})),
-  body TEXT NOT NULL,
-  book_id TEXT REFERENCES books(book_id) ON DELETE CASCADE,
-  source TEXT NOT NULL CHECK (source IN ('reader', 'agent')),
-  created_at INTEGER NOT NULL,
-  updated_at INTEGER NOT NULL
-);
-CREATE UNIQUE INDEX IF NOT EXISTS memories_by_name ON memories (name, IFNULL(book_id, ''));
-CREATE VIRTUAL TABLE IF NOT EXISTS memories_fts USING fts5(name, description, body, tokenize = 'porter unicode61 remove_diacritics 2');
-CREATE TRIGGER IF NOT EXISTS memories_fts_delete AFTER DELETE ON memories BEGIN
-  DELETE FROM memories_fts WHERE rowid = old.rowid;
-END;
+const SEARCH_SCHEMA = `
+CREATE VIRTUAL TABLE IF NOT EXISTS memory_search USING fts5(id UNINDEXED, stamp UNINDEXED, name, description, body, tokenize = 'porter unicode61 remove_diacritics 2');
 `;
 
-/** Name, description and body, in the weights bm25 ranks a match by. */
-const RANK = "bm25(memories_fts, 4.0, 2.0, 1.0)";
+/** Name, description and body, in the weights bm25 ranks a match by (the unindexed id and stamp come first). */
+const RANK = "bm25(memory_search, 0, 0, 4.0, 2.0, 1.0)";
 
 const DEFAULT_SEARCH_LIMIT = 10;
 
-interface MemoryRow {
-  rowid: number;
-  id: string;
-  name: string;
-  description: string;
-  type: MemoryType;
-  body: string;
-  book_id: string | null;
-  book_title: string | null;
-  source: MemorySource;
-  created_at: number;
-  updated_at: number;
+/** Which memories to see: global ones, one book's, or both. Without either, all of them. */
+export interface MemoryFilter {
+  global?: boolean;
+  bookId?: string | null;
 }
-
-const SELECT = `SELECT m.rowid, m.*, b.title AS book_title FROM memories m LEFT JOIN books b ON b.book_id = m.book_id`;
-
-const toMemory = (row: MemoryRow): Memory => ({
-  id: row.id,
-  name: row.name,
-  description: row.description,
-  type: row.type,
-  body: row.body,
-  bookId: row.book_id,
-  bookTitle: row.book_title,
-  source: row.source,
-  createdAt: row.created_at,
-  updatedAt: row.updated_at,
-});
 
 const indexed = (text: string) => foldArabic(text).toLowerCase();
 
@@ -75,12 +41,13 @@ export const cleanMemoryName = (name: string): string =>
 
 const oneLine = (text: string) => text.replace(/\s+/g, " ").trim();
 
-const checked = ({ name, description, type, body }: Omit<MemoryInput, "bookId">) => {
-  const clean = { name: cleanMemoryName(name), description: oneLine(description), type, body: body.trim() };
+const checked = ({ name, description, type, body, bookId }: MemoryInput) => {
+  const clean = { name: cleanMemoryName(name), description: oneLine(description), type, body: body.trim(), bookId: bookId ?? null };
   if (!clean.name) throw new Error("Give the memory a short name.");
   if (!clean.description) throw new Error("Give the memory a one-line description, written so a later search finds it.");
   if (!clean.body) throw new Error("The memory is empty.");
   if (!isMemoryType(type)) throw new Error(`The type is one of ${MEMORY_TYPES.join(", ")}.`);
+  if (type === "book" && !clean.bookId) throw new Error("A book memory needs the book it's about (--book).");
   if (clean.description.length > MEMORY_LIMITS.description) throw new Error(`Keep the description to one line of at most ${MEMORY_LIMITS.description} characters.`);
   if (clean.body.length > MEMORY_LIMITS.body) throw new Error(`A memory holds one short fact, at most ${MEMORY_LIMITS.body} characters. Don't save page text.`);
   return clean;
@@ -92,125 +59,190 @@ export const matchQuery = (query: string): string | null => {
   return words ? words.map((w) => `"${w}"*`).join(" OR ") : null;
 };
 
+const searchText = (row: Row) => ({
+  name: indexed(String(row.name).replace(/-/g, " ")),
+  description: indexed(String(row.description)),
+  body: indexed(String(row.body)),
+});
+
+const stampOf = (text: { name: string; description: string; body: string }) =>
+  createHash("sha256").update(`${text.name}\u0000${text.description}\u0000${text.body}`).digest("hex").slice(0, 16);
+
+const inFilter = ({ bookId, filter }: { bookId: string | null; filter: MemoryFilter | undefined }) => {
+  if (!filter || (!filter.global && !filter.bookId)) return true;
+  return bookId === null ? Boolean(filter.global) : bookId === filter.bookId;
+};
+
+interface LegacyMemoryRow {
+  id: string;
+  name: string;
+  description: string;
+  type: MemoryType;
+  body: string;
+  book_id: string | null;
+  source: MemoryAuthor;
+  created_at: number;
+  updated_at: number;
+}
+
+/** Memories saved in a plain SQLite table by builds before the user store, copied in once with their ids. */
+const legacyMemories = (db: DatabaseSync) =>
+  (db.prepare("SELECT * FROM memories").all() as unknown as LegacyMemoryRow[]).map((m) => ({
+    table: "memories" as const,
+    id: m.id,
+    row: {
+      name: m.name,
+      description: m.description,
+      type: m.type,
+      body: m.body,
+      bookId: m.book_id,
+      // The old table kept who wrote it last; that is the best guess at who wrote it first.
+      author: m.source,
+      editedAt: m.updated_at > m.created_at ? m.updated_at : null,
+      createdAt: m.created_at,
+      updatedAt: m.updated_at,
+    },
+    at: m.updated_at,
+  }));
+
 export const createMemories = ({ db, now = Date.now }: { db: DatabaseSync; now?: () => number }) => {
-  db.exec(SCHEMA);
+  const user = openUserStore({ db });
+  migrateLegacyTable({ user, db, table: "memories", rows: () => legacyMemories(db) });
+  // The old builds' index; the new one is keyed by id rather than the old table's rowid.
+  db.exec("DROP TRIGGER IF EXISTS memories_fts_delete; DROP TABLE IF EXISTS memories_fts;");
+  db.exec(SEARCH_SCHEMA);
 
-  const row = (id: string) => db.prepare(`${SELECT} WHERE m.id = ?`).get(id) as MemoryRow | undefined;
-
-  const reindex = (r: MemoryRow) => {
-    db.prepare("DELETE FROM memories_fts WHERE rowid = ?").run(r.rowid);
-    db.prepare("INSERT INTO memories_fts (rowid, name, description, body) VALUES (?, ?, ?, ?)").run(r.rowid, indexed(r.name.replace(/-/g, " ")), indexed(r.description), indexed(r.body));
+  const bookTitle = (bookId: string): string | null => {
+    const local = db.prepare("SELECT title FROM books WHERE book_id = ?").get(bookId) as { title: string } | undefined;
+    if (local) return local.title;
+    const elsewhere = user.row({ table: "library", id: bookId });
+    return typeof elsewhere?.title === "string" ? elsewhere.title : null;
   };
 
-  const scopeFor = ({ type, bookId }: { type: MemoryType; bookId: string | null | undefined }) => {
-    if (type !== "book") return null;
-    if (!bookId) throw new Error("A book memory needs the book it's about.");
-    if (!db.prepare("SELECT 1 FROM books WHERE book_id = ?").get(bookId)) throw new Error(`There is no book ${bookId} in the library.`);
-    return bookId;
+  const toMemory = ([id, row]: [string, Row]): Memory => {
+    const bookId = typeof row.bookId === "string" ? row.bookId : null;
+    return {
+      id,
+      name: String(row.name),
+      description: String(row.description),
+      type: row.type as MemoryType,
+      body: String(row.body),
+      bookId,
+      bookTitle: bookId ? bookTitle(bookId) : null,
+      author: row.author as MemoryAuthor,
+      editedAt: typeof row.editedAt === "number" ? row.editedAt : null,
+      createdAt: Number(row.createdAt),
+      updatedAt: Number(row.updatedAt),
+    };
+  };
+
+  const newestFirst = (a: Memory, b: Memory) => b.updatedAt - a.updatedAt || (a.id < b.id ? 1 : -1);
+
+  const all = () => user.rows({ table: "memories" }).map(toMemory);
+
+  /** Brings the local search index in line with the store: adds, changes and drops rows by their content stamp. */
+  const syncIndex = () => {
+    const indexedStamps = new Map((db.prepare("SELECT id, stamp FROM memory_search").all() as { id: string; stamp: string }[]).map((r) => [r.id, r.stamp]));
+    const live = new Set<string>();
+    const drop = db.prepare("DELETE FROM memory_search WHERE id = ?");
+    const insert = db.prepare("INSERT INTO memory_search (id, stamp, name, description, body) VALUES (?, ?, ?, ?, ?)");
+    const changes: (() => void)[] = [];
+    for (const [id, row] of user.rows({ table: "memories" })) {
+      live.add(id);
+      const text = searchText(row);
+      const stamp = stampOf(text);
+      if (indexedStamps.get(id) === stamp) continue;
+      changes.push(() => {
+        drop.run(id);
+        insert.run(id, stamp, text.name, text.description, text.body);
+      });
+    }
+    for (const id of indexedStamps.keys()) if (!live.has(id)) changes.push(() => drop.run(id));
+    if (changes.length) user.locked(() => changes.forEach((change) => change()));
   };
 
   const assertNameFree = ({ name, bookId, except }: { name: string; bookId: string | null; except?: string }) => {
-    const taken = db.prepare("SELECT id FROM memories WHERE name = ? AND IFNULL(book_id, '') = ? AND id != ?").get(name, bookId ?? "", except ?? "") as
-      | { id: string }
-      | undefined;
-    if (taken) throw new Error(`A memory named "${name}" already exists (${taken.id}). Update it instead of adding another.`);
+    const taken = user.rows({ table: "memories" }).find(([id, row]) => id !== except && row.name === name && (row.bookId ?? null) === bookId);
+    if (taken) throw new Error(`A memory named "${name}" already exists (${taken[0]}). Update it instead of adding another.`);
   };
 
-  /** Memories a chat about `bookId` sees: the global ones and that book's. */
-  const inScope = "(m.book_id IS NULL OR m.book_id = ?)";
-
   return {
-    /**
-     * Memories a chat about the book sees (global ones only for null), newest first. `all` lists
-     * every book's too, for Settings.
-     */
-    async list({ bookId = null, type, all = false }: { bookId?: string | null; type?: MemoryType; all?: boolean } = {}): Promise<Memory[]> {
-      const where = [all ? "1" : inScope, type ? "m.type = ?" : "1"].join(" AND ");
-      const params = [...(all ? [] : [bookId ?? ""]), ...(type ? [type] : [])];
-      const rows = db.prepare(`${SELECT} WHERE ${where} ORDER BY m.updated_at DESC, m.rowid DESC`).all(...params) as unknown as MemoryRow[];
-      return rows.map(toMemory);
+    /** Memories matching the filter (all of them without one), newest first. */
+    async list({ filter, type }: { filter?: MemoryFilter; type?: MemoryType } = {}): Promise<Memory[]> {
+      user.mergeOthers();
+      return all()
+        .filter((m) => inFilter({ bookId: m.bookId, filter }) && (!type || m.type === type))
+        .sort(newestFirst);
     },
 
-    /** Memories in the chat's scope matching any of the query's words, best match first. */
-    async search({ query, bookId = null, limit = DEFAULT_SEARCH_LIMIT }: { query: string; bookId?: string | null; limit?: number }): Promise<Memory[]> {
+    /** Memories matching the filter and any of the query's words, best match first. */
+    async search({ query, filter, limit = DEFAULT_SEARCH_LIMIT }: { query: string; filter?: MemoryFilter; limit?: number }): Promise<Memory[]> {
       const match = matchQuery(query);
       if (!match) return [];
-      const rows = db
-        .prepare(
-          `${SELECT} JOIN memories_fts ON memories_fts.rowid = m.rowid
-           WHERE memories_fts MATCH ? AND ${inScope}
-           ORDER BY ${RANK}, m.updated_at DESC LIMIT ?`,
-        )
-        .all(match, bookId ?? "", limit) as unknown as MemoryRow[];
-      return rows.map(toMemory);
+      user.mergeOthers();
+      syncIndex();
+      const ranked = db.prepare(`SELECT id FROM memory_search WHERE memory_search MATCH ? ORDER BY ${RANK}`).all(match) as { id: string }[];
+      return ranked
+        .flatMap(({ id }) => {
+          const row = user.row({ table: "memories", id });
+          return row ? [toMemory([id, row])] : [];
+        })
+        .filter((m) => inFilter({ bookId: m.bookId, filter }))
+        .slice(0, limit);
     },
 
     async get({ id }: { id: string }): Promise<Memory | null> {
-      const found = row(id);
-      return found ? toMemory(found) : null;
+      user.mergeOthers();
+      const row = user.row({ table: "memories", id });
+      return row ? toMemory([id, row]) : null;
     },
 
     /** Saves a new memory. A name already used in the same scope is refused, so a fact is updated rather than saved twice. */
-    async add({ source, ...input }: MemoryInput & { source: MemorySource }): Promise<Memory> {
+    async add({ author, ...input }: MemoryInput & { author: MemoryAuthor }): Promise<Memory> {
+      user.mergeOthers();
       const clean = checked(input);
-      const bookId = scopeFor({ type: clean.type, bookId: input.bookId });
-      assertNameFree({ name: clean.name, bookId });
+      assertNameFree({ name: clean.name, bookId: clean.bookId });
       let id = randomUUID().slice(0, 8);
-      while (row(id)) id = randomUUID().slice(0, 8);
+      while (user.store.hasRow("memories", id)) id = randomUUID().slice(0, 8);
       const at = now();
-      db.prepare(
-        "INSERT INTO memories (id, name, description, type, body, book_id, source, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      ).run(id, clean.name, clean.description, clean.type, clean.body, bookId, source, at, at);
-      const saved = row(id) as MemoryRow;
-      reindex(saved);
-      return toMemory(saved);
+      const row = { ...clean, author, editedAt: null, createdAt: at, updatedAt: at };
+      user.rewriteRow({ table: "memories", id, row });
+      return toMemory([id, row]);
     },
 
-    /** Changes some of a memory's fields and marks who wrote it last. */
-    async update({
-      id,
-      source,
-      ...changes
-    }: Partial<MemoryInput> & { id: string; source: MemorySource }): Promise<Memory> {
-      const current = row(id);
+    /** Changes some of a memory's fields, or moves it between global and a book; it then shows as edited. */
+    async update({ id, ...changes }: Partial<MemoryInput> & { id: string }): Promise<Memory> {
+      user.mergeOthers();
+      const current = user.row({ table: "memories", id });
       if (!current) throw new Error(`There is no memory ${id}.`);
       const clean = checked({
-        name: changes.name ?? current.name,
-        description: changes.description ?? current.description,
-        type: changes.type ?? current.type,
-        body: changes.body ?? current.body,
+        name: changes.name ?? String(current.name),
+        description: changes.description ?? String(current.description),
+        type: changes.type ?? (current.type as MemoryType),
+        body: changes.body ?? String(current.body),
+        bookId: changes.bookId !== undefined ? changes.bookId : typeof current.bookId === "string" ? current.bookId : null,
       });
-      const bookId = scopeFor({ type: clean.type, bookId: changes.bookId ?? current.book_id });
-      assertNameFree({ name: clean.name, bookId, except: id });
-      db.prepare("UPDATE memories SET name = ?, description = ?, type = ?, body = ?, book_id = ?, source = ?, updated_at = ? WHERE id = ?").run(
-        clean.name,
-        clean.description,
-        clean.type,
-        clean.body,
-        bookId,
-        source,
-        now(),
-        id,
-      );
-      const saved = row(id) as MemoryRow;
-      reindex(saved);
-      return toMemory(saved);
+      assertNameFree({ name: clean.name, bookId: clean.bookId, except: id });
+      const at = now();
+      user.store.transaction(() => {
+        for (const [cell, value] of Object.entries(clean)) if (current[cell] !== value) user.store.setCell("memories", id, cell, value);
+        user.store.setPartialRow("memories", id, { editedAt: at, updatedAt: at });
+      });
+      return toMemory([id, user.store.getRow("memories", id)]);
     },
 
-    /** Puts a deleted memory back as it was, for undo. Gone for good if its book was deleted meanwhile. */
+    /** Puts a deleted memory back as it was, for undo. */
     async restore({ memory }: { memory: Memory }): Promise<void> {
-      if (row(memory.id)) return;
-      if (memory.bookId && !db.prepare("SELECT 1 FROM books WHERE book_id = ?").get(memory.bookId)) return;
-      const clean = checked(memory);
-      assertNameFree({ name: clean.name, bookId: memory.bookId });
-      db.prepare(
-        "INSERT INTO memories (id, name, description, type, body, book_id, source, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      ).run(memory.id, clean.name, clean.description, clean.type, clean.body, memory.bookId, memory.source, memory.createdAt, memory.updatedAt);
-      reindex(row(memory.id) as MemoryRow);
+      if (user.row({ table: "memories", id: memory.id })) return;
+      const { id, name, description, type, body, bookId, author, editedAt, createdAt, updatedAt } = memory;
+      assertNameFree({ name, bookId });
+      user.rewriteRow({ table: "memories", id, row: { name, description, type, body, bookId, author, editedAt, createdAt, updatedAt } });
     },
 
     async remove({ id }: { id: string }): Promise<void> {
-      if (db.prepare("DELETE FROM memories WHERE id = ?").run(id).changes === 0) throw new Error(`There is no memory ${id}.`);
+      user.mergeOthers();
+      if (!user.row({ table: "memories", id })) throw new Error(`There is no memory ${id}.`);
+      user.store.delRow("memories", id);
     },
   };
 };

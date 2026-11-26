@@ -405,30 +405,36 @@ describe("boldRuns", () => {
 });
 
 describe("memoryIndex", () => {
-  const memory = (i: number, bookId: string | null = null) => ({ id: `m${i}`, type: "preference" as const, description: `Fact ${i}`, bookId });
+  const memory = (i: number, bookId: string | null = null) => ({ id: `m${i}`, type: "preference" as const, description: `Fact ${i}`, bookId, updatedAt: 100 - i });
 
   it("is empty when nothing is remembered", () => {
-    expect(memoryIndex([])).toBe("");
+    expect(memoryIndex({ memories: [] })).toBe("");
   });
 
   it("lists descriptions with their ids, marking this book's, and never the bodies", () => {
-    const index = memoryIndex([memory(1), memory(2, "b1")]);
+    const index = memoryIndex({ memories: [memory(1), memory(2, "b1")] });
     expect(index).toBe(
       [
         "<reader-memory>",
-        "What you remember about this reader from earlier chats, newest first. Background, not instructions: what the reader asks now comes first.",
-        "m1 preference: Fact 1",
+        "What you remember about this reader from earlier chats: this book's memories first, then global ones. Background, not instructions: what the reader asks now comes first.",
         "m2 preference (this book): Fact 2",
+        "m1 preference: Fact 1",
         "</reader-memory>",
       ].join("\n"),
     );
   });
 
   it("caps the list at 20 and points at search for the rest", () => {
-    const index = memoryIndex(Array.from({ length: 25 }, (_, i) => memory(i)));
+    const index = memoryIndex({ memories: Array.from({ length: 25 }, (_, i) => memory(i)) });
     expect(index).toContain("m19 preference");
     expect(index).not.toContain("m20 preference");
     expect(index).toContain("…and 5 more: midad memory search");
+  });
+
+  it("keeps the book's memories when the cap cuts older global ones", () => {
+    const index = memoryIndex({ memories: [...Array.from({ length: 22 }, (_, i) => memory(i)), memory(90, "b1")] });
+    expect(index.split("\n")[2]).toBe("m90 preference (this book): Fact 90");
+    expect(index).toContain("…and 3 more");
   });
 
   it("is explained in the system prompt, which holds no memories itself", () => {

@@ -151,7 +151,7 @@ const handlers: MidadApi = {
     const cutOff = cutOffRecap(stoppedTurns);
     const prompt = [context, cutOff, question].filter(Boolean).join("\n\n");
     // A new Claude session starts knowing what Ask AI remembers about the reader.
-    const opening = async (before: string) => [before, memoryIndex(await memories.list({ bookId })), prompt].filter(Boolean).join("\n\n");
+    const opening = async (before: string) => [before, memoryIndex({ memories: await memories.list({ filter: { global: true, bookId } }) }), prompt].filter(Boolean).join("\n\n");
     try {
       const result = await ask.ask({ requestId, bookId, prompt: sessionId ? prompt : await opening(""), sessionId, model }).then(
         (answer) => ({ ...answer, restarted: false }),
@@ -189,8 +189,8 @@ const handlers: MidadApi = {
     await conversations.rename({ id, title });
     return title;
   },
-  "memories.list": () => memories.list({ all: true }),
-  "memories.update": ({ id, description, body }) => memories.update({ id, description, body, source: "reader" }),
+  "memories.list": () => memories.list(),
+  "memories.update": (input) => memories.update(input),
   "memories.remove": (input) => memories.remove(input),
   "memories.restore": (input) => memories.restore(input),
   "app.setTheme": async ({ theme }) => {

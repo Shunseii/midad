@@ -86,8 +86,8 @@ export interface MidadApi {
   "conversations.nameWithClaude": (input: { id: string }) => Promise<string>;
   /** Every memory Ask AI keeps, every book's included, newest first. */
   "memories.list": () => Promise<Memory[]>;
-  /** The reader's edit: the memory is then labelled as theirs. */
-  "memories.update": (input: { id: string; description: string; body: string }) => Promise<Memory>;
+  /** The reader's edit, including moving it between global (bookId null) and a book; it then shows as edited. */
+  "memories.update": (input: { id: string; description: string; body: string; bookId: string | null }) => Promise<Memory>;
   "memories.remove": (input: { id: string }) => Promise<void>;
   /** Puts a deleted memory back, for undo. */
   "memories.restore": (input: { memory: Memory }) => Promise<void>;

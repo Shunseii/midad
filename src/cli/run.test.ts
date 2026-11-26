@@ -196,8 +196,8 @@ describe("memory", () => {
   it("adds a memory as the agent and gets it in full", async () => {
     const added = await add("--json");
     expect(added.code).toBe(0);
-    const memory = JSON.parse(added.stdout) as { id: string; source: string; bookId: string | null };
-    expect(memory).toMatchObject({ source: "agent", bookId: null });
+    const memory = JSON.parse(added.stdout) as { id: string; author: string; bookId: string | null };
+    expect(memory).toMatchObject({ author: "agent", bookId: null });
     const { stdout } = await run("memory", "get", memory.id);
     expect(stdout).toContain("name: transliterate");
     expect(stdout).toContain("scope: global");
@@ -232,16 +232,44 @@ describe("memory", () => {
     expect((await run("memory", "search")).code).toBe(2);
   });
 
-  it("scopes book memories to the book Ask AI is open on", async () => {
-    const added = await runIn({ currentBook: "b1", argv: ["memory", "add", "--type", "book", "--name", "goal", "--description", "Memorising the definitions for an exam", "--body", "Exam in spring."] });
-    expect(added.code).toBe(0);
-    expect((await runIn({ currentBook: "b1", argv: ["memory", "list"] })).stdout).toContain("[book: الآجرومية]");
-    expect((await runIn({ currentBook: "b2", argv: ["memory", "list"] })).stdout).toBe("No memories saved yet.\n");
-    expect((await run("memory", "list", "--book", "b1")).stdout).toContain("goal");
-    expect((await run("memory", "list", "--all")).stdout).toContain("goal");
-    expect((await run("memory", "search", "exam")).stdout).toBe("No memories match.\n");
+  it("adds a memory globally unless --book names a book, even in a chat about one", async () => {
+    const global = await runIn({ currentBook: "b1", argv: ["memory", "add", "--type", "preference", "--name", "terms", "--description", "Transliterate terms", "--body", "x"] });
+    expect(global.stdout).toContain("global)");
+    const book = await runIn({ currentBook: "b1", argv: ["memory", "add", "--book", "b1", "--type", "book", "--name", "goal", "--description", "Memorising the definitions for an exam", "--body", "Exam in spring."] });
+    expect(book.stdout).toContain("for الآجرومية)");
+    const byTitle = await run("memory", "add", "--book", "البلاغة", "--type", "feedback", "--name", "terms", "--description", "Use the author's terms", "--body", "y");
+    expect(byTitle.stdout).toContain("for دروس البلاغة)");
     const noBook = await run("memory", "add", "--type", "book", "--name", "g", "--description", "d", "--body", "b");
     expect(noBook.stderr).toContain("needs the book");
+  });
+
+  it("lists and searches the chat's book and the global memories, or what --global or --book narrows it to", async () => {
+    await run("memory", "add", "--type", "preference", "--name", "terms", "--description", "Transliterate exam terms", "--body", "x");
+    await run("memory", "add", "--book", "b1", "--type", "book", "--name", "goal", "--description", "Memorising definitions for an exam", "--body", "y");
+    await run("memory", "add", "--book", "b2", "--type", "book", "--name", "goal", "--description", "Reading for the exam examples", "--body", "z");
+    const listed = (argv: string[], currentBook?: string) => runIn({ argv, ...(currentBook ? { currentBook } : {}) }).then((r) => r.stdout);
+
+    const inChat = await listed(["memory", "list"], "b1");
+    expect(inChat).toContain("[book: الآجرومية]");
+    expect(inChat).toContain("[global]");
+    expect(inChat).not.toContain("دروس البلاغة");
+    expect((await listed(["memory", "list"])).split("\n").filter(Boolean)).toHaveLength(3);
+    expect(await listed(["memory", "list", "--global"], "b1")).not.toContain("[book:");
+    expect((await listed(["memory", "list", "--book", "b2"], "b1")).split("\n").filter(Boolean)).toEqual([expect.stringContaining("[book: دروس البلاغة]")]);
+    expect((await listed(["memory", "list", "--all"], "b1")).split("\n").filter(Boolean)).toHaveLength(3);
+    expect((await listed(["memory", "search", "exam", "--global"])).split("\n").filter(Boolean)).toEqual([expect.stringContaining("terms")]);
+    expect((await listed(["memory", "search", "exam"], "b2")).split("\n").filter(Boolean)).toHaveLength(2);
+    expect((await runIn({ argv: ["memory", "list", "--global", "--book", "b1"] })).code).toBe(2);
+  });
+
+  it("moves a memory between a book and global, and labels it edited by its first author", async () => {
+    const id = (JSON.parse((await run("memory", "add", "--type", "feedback", "--name", "terms", "--description", "Use the author's terms", "--body", "x", "--json")).stdout) as { id: string }).id;
+    expect((await run("memory", "update", id, "--book", "b1")).code).toBe(0);
+    expect((await run("memory", "get", id)).stdout).toContain("scope: book b1 (الآجرومية)");
+    await run("memory", "update", id, "--global");
+    const shown = (await run("memory", "get", id)).stdout;
+    expect(shown).toContain("scope: global");
+    expect(shown).toContain("written by: Ask AI, edited");
   });
 
   it("rejects an unknown type", async () => {

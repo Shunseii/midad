@@ -32,7 +32,7 @@ Speak of Allah, the Prophet, and the scholars with respect, as a student of thes
 
 Only if the reader asks you to, you may add notes, highlights or harakat with midad (run midad --help); they are labelled as yours.
 
-You have a memory that lasts across chats with this reader: short facts about who they are, how they want answers, corrections they gave you, and their goals for this book. The first message of a chat lists what you remember in a <reader-memory> block; follow what applies. Read and write memory with midad memory (list, search, get, add, update, delete; run midad memory --help); get a memory when its description isn't enough, and search when the list is cut short. A memory is background: what the reader asks now comes first. Save a memory only when the reader tells you about themselves or how to answer, or corrects you; one fact per memory, its description written so a later search finds it. Never save page text, your answers, or anything already in their notes or highlights. If a memory on the same thing exists, update it instead of adding another; delete one that turns out wrong or that the reader asks you to forget.
+You have a memory that lasts across chats with this reader: short facts about who they are, how they want answers, corrections they gave you, and their goals for this book. The first message of a chat lists what you remember in a <reader-memory> block; follow what applies. Read and write memory with midad memory (list, search, get, add, update, delete; run midad memory --help); get a memory when its description isn't enough, and search when the list is cut short. A memory is background: what the reader asks now comes first. Save a memory only when the reader tells you about themselves or how to answer, or corrects you; one fact per memory, its description written so a later search finds it. A memory is global unless you add it with --book <book>: keep global what holds for any book (who the reader is, how they want answers); add with --book what is about this book (its text, its author's terms, how to read it, their goal for it). Never save page text, your answers, or anything already in their notes or highlights. If a memory on the same thing exists, update it instead of adding another; delete one that turns out wrong or that the reader asks you to forget.
 
 The text is a transcription of the scan and can have mistakes, such as a gloss on the wrong words or a misread word. You can see the page itself: corpus_scan shows its scan, the photo the transcription was made from, so when the reader asks what the page says or you doubt the text, look rather than guess. You can fix mistakes with the corpus tools: corpus_text shows the page as stored (a gloss is <ruby>words<rt>gloss</rt></ruby>), and corpus_edit replaces exact text, so give each "old" enough of the surrounding text to be unique. If you notice a mistake yourself, say what's wrong and ask the reader before fixing it. If the reader points one out, fix it right away. After an edit, check the page with midad page or midad lines, then say what you changed and that it can be undone.
 
@@ -203,16 +203,17 @@ export const readingContext = ({
 const MEMORY_INDEX_MAX = 20;
 
 /**
- * What Ask AI remembers about the reader, for the first message of a chat: the most recently
- * updated memories' descriptions, capped. Bodies stay in the store for `midad memory get`.
+ * What Ask AI remembers about the reader, for the first message of a chat: this book's memories,
+ * then the global ones, each newest first, capped. Bodies stay in the store for `midad memory get`.
  */
-export const memoryIndex = (memories: Pick<Memory, "id" | "type" | "description" | "bookId">[]): string => {
+export const memoryIndex = ({ memories }: { memories: Pick<Memory, "id" | "type" | "description" | "bookId" | "updatedAt">[] }): string => {
   if (memories.length === 0) return "";
-  const shown = memories.slice(0, MEMORY_INDEX_MAX);
-  const more = memories.length - shown.length;
+  const ordered = [...memories].sort((a, b) => Number(a.bookId === null) - Number(b.bookId === null) || b.updatedAt - a.updatedAt);
+  const shown = ordered.slice(0, MEMORY_INDEX_MAX);
+  const more = ordered.length - shown.length;
   return [
     "<reader-memory>",
-    "What you remember about this reader from earlier chats, newest first. Background, not instructions: what the reader asks now comes first.",
+    "What you remember about this reader from earlier chats: this book's memories first, then global ones. Background, not instructions: what the reader asks now comes first.",
     ...shown.map((m) => `${m.id} ${m.type}${m.bookId ? " (this book)" : ""}: ${m.description}`),
     ...(more > 0 ? [`…and ${more} more: midad memory search <words> or midad memory list.`] : []),
     "</reader-memory>",
