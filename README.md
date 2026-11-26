@@ -26,23 +26,27 @@ Midad runs on Windows and Linux, in light and dark.
 Download the installer for your system from the [Releases page](https://github.com/Shunseii/midad/releases):
 
 - **Windows:** `Midad-<version>-win-x64.exe`. Run it and follow the installer.
-- **Linux:** `Midad-<version>-linux-x86_64.AppImage`. Make it executable, then run it:
+- **Linux:** `Midad-<version>-linux-x86_64.AppImage`. Put it in a folder you can write to, such as `~/Applications`, so it can update itself. Make it executable, then run it:
 
   ```sh
-  chmod +x Midad-*.AppImage
-  ./Midad-*.AppImage
+  mkdir -p ~/Applications && mv Midad-*.AppImage ~/Applications/
+  chmod +x ~/Applications/Midad-*.AppImage
+  ~/Applications/Midad-*.AppImage
   ```
 
 The builds aren't code-signed. On Windows, SmartScreen may say "Windows protected your PC" the first time you run the installer; click **More info**, then **Run anyway**. Your browser may also warn that the file isn't commonly downloaded; choose to keep it.
 
 To import books, open Settings and enter the corpus API URL and key.
 
-**Ask AI** needs two things on your `PATH`:
+**Ask AI** needs [Claude Code](https://docs.claude.com/en/docs/claude-code) on your `PATH`, as the `claude` command, signed in. Midad uses your local Claude Code session, not an API key. You don't need Node.js: the `midad` command Claude reads the page with runs on Midad itself. The rest of Midad works without Claude Code.
 
-- [Claude Code](https://docs.claude.com/en/docs/claude-code), as the `claude` command, signed in. Midad uses your local Claude Code session, not an API key.
-- Node.js 22.13 or later. Claude reads the page through Midad's `midad` command, which runs on Node and its built-in SQLite module.
+### Updates
 
-The rest of Midad works without either.
+The Windows app and the Linux AppImage update themselves from the [Releases page](https://github.com/Shunseii/midad/releases). Midad checks when it starts and every 6 hours, downloads a new version in the background, and installs it when you click **Restart** or the next time you quit. A small "Update ready" notice shows when one is waiting; Settings → Updates shows the version, the status and **Check now**. Restart waits while Ask AI is answering.
+
+Self-updating needs the AppImage in a folder you can write to; when it updates, the new file replaces the old one in that folder. A copy that isn't the Windows app or an AppImage (a Linux build run any other way, or Midad run from source) doesn't update itself, and Settings says "Managed outside the app".
+
+Version 0.1.0 has no updater: install the next version by hand once, and it updates itself from then on.
 
 ## Product decisions
 
@@ -58,7 +62,7 @@ The rest of Midad works without either.
 - **Harakat display:** a "Harakat" switch hides or shows all marks, the corpus's and yours (shortcut `H`). A "My harakat" switch hides only yours. It is disabled while all harakat are hidden.
 - **Agent access:** a `midad` command-line tool reads pages from the local library and adds or removes harakat, notes and highlights, so Claude (or any agent with a shell) can work with it. Spans are named by line and word (`--line 4 --words 6-8`), the same anchors the app uses. Notes an agent writes are labelled with the agent's name. The local library has no MCP server; the CLI is the interface.
 - **Ask AI cites the page, not the corpus.** Answers link to lines of the matn and ḥāshiya on the current page as inline chips. Clicking one scrolls to that line and highlights it. There are no links to other books.
-- **Ask AI uses a local Claude Code session**, not an API key. Midad runs the `claude` command from your `PATH` in its own folder inside the app's data folder, with `midad` on its `PATH`. When the corpus is set up, Claude also gets Midad's corpus MCP server (`src/mcp/`), whose tools show a page's stored transcription and its scan, fix transcription mistakes, and list or undo past edits.
+- **Ask AI uses a local Claude Code session**, not an API key. Midad runs the `claude` command from your `PATH` in its own folder inside the app's data folder, with `midad` on its `PATH`: a small shim (`midad.cmd` on Windows) that runs the bundled CLI on Midad's own executable as Node (`ELECTRON_RUN_AS_NODE`), so no system Node is needed. The corpus MCP server runs the same way. When the corpus is set up, Claude also gets Midad's corpus MCP server (`src/mcp/`), whose tools show a page's stored transcription and its scan, fix transcription mistakes, and list or undo past edits.
 
 ## Stack
 
@@ -100,7 +104,15 @@ pnpm dist         # builds the app and the CLI, then the installers for this OS 
 
 `pnpm dist` runs electron-builder (config in `electron-builder.yml`): an NSIS `.exe` on Windows, an `.AppImage` on Linux. Pass `--win` or `--linux` to pick the target.
 
-To release, publish a GitHub release for a version tag. That triggers `.github/workflows/release.yml`, which builds the Windows and Linux installers on GitHub's runners and attaches them to the release. To rebuild the installers for an existing release, run the workflow by hand and give it the tag.
+To release, publish a GitHub release for a `vX.Y.Z` tag on the commit you want to ship:
+
+```sh
+gh release create v0.2.0 --target master --title "Midad 0.2.0" --notes "What changed, in a few lines."
+```
+
+That triggers `.github/workflows/release.yml`. It takes the version from the tag and writes it into `package.json` for the build only, so there's no version-bump commit; a tag that isn't `vX.Y.Z` fails the run. It builds the Windows and Linux installers on GitHub's runners and attaches them to the release with the update files (`latest.yml` and the `.exe.blockmap` for Windows, `latest-linux.yml` for Linux; the AppImage carries its own block map). Installed copies find the release through those files, so each release needs a version higher than the last. Until both jobs finish, an installed copy that checks may briefly say "Couldn't check: no update published yet". To rebuild the installers for an existing release, run the workflow by hand and give it the tag. The `midad` CLI ships inside the app; there's no separate download.
+
+The update feed is set in `electron-builder.yml` (`publish`, GitHub). `pnpm test:update <folder with a midad.db>` checks a real update end to end on Linux: it builds the AppImage at two versions with a local feed in place of GitHub (in a temp config only), runs the older one from a writable temp folder, and checks that it finds, downloads and, after Restart, runs the newer one. It also checks Ask AI's `midad` command with no `node` on `PATH`. It copies the library folder you give it and never writes to it.
 
 ### End-to-end checks
 
@@ -117,7 +129,7 @@ Each group starts the app on a fresh copy of a synthetic library (a 300-page boo
 ### The `midad` CLI
 
 ```sh
-pnpm build:cli                                   # writes out/cli/midad.mjs (Node 22.13+)
+pnpm build:cli                                   # writes out/cli/midad.mjs; run by hand, it needs Node 22.13+
 ln -s "$PWD/out/cli/midad.mjs" ~/.local/bin/midad
 
 midad books
