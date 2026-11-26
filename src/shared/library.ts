@@ -95,3 +95,32 @@ export interface Bookmark {
   name: string | null;
   createdAt: number;
 }
+
+/** What removing a book deletes, counted before it goes. */
+export interface BookRemoval {
+  bookId: string;
+  title: string | null;
+  pages: number;
+  highlights: number;
+  notes: number;
+  harakat: number;
+  bookmarks: number;
+  conversations: number;
+  memories: number;
+}
+
+const REMOVAL_COUNTS: { key: keyof Omit<BookRemoval, "bookId" | "title">; one: string; many: string }[] = [
+  { key: "pages", one: "page", many: "pages" },
+  { key: "highlights", one: "highlight", many: "highlights" },
+  { key: "notes", one: "note", many: "notes" },
+  { key: "harakat", one: "added haraka", many: "added harakat" },
+  { key: "bookmarks", one: "bookmark", many: "bookmarks" },
+  { key: "conversations", one: "conversation", many: "conversations" },
+  { key: "memories", one: "memory", many: "memories" },
+];
+
+/** "1,147 pages · 3 notes · 2 conversations", leaving out what there's none of. */
+export const removalCounts = (removal: BookRemoval): string =>
+  REMOVAL_COUNTS.filter(({ key }) => removal[key] > 0)
+    .map(({ key, one, many }) => `${removal[key].toLocaleString("en")} ${removal[key] === 1 ? one : many}`)
+    .join(" · ");

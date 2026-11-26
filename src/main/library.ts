@@ -19,6 +19,7 @@ import { realignPage, type WordAt } from "../shared/realign";
 import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
 import { tidyHarakat } from "./annotations";
+import { dropRemovedBook } from "./book-removal";
 import { migrateLegacyTable, openUserStore, textRev } from "./user-store";
 
 /**
@@ -189,10 +190,13 @@ export const createLibrary = ({
   corpus,
   now = Date.now,
   onRepinned,
+  scansDir,
 }: {
   db: DatabaseSync;
   corpus: CorpusSource;
   now?: () => number;
+  /** Where page scans are cached, cleared for a book removed on another device. */
+  scansDir?: string;
   /** Called between moving the user store's pins and writing the new text: a seam for crash tests. */
   onRepinned?: () => void;
 }) => {
@@ -201,6 +205,28 @@ export const createLibrary = ({
   db.exec(SCHEMA);
   migrateLegacyTable({ user, db, table: "progress", rows: () => legacyProgress(db) });
   migrateLegacyTable({ user, db, table: "books", rows: () => legacyMembership(db) });
+
+  // A book removed on another device (or by a process that died before dropping its pages) leaves
+  // its library entry deleted: its pages here go too, so it neither stays nor comes back as waiting.
+  const hasLocalCopy = (bookId: string) => db.prepare("SELECT 1 FROM books WHERE book_id = ?").get(bookId) !== undefined;
+  const removedElsewhere = new Set<string>();
+  user.store.addRowListener("library", null, (_store, _table, bookId) => {
+    if (!user.row({ table: "library", id: bookId })) removedElsewhere.add(bookId);
+  });
+  const dropRemoved = () => {
+    for (const bookId of removedElsewhere) {
+      if (hasLocalCopy(bookId) && !user.row({ table: "library", id: bookId })) dropRemovedBook({ db, user, bookId, scansDir });
+    }
+    removedElsewhere.clear();
+  };
+  user.afterMerge({ name: "removed-books", hook: dropRemoved });
+  const unlisted = (db.prepare("SELECT book_id FROM books").all() as { book_id: string }[]).filter(({ book_id }) => !user.row({ table: "library", id: book_id }));
+  if (unlisted.length > 0) {
+    // Only a deleted entry counts: a book never entered in the store stays.
+    const entries = user.store.getMergeableContent()[0][0].library?.[0] ?? {};
+    for (const { book_id } of unlisted) if (entries[book_id]) removedElsewhere.add(book_id);
+    dropRemoved();
+  }
 
   const transaction = <T>(fn: () => T): T => {
     db.exec("BEGIN");
@@ -372,7 +398,8 @@ export const createLibrary = ({
         for (const f of ready) writePage(corpusBookId, f, "insert");
         renumber(corpusBookId);
       });
-      user.store.setRow("library", corpusBookId, { addedAt: now(), title: meta.work?.name ?? meta.title, author: meta.work?.author ?? null });
+      // Freshly stamped whole, so importing a book removed earlier brings back every cell.
+      user.rewriteRow({ table: "library", id: corpusBookId, row: { addedAt: now(), title: meta.work?.name ?? meta.title, author: meta.work?.author ?? null } });
       return { bookId: corpusBookId, imported: ready.length, pending: files.length - ready.length };
     },
 

@@ -319,6 +319,25 @@ const guardLegacyTable = ({ db, table }: { db: DatabaseSync; table: string }) =>
   }
 };
 
+/** Children before parents, so no foreign key cascades into a guarded table. */
+const LEGACY_DELETE_ORDER = ["turns", "highlights", "notes", "harakat", "markers", "bookmarks", "progress", "conversations", "memories"];
+
+/**
+ * Deletes a removed book's rows from the old tables kept as backups, lifting each delete guard just
+ * for this. Runs inside the caller's transaction, so no old build can write between the two.
+ */
+export const deleteLegacyRows = ({ db, bookId }: { db: DatabaseSync; bookId: string }) => {
+  for (const table of LEGACY_DELETE_ORDER) {
+    if (!hasTable(db, table)) continue;
+    const trigger = `midad_legacy_${table}_delete`;
+    const guarded = db.prepare("SELECT 1 FROM sqlite_master WHERE type = 'trigger' AND name = ?").get(trigger) !== undefined;
+    if (guarded) db.exec(`DROP TRIGGER ${trigger}`);
+    const where = table === "turns" ? (hasTable(db, "conversations") ? "conversation_id IN (SELECT id FROM conversations WHERE book_id = ?)" : null) : "book_id = ?";
+    if (where) db.prepare(`DELETE FROM ${table} WHERE ${where}`).run(bookId);
+    if (guarded) guardLegacyTable({ db, table });
+  }
+};
+
 /**
  * Copies a table from before the user store, once, keeping its ids, so two processes doing it at
  * once write the same rows. The copy happens under the write lock after merging the other clients,
