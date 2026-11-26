@@ -160,6 +160,25 @@ await check("the CLI's writes reach the open app at once, and the other device t
   await waitFor(async () => (await onPage(a.page, 39)).highlights.some((x) => x.id === h.id), "A never got B's CLI highlight");
 });
 
+await check("Ask AI's memories reach the other device, with edits, moves between books and deletes", async () => {
+  const memoriesOn = (page) => api(page, "memories.list", undefined);
+  const saved = cli({ userData: b.userData, args: ["memory", "add", "--type", "preference", "--name", "sync-check", "--description", "Transliterate terms on every device", "--body", "x"] });
+  const forBook = cli({ userData: b.userData, args: ["memory", "add", "--book", LONG_BOOK, "--type", "book", "--name", "sync-goal", "--description", "Reading for the exam", "--body", "y"] });
+  await waitFor(async () => {
+    const ids = (await memoriesOn(a.page)).map((m) => m.id);
+    return ids.includes(saved.id) && ids.includes(forBook.id);
+  }, "A never got B's CLI memories");
+  await api(a.page, "memories.update", { id: saved.id, description: "Transliterate terms, in brackets", body: "x", bookId: LONG_BOOK });
+  await api(a.page, "memories.remove", { id: forBook.id });
+  await waitFor(async () => {
+    const found = await memoriesOn(b.page);
+    const moved = found.find((m) => m.id === saved.id);
+    return !found.some((m) => m.id === forBook.id) && moved?.bookId === LONG_BOOK && moved.description === "Transliterate terms, in brackets" && moved.author === "agent" && moved.editedAt !== null;
+  }, "B didn't get A's edit, move and delete", 45_000, async () => memoriesOn(b.page));
+  const searched = cli({ userData: b.userData, args: ["memory", "search", "brackets", "--book", LONG_BOOK] });
+  assert.deepEqual(searched.map((m) => m.id), [saved.id], "B's CLI search didn't follow the synced edit");
+});
+
 await check("with the app closed, the CLI's writes are merged on the next start, in order against a newer edit elsewhere", async () => {
   await b.close();
   const h = cli({ userData: b.userData, args: ["highlight", "add", LONG_BOOK, "37", "--line", "2", "--words", "1-3"] });
