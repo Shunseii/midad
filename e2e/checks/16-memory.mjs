@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { LONG_BOOK } from "../lib/fixture.mjs";
 
 export const name = "Settings memory";
 
@@ -6,6 +7,17 @@ const ROW = "[data-memory]";
 const rows = (page) => page.ev(`[...document.querySelectorAll(${JSON.stringify(ROW)})].map((r) => r.innerText)`);
 const rowWith = (text) => `js:[...document.querySelectorAll(${JSON.stringify(ROW)})].find((r) => r.innerText.includes(${JSON.stringify(text)}))`;
 const buttonIn = (text, label) => `js:${rowWith(text).slice(3)}?.querySelector('[aria-label=${JSON.stringify(label)}]')`;
+
+/** Each group's key (global or a book id) with the descriptions under it, in the order shown. */
+const groups = (page) =>
+  page.ev(`(() => {
+    const out = [];
+    for (const el of document.querySelectorAll("[data-memory-group], [data-memory], form[aria-label='Edit memory']")) {
+      if (el.dataset.memoryGroup) out.push({ group: el.dataset.memoryGroup, title: el.innerText, rows: [] });
+      else out.at(-1)?.rows.push(el.innerText.split("\\n")[1] ?? el.innerText);
+    }
+    return out;
+  })()`);
 
 const openMemory = async (page) => {
   await page.go("#/settings", `!!document.querySelector("#memory")`);
@@ -16,20 +28,25 @@ const openMemory = async (page) => {
 
 export const checks = [
   [
-    "lists every memory, labelled by who wrote it and with its book",
+    "groups memories under All books, then each book by its title, labelled by who wrote them",
     async (page) => {
       await openMemory(page);
+      const shown = await groups(page);
+      assert.deepEqual(
+        shown.map((g) => g.group),
+        ["global", LONG_BOOK],
+      );
+      assert.match(shown[0].title, /all books/i);
+      assert.ok(shown[1].title.includes("كتاب الاختبار الطويل"), `the book's group isn't titled with the book: ${shown[1].title}`);
+      assert.deepEqual(shown[0].rows, ["Transliterate Arabic terms"]);
+      assert.deepEqual(shown[1].rows, ["Reading for the exam"]);
       const listed = await rows(page);
-      assert.equal(listed.length, 2);
-      const goal = listed.find((r) => r.includes("Reading for the exam"));
-      assert.ok(goal?.includes("Ask AI"), `not labelled as Ask AI's: ${goal}`);
-      assert.ok(goal?.includes("كتاب الاختبار الطويل"), `the book memory doesn't name its book: ${goal}`);
-      assert.ok(listed.find((r) => r.includes("Transliterate"))?.includes("All books"));
+      assert.ok(listed.every((r) => r.includes("Ask AI") && !r.includes("edited")), `unexpected labels: ${listed.join(" | ")}`);
       assert.ok(await page.ev(`document.body.innerText.includes("2 memories")`));
     },
   ],
   [
-    "edits a memory in place, which then reads as the reader's",
+    "edits a memory in place, which then shows its first author and that it was edited",
     async (page) => {
       await page.click(buttonIn("Transliterate", "Edit memory"));
       await page.waitFor(`!!document.querySelector("form[aria-label='Edit memory'] textarea")`, { message: "the editor didn't open" });
@@ -37,9 +54,32 @@ export const checks = [
       await page.type("Write the Arabic, then (ism).");
       await page.click(`js:[...document.querySelectorAll("form[aria-label='Edit memory'] button")].find((b) => b.textContent === "Save")`);
       await page.waitFor(`!document.querySelector("form[aria-label='Edit memory']")`, { message: "the editor didn't close on save" });
-      await page.waitFor(`${rowWith("Write the Arabic, then (ism).").slice(3)}?.querySelector("[data-memory-source=reader]") != null`, {
-        message: "the edited memory isn't labelled as the reader's",
+      const row = rowWith("Write the Arabic, then (ism).").slice(3);
+      await page.waitFor(`${row}?.querySelector("[data-memory-author=agent]") != null && ${row}.innerText.includes("edited")`, {
+        message: "the edited memory doesn't show Ask AI as its author and that it was edited",
       });
+    },
+  ],
+  [
+    "moves a memory from All books to a book with Applies to",
+    async (page) => {
+      await page.click(buttonIn("Transliterate", "Edit memory"));
+      await page.waitFor(`!!document.querySelector("form[aria-label='Edit memory'] select")`, { message: "no Applies to picker" });
+      const options = await page.ev(`[...document.querySelector("form[aria-label='Edit memory'] select").options].map((o) => o.textContent)`);
+      assert.deepEqual(options.slice(0, 1), ["All books"]);
+      assert.ok(options.includes("كتاب الاختبار الطويل") && options.includes("رسالة قصيرة"), `books missing from the picker: ${options}`);
+      await page.ev(`(() => {
+        const select = document.querySelector("form[aria-label='Edit memory'] select");
+        const set = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "value").set;
+        set.call(select, ${JSON.stringify(LONG_BOOK)});
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      })()`);
+      await page.click(`js:[...document.querySelectorAll("form[aria-label='Edit memory'] button")].find((b) => b.textContent === "Save")`);
+      await page.waitFor(`!document.querySelector("form[aria-label='Edit memory']")`, { message: "the editor didn't close on save" });
+      await page.waitFor(`!document.querySelector("[data-memory-group=global]")`, { message: "the All books group didn't go once it was empty" });
+      const shown = await groups(page);
+      assert.deepEqual(shown.map((g) => g.group), [LONG_BOOK]);
+      assert.equal(shown[0].rows.length, 2);
     },
   ],
   [

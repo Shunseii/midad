@@ -1,5 +1,5 @@
-import { ArrowLeft, Brain, Check, KeyRound, Minus, Pencil, Plug, Plus, Search, Server, Trash2, TriangleAlert, X } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
+import { ArrowLeft, Brain, Check, ChevronsUpDown, KeyRound, Minus, Pencil, Plug, Plus, Search, Server, Trash2, TriangleAlert, X } from "lucide-react";
+import { Fragment, type ReactNode, useEffect, useId, useState } from "react";
 import { foldArabic } from "../../../shared/arabic";
 import type { Memory, MemoryType } from "../../../shared/memories";
 import { useLocation, useNavigate } from "react-router";
@@ -14,7 +14,7 @@ import { ON_LAUNCH_PREF, type OnLaunch } from "../lib/launch";
 import type { SyncStatus } from "../../../shared/sync";
 import { useNow } from "../components/devices";
 import { plural, timeAgo } from "../lib/format";
-import { midad, useConnectSync, useDisconnectSync, useMemories, useRemoveMemory, useRestoreMemory, useSaveSettings, useSettings, useSyncSettings, useSyncStatus, useUpdateMemory } from "../lib/midad";
+import { midad, useConnectSync, useDisconnectSync, useLibrary, useMemories, useRemoveMemory, useRestoreMemory, useSaveSettings, useSettings, useSyncSettings, useSyncStatus, useUpdateMemory } from "../lib/midad";
 import { usePref } from "../lib/prefs";
 import { useKeybindings } from "../lib/use-keybindings";
 import type { ReaderState } from "./reader";
@@ -389,16 +389,39 @@ const matchesSearch = ({ memory, query }: { memory: Memory; query: string }) => 
 /** How long a deleted row takes to fade before it leaves the list. */
 const ROW_EXIT_MS = 200;
 
+/** The value the "Applies to" picker uses for a memory every chat sees. */
+const ALL_BOOKS = "";
+
+interface MemoryGroup {
+  bookId: string | null;
+  title: string;
+  memories: Memory[];
+}
+
+/** All books first, then each book's memories under its title, in title order. */
+const groupMemories = (memories: Memory[]): MemoryGroup[] => {
+  const books = new Map<string, MemoryGroup>();
+  const global: MemoryGroup = { bookId: null, title: "All books", memories: [] };
+  for (const memory of memories) {
+    if (!memory.bookId) {
+      global.memories.push(memory);
+      continue;
+    }
+    const group = books.get(memory.bookId) ?? { bookId: memory.bookId, title: memory.bookTitle ?? memory.bookId, memories: [] };
+    group.memories.push(memory);
+    books.set(memory.bookId, group);
+  }
+  return [global, ...[...books.values()].sort((a, b) => a.title.localeCompare(b.title, "ar"))].filter((g) => g.memories.length > 0);
+};
+
 const MemoryMeta = ({ memory }: { memory: Memory }) => (
   <span className="flex items-center gap-1 text-xs text-ink-3">
-    <span data-memory-author={memory.author}>{memory.author === "reader" ? "You" : "Ask AI"}{memory.editedAt === null ? "" : " · edited"}</span>
-    <span aria-hidden>·</span>
-    {memory.bookId ? (
-      <span dir="rtl" className="ar">
-        {memory.bookTitle ?? memory.bookId}
-      </span>
-    ) : (
-      <span>All books</span>
+    <span data-memory-author={memory.author}>{memory.author === "reader" ? "You" : "Ask AI"}</span>
+    {memory.editedAt !== null && (
+      <>
+        <span aria-hidden>·</span>
+        <span>edited</span>
+      </>
     )}
     <span aria-hidden>·</span>
     <span>{memoryDate(memory.updatedAt)}</span>
@@ -407,10 +430,18 @@ const MemoryMeta = ({ memory }: { memory: Memory }) => (
 
 const MemoryEditor = ({ memory, onDone }: { memory: Memory; onDone: () => void }) => {
   const update = useUpdateMemory();
+  const library = useLibrary();
   const [description, setDescription] = useState(memory.description);
   const [body, setBody] = useState(memory.body);
-  const changed = description.trim() !== memory.description || body.trim() !== memory.body;
-  const save = () => update.mutate({ id: memory.id, description, body, bookId: memory.bookId }, { onSuccess: onDone });
+  const [bookId, setBookId] = useState(memory.bookId ?? ALL_BOOKS);
+  const pickerId = useId();
+  const books = [
+    ...(library.data ?? []).map((b) => ({ bookId: b.bookId, title: b.title })),
+    // A book only another device has imported can't be picked anew, but stays where it is.
+    ...(memory.bookId && !library.data?.some((b) => b.bookId === memory.bookId) ? [{ bookId: memory.bookId, title: memory.bookTitle ?? memory.bookId }] : []),
+  ];
+  const changed = description.trim() !== memory.description || body.trim() !== memory.body || bookId !== (memory.bookId ?? ALL_BOOKS);
+  const save = () => update.mutate({ id: memory.id, description, body, bookId: bookId === ALL_BOOKS ? null : bookId }, { onSuccess: onDone });
   return (
     <form
       aria-label="Edit memory"
@@ -435,9 +466,31 @@ const MemoryEditor = ({ memory, onDone }: { memory: Memory; onDone: () => void }
         <span className="text-sm font-medium text-ink-2">Memory</span>
         <Textarea value={body} onChange={(e) => setBody(e.target.value)} className="min-h-19" />
       </label>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor={pickerId} className="text-sm font-medium text-ink-2">
+          Applies to
+        </label>
+        <div className="relative w-72">
+          <select
+            id={pickerId}
+            value={bookId}
+            onChange={(e) => setBookId(e.target.value)}
+            className="h-9 w-full appearance-none rounded-lg border border-input bg-surface py-0 pr-9 pl-3 text-sm text-ink outline-hidden transition-[border-color,box-shadow] focus-visible:border-accent focus-visible:ring-3 focus-visible:ring-accent-soft"
+          >
+            <option value={ALL_BOOKS}>All books</option>
+            {books.map((b) => (
+              <option key={b.bookId} value={b.bookId}>
+                {b.title}
+              </option>
+            ))}
+          </select>
+          <ChevronsUpDown className="pointer-events-none absolute top-2.5 right-3 size-4 text-ink-3" aria-hidden />
+        </div>
+        <span className="text-xs text-ink-3">All books: every chat sees it. A book: only chats about that book.</span>
+      </div>
       {update.error && <p className="text-sm text-danger">{update.error.message}</p>}
       <div className="flex items-center gap-2">
-        <span className="flex-1 text-xs text-ink-3">Saving marks it as written by you.</span>
+        <span className="flex-1 text-xs text-ink-3">Saving marks it as edited.</span>
         <Button variant="ghost" size="sm" onClick={onDone}>
           Cancel
         </Button>
@@ -467,6 +520,19 @@ const MemoryRow = ({ memory, leaving, onEdit, onDelete }: { memory: Memory; leav
       <IconButton icon={Pencil} label="Edit memory" onClick={onEdit} />
       <IconButton icon={Trash2} label="Delete memory" onClick={onDelete} />
     </div>
+  </div>
+);
+
+const GroupHeader = ({ group }: { group: MemoryGroup }) => (
+  <div data-memory-group={group.bookId ?? "global"} className="flex items-baseline gap-2 bg-surface-2 px-5 py-2 transition-opacity duration-pop ease-out starting:opacity-0">
+    {group.bookId ? (
+      <span dir="rtl" className="ar text-sm font-semibold text-ink-2">
+        {group.title}
+      </span>
+    ) : (
+      <span className="text-xs font-semibold tracking-wide text-ink-2 uppercase">{group.title}</span>
+    )}
+    <span className="text-xs text-ink-3">{group.memories.length}</span>
   </div>
 );
 
@@ -524,13 +590,18 @@ const MemorySection = () => {
               <span className="text-xs text-ink-3">Try other words, or clear the search.</span>
             </div>
           )}
-          {shown.map((memory) =>
-            editing === memory.id ? (
-              <MemoryEditor key={memory.id} memory={memory} onDone={() => setEditing(null)} />
-            ) : (
-              <MemoryRow key={memory.id} memory={memory} leaving={leaving === memory.id} onEdit={() => setEditing(memory.id)} onDelete={() => onDelete(memory)} />
-            ),
-          )}
+          {groupMemories(shown).map((group) => (
+            <Fragment key={group.bookId ?? "global"}>
+              <GroupHeader group={group} />
+              {group.memories.map((memory) =>
+                editing === memory.id ? (
+                  <MemoryEditor key={memory.id} memory={memory} onDone={() => setEditing(null)} />
+                ) : (
+                  <MemoryRow key={memory.id} memory={memory} leaving={leaving === memory.id} onEdit={() => setEditing(memory.id)} onDelete={() => onDelete(memory)} />
+                ),
+              )}
+            </Fragment>
+          ))}
         </>
       )}
       {remove.error && <p className="px-5 py-3 text-sm text-danger">{remove.error.message}</p>}
