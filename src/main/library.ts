@@ -191,6 +191,7 @@ export const createLibrary = ({
   now = Date.now,
   onRepinned,
   scansDir,
+  onBookDropped,
 }: {
   db: DatabaseSync;
   corpus: CorpusSource;
@@ -199,6 +200,8 @@ export const createLibrary = ({
   scansDir?: string;
   /** Called between moving the user store's pins and writing the new text: a seam for crash tests. */
   onRepinned?: () => void;
+  /** Called after dropping the pages of a book removed on another device. */
+  onBookDropped?: (bookId: string) => void;
 }) => {
   const user = openUserStore({ db });
   db.exec("PRAGMA foreign_keys = ON;");
@@ -213,19 +216,23 @@ export const createLibrary = ({
   user.store.addRowListener("library", null, (_store, _table, bookId) => {
     if (!user.row({ table: "library", id: bookId })) removedElsewhere.add(bookId);
   });
-  const dropRemoved = () => {
+  const dropRemoved = ({ announce }: { announce: boolean }) => {
     for (const bookId of removedElsewhere) {
-      if (hasLocalCopy(bookId) && !user.row({ table: "library", id: bookId })) dropRemovedBook({ db, user, bookId, scansDir });
+      if (hasLocalCopy(bookId) && !user.row({ table: "library", id: bookId })) {
+        dropRemovedBook({ db, user, bookId, scansDir });
+        if (announce) onBookDropped?.(bookId);
+      }
     }
     removedElsewhere.clear();
   };
-  user.afterMerge({ name: "removed-books", hook: dropRemoved });
+  user.afterMerge({ name: "removed-books", hook: () => dropRemoved({ announce: true }) });
   const unlisted = (db.prepare("SELECT book_id FROM books").all() as { book_id: string }[]).filter(({ book_id }) => !user.row({ table: "library", id: book_id }));
   if (unlisted.length > 0) {
     // Only a deleted entry counts: a book never entered in the store stays.
     const entries = user.store.getMergeableContent()[0][0].library?.[0] ?? {};
     for (const { book_id } of unlisted) if (entries[book_id]) removedElsewhere.add(book_id);
-    dropRemoved();
+    // Nothing is showing the library yet.
+    dropRemoved({ announce: false });
   }
 
   const transaction = <T>(fn: () => T): T => {

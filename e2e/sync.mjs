@@ -290,6 +290,27 @@ await check("a new device with an empty library sees the books waiting from the 
   }
 });
 
+await check("a book removed on A with the CLI is gone from B, pages and all, and isn't left waiting", async () => {
+  await api(a.page, "highlights.add", { bookId: SHORT_BOOK, position: 2, span: span(2, 1, 2), color: "pink" });
+  await waitFor(async () => (await api(b.page, "annotations.list", { bookId: SHORT_BOOK, position: 2 })).highlights.length > 0, "B never got the highlight on the short book");
+  await openReader(b.page, { bookId: SHORT_BOOK, position: 2 });
+  const removed = cli({ userData: a.userData, args: ["book", "remove", SHORT_BOOK, "--yes"] });
+  assert.equal(removed.removed, true);
+  assert.equal(removed.highlights, 1);
+  const bState = async () => ({
+    listed: (await api(b.page, "library.list")).map((bk) => bk.bookId),
+    waiting: (await api(b.page, "library.elsewhere")).map((bk) => bk.bookId),
+    hash: await b.page.ev("location.hash"),
+  });
+  await waitFor(async () => !(await api(b.page, "library.list")).some((bk) => bk.bookId === SHORT_BOOK), "B still lists the removed book", 45_000, bState);
+  await waitFor(async () => (await b.page.ev("location.hash")) === "#/", "B's reader stayed on the removed book", 10_000, bState);
+  const state = await bState();
+  assert.ok(!state.waiting.includes(SHORT_BOOK), "B shows the removed book as waiting");
+  assert.ok(state.listed.includes(LONG_BOOK), "B lost the other book");
+  assert.equal(await api(b.page, "library.page", { bookId: SHORT_BOOK, position: 1 }), null, "B still has the removed book's pages");
+  await waitFor(async () => !(await api(a.page, "library.list")).some((bk) => bk.bookId === SHORT_BOOK), "A's open app still lists the book");
+});
+
 await a.close();
 await b.close();
 

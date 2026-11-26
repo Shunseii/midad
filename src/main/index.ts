@@ -67,7 +67,11 @@ const db = new DatabaseSync(dbPath);
 db.exec("PRAGMA journal_mode = WAL; PRAGMA busy_timeout = 5000;");
 const user = openUserStore({ db, clientId: "app" });
 const scansDir = join(userData, "scans");
-const library = createLibrary({ db, corpus, scansDir });
+const notifyLibraryChanged = () => {
+  for (const win of BrowserWindow.getAllWindows()) win.webContents.send(LIBRARY_CHANGED);
+};
+// A book removed on another device loses its pages after the merge has been announced: say so again.
+const library = createLibrary({ db, corpus, scansDir, onBookDropped: notifyLibraryChanged });
 const removal = createBookRemoval({ db, scansDir });
 const annotations = createAnnotations({ db });
 const markers = createMarkers({ db });
