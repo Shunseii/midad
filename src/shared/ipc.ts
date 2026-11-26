@@ -17,6 +17,7 @@ import type {
   WaitingBook,
 } from "./library";
 import type { SyncSettings, SyncStatus } from "./sync";
+import type { UpdateStatus } from "./update";
 
 export type { CorpusBookListing };
 
@@ -99,6 +100,11 @@ export interface MidadApi {
   /** Stops syncing, keeping the server and token for connecting again. */
   "sync.disconnect": () => Promise<SyncSettings>;
   "sync.dismissClockWarning": () => Promise<void>;
+  "update.status": () => Promise<UpdateStatus>;
+  /** Checks the feed now, unless a check or download is already under way. */
+  "update.check": () => Promise<UpdateStatus>;
+  /** Quits and installs the downloaded update; refused while an Ask AI answer streams. */
+  "update.restart": () => Promise<void>;
 }
 
 export interface AskInput {
@@ -169,6 +175,9 @@ export const CHANNELS = [
   "sync.connect",
   "sync.disconnect",
   "sync.dismissClockWarning",
+  "update.status",
+  "update.check",
+  "update.restart",
 ] as const satisfies readonly Channel[];
 
 /** Pushed from the main process to the renderer. */
@@ -183,7 +192,11 @@ export interface MidadEvents {
   onAskEvent: (callback: (requestId: string, event: StreamEvent) => void) => () => void;
   /** Device sync's status changed. Returns an unsubscribe function. */
   onSyncStatus: (callback: (status: SyncStatus) => void) => () => void;
+  /** The updater's status changed. Returns an unsubscribe function. */
+  onUpdateStatus: (callback: (status: UpdateStatus) => void) => () => void;
 }
+
+export const UPDATE_STATUS = "update.statusChanged";
 
 export const SYNC_STATUS = "sync.statusChanged";
 

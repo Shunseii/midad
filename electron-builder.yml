@@ -20,4 +20,9 @@ nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
 artifactName: ${productName}-${version}-${os}-${arch}.${ext}
-publish: null
+# The update feed: public GitHub Releases. CI uploads latest*.yml and the .blockmap files with the installers.
+publish:
+  provider: github
+  owner: Shunseii
+  repo: midad
+  releaseType: release

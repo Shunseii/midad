@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
 import { askModel, cutOffRecap, isLostSession, memoryIndex, readingContext, sessionRecap, titlePrompt } from "../shared/ask";
-import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, REMOTE_CHANGES, SYNC_STATUS, type Theme } from "../shared/ipc";
+import { ASK_EVENT, IMPORT_PROGRESS, type MidadApi, LIBRARY_CHANGED, REMOTE_CHANGES, SYNC_STATUS, type Theme, UPDATE_STATUS } from "../shared/ipc";
 import { createAsk } from "./ask";
 import { createScans } from "./scans";
 import { createAnnotations } from "./annotations";
@@ -17,6 +17,8 @@ import { createMemories } from "./memories";
 import { createSettings } from "./settings";
 import { startSync } from "./sync-client";
 import { openUserStore } from "./user-store";
+import { electronUpdateSource } from "./update-source";
+import { createUpdater, updaterMode } from "./updater";
 
 app.setName("midad");
 // A separate profile (settings + library) for development and testing.
@@ -70,6 +72,23 @@ const bookmarks = createBookmarks({ db });
 const conversations = createConversations({ db });
 const memories = createMemories({ db });
 const scans = createScans({ dir: join(userData, "scans"), fetchScan: (input) => corpusClient().fetchScan(input) });
+
+const updaterOn = updaterMode({ isPackaged: app.isPackaged, platform: process.platform, env: process.env }) === "on";
+const updater = createUpdater({
+  mode: updaterOn ? "on" : "managed",
+  currentVersion: app.getVersion(),
+  source: updaterOn ? await electronUpdateSource() : null,
+  onStatus: (status) => {
+    for (const win of BrowserWindow.getAllWindows()) win.webContents.send(UPDATE_STATUS, status);
+  },
+});
+
+/** Answers streaming now; Restart to update waits while there are any. */
+let answering = 0;
+const setAnswering = (by: number) => {
+  answering += by;
+  updater.setBusy(answering > 0);
+};
 
 /** Each running answer so far, so an error or stop still saves what Claude wrote. */
 const streamed = new Map<string, string>();
@@ -152,6 +171,7 @@ const handlers: MidadApi = {
     const prompt = [context, cutOff, question].filter(Boolean).join("\n\n");
     // A new Claude session starts knowing what Ask AI remembers about the reader.
     const opening = async (before: string) => [before, memoryIndex({ memories: await memories.list({ filter: { global: true, bookId } }) }), prompt].filter(Boolean).join("\n\n");
+    setAnswering(1);
     try {
       const result = await ask.ask({ requestId, bookId, prompt: sessionId ? prompt : await opening(""), sessionId, model }).then(
         (answer) => ({ ...answer, restarted: false }),
@@ -171,6 +191,7 @@ const handlers: MidadApi = {
       throw err;
     } finally {
       streamed.delete(requestId);
+      setAnswering(-1);
     }
   },
   "ai.cancel": async (input) => ask.cancel(input),
@@ -202,6 +223,9 @@ const handlers: MidadApi = {
   "sync.connect": (input) => deviceSync.connect(input),
   "sync.disconnect": () => deviceSync.disconnect(),
   "sync.dismissClockWarning": async () => deviceSync.dismissClockWarning(),
+  "update.status": async () => updater.status(),
+  "update.check": () => updater.check(),
+  "update.restart": async () => updater.restart(),
 };
 
 /** Tells the windows a merge changed the library: first what it changed, so undo forgets it, then to refetch. */
@@ -293,6 +317,7 @@ const createWindow = () => {
 void app.whenReady().then(() => {
   // After ready: safeStorage can't decrypt the token before.
   void deviceSync.apply();
+  updater.start();
   protocol.handle("midad-scan", async (request) => {
     const [bookId = "", fileId = ""] = new URL(request.url).pathname.split("/").filter(Boolean).map(decodeURIComponent);
     try {
