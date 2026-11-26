@@ -1,37 +1,56 @@
 name: Release installers
 
-# Publishing a GitHub release builds the Windows and Linux installers and attaches them to it.
+# Publishing a GitHub release for a vX.Y.Z tag builds the Windows and Linux installers and attaches
+# them, with the auto-update metadata (latest*.yml, .blockmap), to that release. The version comes
+# from the tag and is stamped into package.json for the build only; nothing is committed back.
 on:
   release:
     types: [published]
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag to attach the installers to
+        description: Existing release tag to build and attach installers to (vX.Y.Z)
         required: true
 
 permissions:
   contents: write
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   build:
+    if: startsWith(github.event.release.tag_name || inputs.tag, 'v')
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
             target: --linux
-            files: dist/*.AppImage
+            # The AppImage carries its block map inside the file.
+            files: dist/*.AppImage dist/latest-linux.yml
           - os: windows-latest
             target: --win
-            files: dist/*.exe
+            files: dist/*.exe dist/*.exe.blockmap dist/latest.yml
     runs-on: ${{ matrix.os }}
     env:
       TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.TAG }}
+      - name: Stamp the version from the tag
+        shell: bash
+        run: |
+          version="${TAG#v}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Release tag must be vX.Y.Z, got '$TAG'"
+            exit 1
+          fi
+          node -e 'const fs = require("fs"); const pkg = JSON.parse(fs.readFileSync("package.json", "utf8")); pkg.version = process.argv[1]; fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");' "$version"
+          echo "Building Midad $version"
       - uses: pnpm/action-setup@v4
         with:
           version: 10
@@ -41,8 +60,16 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm dist ${{ matrix.target }}
-      - name: Attach installers to the release
+      - name: Attach installers and update files to the release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$TAG" ${{ matrix.files }} --clobber
+        run: |
+          shopt -s nullglob
+          files=(${{ matrix.files }})
+          if [[ ${#files[@]} -eq 0 ]]; then
+            echo "::error::No build output in dist/"
+            exit 1
+          fi
+          printf 'Uploading %s\n' "${files[@]}"
+          gh release upload "$TAG" "${files[@]}" --clobber
