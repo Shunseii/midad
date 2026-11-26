@@ -285,3 +285,45 @@ describe("memory", () => {
     expect(stderr).toContain("Use: midad memory add --type <reader|preference|feedback|book> --name <slug>");
   });
 });
+
+describe("book remove", () => {
+  const books = async () => (await run("books")).stdout;
+
+  it("without --yes, lists what would go with counts, changes nothing and exits non-zero", async () => {
+    await run("note", "add", "b1", "1", "--line", "2", "--words", "1-2", "--body", "a note");
+    const { code, stdout } = await run("book", "remove", "الآجرومية");
+    expect(code).toBe(1);
+    expect(stdout).toContain("Would remove الآجرومية (b1): 2 pages · 1 note.");
+    expect(stdout).toContain("--yes");
+    expect(await books()).toContain("b1");
+    expect((await annotations()).notes).toHaveLength(1);
+  });
+
+  it("with --yes, removes the book and everything about it, leaving the other", async () => {
+    await run("highlight", "add", "b1", "1", "--line", "2", "--words", "1-2");
+    const { code, stdout } = await run("book", "remove", "b1", "--yes", "--json");
+    expect(code).toBe(0);
+    expect(JSON.parse(stdout)).toMatchObject({ removed: true, bookId: "b1", pages: 2, highlights: 1 });
+    expect(await books()).not.toContain("b1");
+    expect(await books()).toContain("b2");
+    expect((await run("page", "b1", "1")).code).toBe(1);
+  });
+
+  it("gives the dry run as JSON too", async () => {
+    const { code, stdout } = await run("book", "remove", "b2", "--json");
+    expect(code).toBe(1);
+    expect(JSON.parse(stdout)).toMatchObject({ removed: false, bookId: "b2", pages: 1, notes: 0 });
+  });
+
+  it("refuses inside Ask AI, whatever the flags", async () => {
+    const { code, stderr } = await runIn({ currentBook: "b1", argv: ["book", "remove", "b2", "--yes"] });
+    expect(code).toBe(1);
+    expect(stderr).toContain("Ask AI can't remove books");
+    expect(await books()).toContain("b2");
+  });
+
+  it("lists it under its own heading in the help, apart from the agent's commands", async () => {
+    const { stdout } = await run("--help");
+    expect(stdout).toMatch(/Library management \(not for agents\)\n {2}midad book remove <book> \[--yes\]/);
+  });
+});

@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { openUserStore } from "../main/user-store";
 import { runCli } from "./run";
@@ -32,6 +32,7 @@ const code = await runCli({
   db,
   stdout: (s) => process.stdout.write(s),
   stderr: (s) => process.stderr.write(s),
+  scansDir: join(dirname(path), "scans"),
   ...(process.env.MIDAD_BOOK ? { currentBook: process.env.MIDAD_BOOK } : {}),
 });
 db.close();

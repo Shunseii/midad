@@ -2,8 +2,9 @@ import type { DatabaseSync } from "node:sqlite";
 import { parseArgs } from "node:util";
 import { HIGHLIGHT_COLORS, type HighlightColor, type LetterRef, type NoteTarget, type PageAnnotations, type Part, type Span, wordsOf } from "../shared/annotations";
 import { MARK, type MarkName } from "../shared/harakat";
-import type { StoredPage } from "../shared/library";
+import { type BookRemoval, removalCounts, type StoredPage } from "../shared/library";
 import { createAnnotations } from "../main/annotations";
+import { createBookRemoval } from "../main/book-removal";
 import { createPageFinder } from "../main/find-page";
 import { createLibrary } from "../main/library";
 import { createMemories } from "../main/memories";
@@ -53,6 +54,11 @@ Writing (labelled as written by the agent)
   midad harakat clear <book> <page> <span>      Remove every added mark inside the span
 
 ${MEMORY_USAGE}
+Library management (not for agents)
+  midad book remove <book> [--yes]              Remove the book, its pages and everything about it,
+                                                on every synced device. Without --yes, only lists
+                                                what would go. Can't be undone; the corpus keeps it.
+
 <book> is a book id, the start of one, or part of its title. <page> is the page's
 position in the book (1 = first page), as shown in the reader's pager.
 <span> is --line <n> --words <a[-b]>, or --from <line:word> --to <line:word>.
@@ -85,6 +91,7 @@ const OPTIONS = {
   name: { type: "string" },
   description: { type: "string" },
   limit: { type: "string" },
+  yes: { type: "boolean" },
   help: { type: "boolean", short: "h" },
 } as const;
 
@@ -209,6 +216,7 @@ export const runCli = async ({
   stdout,
   stderr,
   currentBook,
+  scansDir,
 }: {
   argv: string[];
   db: DatabaseSync;
@@ -216,6 +224,8 @@ export const runCli = async ({
   stderr: (s: string) => void;
   /** The book Ask AI is open on (MIDAD_BOOK), which memory commands are scoped to unless --book names another. */
   currentBook?: string;
+  /** Where the app caches page scans, cleared for a removed book. */
+  scansDir?: string;
 }): Promise<number> => {
   const library = createLibrary({
     db,
@@ -227,6 +237,7 @@ export const runCli = async ({
   const annotations = createAnnotations({ db });
 
   const memories = createMemories({ db });
+  const removal = createBookRemoval({ db, ...(scansDir ? { scansDir } : {}) });
 
   const finder = createPageFinder({ library });
 
@@ -272,7 +283,7 @@ export const runCli = async ({
       return currentBook ? { global: true, bookId: await bookNamed(currentBook) } : undefined;
     };
 
-    switch (`${command} ${["highlight", "note", "harakat", "memory"].includes(command) ? (a ?? "") : ""}`.trim()) {
+    switch (`${command} ${["highlight", "note", "harakat", "memory", "book"].includes(command) ? (a ?? "") : ""}`.trim()) {
       case "books": {
         const books = await library.listBooks();
         print({
@@ -412,6 +423,25 @@ export const runCli = async ({
           ...(opts.body !== undefined ? { body: opts.body } : {}),
         });
         done(`Updated memory ${m.id} (${m.name}).`, m);
+        return 0;
+      }
+      case "book remove": {
+        if (currentBook) throw new Error("Ask AI can't remove books. The reader removes them from the Library.");
+        if (!b) throw new UsageError("Name the book to remove: midad book remove <book> --yes.");
+        const book = await finder.findBook(b);
+        const name = `${book.title} (${book.bookId})`;
+        const what = (summary: BookRemoval) => removalCounts(summary) || "no pages";
+        if (!opts.yes) {
+          const summary = await removal.preview({ bookId: book.bookId });
+          if (!summary) throw new Error(`Book ${book.bookId} is not in the library.`);
+          print({
+            json: { removed: false, ...summary },
+            text: `Would remove ${name}: ${what(summary)}.\nRun again with --yes to remove it here and on your other synced devices. Can't be undone; the corpus copy stays.\n`,
+          });
+          return 1;
+        }
+        const removed = await removal.remove({ bookId: book.bookId });
+        done(`Removed ${name}: ${what(removed)}.`, { removed: true, ...removed });
         return 0;
       }
       case "memory delete":
