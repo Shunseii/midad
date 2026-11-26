@@ -29,10 +29,12 @@ Download the installer for your system from the [Releases page](https://github.c
 - **Linux:** `Midad-<version>-linux-x86_64.AppImage`. Put it in a folder you can write to, such as `~/Applications`, so it can update itself. Make it executable, then run it:
 
   ```sh
-  mkdir -p ~/Applications && mv Midad-*.AppImage ~/Applications/
-  chmod +x ~/Applications/Midad-*.AppImage
-  ~/Applications/Midad-*.AppImage
+  mkdir -p ~/Applications && mv Midad-*.AppImage ~/Applications/Midad.AppImage
+  chmod +x ~/Applications/Midad.AppImage
+  ~/Applications/Midad.AppImage
   ```
+
+  On first launch Midad adds itself to your app menu (with its icon), so you can pin it and open it from there. If you move the AppImage, open it once from its new place and the menu entry follows.
 
 The builds aren't code-signed. On Windows, SmartScreen may say "Windows protected your PC" the first time you run the installer; click **More info**, then **Run anyway**. Your browser may also warn that the file isn't commonly downloaded; choose to keep it.
 
@@ -58,8 +60,8 @@ These steps take a fresh Windows or Linux computer to a working Midad that syncs
    ```sh
    # Linux: into a writable folder, so it can update itself
    mkdir -p ~/Applications && cd ~/Applications
-   gh release download --repo Shunseii/midad --pattern '*.AppImage'
-   chmod +x Midad-*.AppImage
+   gh release download --repo Shunseii/midad --pattern '*.AppImage' --output Midad.AppImage
+   chmod +x Midad.AppImage
    ```
 
    ```powershell
@@ -67,7 +69,7 @@ These steps take a fresh Windows or Linux computer to a working Midad that syncs
    gh release download --repo Shunseii/midad --pattern '*.exe'
    ```
 
-3. **You:** start Midad. On Windows, run the installer; if SmartScreen says "Windows protected your PC", click **More info**, then **Run anyway**. On Linux, run the AppImage.
+3. **You:** start Midad. On Windows, run the installer; if SmartScreen says "Windows protected your PC", click **More info**, then **Run anyway**. On Linux, run the AppImage once; it adds Midad to the app menu, where you can pin it.
 4. **You:** open Settings → Devices, enter the sync server address and token, and click **Connect**. The agent can put the token on the clipboard for a single paste rather than printing it. Do Devices before the corpus.
 5. **You:** in Settings → Corpus, enter the corpus API URL and key, then **Save**.
 6. **You:** in the Library, books from your other devices show as waiting. Import them; your highlights, notes and bookmarks land on them as they arrive.

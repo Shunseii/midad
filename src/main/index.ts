@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync, renameSync } from "node:fs";
+import { homedir } from "node:os";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { app, BrowserWindow, ipcMain, nativeTheme, protocol, shell } from "electron";
@@ -19,6 +20,7 @@ import { createSettings } from "./settings";
 import { startSync } from "./sync-client";
 import { openUserStore } from "./user-store";
 import { electronUpdateSource } from "./update-source";
+import { installDesktopEntry } from "./desktop-entry";
 import { createUpdater, updaterMode } from "./updater";
 
 app.setName("midad");
@@ -327,6 +329,13 @@ void app.whenReady().then(() => {
   // After ready: safeStorage can't decrypt the token before.
   void deviceSync.apply();
   updater.start();
+  if (process.platform === "linux" && app.isPackaged && process.env.APPIMAGE) {
+    try {
+      installDesktopEntry({ appImage: process.env.APPIMAGE, iconsDir: join(app.getAppPath(), "resources"), dataHome: process.env.XDG_DATA_HOME || join(homedir(), ".local", "share") });
+    } catch (err) {
+      console.error("Couldn't add Midad to the app menu:", err);
+    }
+  }
   protocol.handle("midad-scan", async (request) => {
     const [bookId = "", fileId = ""] = new URL(request.url).pathname.split("/").filter(Boolean).map(decodeURIComponent);
     try {
