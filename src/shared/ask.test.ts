@@ -424,15 +424,22 @@ describe("memoryIndex", () => {
     );
   });
 
-  it("caps the list at 20 and points at search for the rest", () => {
-    const index = memoryIndex({ memories: Array.from({ length: 25 }, (_, i) => memory(i)) });
-    expect(index).toContain("m19 preference");
-    expect(index).not.toContain("m20 preference");
+  it("lists every memory, however many there are", () => {
+    const index = memoryIndex({ memories: Array.from({ length: 150 }, (_, i) => memory(i)) });
+    expect(index).toContain("m0 preference");
+    expect(index).toContain("m149 preference");
+    expect(index).not.toContain("more:");
+  });
+
+  it("stops at 200 and points at search for the rest", () => {
+    const index = memoryIndex({ memories: Array.from({ length: 205 }, (_, i) => memory(i)) });
+    expect(index).toContain("m199 preference");
+    expect(index).not.toContain("m200 preference");
     expect(index).toContain("…and 5 more: midad memory search");
   });
 
-  it("keeps the book's memories when the cap cuts older global ones", () => {
-    const index = memoryIndex({ memories: [...Array.from({ length: 22 }, (_, i) => memory(i)), memory(90, "b1")] });
+  it("keeps the book's memories when the limit cuts older global ones", () => {
+    const index = memoryIndex({ memories: [...Array.from({ length: 202 }, (_, i) => memory(i * 1000)), memory(90, "b1")] });
     expect(index.split("\n")[2]).toBe("m90 preference (this book): Fact 90");
     expect(index).toContain("…and 3 more");
   });

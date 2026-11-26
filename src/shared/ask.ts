@@ -200,11 +200,12 @@ export const readingContext = ({
     "</reading-context>",
   ].join("\n");
 
-const MEMORY_INDEX_MAX = 20;
+/** Every memory is listed, like Claude Code's MEMORY.md; this only guards against a runaway list. */
+const MEMORY_INDEX_MAX = 200;
 
 /**
  * What Ask AI remembers about the reader, for the first message of a chat: this book's memories,
- * then the global ones, each newest first, capped. Bodies stay in the store for `midad memory get`.
+ * then the global ones, each newest first. Bodies stay in the store for `midad memory get`.
  */
 export const memoryIndex = ({ memories }: { memories: Pick<Memory, "id" | "type" | "description" | "bookId" | "updatedAt">[] }): string => {
   if (memories.length === 0) return "";
