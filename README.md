@@ -48,6 +48,31 @@ Self-updating needs the AppImage in a folder you can write to; when it updates, 
 
 Version 0.1.0 has no updater: install the next version by hand once, and it updates itself from then on.
 
+## Set up a new device
+
+These steps take a fresh Windows or Linux computer to a working Midad that syncs with your other devices. Claude Code can run the steps marked **agent**; the steps marked **you** are clicks in the app. You need the sync server address and token, and the corpus API URL and key, which the owner keeps in their password manager. Where the sync server and its secret live: [sync-server/README.md](sync-server/README.md#production).
+
+1. **Agent:** install [Claude Code](https://docs.claude.com/en/docs/claude-code) and sign in (`claude`, then follow its sign-in), so Ask AI works. Node.js isn't needed.
+2. **Agent:** download the latest installer from the [Releases page](https://github.com/Shunseii/midad/releases), or with the GitHub CLI:
+
+   ```sh
+   # Linux: into a writable folder, so it can update itself
+   mkdir -p ~/Applications && cd ~/Applications
+   gh release download --repo Shunseii/midad --pattern '*.AppImage'
+   chmod +x Midad-*.AppImage
+   ```
+
+   ```powershell
+   # Windows
+   gh release download --repo Shunseii/midad --pattern '*.exe'
+   ```
+
+3. **You:** start Midad. On Windows, run the installer; if SmartScreen says "Windows protected your PC", click **More info**, then **Run anyway**. On Linux, run the AppImage.
+4. **You:** open Settings → Devices, enter the sync server address and token, and click **Connect**. The agent can put the token on the clipboard for a single paste rather than printing it. Do Devices before the corpus.
+5. **You:** in Settings → Corpus, enter the corpus API URL and key, then **Save**.
+6. **You:** in the Library, books from your other devices show as waiting. Import them; your highlights, notes and bookmarks land on them as they arrive.
+7. **Check:** the Devices indicator at the foot of the sidebar says **Up to date**, and a book's notes match what you see on another device.
+
 ## Product decisions
 
 - **Books are imported, then read locally.** Importing pulls every transcribed page of a corpus book, parses it (rules below) and stores the result in Midad's local library, a SQLite database in the app's data folder. From then on the reader, the agent tools and Ask AI read only that local copy; the corpus is not queried while reading. The corpus is the only import source for now.
