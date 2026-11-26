@@ -308,9 +308,36 @@ export const cutOffRecap = (turns: { question: string; answer: string; status: s
 
 export const CORPUS_TOOLS = ["corpus_text", "corpus_scan", "corpus_edit", "corpus_history", "corpus_restore"].map((name) => `mcp__corpus__${name}`);
 
-/** Claude Code starts the corpus server itself; it inherits the corpus credentials from Claude's environment, so they never appear here. */
-export const corpusMcpConfig = (serverPath: string): string =>
-  JSON.stringify({ mcpServers: { corpus: { type: "stdio", command: "node", args: ["--no-warnings", serverPath] } } });
+/**
+ * Midad's own executable, run as plain Node (ELECTRON_RUN_AS_NODE), so the CLI and the corpus
+ * server need no Node on the reader's PATH. In development it is the Electron binary.
+ */
+export interface Runtime {
+  execPath: string;
+}
+
+/**
+ * Claude Code starts the corpus server itself on Midad's runtime; it inherits the corpus
+ * credentials from Claude's environment, so they never appear here.
+ */
+export const corpusMcpConfig = ({ serverPath, runtime }: { serverPath: string; runtime: Runtime }): string =>
+  JSON.stringify({
+    mcpServers: { corpus: { type: "stdio", command: runtime.execPath, args: ["--no-warnings", serverPath], env: { ELECTRON_RUN_AS_NODE: "1" } } },
+  });
+
+const shQuote = (value: string) => `'${value.replaceAll("'", `'\\''`)}'`;
+
+/** The `midad` command on Claude's PATH: a shim that runs the bundled CLI on Midad's runtime. */
+export const cliShim = ({ platform, runtime, cliPath }: { platform: NodeJS.Platform; runtime: Runtime; cliPath: string }): { name: string; content: string } =>
+  platform === "win32"
+    ? {
+        name: "midad.cmd",
+        content: ["@echo off", "setlocal", "set ELECTRON_RUN_AS_NODE=1", `"${runtime.execPath}" --no-warnings "${cliPath}" %*`, ""].join("\r\n"),
+      }
+    : {
+        name: "midad",
+        content: `#!/bin/sh\nELECTRON_RUN_AS_NODE=1 exec ${shQuote(runtime.execPath)} --no-warnings ${shQuote(cliPath)} "$@"\n`,
+      };
 
 /** The models the reader can pick in Ask AI; the first is the default. */
 export const ASK_MODELS = [
@@ -336,8 +363,8 @@ export const claudeArgs = ({
   systemPrompt: string;
   sessionId: string | null;
   model?: AskModel;
-  /** Path to the corpus MCP server, when Ask AI may fix the corpus text. */
-  corpusServer?: string | null;
+  /** The corpus MCP server and what runs it, when Ask AI may fix the corpus text. */
+  corpusServer?: { serverPath: string; runtime: Runtime } | null;
 }): string[] => [
   "-p",
   prompt,

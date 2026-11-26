@@ -261,10 +261,12 @@ describe("claudeArgs", () => {
   });
 
   it("passes the corpus server and allows its tools when given", () => {
-    const args = claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: null, corpusServer: "/app/out/cli/corpus-mcp.mjs" });
+    const args = claudeArgs({ prompt: "q", systemPrompt: "s", sessionId: null, corpusServer: { serverPath: "/app/out/cli/corpus-mcp.mjs", runtime: { execPath: "/opt/Midad/midad" } } });
     expect(args).toContain("--strict-mcp-config");
     expect(JSON.parse(args[args.indexOf("--mcp-config") + 1] ?? "")).toEqual({
-      mcpServers: { corpus: { type: "stdio", command: "node", args: ["--no-warnings", "/app/out/cli/corpus-mcp.mjs"] } },
+      mcpServers: {
+        corpus: { type: "stdio", command: "/opt/Midad/midad", args: ["--no-warnings", "/app/out/cli/corpus-mcp.mjs"], env: { ELECTRON_RUN_AS_NODE: "1" } },
+      },
     });
     const allowed = args.slice(args.indexOf("--allowedTools") + 1, args.indexOf("--append-system-prompt"));
     expect(allowed).toEqual(["Bash(midad:*)", "mcp__corpus__corpus_text", "mcp__corpus__corpus_scan", "mcp__corpus__corpus_edit", "mcp__corpus__corpus_history", "mcp__corpus__corpus_restore"]);

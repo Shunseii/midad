@@ -1,7 +1,7 @@
 import { builtinModules } from "node:module";
 import { defineConfig } from "vite";
 
-// Bundles the `midad` command-line tool, and the corpus MCP server Ask AI uses, into files that run on Node 22+.
+// Bundles the `midad` command-line tool, and the corpus MCP server Ask AI uses, into files Midad runs on its own executable as Node (ELECTRON_RUN_AS_NODE).
 export default defineConfig({
   build: {
     outDir: "out/cli",

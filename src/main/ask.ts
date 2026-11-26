@@ -1,9 +1,9 @@
 import { type ChildProcess, spawn } from "node:child_process";
-import { existsSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { delimiter, join } from "node:path";
 import { createInterface } from "node:readline";
-import { type AskModel, claudeArgs, cleanTitle, type StreamEvent, streamEvent, SYSTEM_PROMPT, titleArgs } from "../shared/ask";
+import { type AskModel, claudeArgs, cleanTitle, cliShim, type Runtime, type StreamEvent, streamEvent, SYSTEM_PROMPT, titleArgs } from "../shared/ask";
 
 /**
  * Runs Ask AI questions through the local Claude Code CLI. Claude runs in its
@@ -19,6 +19,7 @@ export const createAsk = ({
   scansDir,
   workDir,
   onEvent,
+  runtime = { execPath: process.execPath },
 }: {
   cliPath: string;
   corpusServerPath: string;
@@ -28,17 +29,15 @@ export const createAsk = ({
   scansDir: string;
   workDir: string;
   onEvent: (requestId: string, event: StreamEvent) => void;
+  runtime?: Runtime;
 }) => {
   const binDir = join(workDir, "bin");
   mkdirSync(binDir, { recursive: true });
-  if (process.platform === "win32") {
-    // Windows can't run a script by its shebang, and symlinks need admin rights there.
-    writeFileSync(join(binDir, "midad.cmd"), `@node --no-warnings "${cliPath}" %*\r\n`);
-  } else {
-    const link = join(binDir, "midad");
-    rmSync(link, { force: true });
-    symlinkSync(cliPath, link);
-  }
+  // Rewritten every launch: an AppImage's runtime path changes with each mount.
+  const shim = cliShim({ platform: process.platform, runtime, cliPath });
+  const shimPath = join(binDir, shim.name);
+  rmSync(shimPath, { force: true });
+  writeFileSync(shimPath, shim.content, { mode: 0o755 });
 
   const running = new Map<string, ChildProcess>();
   // Claude Code exits with code 143 when stopped, rather than by the signal, so a stop is remembered here.
@@ -64,7 +63,7 @@ export const createAsk = ({
       }
       const credentials = existsSync(corpusServerPath) ? corpusCredentials() : null;
       return new Promise((resolve, reject) => {
-        const child = spawn("claude", claudeArgs({ prompt, systemPrompt: SYSTEM_PROMPT, sessionId, model, corpusServer: credentials ? corpusServerPath : null }), {
+        const child = spawn("claude", claudeArgs({ prompt, systemPrompt: SYSTEM_PROMPT, sessionId, model, corpusServer: credentials ? { serverPath: corpusServerPath, runtime } : null }), {
           cwd: workDir,
           env: {
             ...process.env,

@@ -7,7 +7,7 @@ files:
   - out/**
   - resources/**
   - package.json
-# Ask AI runs out/cli/*.mjs with the system's node, which can't read inside an asar archive.
+# Ask AI runs out/cli/*.mjs as plain files, on Midad's own executable with ELECTRON_RUN_AS_NODE.
 asar: false
 icon: resources/icon.png
 linux:
