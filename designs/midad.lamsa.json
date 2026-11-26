@@ -1358,6 +1358,20 @@
       },
       "type": "frame"
     },
+    "0NPaQ6H7": {
+      "content": "الإمام النووي",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "9CtA805u",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "0Ni0YVeC": {
       "icon": "file-text",
       "index": "a0",
@@ -2852,6 +2866,27 @@
       },
       "type": "instance"
     },
+    "0lMt71or": {
+      "componentId": "NpoaMS1Y",
+      "index": "a2",
+      "name": "Remove book",
+      "overrides": {
+        "l23Gt34i": {
+          "icon": "trash-2"
+        }
+      },
+      "parentId": "OqR3MJsP",
+      "props": {
+        "label": "Remove book…",
+        "state": "hover",
+        "tone": "danger",
+        "withHint": "no"
+      },
+      "style": {
+        "width": "100%"
+      },
+      "type": "instance"
+    },
     "0lW8Etvo": {
       "content": "(١) المرادُ بالوضعِ: القصدُ، فلا يُسمّى كلامًا ما صدرَ من النائمِ والساهي ونحوِهما.",
       "index": "a001",
@@ -3367,6 +3402,18 @@
         "display": "flex",
         "justify-content": "space-between",
         "padding-bottom": 12
+      },
+      "type": "frame"
+    },
+    "0xOM2AxI": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "3VGDnbbD",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8,
+        "position": "absolute"
       },
       "type": "frame"
     },
@@ -4234,6 +4281,18 @@
       },
       "type": "frame"
     },
+    "1BEudqOz": {
+      "content": "3 of 24",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "1y0QM7fY",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
     "1BRFKV18": {
       "css": "/* Filled page shape: this page has a page note (it may have word or line notes too). Hollow dots stay word/line notes only. */\ntransition: scale {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  scale: 1.2;\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "b0F",
@@ -4743,6 +4802,19 @@
         "font-size": 12
       },
       "type": "text"
+    },
+    "1KJKXozR": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "Wj0Dahws",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "1Kb5IINg": {
       "index": "a0",
@@ -6608,6 +6680,18 @@
       },
       "type": "instance"
     },
+    "1wwxVeUI": {
+      "index": "a0",
+      "name": "Heading",
+      "parentId": "b7VCfUwX",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": "{spacing.0.5}"
+      },
+      "type": "frame"
+    },
     "1x1rMsur": {
       "componentId": "RV1DOgzp",
       "index": "a009",
@@ -6653,6 +6737,18 @@
         "text-align": "justify",
         "text-align-last": "right",
         "text-indent": "-1.5em"
+      },
+      "type": "frame"
+    },
+    "1y0QM7fY": {
+      "index": "a0",
+      "name": "Book · متن الآجرومية",
+      "parentId": "PkbKQZzM",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
       },
       "type": "frame"
     },
@@ -6940,6 +7036,20 @@
         "position": "relative",
         "user-select": "none",
         "width": 0
+      },
+      "type": "frame"
+    },
+    "241B0hxD": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "ofw3GoSd",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -7567,6 +7677,18 @@
       },
       "type": "frame"
     },
+    "2E7sEAmA": {
+      "index": "a0",
+      "name": "Book · متن الآجرومية",
+      "parentId": "UdPhL2Dz",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
+    },
     "2EQlVoob": {
       "content": "ضمير الشأن",
       "css": "transition: color {transition.duration-press} {ease.out};\n\n&:hover {\n  color: {color.ink};\n}",
@@ -8017,6 +8139,18 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "2M0qK5Sl": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "MprZ6Uke",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
     },
     "2MMWXDGK": {
       "css": "transition: transform {transition.duration-panel} {ease.out};",
@@ -8473,6 +8607,18 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "2TekiAP3": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "jr8Flxa0",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
     },
     "2TuzbD6b": {
       "content": "والفعلُ يُعرَفُ: ب",
@@ -9173,6 +9319,20 @@
       },
       "type": "text"
     },
+    "2eb1yBnN": {
+      "content": "الإمام النووي",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "HqUow7r8",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "2ec4KpE5": {
       "css": "view-transition-name: reader-header;",
       "index": "a000",
@@ -9234,6 +9394,20 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "2fLusMM7": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "MUrb9FQA",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 17,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "2fUWD4ue": {
       "componentId": "RV1DOgzp",
@@ -9368,6 +9542,21 @@
         "flex": 1,
         "flex-direction": "column",
         "min-width": 0
+      },
+      "type": "frame"
+    },
+    "2hOx4hUX": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
+      "index": "a2",
+      "name": "Segmented control",
+      "parentId": "CCXzFSA2",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
       },
       "type": "frame"
     },
@@ -9920,6 +10109,17 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "2rWC1Dco": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "LBYqYP9T",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
       },
       "type": "frame"
     },
@@ -11349,6 +11549,18 @@
       },
       "type": "icon"
     },
+    "3DUHPDAj": {
+      "content": "12 of 96",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "E5Jod9DZ",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
     "3DZ4V1o4": {
       "content": "Midad",
       "index": "a1",
@@ -11462,6 +11674,20 @@
         "text-align": "right"
       },
       "type": "frame"
+    },
+    "3H3L9skc": {
+      "content": "قطر الندى وبل الصدى",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "jr8Flxa0",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "3HZ1pTtB": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
@@ -12239,6 +12465,30 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "3VGDnbbD": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "8LEr1KFq",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 200,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 150
+      },
+      "type": "frame"
     },
     "3VbPFzNR": {
       "content": "بابُ الإعرابِ",
@@ -13209,6 +13459,18 @@
       },
       "type": "text"
     },
+    "3nOvi5MK": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "9CtA805u",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
+    },
     "3nSaef5f": {
       "index": "a1",
       "name": "Segmented control",
@@ -13222,6 +13484,18 @@
         "padding": 3
       },
       "type": "frame"
+    },
+    "3o8A86eY": {
+      "content": "37 of 412",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "NWZszBeF",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
     },
     "3oPDpsW9": {
       "content": "، ",
@@ -13660,6 +13934,20 @@
       },
       "type": "text"
     },
+    "3vh0h2wH": {
+      "content": "ابن هشام الأنصاري",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "E80MYKse",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "3vrxFdPi": {
       "index": "a1",
       "name": "Card",
@@ -13824,6 +14112,20 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "408Uu2n7": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "XI93B8Hq",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -14114,6 +14416,18 @@
         "width": 16
       },
       "type": "icon"
+    },
+    "44NcSHSt": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "HqUow7r8",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
     },
     "467FtwJ2": {
       "index": "a001",
@@ -15356,6 +15670,17 @@
       },
       "type": "instance"
     },
+    "4QeaLK8h": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "csEL7oxF",
+      "props": {
+        "label": "Reading",
+        "state": "default"
+      },
+      "type": "instance"
+    },
     "4QyXUw48": {
       "content": "1",
       "index": "a000",
@@ -15641,6 +15966,20 @@
       },
       "type": "text"
     },
+    "4VALuDJN": {
+      "icon": "book-open",
+      "index": "a0",
+      "name": "Icon book-open",
+      "parentId": "kNSEKrSi",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
     "4VPvDwwS": {
       "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 0 -8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: 0 -8px;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n  translate: none;\n}",
       "index": "z000",
@@ -15845,6 +16184,20 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "4YZJUJpw": {
+      "content": "قطر الندى وبل الصدى",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "tGMbFIia",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "4Yd29IWM": {
       "content": "بابُ الكلامِ",
@@ -18126,6 +18479,20 @@
       },
       "type": "frame"
     },
+    "5BlzbKqm": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "Fm8AFP2Y",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "5C7yUlxW": {
       "componentId": "RV1DOgzp",
       "index": "a009",
@@ -18164,6 +18531,19 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "5CZkD1X6": {
+      "content": "Library",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "bv8m6e9z",
+      "style": {
+        "font-family": "{font.display}",
+        "font-size": 32,
+        "font-weight": 600,
+        "line-height": "40px"
+      },
+      "type": "text"
     },
     "5CdtyDa6": {
       "index": "a008",
@@ -21051,6 +21431,20 @@
       },
       "type": "text"
     },
+    "65to9BHc": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "Hm6E1NiU",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "65vlQSKk": {
       "content": "دْ",
       "index": "a00003",
@@ -21314,6 +21708,18 @@
         "gap": 2
       },
       "type": "frame"
+    },
+    "69pgqjxt": {
+      "content": "3 books · 532 pages",
+      "index": "a1",
+      "name": "Meta",
+      "parentId": "sKsjLet2",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 13
+      },
+      "type": "text"
     },
     "6AjkdzIf": {
       "content": "فالاسمُ يُعرَفُ: ",
@@ -22513,6 +22919,20 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "6WgtUeiW": {
+      "content": "بابُ الكلامِ · ص ٣",
+      "index": "a1",
+      "name": "Chapter",
+      "parentId": "lk7CGHj3",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "text-align": "right"
       },
       "type": "text"
     },
@@ -25194,6 +25614,18 @@
       },
       "type": "frame"
     },
+    "7Hj2mvaW": {
+      "content": "Library",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "eTUswYHx",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
+    },
     "7HlA1yde": {
       "componentId": "uJd03iQq",
       "index": "a000",
@@ -26142,6 +26574,22 @@
       },
       "type": "frame"
     },
+    "7WsbbJrB": {
+      "content": "Continue reading",
+      "index": "a0",
+      "name": "Overline",
+      "parentId": "QAIDqI5R",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
     "7WumHQ7v": {
       "componentId": "uJd03iQq",
       "index": "a000",
@@ -26521,6 +26969,23 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "7eNDRVfP": {
+      "css": "transition: scale {transition.duration-press} {ease.out};\n\n&:active {\n  scale: 0.97;\n}",
+      "index": "a0",
+      "name": "Resume",
+      "parentId": "nEHePVOe",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.on-accent}",
+        "display": "inline-flex",
+        "gap": 6,
+        "height": 36,
+        "padding": "0 14px"
+      },
+      "type": "frame"
     },
     "7efcT0Vi": {
       "index": "a000",
@@ -27318,6 +27783,17 @@
         "position": "absolute",
         "translate": "-50% 0",
         "width": "min(640px, calc(100% - 48px))"
+      },
+      "type": "frame"
+    },
+    "7sVbdD0T": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "W4xNJ8vQ",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
       },
       "type": "frame"
     },
@@ -28720,6 +29196,21 @@
       },
       "type": "frame"
     },
+    "8LEr1KFq": {
+      "index": "a1",
+      "name": "Continue reading",
+      "parentId": "QAIDqI5R",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "gap": 32,
+        "padding": 28
+      },
+      "type": "frame"
+    },
     "8LVDfCuM": {
       "index": "a000",
       "name": "Icon well",
@@ -30113,6 +30604,28 @@
       },
       "type": "frame"
     },
+    "8iAM8sOd": {
+      "componentId": "mUTXOEWB",
+      "index": "a1",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "search"
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": 288
+          }
+        }
+      },
+      "parentId": "CCXzFSA2",
+      "props": {
+        "value": "Filter by title or author",
+        "withHelper": "no",
+        "withLabel": "no"
+      },
+      "type": "instance"
+    },
     "8iHLed9R": {
       "css": "transform-origin: center;\ntransition:\n  scale {transition.duration-sweep} {ease.out},\n  opacity {transition.duration-sweep} {ease.out};\n\n@starting-style {\n  scale: 1 0;\n  opacity: 0;\n}\n\n*:hover > & {\n  scale: 1 1.25;\n}\n\n&[data-state=\"removed\"] {\n  scale: 1 0;\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n  transition-timing-function: {ease.in};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    scale: 1;\n  }\n}",
       "hidden": true,
@@ -30625,6 +31138,20 @@
       },
       "type": "frame"
     },
+    "8swGKaR6": {
+      "content": "ابن عقيل على ألفية ابن مالك",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "MprZ6Uke",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "8t4C71UC": {
       "index": "a001",
       "name": "Spacer",
@@ -30977,6 +31504,18 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "8yqWgQSY": {
+      "content": "140 of 1,312",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "NoNJipLv",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
     },
     "8yqaPA4k": {
       "index": "Za000",
@@ -31783,6 +32322,30 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "9CtA805u": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "E5Jod9DZ",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
       },
       "type": "frame"
     },
@@ -33888,6 +34451,17 @@
       },
       "type": "text"
     },
+    "9szz1njG": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "csEL7oxF",
+      "props": {
+        "label": "Finished",
+        "state": "default"
+      },
+      "type": "instance"
+    },
     "9tEqnM8W": {
       "content": "بابُ الإعرابِ",
       "index": "a002",
@@ -33929,6 +34503,17 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "9uED7bpr": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "tGMbFIia",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
       },
       "type": "frame"
     },
@@ -33987,6 +34572,18 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "9uzeeYHm": {
+      "content": "Page 3 of 24 · last read yesterday",
+      "index": "a1",
+      "name": "Where",
+      "parentId": "x2v2Crk2",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 13
       },
       "type": "text"
     },
@@ -34090,6 +34687,20 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "9wkHnF8x": {
+      "content": "بابُ الكلامِ · ص ٣",
+      "index": "a1",
+      "name": "Chapter",
+      "parentId": "obZ0U2iY",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "text-align": "right"
+      },
+      "type": "text"
     },
     "9wyO52LI": {
       "index": "au",
@@ -34729,6 +35340,18 @@
       },
       "type": "text"
     },
+    "A7ejdNsy": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "tGMbFIia",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "A7ycjr6u": {
       "index": "a0",
       "name": "Heading",
@@ -35098,6 +35721,18 @@
       },
       "type": "frame"
     },
+    "AG25TveI": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "lYqUyupj",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "AG4FITan": {
       "content": "وستر",
       "index": "a0",
@@ -35208,6 +35843,22 @@
         "padding": "4px 10px"
       },
       "type": "frame"
+    },
+    "AHalIgLi": {
+      "componentId": "RV1DOgzp",
+      "index": "a1",
+      "name": "Close",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "x"
+        }
+      },
+      "parentId": "b7VCfUwX",
+      "props": {
+        "label": "Close",
+        "variant": "ghost"
+      },
+      "type": "instance"
     },
     "AHooo3Qv": {
       "index": "a0",
@@ -35429,6 +36080,19 @@
         "gap": 4,
         "padding": "20px 16px",
         "width": 248
+      },
+      "type": "frame"
+    },
+    "AMVOlTmR": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "y44D7cKF",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -36853,6 +37517,18 @@
       },
       "type": "frame"
     },
+    "AqfEtu84": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "MUrb9FQA",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6,
+        "rotate": "45deg",
+        "width": 6
+      },
+      "type": "frame"
+    },
     "Aqlw57gQ": {
       "content": "والفعلُ يُعرَفُ: بقد، والسينِ، وسوف، وتاءِ التأنيثِ الساكنةِ.",
       "index": "a1",
@@ -37705,6 +38381,18 @@
         "display": "flex",
         "flex-direction": "column",
         "gap": 0
+      },
+      "type": "frame"
+    },
+    "B8qPz1hd": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "E80MYKse",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
       },
       "type": "frame"
     },
@@ -39982,6 +40670,17 @@
       },
       "type": "frame"
     },
+    "BiuzwPbQ": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "MUrb9FQA",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 40
+      },
+      "type": "frame"
+    },
     "BiwjQERD": {
       "index": "a0",
       "name": "Reader",
@@ -41902,6 +42601,17 @@
       },
       "type": "instance"
     },
+    "CCXzFSA2": {
+      "index": "a0",
+      "name": "Header",
+      "parentId": "QbqjrDnf",
+      "style": {
+        "align-items": "flex-end",
+        "display": "flex",
+        "gap": 16
+      },
+      "type": "frame"
+    },
     "CCa4N2Un": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
       "index": "a1",
@@ -43351,6 +44061,23 @@
       },
       "type": "instance"
     },
+    "CfhJlpfD": {
+      "index": "au",
+      "name": "Library · Book removed",
+      "style": {
+        "background": "{color.bg}",
+        "color": "{color.ink}",
+        "display": "flex",
+        "flex-direction": "row",
+        "height": 900,
+        "overflow": "hidden",
+        "position": "relative",
+        "width": 1440
+      },
+      "type": "frame",
+      "x": 18520,
+      "y": 0
+    },
     "CfkXD8Ga": {
       "css": "/* Switching between Highlights/Notes and Ask AI (header buttons NotebookPen, Sparkles): the panel slides in from the picked button's side (Ask AI from the right), the old one fades out toward the side it leaves. Reduced motion: fade only. */\ntransition:\n  opacity 220ms var(--ease-out) 40ms,\n  translate 220ms var(--ease-out) 40ms,\n  display 100ms allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  translate: 24px 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  translate: -12px 0;\n  transition-duration: 100ms;\n  transition-delay: 0ms;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  translate: none;\n\n  @starting-style {\n    translate: none;\n  }\n}",
       "index": "z0",
@@ -43940,6 +44667,29 @@
       },
       "type": "text"
     },
+    "CsMYt8A4": {
+      "css": "/* Opens from the book's menu. Focus starts on Cancel; Escape or Cancel closes it. Remove deletes the book on every synced device and closes the dialog; the card folds out of the shelf and a toast confirms. */\ntransition:\n  opacity {transition.duration-panel} {ease.out},\n  scale {transition.duration-panel} {ease.out},\n  display {transition.duration-panel} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-panel-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n\n  @starting-style {\n    scale: 1;\n  }\n\n  &[data-state=\"closed\"] {\n    scale: 1;\n  }\n}",
+      "index": "a3",
+      "name": "Dialog",
+      "parentId": "hzCb4sSn",
+      "style": {
+        "background": "{color.surface}",
+        "border-radius": "{radius.2xl}",
+        "box-shadow": "var(--elevation-float)",
+        "color": "{color.ink}",
+        "display": "flex",
+        "flex-direction": "column",
+        "left": "50%",
+        "max-width": "{container.md}",
+        "overflow": "hidden",
+        "position": "absolute",
+        "top": "50%",
+        "translate": "-50% -50%",
+        "width": "calc(100% - {spacing.12})",
+        "z-index": 50
+      },
+      "type": "frame"
+    },
     "CsMehGAk": {
       "icon": "settings-2",
       "index": "a5",
@@ -44332,6 +45082,19 @@
       },
       "type": "frame"
     },
+    "CzAzfwEx": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "NoNJipLv",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "CzKby9Dw": {
       "componentId": "RV1DOgzp",
       "index": "a003",
@@ -44422,6 +45185,18 @@
       },
       "type": "text"
     },
+    "D0k2G09B": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "lYqUyupj",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
+    },
     "D0udoF2H": {
       "content": "بابُ الأفعالِ",
       "index": "a002",
@@ -44467,6 +45242,20 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "D1NQm0eK": {
+      "icon": "library-big",
+      "index": "a0",
+      "name": "Icon library-big",
+      "parentId": "eTUswYHx",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 18,
+        "width": 18
+      },
+      "type": "icon"
     },
     "D1Nu143H": {
       "content": "والفعلُ يُعرَفُ: ب",
@@ -45942,6 +46731,18 @@
       },
       "type": "frame"
     },
+    "DT2CtUUE": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "bXzblw4j",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6,
+        "rotate": "45deg",
+        "width": 6
+      },
+      "type": "frame"
+    },
     "DT3fQX4K": {
       "index": "a1",
       "name": "Shortcut",
@@ -46085,6 +46886,20 @@
       },
       "type": "text"
     },
+    "DX238HLn": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "nniHtdUu",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "DXvhKWBJ": {
       "content": "Ask about this passage…",
       "index": "a0",
@@ -46105,6 +46920,20 @@
       },
       "type": "text"
     },
+    "DYBuMdhI": {
+      "content": "بابُ الكلامِ · ص ٣",
+      "index": "a1",
+      "name": "Chapter",
+      "parentId": "pUnRVmWQ",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "text-align": "right"
+      },
+      "type": "text"
+    },
     "DYV4ai1z": {
       "content": "١",
       "index": "a1",
@@ -46121,6 +46950,22 @@
         "margin-inline": "2px",
         "position": "relative",
         "top": -12
+      },
+      "type": "text"
+    },
+    "DYZ2Be4k": {
+      "content": "Continue reading",
+      "index": "a0",
+      "name": "Overline",
+      "parentId": "vXitSjI6",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
       },
       "type": "text"
     },
@@ -46863,6 +47708,20 @@
         "width": 16
       },
       "type": "icon"
+    },
+    "DmT2gPQr": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "AMVOlTmR",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.107)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "DmtH1T0h": {
       "content": "٣",
@@ -47833,6 +48692,18 @@
       },
       "type": "text"
     },
+    "E5Jod9DZ": {
+      "index": "a3",
+      "name": "Book · الأربعون النووية",
+      "parentId": "UdPhL2Dz",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
+    },
     "E5MArwy4": {
       "componentId": "RV1DOgzp",
       "index": "a008",
@@ -47984,6 +48855,30 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "E80MYKse": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "TgBIfwEH",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
+      },
+      "type": "frame"
     },
     "E8DOkGxy": {
       "content": "، وسوف، وتاء التأنيث الساكن",
@@ -49266,6 +50161,22 @@
       },
       "type": "frame"
     },
+    "ESCOkLoe": {
+      "content": "All books",
+      "index": "a2",
+      "name": "Overline",
+      "parentId": "OlWdjOED",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
     "ESK74Tjo": {
       "content": "Ask about this passage…",
       "index": "a0",
@@ -50065,6 +50976,20 @@
       },
       "type": "instance"
     },
+    "EkMjQ8wi": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "CzAzfwEx",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.107)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "EkOhKpnH": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
       "index": "a1",
@@ -50275,6 +51200,17 @@
         "border-radius": "{radius.2xl}",
         "display": "flex",
         "flex-direction": "column"
+      },
+      "type": "frame"
+    },
+    "EojmaCZw": {
+      "index": "a0",
+      "name": "Header",
+      "parentId": "cYnKqJt8",
+      "style": {
+        "align-items": "flex-end",
+        "display": "flex",
+        "gap": 16
       },
       "type": "frame"
     },
@@ -51358,6 +52294,18 @@
       },
       "type": "instance"
     },
+    "F88tXbI2": {
+      "content": "3 of 24",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "MwaA1bSY",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
     "F8IvAe32": {
       "content": "5",
       "index": "a000",
@@ -51516,6 +52464,21 @@
         "text-overflow": "ellipsis",
         "unicode-bidi": "plaintext",
         "white-space": "nowrap"
+      },
+      "type": "text"
+    },
+    "FACifhnA": {
+      "content": "متن الآجرومية",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "obZ0U2iY",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 30,
+        "font-weight": 700,
+        "line-height": "48px",
+        "text-align": "right"
       },
       "type": "text"
     },
@@ -51714,6 +52677,20 @@
       },
       "type": "text"
     },
+    "FDFecZrk": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "3VGDnbbD",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 17,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "FE7YMjIe": {
       "index": "an",
       "name": "Highlight dot",
@@ -51811,6 +52788,23 @@
         "flex-direction": "column",
         "gap": 10,
         "width": 168
+      },
+      "type": "frame"
+    },
+    "FG1mw76m": {
+      "css": "transition: scale {transition.duration-press} {ease.out};\n\n&:active {\n  scale: 0.97;\n}",
+      "index": "a0",
+      "name": "Resume",
+      "parentId": "x2v2Crk2",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.on-accent}",
+        "display": "inline-flex",
+        "gap": 6,
+        "height": 36,
+        "padding": "0 14px"
       },
       "type": "frame"
     },
@@ -52242,6 +53236,18 @@
       "type": "frame",
       "x": 12440,
       "y": 18940
+    },
+    "FKaUuFn3": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "LBYqYP9T",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
     },
     "FLCyeeXM": {
       "content": "Show or hide scan",
@@ -53581,6 +54587,22 @@
       },
       "type": "frame"
     },
+    "Fl0HwEEU": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "CCXzFSA2",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
+    },
     "FlLkwMWj": {
       "index": "a000",
       "name": "Mark",
@@ -53591,6 +54613,30 @@
         "display": "flex",
         "flex-direction": "column",
         "gap": 4
+      },
+      "type": "frame"
+    },
+    "Fm8AFP2Y": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "2E7sEAmA",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
       },
       "type": "frame"
     },
@@ -55682,6 +56728,22 @@
       },
       "type": "frame"
     },
+    "GOPQagOk": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "EojmaCZw",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
+    },
     "GOVZE0dQ": {
       "css": "/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
@@ -55999,6 +57061,17 @@
         "tone": "ok"
       },
       "type": "instance"
+    },
+    "GUYvlyDc": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "lYqUyupj",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
     },
     "GUdceVIf": {
       "index": "a0",
@@ -57953,6 +59026,19 @@
       },
       "type": "text"
     },
+    "H2hY920D": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "1y0QM7fY",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "H345v5mB": {
       "content": "6",
       "index": "a000",
@@ -58499,6 +59585,18 @@
         "width": 1
       },
       "type": "frame"
+    },
+    "HBvhJDIC": {
+      "content": "Midad",
+      "index": "a1",
+      "name": "Name",
+      "parentId": "blSldKfQ",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600
+      },
+      "type": "text"
     },
     "HCA1Kp6E": {
       "content": "يصلحُ",
@@ -59336,6 +60434,20 @@
       },
       "type": "frame"
     },
+    "HSlpE1i4": {
+      "index": "a1",
+      "name": "Content",
+      "parentId": "CfhJlpfD",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 28,
+        "overflow": "hidden",
+        "padding": "40px 48px"
+      },
+      "type": "frame"
+    },
     "HStwgLRj": {
       "index": "a006",
       "name": "TOC · بابُ مرفوعاتِ الأسماءِ",
@@ -59418,6 +60530,18 @@
         "line-height": "20px"
       },
       "type": "frame"
+    },
+    "HTrVooQg": {
+      "content": "4 books · 1,844 pages",
+      "index": "a1",
+      "name": "Meta",
+      "parentId": "oKFBLHEd",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 13
+      },
+      "type": "text"
     },
     "HU3m4DRt": {
       "index": "am",
@@ -59549,6 +60673,20 @@
       },
       "type": "frame"
     },
+    "HWT7XhI0": {
+      "content": "ابن آجُرّوم",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "lYqUyupj",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "HX1fw0xB": {
       "content": "بابُ الأفعالِ",
       "index": "a1",
@@ -59672,6 +60810,18 @@
       },
       "type": "frame"
     },
+    "HZy7Tq0A": {
+      "content": "Resume reading",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "7eNDRVfP",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
+    },
     "Ha4LKK6t": {
       "componentId": "RV1DOgzp",
       "index": "a0",
@@ -59736,6 +60886,22 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "HadM86os": {
+      "content": "All books",
+      "index": "a2",
+      "name": "Overline",
+      "parentId": "QAIDqI5R",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
       },
       "type": "text"
     },
@@ -60143,6 +61309,21 @@
       },
       "type": "text"
     },
+    "HjQpHMNn": {
+      "index": "a1",
+      "name": "Continue reading",
+      "parentId": "vXitSjI6",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "gap": 32,
+        "padding": 28
+      },
+      "type": "frame"
+    },
     "HjWZgfZQ": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "index": "a0",
@@ -60292,6 +61473,19 @@
         "top": 9,
         "translate": "50% 0",
         "width": 3
+      },
+      "type": "frame"
+    },
+    "Hm6E1NiU": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "2E7sEAmA",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -60535,6 +61729,30 @@
         "display": "flex",
         "flex-direction": "column",
         "gap": 4
+      },
+      "type": "frame"
+    },
+    "HqUow7r8": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "Wj0Dahws",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
       },
       "type": "frame"
     },
@@ -61398,6 +62616,20 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "I9AgPAfY": {
+      "content": "ابن آجُرّوم",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "W4xNJ8vQ",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -62357,6 +63589,18 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "IOk2KXXx": {
+      "content": "12 of 96",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "Wj0Dahws",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
       },
       "type": "text"
     },
@@ -65546,6 +66790,17 @@
       },
       "type": "instance"
     },
+    "JJgabzLY": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "fVVUwo3V",
+      "props": {
+        "label": "Reading",
+        "state": "default"
+      },
+      "type": "instance"
+    },
     "JKFGdbQH": {
       "componentId": "4aJZW1V7",
       "index": "a1",
@@ -66232,6 +67487,19 @@
         "display": "flex",
         "gap": 8,
         "padding": "4px 10px 20px"
+      },
+      "type": "frame"
+    },
+    "JX4oGMbi": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "MwaA1bSY",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -67944,6 +69212,20 @@
       },
       "type": "text"
     },
+    "K3twNMde": {
+      "content": "الإمام النووي",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "kbo6TX3B",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "K3u2aTKg": {
       "css": "cursor: pointer;\ntransition:\n  background-color {transition.duration-press} {ease.out},\n  color {transition.duration-press} {ease.out};\n\n&:hover {\n  background: color-mix(in oklab, {color.ink} 6%, transparent);\n  color: {color.ink};\n}",
       "index": "a3",
@@ -69285,6 +70567,18 @@
       },
       "type": "frame"
     },
+    "KT395lML": {
+      "index": "a1",
+      "name": "Body",
+      "parentId": "CsMYt8A4",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.4}",
+        "padding": "{spacing.4} {spacing.6} {spacing.5}"
+      },
+      "type": "frame"
+    },
     "KTEUYcuA": {
       "css": "view-transition-name: reader-header;",
       "index": "a000",
@@ -69313,6 +70607,20 @@
         "font-size": 14,
         "font-weight": 500,
         "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "KU9IfX5r": {
+      "content": "ابن عقيل على ألفية ابن مالك",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "LBYqYP9T",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -71098,6 +72406,20 @@
       },
       "type": "instance"
     },
+    "L3UYTX0I": {
+      "content": "الأربعون النووية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "kbo6TX3B",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "L3ZobadM": {
       "index": "a001",
       "name": "Spacer",
@@ -71427,6 +72749,30 @@
       },
       "type": "frame"
     },
+    "LBYqYP9T": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "y44D7cKF",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
+      },
+      "type": "frame"
+    },
     "LBbvILkI": {
       "mode": "light",
       "name": "Reader · Resumed at marker",
@@ -71591,6 +72937,18 @@
         "width": 7
       },
       "type": "frame"
+    },
+    "LDYaFLyt": {
+      "content": "Midad",
+      "index": "a1",
+      "name": "Name",
+      "parentId": "XNIoh98g",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600
+      },
+      "type": "text"
     },
     "LDnODcix": {
       "content": "بابُ الإعرابِ",
@@ -72800,6 +74158,22 @@
         "gap": 4,
         "overflow": "hidden",
         "padding": "8px 4px 8px 10px"
+      },
+      "type": "frame"
+    },
+    "LZpyZBfr": {
+      "css": "transition:\n  opacity {transition.duration-panel} {ease.out},\n  display {transition.duration-panel} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  transition-duration: {transition.duration-panel-exit};\n}",
+      "index": "a2",
+      "name": "Overlay",
+      "parentId": "hzCb4sSn",
+      "style": {
+        "background": "{color.scrim}",
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "z-index": 40
       },
       "type": "frame"
     },
@@ -74108,6 +75482,20 @@
       },
       "type": "frame"
     },
+    "LzBhHnYm": {
+      "content": "الأربعون النووية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "9CtA805u",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "LzX9PXFy": {
       "componentId": "RV1DOgzp",
       "index": "a00",
@@ -74427,6 +75815,18 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "M6YdzQFW": {
+      "content": "Midad",
+      "index": "a1",
+      "name": "Name",
+      "parentId": "PJVbtiHE",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600
       },
       "type": "text"
     },
@@ -75166,6 +76566,18 @@
       },
       "type": "frame"
     },
+    "MLE6Ouy5": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "kbo6TX3B",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
+    },
     "MLLNnEgK": {
       "css": "transition: translate {transition.duration-slide} {ease.move};\n\n[data-settling] > & {\n  transition-duration: 120ms;\n  transition-timing-function: {ease.out};\n}\n\n[data-dragging] > & {\n  transition: none;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "b0B",
@@ -75255,6 +76667,17 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "MMxbZASY": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "2hOx4hUX",
+      "props": {
+        "label": "All",
+        "state": "selected"
+      },
+      "type": "instance"
     },
     "MNAz72fF": {
       "index": "a0",
@@ -75627,6 +77050,30 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "MUrb9FQA": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "HjQpHMNn",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 200,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 150
+      },
+      "type": "frame"
     },
     "MVC2JCqw": {
       "componentId": "RV1DOgzp",
@@ -76426,6 +77873,21 @@
       },
       "type": "text"
     },
+    "Midv2KWf": {
+      "content": "متن الآجرومية",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "lk7CGHj3",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 30,
+        "font-weight": 700,
+        "line-height": "48px",
+        "text-align": "right"
+      },
+      "type": "text"
+    },
     "MiyG3Bln": {
       "content": ".",
       "index": "a00008",
@@ -76693,6 +78155,30 @@
         "flex": 1,
         "flex-direction": "column",
         "height": "100%"
+      },
+      "type": "frame"
+    },
+    "MprZ6Uke": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "NoNJipLv",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
       },
       "type": "frame"
     },
@@ -77147,6 +78633,18 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "MwaA1bSY": {
+      "index": "a0",
+      "name": "Book · متن الآجرومية",
+      "parentId": "NEvT4DLQ",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
     },
     "MwdApIYO": {
       "index": "a1",
@@ -78142,6 +79640,16 @@
       },
       "type": "text"
     },
+    "NEvT4DLQ": {
+      "index": "a3",
+      "name": "Shelf",
+      "parentId": "QAIDqI5R",
+      "style": {
+        "display": "flex",
+        "gap": 28
+      },
+      "type": "frame"
+    },
     "NFE71F9Y": {
       "content": "حتى لا تصح به الصلاة",
       "css": "transition: color {transition.duration-press} {ease.out};\n\n&:hover {\n  color: {color.ink};\n}",
@@ -78266,6 +79774,19 @@
       "parentId": "Uqe0mJeq",
       "style": {
         "position": "relative"
+      },
+      "type": "frame"
+    },
+    "NIbxmevk": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "nfop8HU9",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -78717,6 +80238,20 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "NPRR5vJU": {
+      "content": "شرح ابن عقيل",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "LBYqYP9T",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "NPZrIsSQ": {
       "index": "a006",
@@ -79250,6 +80785,18 @@
         "tone": "mark-3"
       },
       "type": "instance"
+    },
+    "NWZszBeF": {
+      "index": "a1",
+      "name": "Book · قطر الندى وبل الصدى",
+      "parentId": "PkbKQZzM",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
     },
     "NWkar794": {
       "index": "a000",
@@ -80062,6 +81609,18 @@
       },
       "type": "text"
     },
+    "NkP2eiCV": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "Fm8AFP2Y",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "NkRFcxbA": {
       "index": "a000",
       "name": "Mark",
@@ -80293,6 +81852,18 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "NoNJipLv": {
+      "index": "a1",
+      "name": "Book · شرح ابن عقيل",
+      "parentId": "NEvT4DLQ",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
     },
     "NoNfWR8l": {
       "index": "b01",
@@ -81192,6 +82763,20 @@
         "font-size": 14,
         "font-weight": 500,
         "line-height": "20px"
+      },
+      "type": "text"
+    },
+    "O73S6KPj": {
+      "content": "ابن آجُرّوم",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "3VGDnbbD",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 12,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -83274,6 +84859,18 @@
       },
       "type": "frame"
     },
+    "OlWdjOED": {
+      "css": "/* * Switching shelves (All | Reading | Finished): only this block moves. The\n * header and the tabs stay put, and the Segmented fill slides live.\n * Exit: the old shelf fades out quickly (page-out, 100ms ease-out) toward the\n * side it leaves: list-out-to-left going forward, list-out-to-right going back.\n * Entrance: the new shelf slides a short way in from the side of the picked tab\n * (220ms ease-out after 40ms). Forward, picking a tab to the right, comes in\n * from the right as played here; back uses page-in-from-left. */\nanimation: page-in-from-right 220ms var(--ease-out) 40ms both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: none;\n}",
+      "index": "a1",
+      "name": "Shelf content",
+      "parentId": "QbqjrDnf",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 28
+      },
+      "type": "frame"
+    },
     "OlhynWLV": {
       "content": "Pages",
       "index": "a0",
@@ -83516,6 +85113,27 @@
         "position": "absolute",
         "top": 0,
         "width": 28
+      },
+      "type": "frame"
+    },
+    "OqR3MJsP": {
+      "css": "/* Book actions: pops from its trigger. Escape or a pick closes it. */\ntransform-origin: top right;\ntransition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n\n  @starting-style {\n    scale: 1;\n  }\n\n  &[data-state=\"closed\"] {\n    scale: 1;\n  }\n}",
+      "index": "a4",
+      "name": "Book menu",
+      "parentId": "y44D7cKF",
+      "style": {
+        "background": "{color.surface-3}",
+        "border-radius": "{radius.xl}",
+        "box-shadow": "var(--elevation-float)",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 2,
+        "left": 12,
+        "padding": "{spacing.1}",
+        "position": "absolute",
+        "top": 56,
+        "width": 220,
+        "z-index": 5
       },
       "type": "frame"
     },
@@ -83762,6 +85380,20 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "Ovbptr1X": {
+      "content": "ابن آجُرّوم",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "bXzblw4j",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 12,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -85264,6 +86896,18 @@
       },
       "type": "frame"
     },
+    "PJVbtiHE": {
+      "index": "a0",
+      "name": "Brand",
+      "parentId": "RsmieCW4",
+      "style": {
+        "align-items": "baseline",
+        "display": "flex",
+        "gap": 8,
+        "padding": "4px 10px 20px"
+      },
+      "type": "frame"
+    },
     "PJj3vZwA": {
       "css": "animation: screen-in-back {transition.duration-slide} {ease.move} both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation-name: screen-fade-in;\n}\n/* The input is one line, grows to two, then scrolls (see the input's max-height). */\ntransition: border-color {transition.duration-press} {ease.out};\n\n&:focus-within {\n  border-color: {color.ink-3};\n}",
       "index": "a002",
@@ -85344,6 +86988,18 @@
         "display": "flex",
         "flex-direction": "column",
         "gap": 8
+      },
+      "type": "frame"
+    },
+    "PLHIo7YL": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "kbo6TX3B",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
       },
       "type": "frame"
     },
@@ -85515,6 +87171,19 @@
         "flex": 1,
         "flex-direction": "column",
         "gap": 12
+      },
+      "type": "frame"
+    },
+    "PQZgWL8A": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "NWZszBeF",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -86117,6 +87786,22 @@
       },
       "type": "frame"
     },
+    "PcRaHqKj": {
+      "index": "a0",
+      "name": "Sidebar",
+      "parentId": "QfYvBCcX",
+      "style": {
+        "background": "{color.surface-2}",
+        "border-right": "1px solid {color.line}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 4,
+        "padding": "20px 16px",
+        "width": 248
+      },
+      "type": "frame"
+    },
     "PcvoJskP": {
       "index": "a2",
       "name": "Nav item",
@@ -86504,6 +88189,17 @@
       },
       "type": "frame"
     },
+    "PkbKQZzM": {
+      "css": "/* The removed book's card fades and shrinks out (duration-panel-exit), then the cards after it slide into its place (duration-move, ease-move). Reduced motion: no slide, only the fade. */",
+      "index": "a3",
+      "name": "Shelf",
+      "parentId": "vXitSjI6",
+      "style": {
+        "display": "flex",
+        "gap": 28
+      },
+      "type": "frame"
+    },
     "PkvuOY1f": {
       "content": "11",
       "index": "a000",
@@ -86726,6 +88422,22 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "PnhMyTKx": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "t6klNIbf",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
     },
     "PnlhbmbE": {
       "content": "Keep highlights, notes, bookmarks and places the same on all your devices.",
@@ -87052,6 +88764,17 @@
         "pointer-events": "none",
         "position": "absolute",
         "width": 7
+      },
+      "type": "frame"
+    },
+    "PshVDjEV": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "E80MYKse",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
       },
       "type": "frame"
     },
@@ -87987,6 +89710,18 @@
       },
       "style": {},
       "type": "instance"
+    },
+    "QAIDqI5R": {
+      "css": "/* * Switching shelves (All | Reading | Finished): only this block moves. The\n * header and the tabs stay put, and the Segmented fill slides live.\n * Exit: the old shelf fades out quickly (page-out, 100ms ease-out) toward the\n * side it leaves: list-out-to-left going forward, list-out-to-right going back.\n * Entrance: the new shelf slides a short way in from the side of the picked tab\n * (220ms ease-out after 40ms). Forward, picking a tab to the right, comes in\n * from the right as played here; back uses page-in-from-left. */\nanimation: page-in-from-right 220ms var(--ease-out) 40ms both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: none;\n}",
+      "index": "a1",
+      "name": "Shelf content",
+      "parentId": "cYnKqJt8",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 28
+      },
+      "type": "frame"
     },
     "QAOUzQRC": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -89434,6 +91169,20 @@
       },
       "type": "text"
     },
+    "QbqjrDnf": {
+      "index": "a1",
+      "name": "Content",
+      "parentId": "QfYvBCcX",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 28,
+        "overflow": "hidden",
+        "padding": "40px 48px"
+      },
+      "type": "frame"
+    },
     "Qc7qEDRe": {
       "index": "a001",
       "name": "Quote",
@@ -89656,6 +91405,23 @@
         "padding": "4px 10px"
       },
       "type": "frame"
+    },
+    "QfYvBCcX": {
+      "index": "as",
+      "name": "Library · Book menu",
+      "style": {
+        "background": "{color.bg}",
+        "color": "{color.ink}",
+        "display": "flex",
+        "flex-direction": "row",
+        "height": 900,
+        "overflow": "hidden",
+        "position": "relative",
+        "width": 1440
+      },
+      "type": "frame",
+      "x": 15480,
+      "y": 0
     },
     "QgGo5DAa": {
       "content": "Contents",
@@ -91187,6 +92953,21 @@
       },
       "type": "text"
     },
+    "R9rWg0hB": {
+      "index": "a0",
+      "name": "Book",
+      "parentId": "KT395lML",
+      "style": {
+        "align-items": "flex-end",
+        "background": "{color.surface-2}",
+        "border-radius": "{radius.lg}",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.1}",
+        "padding": "{spacing.3} {spacing.4}"
+      },
+      "type": "frame"
+    },
     "RAmLhhjP": {
       "content": "يصلحُ",
       "css": "border-radius: 4px;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"hover\"] {\n  background-color: {color.accent-soft};\n}",
@@ -91737,6 +93518,20 @@
         "width": "100%"
       },
       "type": "frame"
+    },
+    "RL0kbh1F": {
+      "icon": "library-big",
+      "index": "a0",
+      "name": "Icon library-big",
+      "parentId": "sfUMq1Xq",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 18,
+        "width": 18
+      },
+      "type": "icon"
     },
     "RLY2CwCG": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
@@ -93671,6 +95466,22 @@
       },
       "type": "text"
     },
+    "RsmieCW4": {
+      "index": "a0",
+      "name": "Sidebar",
+      "parentId": "hzCb4sSn",
+      "style": {
+        "background": "{color.surface-2}",
+        "border-right": "1px solid {color.line}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 4,
+        "padding": "20px 16px",
+        "width": 248
+      },
+      "type": "frame"
+    },
     "RsqfIXdS": {
       "content": "Connecting…",
       "css": "/* The label crossfades with the glyph. */\ntransition: opacity {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}",
@@ -94372,6 +96183,17 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "S8Ft6Nvl": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "jr8Flxa0",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
     },
     "S8S6P8s8": {
       "content": "2",
@@ -96162,6 +97984,20 @@
       },
       "type": "frame"
     },
+    "Sj4srSuD": {
+      "content": "شرح ابن عقيل",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "MprZ6Uke",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "Sj53vbiT": {
       "index": "a001",
       "name": "Panel body",
@@ -96412,6 +98248,18 @@
       "parentId": "p7CgQ0PB",
       "style": {
         "display": "inline"
+      },
+      "type": "text"
+    },
+    "SnvCOPlK": {
+      "content": "3 of 24",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "2E7sEAmA",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
       },
       "type": "text"
     },
@@ -99573,6 +101421,18 @@
       },
       "type": "frame"
     },
+    "TgBIfwEH": {
+      "index": "a2",
+      "name": "Book · قطر الندى وبل الصدى",
+      "parentId": "UdPhL2Dz",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
+    },
     "TgaSK9I1": {
       "content": "لم يشرع",
       "index": "a0",
@@ -100452,6 +102312,18 @@
       },
       "type": "frame"
     },
+    "Tv3XKtVs": {
+      "content": "Page 3 of 24 · last read yesterday",
+      "index": "a1",
+      "name": "Where",
+      "parentId": "iVNmx72k",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 13
+      },
+      "type": "text"
+    },
     "Tv9wKdUL": {
       "componentId": "uJd03iQq",
       "index": "a000",
@@ -101197,6 +103069,20 @@
       },
       "type": "instance"
     },
+    "U5wogXQ0": {
+      "content": "1,312 pages · 12 highlights · 3 notes · 2 conversations",
+      "index": "a1",
+      "name": "Counts",
+      "parentId": "R9rWg0hB",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": "{text.sm}",
+        "line-height": "20px",
+        "text-align": "right"
+      },
+      "type": "text"
+    },
     "U5z6f3Vb": {
       "content": "مقدمة",
       "index": "a002",
@@ -101589,6 +103475,20 @@
       },
       "type": "frame"
     },
+    "UD3cHeW0": {
+      "content": "ابن هشام الأنصاري",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "jr8Flxa0",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "UDQf957J": {
       "content": "11",
       "index": "a000",
@@ -101658,6 +103558,18 @@
         "width": 0
       },
       "type": "frame"
+    },
+    "UFXerANu": {
+      "content": "Library",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "hOvE5NxL",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
     },
     "UGSBWqTG": {
       "index": "a0",
@@ -101994,6 +103906,28 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "UM8r4g14": {
+      "componentId": "mUTXOEWB",
+      "index": "a1",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "search"
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": 288
+          }
+        }
+      },
+      "parentId": "t6klNIbf",
+      "props": {
+        "value": "Filter by title or author",
+        "withHelper": "no",
+        "withLabel": "no"
+      },
+      "type": "instance"
     },
     "UMepc3eY": {
       "mode": "light",
@@ -103003,6 +104937,16 @@
       },
       "type": "frame"
     },
+    "UdPhL2Dz": {
+      "index": "a3",
+      "name": "Shelf",
+      "parentId": "OlWdjOED",
+      "style": {
+        "display": "flex",
+        "gap": 28
+      },
+      "type": "frame"
+    },
     "UdpBip7W": {
       "index": "a1",
       "name": "Row · Page width",
@@ -103735,6 +105679,22 @@
         "letter-spacing": "0.08em",
         "line-height": "16px",
         "padding": "0 10px 8px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
+    "UueIbjIA": {
+      "content": "All books",
+      "index": "a2",
+      "name": "Overline",
+      "parentId": "vXitSjI6",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
         "text-transform": "uppercase"
       },
       "type": "text"
@@ -107569,6 +109529,30 @@
       },
       "type": "text"
     },
+    "W4xNJ8vQ": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "MwaA1bSY",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
+      },
+      "type": "frame"
+    },
     "W56eCuNG": {
       "icon": "chevron-left",
       "index": "a0",
@@ -107937,6 +109921,18 @@
         "width": 16
       },
       "type": "icon"
+    },
+    "WB1473MX": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "3VGDnbbD",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6,
+        "rotate": "45deg",
+        "width": 6
+      },
+      "type": "frame"
     },
     "WB805oLd": {
       "index": "a7",
@@ -109620,6 +111616,18 @@
       },
       "type": "frame"
     },
+    "Wj0Dahws": {
+      "index": "a3",
+      "name": "Book · الأربعون النووية",
+      "parentId": "NEvT4DLQ",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
+    },
     "Wj8JtqEm": {
       "index": "a001",
       "name": "Page column",
@@ -110642,6 +112650,20 @@
       },
       "type": "frame"
     },
+    "X1qs09DR": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "NIbxmevk",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.090)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "X22D3uvT": {
       "componentId": "RV1DOgzp",
       "index": "a4",
@@ -111558,6 +113580,19 @@
       },
       "type": "frame"
     },
+    "XI93B8Hq": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "E5Jod9DZ",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "XII6hGHL": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
       "index": "a4",
@@ -111773,6 +113808,17 @@
       },
       "type": "text"
     },
+    "XLNtctU2": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "HqUow7r8",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
+    },
     "XLXeE3FI": {
       "index": "a2",
       "name": "Cell",
@@ -111815,6 +113861,18 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "XNIoh98g": {
+      "index": "a0",
+      "name": "Brand",
+      "parentId": "cyHm4T9D",
+      "style": {
+        "align-items": "baseline",
+        "display": "flex",
+        "gap": 8,
+        "padding": "4px 10px 20px"
+      },
+      "type": "frame"
     },
     "XNehHk2z": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -113344,6 +115402,20 @@
       },
       "type": "frame"
     },
+    "XlEgM2VK": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "lYqUyupj",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "XlUa5doH": {
       "content": "Library",
       "index": "a1",
@@ -113564,6 +115636,18 @@
         "align-items": "center",
         "display": "flex",
         "gap": 8
+      },
+      "type": "frame"
+    },
+    "XqrxjKea": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "tGMbFIia",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
       },
       "type": "frame"
     },
@@ -116626,6 +118710,17 @@
       },
       "type": "text"
     },
+    "Yn79zbFY": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "9CtA805u",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
+    },
     "Ynb5K1oq": {
       "index": "a1",
       "name": "Panel",
@@ -117449,6 +119544,18 @@
         "text-align": "center"
       },
       "type": "text"
+    },
+    "Z27y4I4s": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "W4xNJ8vQ",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
     },
     "Z2JkmQ2Q": {
       "componentId": "RV1DOgzp",
@@ -118717,6 +120824,19 @@
         "white-space": "nowrap"
       },
       "type": "text"
+    },
+    "ZUAdqSdw": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "TgBIfwEH",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "ZUMWhemd": {
       "componentId": "uJd03iQq",
@@ -120157,6 +122277,18 @@
       },
       "type": "frame"
     },
+    "Zvp6eZyB": {
+      "content": "12 of 96",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "op3Y8p48",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
     "Zwvs1O38": {
       "index": "a1",
       "name": "Entries",
@@ -120573,6 +122705,20 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "a7sqdctL": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "W4xNJ8vQ",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -121450,6 +123596,20 @@
         "font-size": 15,
         "font-weight": 400,
         "line-height": "24px"
+      },
+      "type": "text"
+    },
+    "aLurBM3j": {
+      "content": "مداد",
+      "index": "a0",
+      "name": "Mark",
+      "parentId": "XNIoh98g",
+      "style": {
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700
       },
       "type": "text"
     },
@@ -122447,6 +124607,17 @@
         "position": "relative",
         "user-select": "none",
         "width": 0
+      },
+      "type": "frame"
+    },
+    "ag209wht": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "3VGDnbbD",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 40
       },
       "type": "frame"
     },
@@ -123755,6 +125926,18 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "b7VCfUwX": {
+      "index": "a0",
+      "name": "Header",
+      "parentId": "CsMYt8A4",
+      "style": {
+        "align-items": "flex-start",
+        "display": "flex",
+        "gap": "{spacing.3}",
+        "padding": "{spacing.5} {spacing.6} 0"
+      },
+      "type": "frame"
     },
     "b7crRwr8": {
       "content": "تعريف الكلام وأقسامه",
@@ -125272,6 +127455,30 @@
       },
       "type": "frame"
     },
+    "bXzblw4j": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "mWQnM1L7",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 200,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 150
+      },
+      "type": "frame"
+    },
     "bYEoosoU": {
       "content": "بالخفضِ، والتنوينِ، ودخولِ الألفِ واللامِ",
       "index": "a001",
@@ -125972,6 +128179,18 @@
       },
       "type": "instance"
     },
+    "blSldKfQ": {
+      "index": "a0",
+      "name": "Brand",
+      "parentId": "PcRaHqKj",
+      "style": {
+        "align-items": "baseline",
+        "display": "flex",
+        "gap": 8,
+        "padding": "4px 10px 20px"
+      },
+      "type": "frame"
+    },
     "bluGHTLZ": {
       "content": "بابُ الأفعالِ",
       "index": "a002",
@@ -126524,6 +128743,18 @@
       "parentId": "mWvRoE1h",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "bv8m6e9z": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "EojmaCZw",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 4
       },
       "type": "frame"
     },
@@ -127112,6 +129343,17 @@
       },
       "type": "instance"
     },
+    "c6D0QgSB": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "bXzblw4j",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 40
+      },
+      "type": "frame"
+    },
     "c6GnsBW9": {
       "content": "بابُ الفاعلِ",
       "index": "a002",
@@ -127676,6 +129918,18 @@
         "width": 3
       },
       "type": "frame"
+    },
+    "cHGjY4M9": {
+      "content": "37 of 412",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "TgBIfwEH",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
     },
     "cHN71dgA": {
       "index": "a3",
@@ -128502,6 +130756,20 @@
       },
       "type": "text"
     },
+    "cYnKqJt8": {
+      "index": "a1",
+      "name": "Content",
+      "parentId": "hzCb4sSn",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 28,
+        "overflow": "hidden",
+        "padding": "40px 48px"
+      },
+      "type": "frame"
+    },
     "cYxW4tMg": {
       "index": "a1",
       "name": "Body",
@@ -128617,6 +130885,18 @@
         "width": 8
       },
       "type": "frame"
+    },
+    "cZhLBD8b": {
+      "content": "4 books · 1,844 pages",
+      "index": "a1",
+      "name": "Meta",
+      "parentId": "bv8m6e9z",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 13
+      },
+      "type": "text"
     },
     "caIIKOlu": {
       "css": "view-transition-name: reader-header;",
@@ -129155,6 +131435,20 @@
       },
       "type": "text"
     },
+    "cliWc2QF": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "JX4oGMbi",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "clqtsbCp": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
       "index": "a0",
@@ -129392,6 +131686,21 @@
         "text-align": "justify",
         "text-align-last": "right",
         "text-indent": "-1.5em"
+      },
+      "type": "frame"
+    },
+    "csEL7oxF": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
+      "index": "a2",
+      "name": "Segmented control",
+      "parentId": "t6klNIbf",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
       },
       "type": "frame"
     },
@@ -129639,6 +131948,22 @@
         "top": 2,
         "translate": "50% 0",
         "width": 5
+      },
+      "type": "frame"
+    },
+    "cyHm4T9D": {
+      "index": "a0",
+      "name": "Sidebar",
+      "parentId": "CfhJlpfD",
+      "style": {
+        "background": "{color.surface-2}",
+        "border-right": "1px solid {color.line}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 4,
+        "padding": "20px 16px",
+        "width": 248
       },
       "type": "frame"
     },
@@ -130479,6 +132804,20 @@
       },
       "type": "frame"
     },
+    "dDxGzIXM": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "bXzblw4j",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 17,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "dEC2vcRC": {
       "index": "al",
       "name": "Highlight dot",
@@ -131133,6 +133472,17 @@
       "props": {
         "label": "Delete note",
         "variant": "ghost"
+      },
+      "type": "instance"
+    },
+    "dQdGVSg8": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "2hOx4hUX",
+      "props": {
+        "label": "Finished",
+        "state": "default"
       },
       "type": "instance"
     },
@@ -132500,6 +134850,20 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "dqX6HU2d": {
+      "content": "قطر الندى وبل الصدى",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "E80MYKse",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "dqgAd38q": {
       "content": "Narrow layouts (no margin beside the number): the \"+\" fades in over the number on hover, and a line with a note shows its icon in the number's place. The \"+\" can only be clicked while its line is hovered, so a click in the margin never starts a note by accident.",
@@ -134512,6 +136876,21 @@
       "parentId": "nnvW24QG",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "eTUswYHx": {
+      "index": "a1",
+      "name": "Nav item",
+      "parentId": "cyHm4T9D",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.accent}",
+        "display": "flex",
+        "gap": 10,
+        "padding": "8px 10px"
       },
       "type": "frame"
     },
@@ -138175,6 +140554,19 @@
       },
       "type": "text"
     },
+    "fU02XODg": {
+      "content": "Library",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "sKsjLet2",
+      "style": {
+        "font-family": "{font.display}",
+        "font-size": 32,
+        "font-weight": 600,
+        "line-height": "40px"
+      },
+      "type": "text"
+    },
     "fU82IZL0": {
       "index": "a0",
       "name": "Line number",
@@ -138282,6 +140674,35 @@
         "top": 2,
         "translate": "50% 0",
         "width": 5
+      },
+      "type": "frame"
+    },
+    "fVVLqTAd": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "1KJKXozR",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
+    "fVVUwo3V": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
+      "index": "a2",
+      "name": "Segmented control",
+      "parentId": "EojmaCZw",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
       },
       "type": "frame"
     },
@@ -138575,6 +140996,17 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "fbKYY7hW": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "csEL7oxF",
+      "props": {
+        "label": "All",
+        "state": "selected"
+      },
+      "type": "instance"
     },
     "fbLCqQkl": {
       "index": "a0",
@@ -141408,6 +143840,18 @@
       },
       "type": "text"
     },
+    "gLsdYYs5": {
+      "content": "140 of 1,312",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "y44D7cKF",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
     "gME5tP8r": {
       "css": "transform-origin: right center;\ntransition: transform {transition.duration-slide} {ease.move};\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a0",
@@ -142401,6 +144845,20 @@
       },
       "type": "frame"
     },
+    "gezwJBrJ": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "ZUAdqSdw",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.090)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "gf5FL2gu": {
       "index": "a3V",
       "name": "Note corner · end",
@@ -142902,6 +145360,20 @@
       },
       "type": "instance"
     },
+    "gqVRflO4": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "PQZgWL8A",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.090)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "gr4w06L1": {
       "index": "a001V",
       "name": "Spacer",
@@ -143074,6 +145546,22 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "gtUrBkeN": {
+      "content": "Continue reading",
+      "index": "a0",
+      "name": "Overline",
+      "parentId": "OlWdjOED",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
       },
       "type": "text"
     },
@@ -143319,6 +145807,20 @@
       },
       "type": "text"
     },
+    "gwzkYB4B": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "r0893nfq",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "gxRK4Zfx": {
       "css": "transition: transform {transition.duration-panel} {ease.out};",
       "index": "a0",
@@ -143371,6 +145873,17 @@
         "font-weight": 700
       },
       "type": "text"
+    },
+    "gxypNKdf": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "fVVUwo3V",
+      "props": {
+        "label": "Finished",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "gy5r1brp": {
       "content": "والسين",
@@ -144883,6 +147396,21 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "hOvE5NxL": {
+      "index": "a1",
+      "name": "Nav item",
+      "parentId": "PcRaHqKj",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.accent}",
+        "display": "flex",
+        "gap": 10,
+        "padding": "8px 10px"
+      },
+      "type": "frame"
     },
     "hOykBZTo": {
       "index": "a01",
@@ -146855,6 +149383,23 @@
       },
       "type": "frame"
     },
+    "hzCb4sSn": {
+      "index": "at",
+      "name": "Library · Remove book",
+      "style": {
+        "background": "{color.bg}",
+        "color": "{color.ink}",
+        "display": "flex",
+        "flex-direction": "row",
+        "height": 900,
+        "overflow": "hidden",
+        "position": "relative",
+        "width": 1440
+      },
+      "type": "frame",
+      "x": 17000,
+      "y": 0
+    },
     "hzEHAbSr": {
       "componentId": "RV1DOgzp",
       "index": "a0005",
@@ -148109,6 +150654,17 @@
       },
       "type": "text"
     },
+    "iKriWYBa": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "2hOx4hUX",
+      "props": {
+        "label": "Reading",
+        "state": "default"
+      },
+      "type": "instance"
+    },
     "iL72KK7k": {
       "componentId": "RV1DOgzp",
       "index": "a000",
@@ -148397,6 +150953,18 @@
       },
       "type": "text"
     },
+    "iR5w9vv0": {
+      "content": "Resume reading",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "kNSEKrSi",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
+    },
     "iR9Hkvvb": {
       "index": "a000",
       "name": "Meta",
@@ -148614,6 +151182,17 @@
         "display": "flex",
         "flex-direction": "column",
         "width": 640
+      },
+      "type": "frame"
+    },
+    "iVNmx72k": {
+      "index": "a3",
+      "name": "Meta row",
+      "parentId": "pUnRVmWQ",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 16
       },
       "type": "frame"
     },
@@ -149562,6 +152141,20 @@
       },
       "type": "frame"
     },
+    "ijEjS9JC": {
+      "content": "ابن آجُرّوم",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "MUrb9FQA",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 12,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "ijWai7nY": {
       "index": "a2",
       "name": "Note corner · start",
@@ -150323,6 +152916,17 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "ivTWmKZY": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "MprZ6Uke",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
     },
     "ivgnGUTU": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -151380,6 +153984,18 @@
       },
       "type": "frame"
     },
+    "jH6KRMAj": {
+      "content": "37 of 412",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "nfop8HU9",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
     "jHqbbA34": {
       "index": "a1",
       "name": "Segmented control",
@@ -151469,6 +154085,18 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "jIsDgAOy": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "bXzblw4j",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8,
+        "position": "absolute"
+      },
+      "type": "frame"
     },
     "jJAziJow": {
       "componentId": "RV1DOgzp",
@@ -151675,6 +154303,21 @@
         "width": 8
       },
       "type": "frame"
+    },
+    "jOB45tkO": {
+      "content": "شرح ابن عقيل",
+      "index": "a0",
+      "name": "Book title",
+      "parentId": "R9rWg0hB",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700,
+        "line-height": 1.6,
+        "text-align": "right"
+      },
+      "type": "text"
     },
     "jOCZbBiM": {
       "css": "transition: opacity {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n}",
@@ -153146,6 +155789,20 @@
       },
       "type": "frame"
     },
+    "jqLxgb5M": {
+      "icon": "book-open",
+      "index": "a0",
+      "name": "Icon book-open",
+      "parentId": "FG1mw76m",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
     "jqivfwJh": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
       "index": "a4",
@@ -153160,6 +155817,30 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "jr8Flxa0": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "nfop8HU9",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
+      },
+      "type": "frame"
     },
     "jr8JpVzP": {
       "index": "a2",
@@ -154115,6 +156796,20 @@
         "font-family": "{font.body}",
         "font-size": 14,
         "line-height": "22px"
+      },
+      "type": "text"
+    },
+    "k9LNcJ4k": {
+      "content": "ابن آجُرّوم",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "Fm8AFP2Y",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -155111,6 +157806,23 @@
       },
       "type": "frame"
     },
+    "kNSEKrSi": {
+      "css": "transition: scale {transition.duration-press} {ease.out};\n\n&:active {\n  scale: 0.97;\n}",
+      "index": "a0",
+      "name": "Resume",
+      "parentId": "iVNmx72k",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.on-accent}",
+        "display": "inline-flex",
+        "gap": 6,
+        "height": 36,
+        "padding": "0 14px"
+      },
+      "type": "frame"
+    },
     "kNlvUDfC": {
       "content": "Ibn Ājurrūm · Bāb al-Kalām",
       "index": "a001",
@@ -155849,6 +158561,30 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "kbo6TX3B": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "op3Y8p48",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
+      },
+      "type": "frame"
     },
     "kcEuQK3u": {
       "index": "a0",
@@ -157575,6 +160311,20 @@
       },
       "type": "icon"
     },
+    "l9aiwGYI": {
+      "content": "مداد",
+      "index": "a0",
+      "name": "Mark",
+      "parentId": "blSldKfQ",
+      "style": {
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700
+      },
+      "type": "text"
+    },
     "l9qjSgw7": {
       "index": "a00",
       "name": "Head",
@@ -158385,6 +161135,18 @@
       },
       "type": "frame"
     },
+    "lPdfyNKV": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "MprZ6Uke",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
+    },
     "lPy9vo6K": {
       "componentId": "uJd03iQq",
       "css": "/* Status changes recolour the badge in place. */\ntransition:\n  background-color {transition.duration-pop} {ease.out},\n  color {transition.duration-pop} {ease.out};",
@@ -158912,6 +161674,30 @@
       },
       "type": "frame"
     },
+    "lYqUyupj": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "1y0QM7fY",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
+      },
+      "type": "frame"
+    },
     "lYzbGYgO": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "aP",
@@ -158992,6 +161778,18 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "la3nqgEV": {
+      "content": "Page 3 of 24 · last read yesterday",
+      "index": "a1",
+      "name": "Where",
+      "parentId": "nEHePVOe",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 13
+      },
+      "type": "text"
     },
     "lbLlWJZK": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
@@ -159109,6 +161907,18 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "ldZ8Ew49": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "9CtA805u",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
       },
       "type": "frame"
     },
@@ -159526,6 +162336,18 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "lk7CGHj3": {
+      "index": "a1",
+      "name": "Info",
+      "parentId": "HjQpHMNn",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 12
+      },
+      "type": "frame"
     },
     "lkLWsyzA": {
       "componentId": "RV1DOgzp",
@@ -160495,6 +163317,28 @@
       "props": {
         "label": "Show highlights and notes",
         "variant": "ghost"
+      },
+      "type": "instance"
+    },
+    "lzhVq2G1": {
+      "componentId": "mUTXOEWB",
+      "index": "a1",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "search"
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": 288
+          }
+        }
+      },
+      "parentId": "EojmaCZw",
+      "props": {
+        "value": "Filter by title or author",
+        "withHelper": "no",
+        "withLabel": "no"
       },
       "type": "instance"
     },
@@ -162183,6 +165027,21 @@
       },
       "type": "frame"
     },
+    "mWQnM1L7": {
+      "index": "a1",
+      "name": "Continue reading",
+      "parentId": "OlWdjOED",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "gap": 32,
+        "padding": 28
+      },
+      "type": "frame"
+    },
     "mWZ0gpc0": {
       "index": "av",
       "name": "Highlight dot",
@@ -162511,6 +165370,19 @@
         "gap": 16
       },
       "type": "frame"
+    },
+    "mbcBKbmZ": {
+      "content": "Library",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "oKFBLHEd",
+      "style": {
+        "font-family": "{font.display}",
+        "font-size": 32,
+        "font-weight": 600,
+        "line-height": "40px"
+      },
+      "type": "text"
     },
     "mbmc4saH": {
       "index": "a003",
@@ -162921,6 +165793,20 @@
       },
       "type": "frame"
     },
+    "mik9DgeZ": {
+      "content": "مداد",
+      "index": "a0",
+      "name": "Mark",
+      "parentId": "PJVbtiHE",
+      "style": {
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700
+      },
+      "type": "text"
+    },
     "mjDKxzNF": {
       "content": "7",
       "index": "a000",
@@ -162997,6 +165883,17 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "ml6NrACq": {
+      "index": "a1",
+      "name": "Separator",
+      "parentId": "OqR3MJsP",
+      "style": {
+        "background": "{color.line}",
+        "height": 1,
+        "margin": "{spacing.1} 0"
+      },
+      "type": "frame"
     },
     "mlFXJKr3": {
       "content": "مقدمة",
@@ -163499,6 +166396,18 @@
       },
       "type": "frame"
     },
+    "mvNAn2DF": {
+      "componentId": "ua9C67i7",
+      "index": "a1",
+      "name": "Remove",
+      "parentId": "z0QShmA0",
+      "props": {
+        "label": "Remove",
+        "variant": "danger",
+        "withIcon": "no"
+      },
+      "type": "instance"
+    },
     "mvPORRk9": {
       "css": "transform-origin: bottom center;\ntransition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n  scale: 0.96;\n}\n\n&[data-state=\"open\"] {\n  opacity: 1;\n  scale: 1;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  scale: 0.96;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
       "index": "a0V",
@@ -163778,6 +166687,24 @@
         "width": 28
       },
       "type": "frame"
+    },
+    "myfXk8fW": {
+      "componentId": "RV1DOgzp",
+      "css": "/* Shows on card hover or keyboard focus, and stays while its menu is open. */\ntransition: opacity {transition.duration-press} {ease.out};",
+      "index": "a3",
+      "name": "Book actions",
+      "parentId": "y44D7cKF",
+      "props": {
+        "label": "Book actions",
+        "state": "active",
+        "variant": "outline"
+      },
+      "style": {
+        "position": "absolute",
+        "right": "{spacing.3}",
+        "top": "{spacing.3}"
+      },
+      "type": "instance"
     },
     "mzp9lAxw": {
       "content": "2 days ago",
@@ -164554,6 +167481,17 @@
       },
       "type": "text"
     },
+    "nEHePVOe": {
+      "index": "a3",
+      "name": "Meta row",
+      "parentId": "obZ0U2iY",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 16
+      },
+      "type": "frame"
+    },
     "nFIMgI9w": {
       "componentId": "RV1DOgzp",
       "index": "a004V",
@@ -164743,6 +167681,20 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "nIe1FFdu": {
+      "icon": "book-open",
+      "index": "a0",
+      "name": "Icon book-open",
+      "parentId": "7eNDRVfP",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
     },
     "nItkEMsT": {
       "index": "a005",
@@ -164988,6 +167940,20 @@
         "direction": "rtl",
         "display": "flex",
         "justify-content": "flex-start"
+      },
+      "type": "frame"
+    },
+    "nN5MwAth": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "H2hY920D",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -165996,6 +168962,18 @@
       },
       "type": "frame"
     },
+    "nfop8HU9": {
+      "index": "a2",
+      "name": "Book · قطر الندى وبل الصدى",
+      "parentId": "NEvT4DLQ",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
+    },
     "ng0ZS9Zm": {
       "css": "/* Sidebar footer. Hidden when Devices is off. Opens the Devices popover upward. */\ncursor: pointer;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"open\"] {\n  background: color-mix(in oklab, {color.ink} 6%, transparent);\n}\n\n&:active {\n  scale: 0.98;\n}",
       "index": "a3",
@@ -166408,6 +169386,19 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "nniHtdUu": {
+      "index": "a2",
+      "name": "Progress",
+      "parentId": "pUnRVmWQ",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "nnkj8Vnz": {
       "index": "a002",
@@ -168339,6 +171330,18 @@
       },
       "type": "instance"
     },
+    "oKFBLHEd": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "CCXzFSA2",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 4
+      },
+      "type": "frame"
+    },
     "oKV7NUdd": {
       "content": "قَ",
       "index": "a2",
@@ -169241,6 +172244,18 @@
       },
       "type": "frame"
     },
+    "obZ0U2iY": {
+      "index": "a1",
+      "name": "Info",
+      "parentId": "mWQnM1L7",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 12
+      },
+      "type": "frame"
+    },
     "objuVkpY": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
       "index": "a5",
@@ -169438,6 +172453,19 @@
       "parentId": "IA13baYQ",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "ofw3GoSd": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "op3Y8p48",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -169925,6 +172953,18 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "op3Y8p48": {
+      "index": "a2",
+      "name": "Book · الأربعون النووية",
+      "parentId": "PkbKQZzM",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
     },
     "op7Lr4DW": {
       "index": "a0",
@@ -172124,6 +175164,18 @@
       },
       "type": "frame"
     },
+    "pUnRVmWQ": {
+      "index": "a1",
+      "name": "Info",
+      "parentId": "8LEr1KFq",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 12
+      },
+      "type": "frame"
+    },
     "pUy1oVTT": {
       "index": "a3",
       "name": "Book · الأربعون النووية",
@@ -172293,6 +175345,19 @@
         "font-size": 17,
         "font-weight": 600,
         "line-height": "24px"
+      },
+      "type": "text"
+    },
+    "pZYVIlrs": {
+      "content": "Its highlights, notes and Ask AI chats go with it, on all your devices. Can't be undone. The corpus copy stays.",
+      "index": "a1",
+      "name": "Explanation",
+      "parentId": "KT395lML",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": "{text.sm}",
+        "line-height": "20px"
       },
       "type": "text"
     },
@@ -174105,6 +177170,25 @@
       },
       "type": "text"
     },
+    "q5WskwWW": {
+      "componentId": "NpoaMS1Y",
+      "index": "a0",
+      "name": "Sync with corpus",
+      "overrides": {
+        "l23Gt34i": {
+          "icon": "refresh-cw"
+        }
+      },
+      "parentId": "OqR3MJsP",
+      "props": {
+        "label": "Sync with corpus…",
+        "withHint": "no"
+      },
+      "style": {
+        "width": "100%"
+      },
+      "type": "instance"
+    },
     "q66G5Amc": {
       "index": "a1",
       "name": "Nav item",
@@ -175491,6 +178575,20 @@
       },
       "type": "frame"
     },
+    "qYC6v2nm": {
+      "content": "ابن هشام الأنصاري",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "tGMbFIia",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "qZOQGQx2": {
       "index": "a001",
       "name": "Spacer",
@@ -176356,6 +179454,19 @@
       },
       "type": "frame"
     },
+    "qpGkGwbZ": {
+      "componentId": "ua9C67i7",
+      "index": "a0",
+      "name": "Cancel",
+      "parentId": "z0QShmA0",
+      "props": {
+        "label": "Cancel",
+        "state": "focus",
+        "variant": "secondary",
+        "withIcon": "no"
+      },
+      "type": "instance"
+    },
     "qplsbDqH": {
       "componentId": "RV1DOgzp",
       "index": "a004V",
@@ -176878,6 +179989,19 @@
         "display": "inline"
       },
       "type": "text"
+    },
+    "r0893nfq": {
+      "index": "a2",
+      "name": "Progress",
+      "parentId": "obZ0U2iY",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "r0HhmN7B": {
       "index": "a001",
@@ -177449,6 +180573,18 @@
         "top": 0
       },
       "type": "text"
+    },
+    "rAeBq13P": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "HqUow7r8",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
     },
     "rBCBUEJR": {
       "icon": "arrow-left",
@@ -182036,6 +185172,18 @@
       },
       "type": "frame"
     },
+    "sKsjLet2": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "t6klNIbf",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 4
+      },
+      "type": "frame"
+    },
     "sLAbRVWA": {
       "content": "12",
       "index": "a000",
@@ -183196,6 +186344,21 @@
       },
       "type": "text"
     },
+    "sfUMq1Xq": {
+      "index": "a1",
+      "name": "Nav item",
+      "parentId": "RsmieCW4",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.accent}",
+        "display": "flex",
+        "gap": 10,
+        "padding": "8px 10px"
+      },
+      "type": "frame"
+    },
     "sfegmQMz": {
       "index": "a004",
       "name": "Spacer",
@@ -183914,6 +187077,18 @@
       },
       "type": "text"
     },
+    "svoHITSE": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "MUrb9FQA",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "svre1Brm": {
       "content": "فالاسمُ يُعرَفُ: ",
       "index": "a000",
@@ -184156,6 +187331,18 @@
         "top": 0
       },
       "type": "text"
+    },
+    "szhBjwN1": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "W4xNJ8vQ",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
     },
     "szovE11P": {
       "content": "Matn al-Ājurrūmiyya",
@@ -184486,6 +187673,17 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "t6klNIbf": {
+      "index": "a0",
+      "name": "Header",
+      "parentId": "HSlpE1i4",
+      "style": {
+        "align-items": "flex-end",
+        "display": "flex",
+        "gap": 16
+      },
+      "type": "frame"
     },
     "t6ldwuXy": {
       "index": "a001",
@@ -185063,6 +188261,30 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "tGMbFIia": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "NWZszBeF",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
+      },
+      "type": "frame"
     },
     "tGNcRz8b": {
       "componentId": "mUTXOEWB",
@@ -186284,6 +189506,18 @@
         "width": 720
       },
       "type": "frame"
+    },
+    "tdk5QOO5": {
+      "content": "Resume reading",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "FG1mw76m",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
     },
     "tdvJjQgE": {
       "content": "، وسوف، وتاء التأنيث الساكن",
@@ -188097,6 +191331,17 @@
         "align-items": "center",
         "display": "flex",
         "gap": 8
+      },
+      "type": "frame"
+    },
+    "uDBIPJoz": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "kbo6TX3B",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
       },
       "type": "frame"
     },
@@ -192559,6 +195804,21 @@
       },
       "type": "text"
     },
+    "vVYRNw8E": {
+      "content": "متن الآجرومية",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "pUnRVmWQ",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 30,
+        "font-weight": 700,
+        "line-height": "48px",
+        "text-align": "right"
+      },
+      "type": "text"
+    },
     "vVtKVrCZ": {
       "css": "transform-origin: center;\ntransition:\n  scale {transition.duration-sweep} {ease.out},\n  opacity {transition.duration-sweep} {ease.out};\n\n@starting-style {\n  scale: 1 0;\n  opacity: 0;\n}\n\n*:hover > & {\n  scale: 1 1.25;\n}\n\n&[data-state=\"removed\"] {\n  scale: 1 0;\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n  transition-timing-function: {ease.in};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    scale: 1;\n  }\n}",
       "hidden": true,
@@ -192629,6 +195889,18 @@
         "display": "flex",
         "gap": 8,
         "padding": "4px 10px 20px"
+      },
+      "type": "frame"
+    },
+    "vXitSjI6": {
+      "css": "/* * Switching shelves (All | Reading | Finished): only this block moves. The\n * header and the tabs stay put, and the Segmented fill slides live.\n * Exit: the old shelf fades out quickly (page-out, 100ms ease-out) toward the\n * side it leaves: list-out-to-left going forward, list-out-to-right going back.\n * Entrance: the new shelf slides a short way in from the side of the picked tab\n * (220ms ease-out after 40ms). Forward, picking a tab to the right, comes in\n * from the right as played here; back uses page-in-from-left. */\nanimation: page-in-from-right 220ms var(--ease-out) 40ms both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: none;\n}",
+      "index": "a1",
+      "name": "Shelf content",
+      "parentId": "HSlpE1i4",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 28
       },
       "type": "frame"
     },
@@ -193027,6 +196299,20 @@
       },
       "type": "text"
     },
+    "vgJEDEwN": {
+      "content": "الأربعون النووية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "HqUow7r8",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "vgYnzo2u": {
       "componentId": "RV1DOgzp",
       "index": "a3",
@@ -193394,6 +196680,18 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "vnOuOjNv": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "jr8Flxa0",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
       },
       "type": "frame"
     },
@@ -193944,6 +197242,20 @@
       "parentId": "bOz6s4rz",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "vwS57uZ8": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "yr4ZzocQ",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -194782,6 +198094,18 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "wCKgv525": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "E80MYKse",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
     },
     "wClmFhmj": {
       "index": "a3V",
@@ -196781,6 +200105,18 @@
       },
       "type": "text"
     },
+    "wmypza6m": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "LBYqYP9T",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "wmz41Dss": {
       "content": "2",
       "index": "a0",
@@ -197701,6 +201037,17 @@
         "flex": 1
       },
       "type": "instance"
+    },
+    "x2v2Crk2": {
+      "index": "a3",
+      "name": "Meta row",
+      "parentId": "lk7CGHj3",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 16
+      },
+      "type": "frame"
     },
     "x2xpzb6Z": {
       "componentId": "RV1DOgzp",
@@ -200291,6 +203638,18 @@
       },
       "type": "text"
     },
+    "xm1MgMZY": {
+      "content": "Library",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "sfUMq1Xq",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
+    },
     "xmNZOqoc": {
       "content": "5",
       "index": "a000",
@@ -200834,6 +204193,17 @@
       },
       "type": "frame"
     },
+    "y0IBV0m0": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "fVVUwo3V",
+      "props": {
+        "label": "All",
+        "state": "selected"
+      },
+      "type": "instance"
+    },
     "y0KViCIp": {
       "componentId": "RV1DOgzp",
       "index": "a006V",
@@ -201017,6 +204387,19 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "y44D7cKF": {
+      "index": "a1",
+      "name": "Book · شرح ابن عقيل",
+      "parentId": "UdPhL2Dz",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "position": "relative",
+        "width": 168
+      },
+      "type": "frame"
     },
     "y4pTk1b5": {
       "content": "يصلحُ",
@@ -203005,6 +206388,18 @@
       },
       "type": "instance"
     },
+    "ygEqjiUK": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "Fm8AFP2Y",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
+    },
     "yh8fPgGg": {
       "index": "a004",
       "name": "Spacer",
@@ -203589,6 +206984,19 @@
       },
       "type": "frame"
     },
+    "yr4ZzocQ": {
+      "index": "a2",
+      "name": "Progress",
+      "parentId": "lk7CGHj3",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "yr4hM3BC": {
       "content": "My harakat",
       "index": "a0",
@@ -204025,6 +207433,32 @@
       },
       "type": "frame"
     },
+    "z0QShmA0": {
+      "index": "a2",
+      "name": "Footer",
+      "parentId": "CsMYt8A4",
+      "style": {
+        "border-top": "1px solid {color.line}",
+        "display": "flex",
+        "gap": "{spacing.2}",
+        "justify-content": "flex-end",
+        "padding": "{spacing.4} {spacing.6}"
+      },
+      "type": "frame"
+    },
+    "z0SRsbqn": {
+      "content": "Remove book?",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "1wwxVeUI",
+      "style": {
+        "color": "{color.ink}",
+        "font-size": "{text.lg}",
+        "font-weight": "{font-weight.semibold}",
+        "line-height": "28px"
+      },
+      "type": "text"
+    },
     "z0klCYet": {
       "index": "a001",
       "name": "TOC · مقدمة",
@@ -204203,6 +207637,22 @@
       "parentId": "8McyORh7",
       "style": {
         "width": "100%"
+      },
+      "type": "instance"
+    },
+    "z45gu7F7": {
+      "componentId": "K2A7iETC",
+      "index": "a2",
+      "name": "Toast",
+      "parentId": "CfhJlpfD",
+      "props": {
+        "label": "Removed شرح ابن عقيل"
+      },
+      "style": {
+        "bottom": "{spacing.6}",
+        "left": "50%",
+        "position": "absolute",
+        "translate": "-50% 0"
       },
       "type": "instance"
     },
@@ -205530,6 +208980,17 @@
       },
       "type": "instance"
     },
+    "zX0TUZwU": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "Fm8AFP2Y",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
+    },
     "zXEldwmu": {
       "index": "a001",
       "name": "TOC · مقدمة",
@@ -206543,6 +210004,20 @@
         "white-space": "pre"
       },
       "type": "frame"
+    },
+    "zqqMXBxd": {
+      "icon": "library-big",
+      "index": "a0",
+      "name": "Icon library-big",
+      "parentId": "hOvE5NxL",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 18,
+        "width": 18
+      },
+      "type": "icon"
     },
     "zr6Dje8e": {
       "index": "a1",
