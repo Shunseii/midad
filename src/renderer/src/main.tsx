@@ -27,6 +27,8 @@ window.midadEvents.onLibraryChanged(() => void queryClient.invalidateQueries({ q
 
 window.midadEvents.onSyncStatus((status) => queryClient.setQueryData(keys.syncStatus, status));
 
+window.midadEvents.onUpdateStatus((status) => queryClient.setQueryData(keys.updateStatus, status));
+
 passPressesThroughTransitions();
 dropFocusFromClickedControls();
 

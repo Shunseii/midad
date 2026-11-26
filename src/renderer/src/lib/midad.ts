@@ -17,6 +17,7 @@ export const keys = {
   settings: ["settings"] as const,
   syncSettings: ["sync", "settings"] as const,
   syncStatus: ["sync", "status"] as const,
+  updateStatus: ["update", "status"] as const,
   corpusBooks: ["corpus", "books"] as const,
   library: ["library"] as const,
   waiting: ["library", "elsewhere"] as const,
@@ -240,6 +241,19 @@ export const useDisconnectSync = () => {
     onSuccess: (settings) => client.setQueryData(keys.syncSettings, settings),
   });
 };
+
+/** The updater's status, kept current by the main process's pushes (see main.tsx). */
+export const useUpdateStatus = () => useQuery({ queryKey: keys.updateStatus, queryFn: () => midad["update.status"](), staleTime: Number.POSITIVE_INFINITY });
+
+export const useCheckForUpdates = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: () => midad["update.check"](),
+    onSuccess: (status) => client.setQueryData(keys.updateStatus, status),
+  });
+};
+
+export const useRestartToUpdate = () => useMutation({ mutationFn: () => midad["update.restart"]() });
 
 const LEGACY_PREFIX = "hamish.";
 try {

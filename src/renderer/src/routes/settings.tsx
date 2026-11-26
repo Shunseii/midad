@@ -1,4 +1,4 @@
-import { ArrowLeft, Brain, Check, ChevronsUpDown, KeyRound, Minus, Pencil, Plug, Plus, Search, Server, Trash2, TriangleAlert, X } from "lucide-react";
+import { ArrowLeft, Brain, Check, ChevronsUpDown, ExternalLink, KeyRound, Minus, Pencil, Plug, Plus, RotateCw, Search, Server, Trash2, TriangleAlert, X } from "lucide-react";
 import { Fragment, type ReactNode, useEffect, useId, useState } from "react";
 import { foldArabic } from "../../../shared/arabic";
 import type { Memory, MemoryType } from "../../../shared/memories";
@@ -14,7 +14,11 @@ import { ON_LAUNCH_PREF, type OnLaunch } from "../lib/launch";
 import type { SyncStatus } from "../../../shared/sync";
 import { useNow } from "../components/devices";
 import { plural, timeAgo } from "../lib/format";
-import { midad, useConnectSync, useDisconnectSync, useLibrary, useMemories, useRemoveMemory, useRestoreMemory, useSaveSettings, useSettings, useSyncSettings, useSyncStatus, useUpdateMemory } from "../lib/midad";
+import { midad, useCheckForUpdates, useConnectSync, useDisconnectSync, useLibrary, useMemories, useRemoveMemory, useRestoreMemory, useSaveSettings, useSettings, useSyncSettings, useSyncStatus, useUpdateMemory, useUpdateStatus } from "../lib/midad";
+import { RESTART_BLOCKED, useRestart } from "../components/updates";
+import { releaseNotesUrl } from "../../../shared/update";
+import { updateBadge, updateDetail } from "../lib/updates";
+import { Progress } from "../components/ui/progress";
 import { usePref } from "../lib/prefs";
 import { useKeybindings } from "../lib/use-keybindings";
 import type { ReaderState } from "./reader";
@@ -624,6 +628,53 @@ const MemorySection = () => {
   );
 };
 
+const Updates = () => {
+  const status = useUpdateStatus().data;
+  const check = useCheckForUpdates();
+  const restart = useRestart();
+  const now = useNow();
+  if (!status) return null;
+  const { phase } = status;
+  const badge = updateBadge({ status, now });
+  const busy = phase.kind === "idle" || phase.kind === "checking" || phase.kind === "downloading" || check.isPending;
+
+  return (
+    <Section title="Updates" description="New versions download in the background and install when you restart.">
+      <div className="flex flex-col gap-4 p-5" data-update-phase={phase.kind}>
+        <div className="flex flex-col gap-0.5">
+          <span className="text-sm font-medium">Midad {status.currentVersion}</span>
+          <span className="text-xs text-ink-3">{updateDetail({ status, now })}</span>
+        </div>
+        {phase.kind === "downloading" && (
+          <Progress value={phase.percent} aria-label="Download progress" className={cx(ENTER, "[&_[data-slot=progress-indicator]]:motion-reduce:transition-none")} />
+        )}
+        <div className="flex items-center gap-3">
+          <span key={badge.tone} className="animate-in fade-in-0 duration-pop ease-out" data-update-status>
+            <Badge tone={badge.tone} dot={phase.kind !== "managed"}>
+              {badge.label}
+            </Badge>
+          </span>
+          <div className="flex-1" />
+          <Button variant="ghost" icon={ExternalLink} onClick={() => window.open(releaseNotesUrl(status))}>
+            Release notes
+          </Button>
+          {phase.kind === "ready" ? (
+            <Button icon={RotateCw} disabled={status.restartBlocked} tooltip={status.restartBlocked ? RESTART_BLOCKED : undefined} onClick={restart} className={ENTER}>
+              Restart
+            </Button>
+          ) : (
+            phase.kind !== "managed" && (
+              <Button variant="secondary" disabled={busy} onClick={() => check.mutate()}>
+                {phase.kind === "error" ? "Try again" : "Check now"}
+              </Button>
+            )
+          )}
+        </div>
+      </div>
+    </Section>
+  );
+};
+
 /** Back to the book Settings was opened from, at the same page and scroll. Alt+Left, or Esc outside a field, does the same. */
 const BackToBook = ({ from }: { from: BookReturn }) => {
   const navigate = useNavigate();
@@ -685,6 +736,7 @@ export const SettingsRoute = () => {
       <MemorySection />
       <Corpus />
       <Devices />
+      <Updates />
     </div>
     </>
   );
