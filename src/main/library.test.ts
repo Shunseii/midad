@@ -411,3 +411,31 @@ describe("book index", () => {
   });
 });
 
+
+describe("unnamed library entries", () => {
+  const entryOf = (bookId: string) => openUserStore({ db }).row({ table: "library", id: bookId });
+
+  it("names an entry written without a title from the book's copy here, on the next start", async () => {
+    corpus.files = [file({ file_id: "f1", page_number: 1 })];
+    await library.importBook({ corpusBookId: "b1" });
+    const { store } = openUserStore({ db });
+    store.delCell("library", "b1", "title");
+    store.delCell("library", "b1", "author");
+    expect(entryOf("b1")?.title).toBeUndefined();
+
+    createLibrary({ db, corpus, now: () => 2000 });
+    expect(entryOf("b1")).toMatchObject({ title: "متن الآجرومية", author: "ابن آجروم" });
+  });
+
+  it("leaves a named entry and a book only on another device alone", async () => {
+    corpus.files = [file({ file_id: "f1", page_number: 1 })];
+    await library.importBook({ corpusBookId: "b1" });
+    const { store } = openUserStore({ db });
+    store.setCell("library", "b1", "title", "عنوان آخر");
+    store.setRow("library", "elsewhere", { addedAt: 5 });
+
+    createLibrary({ db, corpus, now: () => 2000 });
+    expect(entryOf("b1")?.title).toBe("عنوان آخر");
+    expect(entryOf("elsewhere")).toEqual({ addedAt: 5 });
+  });
+});

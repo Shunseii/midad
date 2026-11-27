@@ -20,7 +20,7 @@ import { parsePage } from "../shared/page";
 import type { CorpusSource } from "./corpus";
 import { tidyHarakat } from "./annotations";
 import { dropRemovedBook } from "./book-removal";
-import { migrateLegacyTable, openUserStore, textRev } from "./user-store";
+import { migrateLegacyTable, openUserStore, textRev, type UserStore } from "./user-store";
 
 /**
  * Midad's local library: imported books and their parsed pages. This is the
@@ -170,6 +170,24 @@ const legacyMembership = (db: DatabaseSync) =>
     at: b.imported_at,
   }));
 
+/**
+ * Names library entries that have no title, from the book's copy here. Builds before titles were
+ * synced entered books with only `addedAt`, and the migration that adds titles runs once, so
+ * those entries stayed unnamed on every device without the book's text.
+ */
+export const nameUnnamedEntries = ({ db, user }: { db: DatabaseSync; user: UserStore }): number => {
+  const books = db.prepare("SELECT book_id, title, author FROM books").all() as { book_id: string; title: string; author: string | null }[];
+  const unnamed = books.filter((b) => {
+    const entry = user.row({ table: "library", id: b.book_id });
+    return entry && typeof entry.title !== "string";
+  });
+  if (unnamed.length === 0) return 0;
+  user.store.transaction(() => {
+    for (const b of unnamed) user.store.setPartialRow("library", b.book_id, { title: b.title, ...(b.author ? { author: b.author } : {}) });
+  });
+  return unnamed.length;
+};
+
 const byCorpusOrder = (
   a: { number: number | null; orderHint: number | null; fileId: string },
   b: { number: number | null; orderHint: number | null; fileId: string },
@@ -208,6 +226,8 @@ export const createLibrary = ({
   db.exec(SCHEMA);
   migrateLegacyTable({ user, db, table: "progress", rows: () => legacyProgress(db) });
   migrateLegacyTable({ user, db, table: "books", rows: () => legacyMembership(db) });
+  nameUnnamedEntries({ db, user });
+  user.afterMerge({ name: "unnamed-books", hook: () => nameUnnamedEntries({ db, user }) });
 
   // A book removed on another device (or by a process that died before dropping its pages) leaves
   // its library entry deleted: its pages here go too, so it neither stays nor comes back as waiting.

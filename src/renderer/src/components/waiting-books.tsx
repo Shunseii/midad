@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import type { ImportProgress, WaitingBook } from "../../../shared/library";
 import { plural } from "../lib/format";
-import { useImportBook } from "../lib/midad";
+import { useCorpusBooks, useImportBook } from "../lib/midad";
 import { Button, Progress, cx } from "./ui";
 
 /** How long an imported row takes to fold away before the list drops it (duration-panel-exit). */
@@ -16,6 +16,12 @@ const FOLD_MS = 180;
  */
 export const WaitingBooks = ({ books, configured, onImported }: { books: WaitingBook[]; configured: boolean; onImported: (message: string) => void }) => {
   const importBook = useImportBook();
+  // Entries synced by older builds carry no title; the corpus still knows it.
+  const corpus = useCorpusBooks({ enabled: configured && books.some((b) => !b.title) });
+  const nameOf = (book: WaitingBook) => {
+    const listed = corpus.data?.find((c) => c.id === book.bookId);
+    return { title: book.title ?? listed?.workTitle ?? listed?.title ?? null, author: book.author ?? listed?.author ?? null };
+  };
   const [importing, setImporting] = useState<string | null>(null);
   const [queue, setQueue] = useState<string[]>([]);
   const [progress, setProgress] = useState<ImportProgress | null>(null);
@@ -43,7 +49,7 @@ export const WaitingBooks = ({ books, configured, onImported }: { books: Waiting
           setLeaving((list) => [...list, book]);
           setTimeout(() => setLeaving((list) => list.filter((b) => b.bookId !== book.bookId)), FOLD_MS);
         }
-        onImported(`Imported ${book?.title ?? "the book"}: ${plural({ count: result.imported, one: "page", many: "pages" })}`);
+        onImported(`Imported ${(book && nameOf(book).title) ?? "the book"}: ${plural({ count: result.imported, one: "page", many: "pages" })}`);
       },
       onError: () => setQueue([]),
       onSettled: () => setImporting(null),
@@ -109,8 +115,8 @@ export const WaitingBooks = ({ books, configured, onImported }: { books: Waiting
                 )}
               </div>
               <div className="flex min-w-0 flex-1 flex-col items-end gap-0.5 text-right">
-                <span className="ar text-ar-body font-bold">{book.title ?? book.bookId}</span>
-                {book.author && <span className="ar text-ar-small text-ink-2">{book.author}</span>}
+                <span className="ar text-ar-body font-bold">{nameOf(book).title ?? book.bookId}</span>
+                {nameOf(book).author && <span className="ar text-ar-small text-ink-2">{nameOf(book).author}</span>}
               </div>
             </div>
           );
