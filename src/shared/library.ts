@@ -34,6 +34,8 @@ export interface LibraryBook {
   pageCount: number;
   importedAt: number;
   syncedAt: number;
+  /** When the reader pinned the book to the top of the shelf; null when it isn't pinned. Synced between devices. */
+  pinnedAt: number | null;
   progress: ReadingProgress | null;
 }
 

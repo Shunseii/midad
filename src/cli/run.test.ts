@@ -327,3 +327,24 @@ describe("book remove", () => {
     expect(stdout).toMatch(/Library management \(not for agents\)\n {2}midad book remove <book> \[--yes\]/);
   });
 });
+
+describe("book pin and unpin", () => {
+  const shelf = async () => (JSON.parse((await run("books", "--json")).stdout) as { bookId: string; pinnedAt: number | null }[]).map((b) => [b.bookId, b.pinnedAt !== null]);
+
+  it("pins a book to the top of the list, and unpins it", async () => {
+    const before = await shelf();
+    const last = before.at(-1)?.[0];
+    const lastTitle = last === "b1" ? "الآجرومية" : "دروس البلاغة";
+    expect((await run("book", "pin", String(last))).stdout).toBe(`Pinned ${lastTitle} (${last}).\n`);
+    expect((await shelf())[0]).toEqual([last, true]);
+    expect((await run("book", "unpin", String(last), "--json")).stdout).toContain('"pinned": false');
+    expect(await shelf()).toEqual(before);
+  });
+
+  it("refuses inside Ask AI", async () => {
+    const { code, stderr } = await runIn({ currentBook: "b1", argv: ["book", "pin", "b2"] });
+    expect(code).toBe(1);
+    expect(stderr).toContain("Ask AI can't pin books");
+    expect((await shelf()).every(([, pinned]) => !pinned)).toBe(true);
+  });
+});

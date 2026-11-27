@@ -1,6 +1,6 @@
 import { Menu } from "@base-ui/react/menu";
-import { BookOpen, Download, Ellipsis, RefreshCw, Search, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { BookOpen, Download, Ellipsis, Pin, PinOff, RefreshCw, Search, Trash2 } from "lucide-react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Button as ButtonBase } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router";
@@ -9,10 +9,10 @@ import { BookCover, markOpeningCover, useClosingCover } from "../components/book
 import { ImportDialog } from "../components/import-dialog";
 import { RemoveBookDialog } from "../components/remove-book-dialog";
 import { SyncDialog } from "../components/sync-dialog";
-import { Button, cx, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
+import { Button, cx, IconButton, Progress, Segmented, Skeleton, TextField, Toast } from "../components/ui";
 import { plural, timeAgo } from "../lib/format";
 import { WaitingBooks } from "../components/waiting-books";
-import { keys, useLibrary, useSettings, useWaitingBooks } from "../lib/midad";
+import { keys, useLibrary, useSetPinned, useSettings, useWaitingBooks } from "../lib/midad";
 import { switchListInTransition } from "../lib/view-transition";
 
 type Shelf = "all" | "reading" | "finished";
@@ -28,10 +28,49 @@ const isFinished = (b: LibraryBook) => b.progress !== null && b.progress.positio
 /** How long a removed book's card takes to fold away before the shelf drops it (duration-panel-exit). */
 const FOLD_MS = 180;
 
+/** The longest a pin's view transition waits for the reordered shelf before it plays anyway. */
+const REORDER_WAIT_MS = 1000;
+
+/**
+ * Runs a change that reorders the shelf inside a view transition, so each card glides to its new
+ * place (see "Reordering the shelf" in styles.css). The new snapshot is taken once the refetched
+ * books have rendered.
+ */
+const useShelfReorder = (books: LibraryBook[]) => {
+  const rendered = useRef<(() => void) | null>(null);
+  useLayoutEffect(() => {
+    rendered.current?.();
+    rendered.current = null;
+  }, [books]);
+  return (change: () => Promise<unknown>): Promise<unknown> => {
+    if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) return change();
+    const root = document.documentElement;
+    root.dataset.reorder = "library";
+    let result: Promise<unknown> = Promise.resolve();
+    const transition = document.startViewTransition(
+      () =>
+        new Promise<void>((resolve) => {
+          rendered.current = resolve;
+          result = change();
+          result.catch(() => resolve());
+          setTimeout(resolve, REORDER_WAIT_MS);
+        }),
+    );
+    void transition.finished.finally(() => delete root.dataset.reorder);
+    return transition.updateCallbackDone.then(() => result);
+  };
+};
+
 const MENU_ITEM = "flex cursor-default items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm outline-hidden transition-colors duration-press ease-out select-none data-highlighted:bg-surface-2 [&_svg]:size-4 [&_svg]:shrink-0";
 
 /** A book's actions, from the button on its card. */
-const BookMenu = ({ book, onSync, onRemove }: { book: LibraryBook; onSync: () => void; onRemove: () => void }) => (
+interface BookActions {
+  onTogglePin: () => void;
+  onSync: () => void;
+  onRemove: () => void;
+}
+
+const BookMenu = ({ book, onTogglePin, onSync, onRemove }: BookActions & { book: LibraryBook }) => (
   <Menu.Root modal={false}>
     <Menu.Trigger
       render={<ButtonBase variant="outline" size="icon" aria-label={`Actions for ${book.title}`} data-book-actions />}
@@ -45,6 +84,10 @@ const BookMenu = ({ book, onSync, onRemove }: { book: LibraryBook; onSync: () =>
           aria-label="Book actions"
           className="flex w-55 origin-(--transform-origin) flex-col gap-0.5 rounded-xl bg-surface-3 p-1 text-ink shadow-float outline-hidden duration-pop ease-out data-closed:duration-pop-exit data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 motion-reduce:data-open:zoom-in-100 motion-reduce:data-closed:zoom-out-100"
         >
+          <Menu.Item onClick={onTogglePin} data-pin-item className={cx(MENU_ITEM, "[&_svg]:text-ink-2")}>
+            {book.pinnedAt === null ? <Pin aria-hidden /> : <PinOff aria-hidden />}
+            {book.pinnedAt === null ? "Pin to top" : "Unpin"}
+          </Menu.Item>
           <Menu.Item onClick={onSync} className={cx(MENU_ITEM, "[&_svg]:text-ink-2")}>
             <RefreshCw aria-hidden />
             Sync with corpus…
@@ -60,11 +103,14 @@ const BookMenu = ({ book, onSync, onRemove }: { book: LibraryBook; onSync: () =>
   </Menu.Root>
 );
 
-const BookCard = ({ book, leaving, onSync, onRemove }: { book: LibraryBook; leaving: boolean; onSync: () => void; onRemove: () => void }) => {
+const BookCard = ({ book, leaving, onTogglePin, onSync, onRemove }: BookActions & { book: LibraryBook; leaving: boolean }) => {
   const position = book.progress?.position ?? 0;
+  const pinned = book.pinnedAt !== null;
   return (
     <div
       data-book={book.bookId}
+      data-shelf-card
+      data-pinned={pinned || undefined}
       data-state={leaving ? "leaving" : undefined}
       className="group relative flex flex-col gap-3 transition-[opacity,scale] duration-panel-exit ease-out data-[state=leaving]:scale-95 data-[state=leaving]:opacity-0 motion-reduce:data-[state=leaving]:scale-100"
     >
@@ -77,7 +123,21 @@ const BookCard = ({ book, leaving, onSync, onRemove }: { book: LibraryBook; leav
       >
         <BookCover title={book.title} author={[book.author, book.edition].filter(Boolean).join(" · ") || null} size="sm" />
       </Link>
-      <BookMenu book={book} onSync={onSync} onRemove={onRemove} />
+      <IconButton
+        icon={Pin}
+        label={pinned ? "Unpin" : "Pin to top"}
+        variant="outline"
+        selected={pinned}
+        aria-label={`Pin ${book.title}`}
+        aria-pressed={pinned}
+        data-pin-toggle
+        onClick={onTogglePin}
+        className={cx(
+          "absolute top-3 left-3 transition-[opacity,background-color,color] [&_svg]:transition-[rotate] [&_svg]:duration-pop [&_svg]:ease-out hover:[&_svg]:-rotate-12 motion-reduce:hover:[&_svg]:rotate-0",
+          pinned ? "border-accent-soft" : "opacity-0 group-hover:opacity-100 focus-visible:opacity-100",
+        )}
+      />
+      <BookMenu book={book} onTogglePin={onTogglePin} onSync={onSync} onRemove={onRemove} />
       <Progress value={book.pageCount ? position / book.pageCount : 0} />
       <span className="flex justify-between text-xs text-ink-3">
         <span>{position ? `Page ${position} of ${book.pageCount}` : "Not started"}</span>
@@ -140,7 +200,21 @@ export const LibraryRoute = () => {
   const [toast, setToast] = useState<string | null>(null);
 
   const books = library.data ?? [];
-  const continueBook = books.find((b) => b.progress !== null && !isFinished(b));
+  // Pinned books lead the list, so the book read last is found by when it was read, not by its place.
+  const continueBook = books
+    .filter((b) => b.progress !== null && !isFinished(b))
+    .reduce<LibraryBook | undefined>((latest, b) => ((b.progress?.updatedAt ?? 0) > (latest?.progress?.updatedAt ?? -Infinity) ? b : latest), undefined);
+  const setPinned = useSetPinned();
+  const reorder = useShelfReorder(books);
+  const togglePin = (book: LibraryBook) => {
+    const pinned = book.pinnedAt === null;
+    reorder(() => setPinned.mutateAsync({ bookId: book.bookId, pinned }))
+      .then(() => {
+        // Moving a card in the shelf drops the focus inside it; keyboard users land back on its pin.
+        if (document.activeElement === document.body) document.querySelector<HTMLElement>(`[data-shelf-card][data-book="${CSS.escape(book.bookId)}"] [data-pin-toggle]`)?.focus();
+      })
+      .catch((err: unknown) => setToast(`Couldn't ${pinned ? "pin" : "unpin"} ${book.title}: ${err instanceof Error ? err.message : String(err)}`));
+  };
   const configured = Boolean(settings.data?.endpoint && settings.data.hasKey);
 
   const shown = useMemo(() => {
@@ -223,7 +297,14 @@ export const LibraryRoute = () => {
           ) : (
             <div className="grid grid-cols-shelf gap-6">
               {shown.map((b) => (
-                <BookCard key={b.bookId} book={b} leaving={leaving === b.bookId} onSync={() => setSyncing(b)} onRemove={() => setRemoving(b)} />
+                <BookCard
+                  key={b.bookId}
+                  book={b}
+                  leaving={leaving === b.bookId}
+                  onTogglePin={() => togglePin(b)}
+                  onSync={() => setSyncing(b)}
+                  onRemove={() => setRemoving(b)}
+                />
               ))}
             </div>
           )}

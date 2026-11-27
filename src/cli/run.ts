@@ -58,6 +58,9 @@ Library management (not for agents)
   midad book remove <book> [--yes]              Remove the book, its pages and everything about it,
                                                 on every synced device. Without --yes, only lists
                                                 what would go. Can't be undone; the corpus keeps it.
+  midad book pin <book>                         Pin the book to the top of the library, on every
+                                                synced device
+  midad book unpin <book>                       Unpin it
 
 <book> is a book id, the start of one, or part of its title. <page> is the page's
 position in the book (1 = first page), as shown in the reader's pager.
@@ -442,6 +445,16 @@ export const runCli = async ({
         }
         const removed = await removal.remove({ bookId: book.bookId });
         done(`Removed ${name}: ${what(removed)}.`, { removed: true, ...removed });
+        return 0;
+      }
+      case "book pin":
+      case "book unpin": {
+        const pinned = a === "pin";
+        if (currentBook) throw new Error("Ask AI can't pin books. The reader pins them in the Library.");
+        if (!b) throw new UsageError(`Name the book to ${a}: midad book ${a} <book>.`);
+        const book = await finder.findBook(b);
+        await library.setPinned({ bookId: book.bookId, pinned });
+        done(`${pinned ? "Pinned" : "Unpinned"} ${book.title} (${book.bookId}).`, { bookId: book.bookId, pinned });
         return 0;
       }
       case "memory delete":

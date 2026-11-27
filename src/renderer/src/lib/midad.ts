@@ -105,6 +105,15 @@ export const useSyncBook = () => {
   });
 };
 
+/** Pins or unpins a book; resolves once the library has been refetched in its new order. */
+export const useSetPinned = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { bookId: string; pinned: boolean }) => midad["library.setPinned"](input),
+    onSettled: () => client.invalidateQueries({ queryKey: keys.library }),
+  });
+};
+
 /** What removing a book would delete, counted fresh each time the dialog opens. */
 export const useRemovalPreview = (bookId: string) =>
   useQuery({ queryKey: ["library", bookId, "removal"], queryFn: () => midad["library.removalPreview"]({ bookId }), gcTime: 0 });

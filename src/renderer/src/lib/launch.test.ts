@@ -10,6 +10,7 @@ const book = ({ bookId, progress }: { bookId: string; progress: ReadingProgress 
   pageCount: 10,
   importedAt: 0,
   syncedAt: 0,
+  pinnedAt: null,
   progress,
 });
 

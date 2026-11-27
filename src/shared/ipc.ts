@@ -54,6 +54,8 @@ export interface MidadApi {
   /** What removing the book would delete, or null when it isn't in the library. */
   "library.removalPreview": (input: { bookId: string }) => Promise<BookRemoval | null>;
   "library.remove": (input: { bookId: string }) => Promise<BookRemoval>;
+  /** Pins the book to the top of the shelf, or unpins it, on every synced device. */
+  "library.setPinned": (input: { bookId: string; pinned: boolean }) => Promise<void>;
   "annotations.list": (input: { bookId: string; position: number }) => Promise<PageAnnotations>;
   "annotations.bookMarks": (input: { bookId: string }) => Promise<BookMarks>;
   "highlights.add": (input: { bookId: string; position: number; span: Span; color: HighlightColor }) => Promise<Highlight>;
@@ -145,6 +147,7 @@ export const CHANNELS = [
   "library.firstLine",
   "library.removalPreview",
   "library.remove",
+  "library.setPinned",
   "annotations.list",
   "annotations.bookMarks",
   "highlights.add",

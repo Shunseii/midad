@@ -81,6 +81,7 @@ These steps take a fresh Windows or Linux computer to a working Midad that syncs
 - **Syncing is explicit.** For an imported book you can pull pages the corpus has gained since import (existing pages are left alone), or overwrite chosen pages with the corpus's current text. Pages the corpus hasn't finished transcribing are skipped and counted as pending.
 - **Devices keep your own data in step.** Highlights, notes, harakat, bookmarks, reading places, Ask AI conversations and what Ask AI remembers about you sync between your devices through a small server (`sync-server/`, a Cloudflare Worker). Book text doesn't sync; each device imports its books from the corpus, and books another device has imported show up as waiting. Connect a device in Settings → Devices. Where the server and its token live: [sync-server/README.md](sync-server/README.md#production).
 - **Removing a book takes everything about it.** "Remove book…" in a book's menu on the Library (or `midad book remove <book> --yes`) deletes its pages and scans and every highlight, note, harakat mark, bookmark, reading place, Ask AI conversation and book memory tied to it, on every synced device. Global memories and the corpus are left alone, and importing it again starts fresh. Ask AI never removes books.
+- **Pinned books stay at the top of the Library.** The pin on a book's cover (it shows on hover or focus) or "Pin to top" in its menu keeps it ahead of the unpinned books, on every synced device. Pinned books keep the shelf's usual last-opened order among themselves; Continue reading still shows the book read last. Removing a book drops its pin.
 - **Pages:** Library, Reader and Settings. There is no search page and no page that lists every note.
 - **Page text is the matn, the ḥāshiya and their glosses.** Corpus pages are markdown: the matn first, then `---` and a `### الحاشية` heading before the footnotes. Interlinear glosses (small text written between the lines) come as `<ruby>base<rt>gloss</rt></ruby>`. Midad keeps the base words in the text and attaches each gloss to the words it explains. The reader prints glosses small under their words, shows them on hover, or hides them (a setting). Highlights, notes and harakat are positioned against the text without the glosses. `midad page` returns the same text, with each line's glosses listed under it.
 - **Highlights and notes are separate.** A highlight is a colour on a range of text. A note is text anchored to a word or phrase, shown with a dotted underline. Hovering the anchor opens a popover above or below it, where the note is edited directly and saves itself. A note can also cover a whole line (shown by the line's number) or the whole page.
@@ -165,6 +166,7 @@ midad page الآجرومية 3 --words                  # numbered lines, numbe
 midad note add الآجرومية 3 --line 2 --words 4-5 --body "…"
 midad harakat set الآجرومية 3 --line 2 --word 3 --letter 4 --marks shadda+fatha
 midad book remove الآجرومية                    # lists what would go; add --yes to remove it
+midad book pin الآجرومية                       # keeps it at the top of the library; book unpin undoes it
 midad --help
 ```
 
