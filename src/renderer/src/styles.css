@@ -631,6 +631,35 @@ body {
   }
 }
 
+/*
+ * Reordering the shelf (pinning or unpinning a book, data-reorder): each shelf
+ * card glides to its new place while everything else changes in place, and a
+ * newly set pin drops in.
+ */
+:root[data-reorder="library"] [data-shelf-card] {
+  view-transition-name: match-element;
+  view-transition-class: book-card;
+}
+:root[data-reorder]::view-transition-old(root) {
+  display: none;
+}
+:root[data-reorder]::view-transition-new(root) {
+  animation: none;
+}
+::view-transition-group(*.book-card) {
+  animation-duration: var(--transition-duration-slide);
+  animation-timing-function: var(--ease-move);
+}
+:root[data-reorder] [data-pinned] [data-pin-toggle] svg {
+  animation: pin-set var(--transition-duration-panel) var(--ease-out);
+}
+@keyframes pin-set {
+  from {
+    rotate: -45deg;
+    scale: 0.6;
+  }
+}
+
 @keyframes page-out {
   to {
     opacity: 0;

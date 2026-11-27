@@ -1,6 +1,6 @@
 {
   "$schema": "https://lamsa.dev/schema/v1.json",
-  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%, 60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n@keyframes marker-sweep {\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes marker-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes page-out {\n  to {\n    opacity: 0;\n  }\n}\n\n@keyframes page-in-forward {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes page-in-back {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-in-from-right {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes cover-content-in {\n  0%, 30% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 180ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-old(reader-page) {\n  animation-name: page-out;\n  animation-duration: 90ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-forward;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-back;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n::view-transition-group(page-counter) {\n  animation-duration: 0s;\n}\n\n::view-transition-old(page-counter) {\n  display: none;\n}\n\n::view-transition-new(page-counter) {\n  animation: none;\n}\n\n::view-transition-group(book-cover) {\n  animation-duration: 420ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n}\n\n::view-transition-new(book-cover) {\n  animation-name: cover-content-in;\n  animation-duration: 420ms;\n}\n\n::view-transition-group(book-cover.closing) {\n  animation-duration: 360ms;\n}\n/* Opening: the old cover fades quickly so it never looks stretched as it grows. */\n\n::view-transition-old(book-cover) {\n  animation-name: page-out;\n  animation-duration: 160ms;\n  animation-timing-function: ease-out;\n  animation-fill-mode: both;\n}\n\n::view-transition-old(book-cover.closing) {\n  animation-name: page-out;\n  animation-duration: 160ms;\n  animation-timing-function: ease-out;\n  animation-fill-mode: both;\n}\n\n::view-transition-new(book-cover.closing) {\n  animation-duration: 360ms;\n}\n\n::view-transition-old(page-scrubber.closing) {\n  animation-name: page-out;\n  animation-duration: 120ms;\n  animation-timing-function: ease-out;\n  animation-fill-mode: both;\n}\n\n::view-transition-old(page-counter.closing) {\n  display: block;\n  animation-name: page-out;\n  animation-duration: 120ms;\n  animation-timing-function: ease-out;\n  animation-fill-mode: both;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  :active-view-transition-type(forward)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  :active-view-transition-type(back)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  ::view-transition-group(book-cover) {\n    animation-duration: 0s;\n  }\n\n  ::view-transition-group(book-cover.closing) {\n    animation-duration: 0s;\n  }\n}\n\n@property --fade-top {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@property --fade-bottom {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@keyframes gloss-fade {\n  from {\n    --fade-top: 0px;\n    --fade-bottom: 1.5rem;\n  }\n\n  to {\n    --fade-top: 1.5rem;\n    --fade-bottom: 0px;\n  }\n}\n\n@keyframes footnote-reveal {\n  0%, 60% {\n    background-color: var(--color-accent-soft);\n  }\n\n  100% {\n    background-color: transparent;\n  }\n}\n\n@keyframes screen-in-forward {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes screen-in-back {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes screen-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes bookmark-pop {\n  0% {\n    scale: 1;\n  }\n\n  40% {\n    scale: 1.2;\n  }\n\n  100% {\n    scale: 1;\n  }\n}\n\n@keyframes fade-in {\n  from {\n    opacity: 0;\n  }\n\n  to {\n    opacity: 1;\n  }\n}\n\n@keyframes copied-flash {\n  from {\n    opacity: 0;\n    translate: -50% 3px;\n  }\n}\n\n@keyframes copied-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes answer-stream {\n  from {\n    clip-path: inset(0 0 100% 0);\n  }\n\n  to {\n    clip-path: inset(0);\n  }\n}\n\n@keyframes page-note-settle {\n  from {\n    scale: 0.98;\n    background-color: color-mix(in oklab, var(--color-accent) 22%, transparent);\n  }\n}\n\n@keyframes page-note-wash {\n  from {\n    background-color: color-mix(in oklab, var(--color-accent) 22%, transparent);\n  }\n}",
+  "css": "@keyframes blink {\n  50% {\n    opacity: 0;\n  }\n}\n\n@keyframes reveal {\n  0%, 60% {\n    background: var(--color-accent-soft);\n    box-shadow: 0 0 0 0.75rem var(--color-accent-soft);\n  }\n\n  to {\n    background: transparent;\n    box-shadow: 0 0 0 0.75rem transparent;\n  }\n}\n\n@keyframes marker-sweep {\n  to {\n    background-size: 100% 100%;\n  }\n}\n\n@keyframes marker-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes page-out {\n  to {\n    opacity: 0;\n  }\n}\n\n@keyframes page-in-forward {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes page-in-back {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-in-from-right {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes page-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes cover-content-in {\n  0%, 30% {\n    opacity: 0;\n  }\n}\n\n::view-transition-group(root) {\n  animation-duration: 180ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-group(reader-page) {\n  animation-duration: 200ms;\n  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);\n}\n\n::view-transition-old(reader-page) {\n  animation-name: page-out;\n  animation-duration: 90ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(forward)::view-transition-new(reader-page) {\n  animation-name: page-in-forward;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n:active-view-transition-type(back)::view-transition-new(reader-page) {\n  animation-name: page-in-back;\n  animation-delay: 40ms;\n  animation-fill-mode: both;\n}\n\n::view-transition-group(page-counter) {\n  animation-duration: 0s;\n}\n\n::view-transition-old(page-counter) {\n  display: none;\n}\n\n::view-transition-new(page-counter) {\n  animation: none;\n}\n\n::view-transition-group(book-cover) {\n  animation-duration: 420ms;\n  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);\n}\n\n::view-transition-new(book-cover) {\n  animation-name: cover-content-in;\n  animation-duration: 420ms;\n}\n\n::view-transition-group(book-cover.closing) {\n  animation-duration: 360ms;\n}\n/* Opening: the old cover fades quickly so it never looks stretched as it grows. */\n\n::view-transition-old(book-cover) {\n  animation-name: page-out;\n  animation-duration: 160ms;\n  animation-timing-function: ease-out;\n  animation-fill-mode: both;\n}\n\n::view-transition-old(book-cover.closing) {\n  animation-name: page-out;\n  animation-duration: 160ms;\n  animation-timing-function: ease-out;\n  animation-fill-mode: both;\n}\n\n::view-transition-new(book-cover.closing) {\n  animation-duration: 360ms;\n}\n\n::view-transition-old(page-scrubber.closing) {\n  animation-name: page-out;\n  animation-duration: 120ms;\n  animation-timing-function: ease-out;\n  animation-fill-mode: both;\n}\n\n::view-transition-old(page-counter.closing) {\n  display: block;\n  animation-name: page-out;\n  animation-duration: 120ms;\n  animation-timing-function: ease-out;\n  animation-fill-mode: both;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  :active-view-transition-type(forward)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  :active-view-transition-type(back)::view-transition-new(reader-page) {\n    animation-name: page-fade-in;\n  }\n\n  ::view-transition-group(book-cover) {\n    animation-duration: 0s;\n  }\n\n  ::view-transition-group(book-cover.closing) {\n    animation-duration: 0s;\n  }\n}\n\n@property --fade-top {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@property --fade-bottom {\n  syntax: \"<length>\";\n  inherits: false;\n  initial-value: 0px;\n}\n\n@keyframes gloss-fade {\n  from {\n    --fade-top: 0px;\n    --fade-bottom: 1.5rem;\n  }\n\n  to {\n    --fade-top: 1.5rem;\n    --fade-bottom: 0px;\n  }\n}\n\n@keyframes footnote-reveal {\n  0%, 60% {\n    background-color: var(--color-accent-soft);\n  }\n\n  100% {\n    background-color: transparent;\n  }\n}\n\n@keyframes screen-in-forward {\n  from {\n    opacity: 0;\n    translate: 1.5rem 0;\n  }\n}\n\n@keyframes screen-in-back {\n  from {\n    opacity: 0;\n    translate: -1.5rem 0;\n  }\n}\n\n@keyframes screen-fade-in {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes bookmark-pop {\n  0% {\n    scale: 1;\n  }\n\n  40% {\n    scale: 1.2;\n  }\n\n  100% {\n    scale: 1;\n  }\n}\n\n@keyframes fade-in {\n  from {\n    opacity: 0;\n  }\n\n  to {\n    opacity: 1;\n  }\n}\n\n@keyframes copied-flash {\n  from {\n    opacity: 0;\n    translate: -50% 3px;\n  }\n}\n\n@keyframes copied-fade {\n  from {\n    opacity: 0;\n  }\n}\n\n@keyframes answer-stream {\n  from {\n    clip-path: inset(0 0 100% 0);\n  }\n\n  to {\n    clip-path: inset(0);\n  }\n}\n\n@keyframes page-note-settle {\n  from {\n    scale: 0.98;\n    background-color: color-mix(in oklab, var(--color-accent) 22%, transparent);\n  }\n}\n\n@keyframes page-note-wash {\n  from {\n    background-color: color-mix(in oklab, var(--color-accent) 22%, transparent);\n  }\n}\n\n@keyframes pin-set {\n  from {\n    rotate: -45deg;\n    scale: 0.6;\n  }\n}\n\n::view-transition-group(*.book-card) {\n  animation-duration: 280ms;\n  animation-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);\n}",
   "nodes": {
     "00B6kK3O": {
       "index": "a1",
@@ -975,6 +975,19 @@
       },
       "type": "text"
     },
+    "0Fx8VWti": {
+      "css": "/* When a pin or unpin reorders the shelf, each card glides to its new place (a view transition per card). */\nview-transition-class: book-card;",
+      "index": "a0",
+      "name": "Book · متن الآجرومية",
+      "parentId": "42xXpSE9",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
+    },
     "0GrMn5ot": {
       "index": "a1",
       "name": "Progress",
@@ -1557,6 +1570,20 @@
         "padding": "4px 10px"
       },
       "type": "frame"
+    },
+    "0PL2YFaJ": {
+      "content": "ابن عقيل على ألفية ابن مالك",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "zNOSv8rP",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "0PYqyHO2": {
       "content": "Scan",
@@ -8650,6 +8677,25 @@
       },
       "type": "frame"
     },
+    "2TlNyyfm": {
+      "componentId": "NpoaMS1Y",
+      "index": "Zz",
+      "name": "Pin to top",
+      "overrides": {
+        "l23Gt34i": {
+          "icon": "pin"
+        }
+      },
+      "parentId": "OqR3MJsP",
+      "props": {
+        "label": "Pin to top",
+        "withHint": "no"
+      },
+      "style": {
+        "width": "100%"
+      },
+      "type": "instance"
+    },
     "2TuzbD6b": {
       "content": "والفعلُ يُعرَفُ: ب",
       "index": "a000",
@@ -10570,6 +10616,30 @@
         "top": 11,
         "translate": "50% 0",
         "width": 1
+      },
+      "type": "frame"
+    },
+    "2yz41qJN": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "0Fx8VWti",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
       },
       "type": "frame"
     },
@@ -14386,6 +14456,16 @@
       },
       "type": "text"
     },
+    "42xXpSE9": {
+      "index": "a3",
+      "name": "Shelf",
+      "parentId": "sLyXhJSv",
+      "style": {
+        "display": "flex",
+        "gap": 28
+      },
+      "type": "frame"
+    },
     "43EAgjoo": {
       "css": "view-transition-name: reader-header;",
       "index": "a000",
@@ -16432,6 +16512,19 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "4bYXSwIi": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "0Fx8VWti",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "4cCM1cgl": {
       "index": "Za000",
@@ -18667,6 +18760,18 @@
       },
       "type": "frame"
     },
+    "5Dk7GdIP": {
+      "content": "Midad",
+      "index": "a1",
+      "name": "Name",
+      "parentId": "Qdwrk5iq",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 17,
+        "font-weight": 600
+      },
+      "type": "text"
+    },
     "5E3Vmys3": {
       "index": "Za000",
       "name": "Line number",
@@ -20451,6 +20556,18 @@
       },
       "type": "frame"
     },
+    "5kTn76cK": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "uIQUidq1",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "5kc4stJC": {
       "content": "وأقسامُه ثلاثةٌ: ",
       "index": "a1",
@@ -21422,6 +21539,18 @@
       },
       "type": "frame"
     },
+    "64IRMJFx": {
+      "content": "37 of 412",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "tBgefGG5",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
     "64ZkgYoC": {
       "content": "بابُ الأفعالِ",
       "index": "a1",
@@ -21457,6 +21586,20 @@
         "font-weight": 600
       },
       "type": "text"
+    },
+    "65Jr8KYf": {
+      "index": "a1",
+      "name": "Content",
+      "parentId": "o5B6IxTT",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 28,
+        "overflow": "hidden",
+        "padding": "40px 48px"
+      },
+      "type": "frame"
     },
     "65mjKiaR": {
       "index": "a9",
@@ -26911,6 +27054,22 @@
       },
       "type": "frame"
     },
+    "7bl5EN4r": {
+      "index": "a0",
+      "name": "Sidebar",
+      "parentId": "o5B6IxTT",
+      "style": {
+        "background": "{color.surface-2}",
+        "border-right": "1px solid {color.line}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 4,
+        "padding": "20px 16px",
+        "width": 248
+      },
+      "type": "frame"
+    },
     "7btVSDJk": {
       "index": "a001",
       "name": "Spacer",
@@ -26994,6 +27153,19 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "7d1A2HAZ": {
+      "content": "Library",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "BO5UpZ2J",
+      "style": {
+        "font-family": "{font.display}",
+        "font-size": 32,
+        "font-weight": 600,
+        "line-height": "40px"
       },
       "type": "text"
     },
@@ -27187,6 +27359,18 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "7gP0k8Hw": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "rbXBP677",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
     },
     "7gyJdvXI": {
       "css": "view-transition-name: reader-header;",
@@ -27719,6 +27903,21 @@
         "right": "7.58%",
         "translate": "50% 0",
         "width": 5
+      },
+      "type": "frame"
+    },
+    "7pDKDvxv": {
+      "css": "/* The selected fill slides between tabs (Tabs.Indicator, 280ms ease-move). Switching shelves moves only the Shelf content below. */",
+      "index": "a2",
+      "name": "Segmented control",
+      "parentId": "wRPYJfVA",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": 8,
+        "display": "flex",
+        "gap": 2,
+        "padding": 3
       },
       "type": "frame"
     },
@@ -28362,6 +28561,20 @@
       },
       "type": "frame"
     },
+    "82gi0O14": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "4bYXSwIi",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "82itmSUg": {
       "componentId": "uJd03iQq",
       "index": "a0",
@@ -28685,6 +28898,17 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "897fwCkY": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "8VZXTfWN",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
     },
     "89fY5LvI": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
@@ -29844,6 +30068,30 @@
         "position": "relative",
         "user-select": "none",
         "width": 0
+      },
+      "type": "frame"
+    },
+    "8VZXTfWN": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "tBgefGG5",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
       },
       "type": "frame"
     },
@@ -32829,6 +33077,17 @@
       },
       "type": "frame"
     },
+    "9JrObUT7": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "rbXBP677",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
+    },
     "9KCJrsgq": {
       "content": "1",
       "index": "a000",
@@ -34158,6 +34417,17 @@
       },
       "type": "text"
     },
+    "9mPYGnVj": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "2yz41qJN",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
+    },
     "9mU9mEB9": {
       "componentId": "RV1DOgzp",
       "index": "a1",
@@ -35217,6 +35487,20 @@
       },
       "type": "frame"
     },
+    "A4l5LGOA": {
+      "icon": "book-open",
+      "index": "a0",
+      "name": "Icon book-open",
+      "parentId": "hfjEljUt",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "flex-shrink": 0,
+        "height": 16,
+        "width": 16
+      },
+      "type": "icon"
+    },
     "A5FlepdA": {
       "index": "a1",
       "name": "Field",
@@ -35633,6 +35917,17 @@
       },
       "type": "frame"
     },
+    "ABpu5mfu": {
+      "componentId": "46QiZLNZ",
+      "index": "a2",
+      "name": "Segment",
+      "parentId": "7pDKDvxv",
+      "props": {
+        "label": "Finished",
+        "state": "default"
+      },
+      "type": "instance"
+    },
     "ACxUFC2y": {
       "index": "aw",
       "name": "Highlight dot",
@@ -35796,6 +36091,20 @@
         "flex": 1
       },
       "type": "frame"
+    },
+    "AFVAWTwK": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "uIQUidq1",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 17,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "AFhWf5uT": {
       "content": "الكلامُ: هو اللفظُ المركَّبُ ",
@@ -38882,6 +39191,19 @@
       },
       "type": "text"
     },
+    "BEcGZUU1": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "vfwpLhf7",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "BF8aSQvI": {
       "componentId": "RV1DOgzp",
       "index": "a006V",
@@ -39501,6 +39823,18 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "BO5UpZ2J": {
+      "index": "a0",
+      "name": "Title",
+      "parentId": "wRPYJfVA",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 4
+      },
+      "type": "frame"
     },
     "BP9NAu2e": {
       "content": "٣",
@@ -40237,6 +40571,21 @@
         "text-indent": "-1.5em"
       },
       "type": "frame"
+    },
+    "BYTmqwVo": {
+      "content": "متن الآجرومية",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "al0qCT1M",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 30,
+        "font-weight": 700,
+        "line-height": "48px",
+        "text-align": "right"
+      },
+      "type": "text"
     },
     "BYUFmt2N": {
       "content": "بابُ الأفعالِ",
@@ -42982,6 +43331,20 @@
         "font-variant-numeric": "tabular-nums",
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "CHPpSWIl": {
+      "content": "قطر الندى وبل الصدى",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "8VZXTfWN",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -57109,6 +57472,18 @@
       },
       "type": "frame"
     },
+    "GRWmvl46": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "2yz41qJN",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "GRd3VAM5": {
       "index": "a007",
       "name": "Divider",
@@ -58571,6 +58946,20 @@
         "width": 248
       },
       "type": "frame"
+    },
+    "GrwjypNV": {
+      "content": "مداد",
+      "index": "a0",
+      "name": "Mark",
+      "parentId": "Qdwrk5iq",
+      "style": {
+        "color": "{color.accent}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 20,
+        "font-weight": 700
+      },
+      "type": "text"
     },
     "GrzR37SJ": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -67214,6 +67603,18 @@
       },
       "type": "text"
     },
+    "JNUwFHkY": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "zNOSv8rP",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "JNkZiPsM": {
       "content": "11",
       "index": "a000",
@@ -68112,6 +68513,20 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "Jf18mEzX": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "bJUIixMh",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.090)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "JfSZwuI2": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
@@ -70583,6 +70998,32 @@
       },
       "type": "text"
     },
+    "KPK1nOZM": {
+      "componentId": "RV1DOgzp",
+      "css": "/* Pinned: always shown, accent-tinted; pressing it unpins. The pin drops in when it's set. */\ntransition:\n  opacity {transition.duration-press} {ease.out},\n  background-color {transition.duration-press} {ease.out},\n  color {transition.duration-press} {ease.out};\n\n& > svg {\n  transition: rotate {transition.duration-pop} {ease.out};\n}\n\n&[data-state=\"pinned\"] > svg {\n  animation: pin-set {transition.duration-panel} {ease.out};\n}\n\n&:hover > svg {\n  rotate: -12deg;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  & > svg {\n    animation: none;\n    rotate: none;\n  }\n}",
+      "index": "a3",
+      "name": "Pin toggle · Pinned",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pin"
+        }
+      },
+      "parentId": "tBgefGG5",
+      "props": {
+        "label": "Unpin",
+        "state": "selected",
+        "variant": "outline"
+      },
+      "style": {
+        "background": "{color.accent-soft}",
+        "border-color": "{color.accent-soft}",
+        "color": "{color.accent}",
+        "left": "{spacing.3}",
+        "position": "absolute",
+        "top": "{spacing.3}"
+      },
+      "type": "instance"
+    },
     "KPOFjms0": {
       "content": "بابُ الكلامِ",
       "index": "a001",
@@ -71201,6 +71642,20 @@
         "width": 640
       },
       "type": "frame"
+    },
+    "KcNyIXbX": {
+      "content": "شرح ابن عقيل",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "zNOSv8rP",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "KcPIjTGB": {
       "content": "بابُ معرفةِ علاماتِ الإعرابِ",
@@ -83821,6 +84276,21 @@
       },
       "type": "frame"
     },
+    "OI1PqjXk": {
+      "index": "a1",
+      "name": "Continue reading",
+      "parentId": "sLyXhJSv",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.2xl}",
+        "display": "flex",
+        "gap": 32,
+        "padding": 28
+      },
+      "type": "frame"
+    },
     "OI48o9dN": {
       "index": "a1",
       "name": "Ornament",
@@ -84351,6 +84821,18 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "OSWLNskD": {
+      "content": "Resume reading",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "hfjEljUt",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
     },
     "OSsVhA9Y": {
       "content": "الثواب",
@@ -87474,6 +87956,20 @@
       },
       "type": "frame"
     },
+    "PP5zAuXs": {
+      "content": "بابُ الكلامِ · ص ٣",
+      "index": "a1",
+      "name": "Chapter",
+      "parentId": "al0qCT1M",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 16,
+        "text-align": "right"
+      },
+      "type": "text"
+    },
     "PPzEoO3R": {
       "componentId": "v8FmfBf5",
       "index": "a1",
@@ -87836,6 +88332,17 @@
       "parentId": "ue6gvX34",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "PWoG8j5t": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "uIQUidq1",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 40
       },
       "type": "frame"
     },
@@ -89828,6 +90335,20 @@
       },
       "type": "text"
     },
+    "Q68DGO21": {
+      "content": "ابن آجُرّوم",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "uIQUidq1",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 12,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "Q6zWw3HF": {
       "index": "a002",
       "name": "Spacer",
@@ -91654,6 +92175,18 @@
       },
       "type": "frame"
     },
+    "Qdwrk5iq": {
+      "index": "a0",
+      "name": "Brand",
+      "parentId": "7bl5EN4r",
+      "style": {
+        "align-items": "baseline",
+        "display": "flex",
+        "gap": 8,
+        "padding": "4px 10px 20px"
+      },
+      "type": "frame"
+    },
     "QeU3WmA5": {
       "content": "Settings",
       "index": "a1",
@@ -92227,6 +92760,18 @@
       },
       "type": "text"
     },
+    "Qp32rX5S": {
+      "content": "4 books · 1,844 pages",
+      "index": "a1",
+      "name": "Meta",
+      "parentId": "BO5UpZ2J",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 13
+      },
+      "type": "text"
+    },
     "QpGACROQ": {
       "content": "يصلحُ",
       "index": "a000",
@@ -92703,6 +93248,20 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "QxuCb9oU": {
+      "content": "الإمام النووي",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "rbXBP677",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -95546,6 +96105,17 @@
         "padding": "8px 10px"
       },
       "type": "frame"
+    },
+    "Rmt1RNtM": {
+      "componentId": "46QiZLNZ",
+      "index": "a1",
+      "name": "Segment",
+      "parentId": "7pDKDvxv",
+      "props": {
+        "label": "Reading",
+        "state": "default"
+      },
+      "type": "instance"
     },
     "RnFoczCQ": {
       "content": "Glosses",
@@ -98503,6 +99073,20 @@
         "font-family": "{font.body}",
         "font-size": 14,
         "font-weight": 600
+      },
+      "type": "text"
+    },
+    "SkbKPp8H": {
+      "content": "متن الآجرومية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "2yz41qJN",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -108949,6 +109533,19 @@
       },
       "type": "frame"
     },
+    "VklVm9FX": {
+      "index": "a2",
+      "name": "Progress",
+      "parentId": "al0qCT1M",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "Vks61r6T": {
       "index": "a1",
       "name": "Body",
@@ -112850,6 +113447,20 @@
         "width": 8
       },
       "type": "frame"
+    },
+    "WxAYPJPL": {
+      "content": "ابن آجُرّوم",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "2yz41qJN",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
     },
     "WxT5QL55": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -119898,6 +120509,21 @@
       },
       "type": "text"
     },
+    "Z10RMpoB": {
+      "index": "a1",
+      "name": "Nav item",
+      "parentId": "7bl5EN4r",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent-soft}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.accent}",
+        "display": "flex",
+        "gap": 10,
+        "padding": "8px 10px"
+      },
+      "type": "frame"
+    },
     "Z11lRD8q": {
       "content": "بصيغة المجهول أي لم تجعل مشروعة",
       "css": "transition: color {transition.duration-press} {ease.out};\n\n&:hover {\n  color: {color.ink};\n}",
@@ -119932,6 +120558,17 @@
         "width": 1
       },
       "type": "frame"
+    },
+    "Z1PSVPmm": {
+      "componentId": "46QiZLNZ",
+      "index": "a0",
+      "name": "Segment",
+      "parentId": "7pDKDvxv",
+      "props": {
+        "label": "All",
+        "state": "selected"
+      },
+      "type": "instance"
     },
     "Z1Q27jOT": {
       "index": "a001",
@@ -122770,6 +123407,18 @@
       },
       "type": "text"
     },
+    "ZwAmS6zu": {
+      "content": "Page 3 of 24 · last read yesterday",
+      "index": "a1",
+      "name": "Where",
+      "parentId": "ttme0Kgf",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-family": "{font.body}",
+        "font-size": 13
+      },
+      "type": "text"
+    },
     "Zwvs1O38": {
       "index": "a1",
       "name": "Entries",
@@ -125234,6 +125883,18 @@
       },
       "type": "icon"
     },
+    "al0qCT1M": {
+      "index": "a1",
+      "name": "Info",
+      "parentId": "OI1PqjXk",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": 12
+      },
+      "type": "frame"
+    },
     "al246vJl": {
       "content": "",
       "index": "a00002",
@@ -127312,6 +127973,19 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "bJUIixMh": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "tBgefGG5",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "bK2z8ZM7": {
       "index": "a008",
@@ -130204,6 +130878,19 @@
       },
       "type": "text"
     },
+    "cChwdAUs": {
+      "index": "a1",
+      "name": "Progress",
+      "parentId": "mzVZT6I7",
+      "style": {
+        "background": "{color.line}",
+        "border-radius": 999,
+        "height": 4,
+        "overflow": "hidden",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "cD4kCd0v": {
       "content": "to save",
       "index": "a1",
@@ -130519,6 +131206,20 @@
         "flex-direction": "column",
         "gap": 4,
         "min-width": 0
+      },
+      "type": "frame"
+    },
+    "cIzy6WJ3": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "BEcGZUU1",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.107)",
+        "transform-origin": "left",
+        "width": "100%"
       },
       "type": "frame"
     },
@@ -141016,6 +141717,18 @@
       },
       "type": "frame"
     },
+    "fQtsMyl3": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "uIQUidq1",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6,
+        "rotate": "45deg",
+        "width": 6
+      },
+      "type": "frame"
+    },
     "fQwilHJL": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "a5",
@@ -148876,6 +149589,23 @@
       },
       "type": "text"
     },
+    "hfjEljUt": {
+      "css": "transition: scale {transition.duration-press} {ease.out};\n\n&:active {\n  scale: 0.97;\n}",
+      "index": "a0",
+      "name": "Resume",
+      "parentId": "ttme0Kgf",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border-radius": "{radius.lg}",
+        "color": "{color.on-accent}",
+        "display": "inline-flex",
+        "gap": 6,
+        "height": 36,
+        "padding": "0 14px"
+      },
+      "type": "frame"
+    },
     "hfjkBgRh": {
       "index": "a0",
       "name": "Line number",
@@ -154851,6 +155581,20 @@
       },
       "type": "frame"
     },
+    "jL7bLNnV": {
+      "content": "ابن هشام الأنصاري",
+      "index": "a4",
+      "name": "Author",
+      "parentId": "8VZXTfWN",
+      "style": {
+        "color": "{color.ink-2}",
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 13.440000000000001,
+        "line-height": 1.6
+      },
+      "type": "text"
+    },
     "jLCOsKNV": {
       "index": "a001",
       "name": "Body",
@@ -158786,6 +159530,20 @@
       },
       "type": "frame"
     },
+    "kUiAF4EU": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "VklVm9FX",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
+    },
     "kUnC5ADt": {
       "index": "b07",
       "name": "Note dot",
@@ -158994,6 +159752,22 @@
         "text-align": "right"
       },
       "type": "frame"
+    },
+    "kYBpvgLx": {
+      "componentId": "ua9C67i7",
+      "index": "a3",
+      "name": "Button",
+      "overrides": {
+        "O46dZG6P": {
+          "icon": "download"
+        }
+      },
+      "parentId": "wRPYJfVA",
+      "props": {
+        "label": "Import",
+        "withIcon": "yes"
+      },
+      "type": "instance"
     },
     "kYhyc5nr": {
       "icon": "sparkles",
@@ -167391,6 +168165,19 @@
       },
       "type": "instance"
     },
+    "mzVZT6I7": {
+      "css": "/* When a pin or unpin reorders the shelf, each card glides to its new place (a view transition per card). */\nview-transition-class: book-card;",
+      "index": "a3",
+      "name": "Book · الأربعون النووية",
+      "parentId": "42xXpSE9",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "width": 168
+      },
+      "type": "frame"
+    },
     "mzp9lAxw": {
       "content": "2 days ago",
       "index": "a0",
@@ -168801,6 +169588,23 @@
         "line-height": "24px"
       },
       "type": "text"
+    },
+    "nRKYiETG": {
+      "componentId": "RV1DOgzp",
+      "css": "/* Shows on card hover or keyboard focus, and stays while its menu is open. */\ntransition: opacity {transition.duration-press} {ease.out};",
+      "index": "a4",
+      "name": "Book actions",
+      "parentId": "vfwpLhf7",
+      "props": {
+        "label": "Book actions",
+        "variant": "outline"
+      },
+      "style": {
+        "position": "absolute",
+        "right": "{spacing.3}",
+        "top": "{spacing.3}"
+      },
+      "type": "instance"
     },
     "nRQeQ5n9": {
       "index": "a006",
@@ -171231,6 +172035,23 @@
       },
       "type": "frame"
     },
+    "o5B6IxTT": {
+      "index": "as",
+      "name": "Library · Pinned",
+      "style": {
+        "background": "{color.bg}",
+        "color": "{color.ink}",
+        "display": "flex",
+        "flex-direction": "row",
+        "height": 900,
+        "overflow": "hidden",
+        "position": "relative",
+        "width": 1440
+      },
+      "type": "frame",
+      "x": 20040,
+      "y": 0
+    },
     "o5EOd3Ee": {
       "content": ".",
       "index": "a00008",
@@ -171339,6 +172160,20 @@
         "font-size": 12,
         "font-weight": 400,
         "line-height": "16px"
+      },
+      "type": "text"
+    },
+    "o7ptcYzT": {
+      "content": "الأربعون النووية",
+      "index": "a2",
+      "name": "Title",
+      "parentId": "rbXBP677",
+      "style": {
+        "direction": "rtl",
+        "font-family": "{font.ar}",
+        "font-size": 19.040000000000003,
+        "font-weight": 700,
+        "line-height": 1.6
       },
       "type": "text"
     },
@@ -174173,6 +175008,18 @@
       },
       "type": "instance"
     },
+    "ozzk5hJd": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "8VZXTfWN",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
+    },
     "p00mlUD0": {
       "content": "21 of 24",
       "index": "a1",
@@ -175135,6 +175982,18 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "pHdQLZRe": {
+      "content": "3 of 24",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "0Fx8VWti",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
       },
       "type": "text"
     },
@@ -179136,6 +179995,18 @@
       },
       "type": "frame"
     },
+    "qUvjhuUV": {
+      "content": "12 of 96",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "mzVZT6I7",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
+      },
+      "type": "text"
+    },
     "qV7ce7pR": {
       "content": "دْ",
       "index": "a00003",
@@ -179149,6 +180020,22 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "qVRRp9qY": {
+      "content": "Continue reading",
+      "index": "a0",
+      "name": "Overline",
+      "parentId": "sLyXhJSv",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
       },
       "type": "text"
     },
@@ -183117,6 +184004,30 @@
       },
       "type": "frame"
     },
+    "rbXBP677": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "mzVZT6I7",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 168
+      },
+      "type": "frame"
+    },
     "rc5XlrWi": {
       "index": "a1",
       "name": "Line 1",
@@ -185999,6 +186910,18 @@
       },
       "type": "frame"
     },
+    "sLyXhJSv": {
+      "css": "/* * Switching shelves (All | Reading | Finished): only this block moves. The\n * header and the tabs stay put, and the Segmented fill slides live.\n * Exit: the old shelf fades out quickly (page-out, 100ms ease-out) toward the\n * side it leaves: list-out-to-left going forward, list-out-to-right going back.\n * Entrance: the new shelf slides a short way in from the side of the picked tab\n * (220ms ease-out after 40ms). Forward, picking a tab to the right, comes in\n * from the right as played here; back uses page-in-from-left. */\nanimation: page-in-from-right 220ms var(--ease-out) 40ms both;\n\n@media (prefers-reduced-motion: reduce) {\n  animation: none;\n}",
+      "index": "a1",
+      "name": "Shelf content",
+      "parentId": "65Jr8KYf",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 28
+      },
+      "type": "frame"
+    },
     "sMIWIvX4": {
       "content": "أي انتفاء كونه عبادة موجبة للثواب",
       "css": "transition: color {transition.duration-press} {ease.out};\n\n&:hover {\n  color: {color.ink};\n}",
@@ -188655,6 +189578,20 @@
       },
       "type": "frame"
     },
+    "tBgefGG5": {
+      "css": "/* When a pin or unpin reorders the shelf, each card glides to its new place (a view transition per card). */\nview-transition-class: book-card;",
+      "index": "Zz",
+      "name": "Book · قطر الندى وبل الصدى",
+      "parentId": "42xXpSE9",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "position": "relative",
+        "width": 168
+      },
+      "type": "frame"
+    },
     "tBjhSOAR": {
       "content": "Opus 5.5",
       "index": "a0",
@@ -190948,6 +191885,17 @@
       },
       "type": "frame"
     },
+    "ttme0Kgf": {
+      "index": "a3",
+      "name": "Meta row",
+      "parentId": "al0qCT1M",
+      "style": {
+        "align-items": "center",
+        "display": "flex",
+        "gap": 16
+      },
+      "type": "frame"
+    },
     "tts2x2Eu": {
       "css": "transition: transform {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  transform: scaleY(1.6);\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
       "index": "aN",
@@ -191737,6 +192685,28 @@
       },
       "type": "text"
     },
+    "u7IzIH6d": {
+      "componentId": "mUTXOEWB",
+      "index": "a1",
+      "name": "Input",
+      "overrides": {
+        "0fjuuwzx": {
+          "icon": "search"
+        },
+        "mUTXOEWB": {
+          "style": {
+            "width": 288
+          }
+        }
+      },
+      "parentId": "wRPYJfVA",
+      "props": {
+        "value": "Filter by title or author",
+        "withHelper": "no",
+        "withLabel": "no"
+      },
+      "type": "instance"
+    },
     "u7hmo8q5": {
       "content": "Updates",
       "index": "a0",
@@ -192472,6 +193442,30 @@
       },
       "type": "instance"
     },
+    "uIQUidq1": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "OI1PqjXk",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 200,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "width": 150
+      },
+      "type": "frame"
+    },
     "uIVx3AeO": {
       "content": "Continue reading",
       "index": "a1",
@@ -192781,6 +193775,18 @@
       },
       "type": "frame"
     },
+    "uNw0Mr45": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "zNOSv8rP",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
+    },
     "uOBxTfpz": {
       "content": "دْ",
       "index": "a00003",
@@ -193008,6 +194014,20 @@
         "font-weight": 500
       },
       "type": "text"
+    },
+    "uQnSJT1u": {
+      "icon": "library-big",
+      "index": "a0",
+      "name": "Icon library-big",
+      "parentId": "Z10RMpoB",
+      "set": "lucide",
+      "style": {
+        "color": "{color.accent}",
+        "flex-shrink": 0,
+        "height": 18,
+        "width": 18
+      },
+      "type": "icon"
     },
     "uQthf29s": {
       "content": "بابُ الكلامِ",
@@ -197102,6 +198122,20 @@
       },
       "type": "text"
     },
+    "vfwpLhf7": {
+      "css": "/* When a pin or unpin reorders the shelf, each card glides to its new place (a view transition per card). */\nview-transition-class: book-card;",
+      "index": "a1",
+      "name": "Book · شرح ابن عقيل",
+      "parentId": "42xXpSE9",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": 10,
+        "position": "relative",
+        "width": 168
+      },
+      "type": "frame"
+    },
     "vgJEDEwN": {
       "content": "الأربعون النووية",
       "index": "a2",
@@ -199797,6 +200831,17 @@
       },
       "type": "frame"
     },
+    "wRPYJfVA": {
+      "index": "a0",
+      "name": "Header",
+      "parentId": "65Jr8KYf",
+      "style": {
+        "align-items": "flex-end",
+        "display": "flex",
+        "gap": 16
+      },
+      "type": "frame"
+    },
     "wRUotFTc": {
       "content": "دْ",
       "index": "a5",
@@ -200653,6 +201698,18 @@
       },
       "type": "text"
     },
+    "wiexyvOm": {
+      "content": "Library",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "Z10RMpoB",
+      "style": {
+        "font-family": "{font.body}",
+        "font-size": 14,
+        "font-weight": 500
+      },
+      "type": "text"
+    },
     "winY9WFZ": {
       "index": "Za000",
       "name": "Line number",
@@ -200977,6 +202034,26 @@
       },
       "type": "frame"
     },
+    "wof3pckk": {
+      "content": "Pinned books sit first on the shelf, in the shelf's usual order (last opened first). A pin button on the cover's top-left corner shows on hover or focus and stays, accent-tinted, once the book is pinned; the book menu has Pin to top / Unpin too. Pinning slides the cards to their new places (280ms ease-move) and the pin drops in. Continue reading is unaffected.",
+      "index": "a2",
+      "name": "Spec note",
+      "parentId": "o5B6IxTT",
+      "style": {
+        "background": "{color.surface-2}",
+        "border-radius": "{radius.lg}",
+        "bottom": 20,
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12,
+        "line-height": "18px",
+        "padding": "8px 12px",
+        "position": "absolute",
+        "right": 24,
+        "width": 420
+      },
+      "type": "text"
+    },
     "wouUKiCP": {
       "content": "بابُ الكلامِ",
       "index": "a001",
@@ -201124,6 +202201,30 @@
         "width": 8
       },
       "type": "frame"
+    },
+    "wq0j2LHh": {
+      "componentId": "RV1DOgzp",
+      "css": "/* Unpinned: shows on card hover or keyboard focus, like the menu button. */\ntransition:\n  opacity {transition.duration-press} {ease.out},\n  background-color {transition.duration-press} {ease.out},\n  color {transition.duration-press} {ease.out};\n\n& > svg {\n  transition: rotate {transition.duration-pop} {ease.out};\n}\n\n&[data-state=\"pinned\"] > svg {\n  animation: pin-set {transition.duration-panel} {ease.out};\n}\n\n&:hover > svg {\n  rotate: -12deg;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  & > svg {\n    animation: none;\n    rotate: none;\n  }\n}",
+      "index": "a3",
+      "name": "Pin toggle",
+      "overrides": {
+        "YmvmyXk9": {
+          "icon": "pin"
+        }
+      },
+      "parentId": "vfwpLhf7",
+      "props": {
+        "label": "Pin to top",
+        "state": "hover",
+        "tooltip": "on",
+        "variant": "outline"
+      },
+      "style": {
+        "left": "{spacing.3}",
+        "position": "absolute",
+        "top": "{spacing.3}"
+      },
+      "type": "instance"
     },
     "wqXwK9Hl": {
       "index": "a2",
@@ -203124,6 +204225,18 @@
       },
       "type": "frame"
     },
+    "xO3J6Ayn": {
+      "index": "a1",
+      "name": "Ornament",
+      "parentId": "2yz41qJN",
+      "style": {
+        "border": "1px solid {color.accent}",
+        "height": 6.720000000000001,
+        "rotate": "45deg",
+        "width": 6.720000000000001
+      },
+      "type": "frame"
+    },
     "xO82XaqX": {
       "index": "a001",
       "name": "Book",
@@ -203678,6 +204791,18 @@
         "font-size": 26,
         "font-weight": 400,
         "line-height": "52px"
+      },
+      "type": "text"
+    },
+    "xWEK9ABN": {
+      "content": "140 of 1,312",
+      "index": "a2",
+      "name": "Where",
+      "parentId": "vfwpLhf7",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 12
       },
       "type": "text"
     },
@@ -204458,6 +205583,18 @@
       "parentId": "MdkQwAKV",
       "style": {
         "flex": 1
+      },
+      "type": "frame"
+    },
+    "xkxJ4Uj4": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "rbXBP677",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
       },
       "type": "frame"
     },
@@ -206915,6 +208052,18 @@
       },
       "type": "instance"
     },
+    "yc02CMBg": {
+      "index": "a0",
+      "name": "Frame",
+      "parentId": "8VZXTfWN",
+      "style": {
+        "border": "3px double {color.ink-3}",
+        "border-radius": 2,
+        "inset": 8.96,
+        "position": "absolute"
+      },
+      "type": "frame"
+    },
     "yc5xZbvC": {
       "content": "Ibn Ājurrūm · Bāb al-Kalām",
       "index": "a001",
@@ -207615,6 +208764,22 @@
       },
       "type": "frame"
     },
+    "ymVtRGUZ": {
+      "content": "All books",
+      "index": "a2",
+      "name": "Overline",
+      "parentId": "sLyXhJSv",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-family": "{font.body}",
+        "font-size": 11,
+        "font-weight": 600,
+        "letter-spacing": "0.08em",
+        "line-height": "16px",
+        "text-transform": "uppercase"
+      },
+      "type": "text"
+    },
     "ymr5nYQY": {
       "index": "a1",
       "name": "Row · Harakat",
@@ -208201,6 +209366,17 @@
         "line-height": "20px"
       },
       "type": "text"
+    },
+    "yxdfxDIq": {
+      "index": "a3",
+      "name": "Rule",
+      "parentId": "zNOSv8rP",
+      "style": {
+        "background": "{color.ink-3}",
+        "height": 1,
+        "width": 44.800000000000004
+      },
+      "type": "frame"
     },
     "yxqX2ZuW": {
       "content": "، ",
@@ -209474,6 +210650,32 @@
       },
       "type": "text"
     },
+    "zNOSv8rP": {
+      "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
+      "index": "a0",
+      "name": "Cover",
+      "parentId": "vfwpLhf7",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.md}",
+        "box-shadow": "var(--elevation-float)",
+        "display": "flex",
+        "flex-direction": "column",
+        "flex-shrink": 0,
+        "gap": 8,
+        "height": 224,
+        "justify-content": "center",
+        "overflow": "hidden",
+        "padding": 14,
+        "position": "relative",
+        "text-align": "center",
+        "translate": "0 -3px",
+        "width": 168
+      },
+      "type": "frame"
+    },
     "zOLsf6D4": {
       "index": "a006",
       "name": "TOC · بابُ مرفوعاتِ الأسماءِ",
@@ -210632,6 +211834,20 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "zlHGM2rg": {
+      "css": "transition: transform {transition.duration-panel} {ease.out};",
+      "index": "a0",
+      "name": "Fill",
+      "parentId": "cChwdAUs",
+      "style": {
+        "background": "{color.accent}",
+        "height": "100%",
+        "transform": "scaleX(0.125)",
+        "transform-origin": "left",
+        "width": "100%"
+      },
+      "type": "frame"
     },
     "zlVLPrOW": {
       "index": "a3",

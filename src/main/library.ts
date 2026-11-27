@@ -369,6 +369,11 @@ export const createLibrary = ({
     return { position: page.position, updatedAt: Number(progress.updatedAt), anchor: typeof progress.anchor === "string" ? parseAnchor(progress.anchor) : null };
   };
 
+  const pinnedAtOf = (bookId: string): number | null => {
+    const pinnedAt = user.row({ table: "library", id: bookId })?.pinnedAt;
+    return typeof pinnedAt === "number" ? pinnedAt : null;
+  };
+
   const toBook = (r: BookRow): LibraryBook => ({
     bookId: r.book_id,
     title: r.title,
@@ -377,6 +382,7 @@ export const createLibrary = ({
     pageCount: r.page_count,
     importedAt: r.imported_at,
     syncedAt: r.synced_at,
+    pinnedAt: pinnedAtOf(r.book_id),
     progress: progressOf(r.book_id),
   });
 
@@ -425,8 +431,11 @@ export const createLibrary = ({
         for (const f of ready) writePage(corpusBookId, f, "insert");
         renumber(corpusBookId);
       });
-      // Freshly stamped whole, so importing a book removed earlier brings back every cell.
-      user.rewriteRow({ table: "library", id: corpusBookId, row: { addedAt: now(), title: meta.work?.name ?? meta.title, author: meta.work?.author ?? null } });
+      const entry = { addedAt: now(), title: meta.work?.name ?? meta.title, author: meta.work?.author ?? null };
+      // A book waiting from another device keeps its other cells (its pin): only these are restamped.
+      // One removed earlier, or never listed, is freshly stamped whole so every cell comes back.
+      if (user.row({ table: "library", id: corpusBookId })) user.store.setPartialRow("library", corpusBookId, entry);
+      else user.rewriteRow({ table: "library", id: corpusBookId, row: entry });
       return { bookId: corpusBookId, imported: ready.length, pending: files.length - ready.length };
     },
 
@@ -498,7 +507,15 @@ export const createLibrary = ({
     async listBooks(): Promise<LibraryBook[]> {
       const books = (db.prepare(BOOK_SELECT).all() as unknown as BookRow[]).map(toBook);
       const lastOpened = (b: LibraryBook) => b.progress?.updatedAt ?? b.importedAt;
-      return books.sort((a, b) => lastOpened(b) - lastOpened(a));
+      const pinned = (b: LibraryBook) => (b.pinnedAt === null ? 0 : 1);
+      return books.sort((a, b) => pinned(b) - pinned(a) || lastOpened(b) - lastOpened(a));
+    },
+
+    /** Pins the book to the top of the shelf, or unpins it, on every synced device. */
+    async setPinned({ bookId, pinned }: { bookId: string; pinned: boolean }): Promise<void> {
+      if (!bookExists(bookId) || !user.row({ table: "library", id: bookId })) throw new Error(`Book ${bookId} is not in the library.`);
+      if (!pinned) user.store.delCell("library", bookId, "pinnedAt");
+      else if (pinnedAtOf(bookId) === null) user.store.setCell("library", bookId, "pinnedAt", now());
     },
 
     async getBook(bookId: string): Promise<BookDetail | null> {

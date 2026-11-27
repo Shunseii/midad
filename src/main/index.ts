@@ -155,6 +155,7 @@ const handlers: MidadApi = {
   "library.firstLine": (input) => library.getFirstLine(input),
   "library.removalPreview": (input) => removal.preview(input),
   "library.remove": (input) => removal.remove(input),
+  "library.setPinned": (input) => library.setPinned(input),
   "annotations.list": (input) => annotations.listForPage(input),
   "annotations.bookMarks": (input) => annotations.bookMarks(input),
   "highlights.add": (input) => annotations.addHighlight(input),
