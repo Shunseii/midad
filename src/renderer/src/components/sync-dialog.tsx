@@ -26,6 +26,9 @@ export const SyncDialog = ({
       return next;
     });
 
+  const toggleAll = (fileIds: string[]) =>
+    setSelected((prev) => (fileIds.every((id) => prev.has(id)) ? new Set() : new Set(fileIds)));
+
   const pullNew = () =>
     sync.mutate(
       { bookId: book.bookId, mode: "new" },
@@ -80,11 +83,18 @@ export const SyncDialog = ({
 
         {data && data.changedPages.length > 0 && (
           <section className="flex flex-col gap-3 rounded-xl border border-line p-4">
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm font-medium">
-                {plural({ count: data.changedPages.length, one: "page differs", many: "pages differ" })} from the corpus
-              </span>
-              <span className="text-xs text-ink-3">Overwriting replaces your copy of the page with the corpus text.</span>
+            <div className="flex items-start gap-3">
+              <div className="flex flex-1 flex-col gap-0.5">
+                <span className="text-sm font-medium">
+                  {plural({ count: data.changedPages.length, one: "page differs", many: "pages differ" })} from the corpus
+                </span>
+                <span className="text-xs text-ink-3">Overwriting replaces your copy of the page with the corpus text.</span>
+              </div>
+              {data.changedPages.length > 1 && (
+                <Button size="sm" variant="ghost" className="text-accent hover:bg-accent-soft" onClick={() => toggleAll(data.changedPages.map((p) => p.fileId))}>
+                  {data.changedPages.every((p) => selected.has(p.fileId)) ? "Select none" : "Select all"}
+                </Button>
+              )}
             </div>
             <ul className="flex max-h-48 flex-col gap-1 overflow-y-auto">
               {data.changedPages.map((p) => (

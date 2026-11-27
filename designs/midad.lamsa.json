@@ -5750,6 +5750,21 @@
       },
       "type": "instance"
     },
+    "1cEpauxr": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a1",
+      "name": "Page 15",
+      "parentId": "utFn9YUc",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
+      },
+      "type": "frame"
+    },
     "1cQ9eYS1": {
       "componentId": "v8FmfBf5",
       "index": "a1",
@@ -7423,6 +7438,21 @@
         "position": "relative",
         "text-align": "center",
         "width": 168
+      },
+      "type": "frame"
+    },
+    "2AwqtPSF": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a4",
+      "name": "Page 34",
+      "parentId": "nfx32VXe",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
       },
       "type": "frame"
     },
@@ -13406,6 +13436,18 @@
       },
       "type": "text"
     },
+    "3mdRbFP8": {
+      "icon": "refresh-cw",
+      "index": "a0",
+      "name": "Icon",
+      "parentId": "qMN3M7hw",
+      "set": "lucide",
+      "style": {
+        "height": 14,
+        "width": 14
+      },
+      "type": "icon"
+    },
     "3mhcgxSC": {
       "index": "a004",
       "name": "Spacer",
@@ -18696,6 +18738,17 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "5GBYx9WL": {
+      "content": "Overwriting replaces your copy of the page with the corpus text.",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "ykc7nsud",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-size": "{text.xs}"
+      },
+      "type": "text"
     },
     "5GH7cCSN": {
       "componentId": "RV1DOgzp",
@@ -27017,6 +27070,21 @@
       },
       "type": "frame"
     },
+    "7ejz4AiY": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a3",
+      "name": "Page 21",
+      "parentId": "utFn9YUc",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
+      },
+      "type": "frame"
+    },
     "7fVByy5P": {
       "icon": "settings",
       "index": "a0",
@@ -32540,6 +32608,21 @@
       },
       "type": "frame"
     },
+    "9Gj5ifUx": {
+      "index": "aw",
+      "name": "Corpus sync · Pages differ · Some selected",
+      "style": {
+        "align-items": "center",
+        "background": "{color.bg}",
+        "display": "flex",
+        "height": 620,
+        "justify-content": "center",
+        "width": 720
+      },
+      "type": "frame",
+      "x": 280,
+      "y": 20000
+    },
     "9HA6irqg": {
       "content": "٣",
       "index": "a000",
@@ -34264,6 +34347,13 @@
       },
       "type": "text"
     },
+    "9pVdtJxk": {
+      "content": "Page 34",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "yav8BLQ5",
+      "type": "text"
+    },
     "9pd7fOcl": {
       "content": "متن الآجرومية",
       "index": "a2",
@@ -34329,6 +34419,23 @@
         "white-space": "nowrap"
       },
       "type": "text"
+    },
+    "9rD2KpRr": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "yav8BLQ5",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
     },
     "9rbCMCEe": {
       "css": "/* Sidebar footer. Hidden when Devices is off. Opens the Devices popover upward. */\ncursor: pointer;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"open\"] {\n  background: color-mix(in oklab, {color.ink} 6%, transparent);\n}\n\n&:active {\n  scale: 0.98;\n}",
@@ -35406,6 +35513,23 @@
         "display": "flex",
         "gap": 16,
         "padding": "12px 20px"
+      },
+      "type": "frame"
+    },
+    "A95NDWK7": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "kAPOLaZ1",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border": "1px solid {color.accent}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
       },
       "type": "frame"
     },
@@ -39877,6 +40001,20 @@
         "line-height": "16px"
       },
       "type": "text"
+    },
+    "BUWTQ4i7": {
+      "index": "a1",
+      "name": "Changed pages",
+      "parentId": "tcXBkFdc",
+      "style": {
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.xl}",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.3}",
+        "padding": "{spacing.4}"
+      },
+      "type": "frame"
     },
     "BUiP5dR7": {
       "index": "a0",
@@ -45849,6 +45987,23 @@
       },
       "type": "icon"
     },
+    "DBgTfnfA": {
+      "content": "Select all",
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  scale {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.accent-soft};\n}\n\n&:active {\n  scale: 0.96;\n}\n\n&:focus-visible {\n  outline: 2px solid {color.accent};\n  outline-offset: 1px;\n}",
+      "index": "a1",
+      "name": "Select all toggle",
+      "parentId": "xjlqTNz3",
+      "style": {
+        "border-radius": "{radius.md}",
+        "color": "{color.accent}",
+        "cursor": "pointer",
+        "font-size": "{text.xs}",
+        "font-weight": 500,
+        "padding": "{spacing.1} {spacing.1.5}",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "DCBAv7Mn": {
       "content": "المفيدُ بالوضعِ",
       "index": "a001",
@@ -51000,6 +51155,13 @@
       },
       "type": "text"
     },
+    "EknjAZ8w": {
+      "content": "Page 12",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "Zc303hpD",
+      "type": "text"
+    },
     "ElCDBRrK": {
       "content": "، وفعلٌ، وحرفٌ جاءَ لمعنًى.",
       "index": "a4",
@@ -53553,6 +53715,17 @@
         "width": 7
       },
       "type": "frame"
+    },
+    "FRl3wijg": {
+      "content": "Overwriting replaces your copy of the page with the corpus text.",
+      "index": "a1",
+      "name": "Hint",
+      "parentId": "KEdwCgmv",
+      "style": {
+        "color": "{color.ink-3}",
+        "font-size": "{text.xs}"
+      },
+      "type": "text"
     },
     "FRnN5nm1": {
       "index": "a0",
@@ -56205,6 +56378,17 @@
       },
       "type": "text"
     },
+    "GCntq6Lc": {
+      "content": "5 pages differ from the corpus",
+      "index": "a0",
+      "name": "Count",
+      "parentId": "KEdwCgmv",
+      "style": {
+        "font-size": "{text.sm}",
+        "font-weight": 500
+      },
+      "type": "text"
+    },
     "GD9MVUhZ": {
       "index": "a1",
       "name": "Spacer",
@@ -57579,6 +57763,23 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "GexREMB1": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "zrK4VUTP",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border": "1px solid {color.accent}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
     },
     "GgIKSlJq": {
       "index": "a001",
@@ -61110,6 +61311,23 @@
       },
       "type": "text"
     },
+    "Hf0jXJEW": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "lk0jcbsN",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border": "1px solid {color.accent}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
+    },
     "Hf2X6GpK": {
       "content": "بابُ الأفعالِ",
       "index": "a002",
@@ -61323,6 +61541,13 @@
         "padding": 28
       },
       "type": "frame"
+    },
+    "HjU8OxAd": {
+      "content": "Page 15",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "1cEpauxr",
+      "type": "text"
     },
     "HjWZgfZQ": {
       "css": "transition:\n  border-color {transition.duration-press} {ease.out},\n  opacity {transition.duration-press} {ease.out};",
@@ -63107,6 +63332,23 @@
       },
       "type": "frame"
     },
+    "IGhu5JlN": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "Zc303hpD",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border": "1px solid {color.accent}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
+    },
     "IHdrHTAR": {
       "content": "6",
       "index": "a0",
@@ -63379,6 +63621,21 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "IMZ1t3v4": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a2",
+      "name": "Page 16",
+      "parentId": "utFn9YUc",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
+      },
+      "type": "frame"
     },
     "IMZpjnhw": {
       "content": "Popover",
@@ -64046,6 +64303,22 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "IWkn2VO1": {
+      "content": "Corpus sync",
+      "index": "av",
+      "name": "Row Label · Corpus sync",
+      "style": {
+        "color": "{color.ink}",
+        "font-family": "{font.display}",
+        "font-size": 32,
+        "font-weight": 600,
+        "line-height": "40px",
+        "width": 200
+      },
+      "type": "text",
+      "x": 0,
+      "y": 20000
     },
     "IXhEwtdT": {
       "index": "a003",
@@ -68431,6 +68704,20 @@
       },
       "type": "text"
     },
+    "JpWww8wI": {
+      "index": "a1",
+      "name": "Changed pages",
+      "parentId": "dJ09RK5D",
+      "style": {
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.xl}",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.3}",
+        "padding": "{spacing.4}"
+      },
+      "type": "frame"
+    },
     "Jpl0kall": {
       "css": "view-transition-name: reader-header;",
       "index": "a000",
@@ -69781,6 +70068,18 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "KEdwCgmv": {
+      "index": "a0",
+      "name": "Heading",
+      "parentId": "xjlqTNz3",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": "{spacing.0.5}"
       },
       "type": "frame"
     },
@@ -76185,6 +76484,13 @@
       },
       "type": "text"
     },
+    "MEonfgv2": {
+      "content": "Page 21",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "7ejz4AiY",
+      "type": "text"
+    },
     "MEpDzQwk": {
       "css": "transform-origin: center;\ntransition:\n  scale {transition.duration-sweep} {ease.out},\n  opacity {transition.duration-sweep} {ease.out};\n\n@starting-style {\n  scale: 1 0;\n  opacity: 0;\n}\n\n*:hover > & {\n  scale: 1 1.25;\n}\n\n&[data-state=\"removed\"] {\n  scale: 1 0;\n  opacity: 0;\n  transition-duration: {transition.duration-pop-exit};\n  transition-timing-function: {ease.in};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n\n  @starting-style {\n    scale: 1;\n  }\n}",
       "hidden": true,
@@ -81064,6 +81370,23 @@
       },
       "type": "frame"
     },
+    "NaLv2zof": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "hG897SDI",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
+    },
     "NaMM13JR": {
       "index": "a0",
       "name": "Highlight · Under",
@@ -82051,6 +82374,17 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "NrifYHPd": {
+      "content": "شرح العقيدة الطحاوية. Your copy only changes when you choose to pull or overwrite.",
+      "index": "a1",
+      "name": "Description",
+      "parentId": "eOiRV73o",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-size": "{text.sm}"
+      },
+      "type": "text"
     },
     "NrijT6wE": {
       "css": "transform-origin: bottom center;\ntransition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out};\n\n@starting-style {\n  opacity: 0;\n  scale: 0.96;\n}\n\n&[data-state=\"open\"] {\n  opacity: 1;\n  scale: 1;\n}\n\n&[data-state=\"closed\"] {\n  opacity: 0;\n  scale: 0.96;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity;\n}",
@@ -90597,6 +90931,16 @@
       },
       "type": "frame"
     },
+    "QOecsAZj": {
+      "index": "a2",
+      "name": "Actions",
+      "parentId": "BUWTQ4i7",
+      "style": {
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
+    },
     "QOfu7ySe": {
       "content": "بابُ معرفةِ علاماتِ الإعرابِ",
       "index": "a002",
@@ -91823,6 +92167,19 @@
         "width": 28
       },
       "type": "frame"
+    },
+    "Qoc6SuSk": {
+      "icon": "check",
+      "index": "a0",
+      "name": "Check",
+      "parentId": "Hf0jXJEW",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "height": 10,
+        "width": 10
+      },
+      "type": "icon"
     },
     "QogLgCND": {
       "content": "يصلحُ",
@@ -95296,6 +95653,23 @@
       },
       "type": "frame"
     },
+    "Rp2PmihX": {
+      "content": "Select none",
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  scale {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.accent-soft};\n}\n\n&:active {\n  scale: 0.96;\n}\n\n&:focus-visible {\n  outline: 2px solid {color.accent};\n  outline-offset: 1px;\n}",
+      "index": "a1",
+      "name": "Select all toggle",
+      "parentId": "bRW9Jwcg",
+      "style": {
+        "border-radius": "{radius.md}",
+        "color": "{color.accent}",
+        "cursor": "pointer",
+        "font-size": "{text.xs}",
+        "font-weight": 500,
+        "padding": "{spacing.1} {spacing.1.5}",
+        "white-space": "nowrap"
+      },
+      "type": "text"
+    },
     "Rp7P4y7Z": {
       "content": "Don't give the full iʿrāb unless asked; hint at the case ending",
       "index": "a1",
@@ -95796,6 +96170,21 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "RzUU2kj9": {
+      "index": "ax",
+      "name": "Corpus sync · Pages differ · All selected",
+      "style": {
+        "align-items": "center",
+        "background": "{color.bg}",
+        "display": "flex",
+        "height": 620,
+        "justify-content": "center",
+        "width": 720
+      },
+      "type": "frame",
+      "x": 1100,
+      "y": 20000
     },
     "Rze4CDZy": {
       "index": "a1",
@@ -96745,6 +97134,18 @@
         "display": "inline"
       },
       "type": "text"
+    },
+    "SIGdedSf": {
+      "icon": "refresh-cw",
+      "index": "a0",
+      "name": "Icon",
+      "parentId": "wSs0tWJQ",
+      "set": "lucide",
+      "style": {
+        "height": 14,
+        "width": 14
+      },
+      "type": "icon"
     },
     "SIKHQ8Zd": {
       "index": "a0",
@@ -99728,6 +100129,17 @@
         "padding-top": 12
       },
       "type": "frame"
+    },
+    "TDftTgsK": {
+      "content": "شرح العقيدة الطحاوية. Your copy only changes when you choose to pull or overwrite.",
+      "index": "a1",
+      "name": "Description",
+      "parentId": "nnPVkEmY",
+      "style": {
+        "color": "{color.ink-2}",
+        "font-size": "{text.sm}"
+      },
+      "type": "text"
     },
     "TET4zIKB": {
       "index": "Za000",
@@ -108372,6 +108784,17 @@
       },
       "type": "frame"
     },
+    "VhepoScB": {
+      "content": "5 pages differ from the corpus",
+      "index": "a0",
+      "name": "Count",
+      "parentId": "ykc7nsud",
+      "style": {
+        "font-size": "{text.sm}",
+        "font-weight": 500
+      },
+      "type": "text"
+    },
     "VhiTnqJ4": {
       "css": "view-transition-name: reader-page;",
       "index": "a000",
@@ -115467,6 +115890,19 @@
       },
       "type": "frame"
     },
+    "XnTVzOR2": {
+      "icon": "check",
+      "index": "a0",
+      "name": "Check",
+      "parentId": "e7ioKnfN",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "height": 10,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "XnquTcIW": {
       "componentId": "RV1DOgzp",
       "index": "a004V",
@@ -117631,6 +118067,19 @@
       },
       "type": "frame"
     },
+    "YQAJ1EQm": {
+      "icon": "check",
+      "index": "a0",
+      "name": "Check",
+      "parentId": "IGhu5JlN",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "height": 10,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "YQWEBqbI": {
       "index": "a01",
       "name": "Marks",
@@ -119686,6 +120135,23 @@
       },
       "type": "text"
     },
+    "Z4PDys1t": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "IMZ1t3v4",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
+    },
     "Z4pmv2CQ": {
       "index": "a0",
       "name": "Running header",
@@ -121267,6 +121733,21 @@
       "x": 13960,
       "y": 17740
     },
+    "Zc303hpD": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a0",
+      "name": "Page 12",
+      "parentId": "nfx32VXe",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
+      },
+      "type": "frame"
+    },
     "ZcJOxwSb": {
       "content": "المفيدُ بالوضعِ",
       "index": "a001",
@@ -122431,6 +122912,13 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "ZzVDhN8w": {
+      "content": "Overwrite 1 page",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "qMN3M7hw",
+      "type": "text"
     },
     "ZzesWBo9": {
       "index": "a005",
@@ -127161,6 +127649,17 @@
       },
       "type": "text"
     },
+    "bRW9Jwcg": {
+      "index": "a0",
+      "name": "Heading row",
+      "parentId": "JpWww8wI",
+      "style": {
+        "align-items": "flex-start",
+        "display": "flex",
+        "gap": "{spacing.3}"
+      },
+      "type": "frame"
+    },
     "bRZJTHnP": {
       "index": "a001",
       "name": "Spacer",
@@ -129111,6 +129610,13 @@
         "text-indent": "-1.5em"
       },
       "type": "frame"
+    },
+    "c2IWQwat": {
+      "content": "Overwrite 5 pages",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "wSs0tWJQ",
+      "type": "text"
     },
     "c2JEN8vS": {
       "index": "a1",
@@ -132432,6 +132938,17 @@
       },
       "type": "instance"
     },
+    "d6RmyVBp": {
+      "content": "Sync with corpus",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "nnPVkEmY",
+      "style": {
+        "font-size": "{text.lg}",
+        "font-weight": 600
+      },
+      "type": "text"
+    },
     "d6VVYWdq": {
       "content": "5",
       "index": "a000",
@@ -133131,6 +133648,23 @@
         "right": "50%",
         "top": 47,
         "translate": "calc(50% - 28px) 0"
+      },
+      "type": "frame"
+    },
+    "dJ09RK5D": {
+      "index": "a0",
+      "name": "Dialog",
+      "parentId": "RzUU2kj9",
+      "style": {
+        "background": "{color.surface}",
+        "border-radius": "{radius.2xl}",
+        "box-shadow": "var(--elevation-float)",
+        "color": "{color.ink}",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.5}",
+        "padding": "{spacing.6}",
+        "width": 480
       },
       "type": "frame"
     },
@@ -135672,6 +136206,23 @@
       },
       "type": "text"
     },
+    "e7ioKnfN": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "2AwqtPSF",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border": "1px solid {color.accent}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
+    },
     "e7nPQoiz": {
       "index": "at",
       "name": "Highlight dot",
@@ -136604,6 +137155,17 @@
         "gap": 8,
         "justify-content": "flex-end",
         "padding": "4px 10px"
+      },
+      "type": "frame"
+    },
+    "eOiRV73o": {
+      "index": "a0",
+      "name": "Header",
+      "parentId": "dJ09RK5D",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.1}"
       },
       "type": "frame"
     },
@@ -139225,6 +139787,17 @@
         "gap": "{spacing.1}"
       },
       "type": "frame"
+    },
+    "f4vv0NLh": {
+      "content": "Sync with corpus",
+      "index": "a0",
+      "name": "Title",
+      "parentId": "eOiRV73o",
+      "style": {
+        "font-size": "{text.lg}",
+        "font-weight": 600
+      },
+      "type": "text"
     },
     "f54IJDVc": {
       "content": "المفيدُ بالوضعِ",
@@ -144008,6 +144581,19 @@
       },
       "type": "frame"
     },
+    "gPwl0IKM": {
+      "icon": "check",
+      "index": "a0",
+      "name": "Check",
+      "parentId": "GexREMB1",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "height": 10,
+        "width": 10
+      },
+      "type": "icon"
+    },
     "gQ7FKZCs": {
       "content": "Text size",
       "index": "a0",
@@ -146893,6 +147479,21 @@
       },
       "type": "frame"
     },
+    "hG897SDI": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a0",
+      "name": "Page 12",
+      "parentId": "utFn9YUc",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
+      },
+      "type": "frame"
+    },
     "hG8xH4Om": {
       "index": "a004",
       "name": "Passage",
@@ -148528,6 +149129,23 @@
         "display": "inline"
       },
       "type": "text"
+    },
+    "hlJvKCYI": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "7ejz4AiY",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface}",
+        "border": "1px solid {color.line}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
     },
     "hlMlv1tR": {
       "content": " معه دليلُ الاسمِ ولا دليلُ الفعلِ.",
@@ -156837,6 +157455,21 @@
       },
       "type": "frame"
     },
+    "kAPOLaZ1": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a1",
+      "name": "Page 15",
+      "parentId": "nfx32VXe",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
+      },
+      "type": "frame"
+    },
     "kAUA6qEX": {
       "css": "transition:\n  translate {transition.duration-pop} {ease.out},\n  box-shadow {transition.duration-pop} {ease.out};\n\n&:hover {\n  translate: 0 -3px;\n  box-shadow: var(--elevation-float);\n}\n\n&:active {\n  scale: 0.98;\n}\n\n@media (prefers-reduced-motion: reduce) {\n  &:hover {\n    translate: none;\n  }\n}",
       "index": "a0",
@@ -158043,6 +158676,16 @@
         "variant": "ghost"
       },
       "type": "instance"
+    },
+    "kT0lvihT": {
+      "index": "a2",
+      "name": "Actions",
+      "parentId": "JpWww8wI",
+      "style": {
+        "display": "flex",
+        "justify-content": "flex-end"
+      },
+      "type": "frame"
     },
     "kTDs7u6I": {
       "css": "/* Filled page shape: this page has a page note (it may have word or line notes too). Hollow dots stay word/line notes only. */\ntransition: scale {transition.duration-pop-exit} {ease.out};\n\n*:hover > & {\n  scale: 1.2;\n  transition-duration: {transition.duration-pop};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition: none;\n}",
@@ -160241,6 +160884,13 @@
       },
       "type": "text"
     },
+    "l92yKEyV": {
+      "content": "Page 34",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "2AwqtPSF",
+      "type": "text"
+    },
     "l9DhPOMf": {
       "content": "ص ١١",
       "index": "a0",
@@ -162322,6 +162972,21 @@
       },
       "type": "frame"
     },
+    "lk0jcbsN": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a2",
+      "name": "Page 16",
+      "parentId": "nfx32VXe",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
+      },
+      "type": "frame"
+    },
     "lk1b2Q2t": {
       "content": "فالاسمُ يُعرَفُ: ",
       "index": "a000",
@@ -163854,6 +164519,13 @@
       },
       "type": "frame"
     },
+    "m82Qn6WC": {
+      "content": "Page 16",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "IMZ1t3v4",
+      "type": "text"
+    },
     "m85uds4M": {
       "index": "a1",
       "name": "Alternative",
@@ -165086,6 +165758,19 @@
         "width": 5
       },
       "type": "frame"
+    },
+    "mWmXAmuG": {
+      "icon": "check",
+      "index": "a0",
+      "name": "Check",
+      "parentId": "p4VBYrVj",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "height": 10,
+        "width": 10
+      },
+      "type": "icon"
     },
     "mWrjGGzD": {
       "index": "a3V",
@@ -168974,6 +169659,17 @@
       },
       "type": "frame"
     },
+    "nfx32VXe": {
+      "index": "a1",
+      "name": "Page list",
+      "parentId": "JpWww8wI",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.1}"
+      },
+      "type": "frame"
+    },
     "ng0ZS9Zm": {
       "css": "/* Sidebar footer. Hidden when Devices is off. Opens the Devices popover upward. */\ncursor: pointer;\ntransition: background-color {transition.duration-press} {ease.out};\n\n&:hover, &[data-state=\"open\"] {\n  background: color-mix(in oklab, {color.ink} 6%, transparent);\n}\n\n&:active {\n  scale: 0.98;\n}",
       "index": "a3",
@@ -169358,6 +170054,17 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "nnPVkEmY": {
+      "index": "a0",
+      "name": "Header",
+      "parentId": "tcXBkFdc",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.1}"
       },
       "type": "frame"
     },
@@ -171932,6 +172639,13 @@
       },
       "type": "text"
     },
+    "oWe8F2mb": {
+      "content": "Page 21",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "zrK4VUTP",
+      "type": "text"
+    },
     "oWeA9WGB": {
       "content": "بابُ الكلامِ",
       "index": "a001V",
@@ -173677,6 +174391,23 @@
         "line-height": "52px"
       },
       "type": "text"
+    },
+    "p4VBYrVj": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  border-color {transition.duration-press} {ease.out};",
+      "index": "a0",
+      "name": "Checkbox",
+      "parentId": "1cEpauxr",
+      "style": {
+        "align-items": "center",
+        "background": "{color.accent}",
+        "border": "1px solid {color.accent}",
+        "border-radius": "{radius.sm}",
+        "display": "flex",
+        "height": 14,
+        "justify-content": "center",
+        "width": 14
+      },
+      "type": "frame"
     },
     "p4oh9imk": {
       "index": "a008",
@@ -176793,6 +177524,13 @@
       },
       "type": "frame"
     },
+    "pzOHQ1Xh": {
+      "content": "Page 15",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "kAPOLaZ1",
+      "type": "text"
+    },
     "pza3BIhY": {
       "componentId": "RV1DOgzp",
       "index": "a000",
@@ -177877,6 +178615,23 @@
         "display": "block",
         "position": "relative",
         "text-align": "right"
+      },
+      "type": "frame"
+    },
+    "qMN3M7hw": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  scale {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-3};\n}\n\n&:active {\n  scale: 0.97;\n}",
+      "index": "a0",
+      "name": "Overwrite button",
+      "parentId": "QOecsAZj",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": "{radius.lg}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "font-weight": 500,
+        "gap": "{spacing.1.5}",
+        "padding": "{spacing.1.5} {spacing.3}"
       },
       "type": "frame"
     },
@@ -189382,6 +190137,23 @@
       },
       "type": "text"
     },
+    "tcXBkFdc": {
+      "index": "a0",
+      "name": "Dialog",
+      "parentId": "9Gj5ifUx",
+      "style": {
+        "background": "{color.surface}",
+        "border-radius": "{radius.2xl}",
+        "box-shadow": "var(--elevation-float)",
+        "color": "{color.ink}",
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.5}",
+        "padding": "{spacing.6}",
+        "width": 480
+      },
+      "type": "frame"
+    },
     "tcXg81tx": {
       "index": "a0",
       "name": "Toolbar",
@@ -190414,6 +191186,13 @@
         "width": 18
       },
       "type": "icon"
+    },
+    "ty5X3Qaw": {
+      "content": "Page 12",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "hG897SDI",
+      "type": "text"
     },
     "tyAv7k00": {
       "index": "a1",
@@ -191638,6 +192417,19 @@
         "width": 28
       },
       "type": "frame"
+    },
+    "uI13SBJD": {
+      "icon": "check",
+      "index": "a0",
+      "name": "Check",
+      "parentId": "A95NDWK7",
+      "set": "lucide",
+      "style": {
+        "color": "{color.on-accent}",
+        "height": 10,
+        "width": 10
+      },
+      "type": "icon"
     },
     "uI2FF4h8": {
       "content": "12",
@@ -193707,6 +194499,17 @@
         "text-align": "right"
       },
       "type": "text"
+    },
+    "utFn9YUc": {
+      "index": "a1",
+      "name": "Page list",
+      "parentId": "BUWTQ4i7",
+      "style": {
+        "display": "flex",
+        "flex-direction": "column",
+        "gap": "{spacing.1}"
+      },
+      "type": "frame"
     },
     "utL1lWgY": {
       "index": "Za000",
@@ -199139,6 +199942,23 @@
       },
       "type": "frame"
     },
+    "wSs0tWJQ": {
+      "css": "transition:\n  background {transition.duration-press} {ease.out},\n  scale {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-3};\n}\n\n&:active {\n  scale: 0.97;\n}",
+      "index": "a0",
+      "name": "Overwrite button",
+      "parentId": "kT0lvihT",
+      "style": {
+        "align-items": "center",
+        "background": "{color.surface-2}",
+        "border-radius": "{radius.lg}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "font-weight": 500,
+        "gap": "{spacing.1.5}",
+        "padding": "{spacing.1.5} {spacing.3}"
+      },
+      "type": "frame"
+    },
     "wSy9ezgw": {
       "index": "a0",
       "name": "Heading",
@@ -199652,6 +200472,13 @@
         "padding-top": 8,
         "text-align": "center"
       },
+      "type": "text"
+    },
+    "wceqLq2D": {
+      "content": "Page 16",
+      "index": "a1",
+      "name": "Label",
+      "parentId": "lk0jcbsN",
       "type": "text"
     },
     "wddHaPq8": {
@@ -203570,6 +204397,17 @@
       },
       "type": "frame"
     },
+    "xjlqTNz3": {
+      "index": "a0",
+      "name": "Heading row",
+      "parentId": "BUWTQ4i7",
+      "style": {
+        "align-items": "flex-start",
+        "display": "flex",
+        "gap": "{spacing.3}"
+      },
+      "type": "frame"
+    },
     "xjyZ48uV": {
       "index": "a3",
       "name": "Rule",
@@ -206037,6 +206875,21 @@
       },
       "type": "frame"
     },
+    "yav8BLQ5": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a4",
+      "name": "Page 34",
+      "parentId": "utFn9YUc",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
+      },
+      "type": "frame"
+    },
     "yazN4PeG": {
       "index": "a001",
       "name": "Spacer",
@@ -206647,6 +207500,18 @@
         "text-align": "justify",
         "text-align-last": "right",
         "text-indent": "-1.5em"
+      },
+      "type": "frame"
+    },
+    "ykc7nsud": {
+      "index": "a0",
+      "name": "Heading",
+      "parentId": "bRW9Jwcg",
+      "style": {
+        "display": "flex",
+        "flex": 1,
+        "flex-direction": "column",
+        "gap": "{spacing.0.5}"
       },
       "type": "frame"
     },
@@ -210068,6 +210933,21 @@
         "display": "flex",
         "flex-shrink": 0,
         "width": 180
+      },
+      "type": "frame"
+    },
+    "zrK4VUTP": {
+      "css": "transition: background {transition.duration-press} {ease.out};\n\n&:hover {\n  background: {color.surface-2};\n}",
+      "index": "a3",
+      "name": "Page 21",
+      "parentId": "nfx32VXe",
+      "style": {
+        "align-items": "center",
+        "border-radius": "{radius.md}",
+        "display": "flex",
+        "font-size": "{text.sm}",
+        "gap": "{spacing.2}",
+        "padding": "{spacing.1}"
       },
       "type": "frame"
     },
