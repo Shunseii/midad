@@ -231,6 +231,13 @@ const shot = async (page, name) => {
 };
 const phase = (page) => page.ev(`document.querySelector("[data-update-phase]")?.dataset.updatePhase ?? null`);
 const updatesText = (page) => page.ev(`document.getElementById("updates")?.textContent ?? ""`);
+const UPDATE_INDICATOR = `document.querySelector("[data-update-indicator]")`;
+const RESTART = `[...document.querySelectorAll("[data-update-section] button")].find((b) => b.textContent.trim() === "Restart to update")`;
+/** Opens the reader's status popover, where Restart to update lives, unless it's open already. */
+const openRestart = async (page) => {
+  if (!(await page.ev(`!!${RESTART}`))) await page.click(`js:${UPDATE_INDICATOR}`);
+  await page.waitFor(`!!${RESTART}`, { timeout: 3000, message: "the reader's status popover has no Restart to update" });
+};
 const openUpdates = async (page) => {
   await page.go("#/settings", `!!document.getElementById("updates")`);
   await page.waitFor(`!!document.getElementById("devices") && !!document.querySelector("[data-update-phase]")`);
@@ -276,8 +283,12 @@ try {
   step("Restart waits while an Ask AI answer streams");
   const bookId = await page.ev(`window.midad["library.list"]().then((books) => books[0]?.bookId)`);
   assert.ok(bookId, "the copied library has no books");
-  await page.go(`#/read/${bookId}?p=1`, `!!document.querySelector('[data-update-notice="toolbar"]')`);
-  await shot(page, "6-ready-reader-notice");
+  await page.go(`#/read/${bookId}?p=1`, `!!${UPDATE_INDICATOR}?.querySelector("[data-update-dot]")`);
+  assert.equal(await page.ev(`!!document.querySelector("[data-update-notice]")`), false, "the reader shows an Update ready pill");
+  await openRestart(page);
+  await shot(page, "6-ready-reader-popover");
+  await page.click(`js:${UPDATE_INDICATOR}`);
+  await page.waitFor(`!${RESTART}`, { timeout: 3000, message: "the reader's status popover didn't close" });
   await page.click('[aria-label^="Ask AI"]');
   await page.waitFor(`!!document.querySelector("[role=textbox][aria-multiline]")`, { message: "Ask AI didn't open" });
   await page.waitStill("[role=textbox][aria-multiline]");
@@ -287,7 +298,8 @@ try {
   await page.waitFor(`document.querySelector("[role=textbox][aria-multiline]").innerText.includes("Which books")`, { message: "the question wasn't typed" });
   await page.press("Enter");
   await page.waitFor(`!!document.querySelector('[aria-label="Stop"]')`, { timeout: 8000, message: "the answer didn't start streaming" });
-  await page.waitFor(`document.querySelector('[data-update-notice="toolbar"] button:not([aria-label])')?.disabled === true`, { timeout: 3000, message: "Restart stayed enabled while streaming" });
+  await openRestart(page);
+  await page.waitFor(`${RESTART}?.disabled === true`, { timeout: 3000, message: "Restart stayed enabled while streaming" });
   await shot(page, "7-restart-held-while-answering");
   await page.waitFor(`!document.querySelector('[aria-label="Stop"]')`, { timeout: 20000, message: "the answer never finished" });
   const answer = await page.ev(`document.body.innerText`);
@@ -295,7 +307,8 @@ try {
   assert.match(answer, /BOOKS: \S/, "midad books printed nothing through the shim");
   assert.doesNotMatch(answer, /BOOKS: [^\n]*(not found|ELECTRON|Error)/i, "midad books failed through the shim");
   console.log(`  ✓ midad books ran through the shim with no node: ${answer.match(/BOOKS: [^\n]*/)[0].slice(0, 120)}`);
-  await page.waitFor(`document.querySelector('[data-update-notice="toolbar"] button:not([aria-label])')?.disabled === false`, { timeout: 3000, message: "Restart stayed disabled after the answer" });
+  await openRestart(page);
+  await page.waitFor(`${RESTART}?.disabled === false`, { timeout: 3000, message: "Restart stayed disabled after the answer" });
 
   step("Restart installs and relaunches");
   // The AppImage runtime serving the old mount can outlive the app (the relaunched one starts inside that mount), so only the app itself must quit.
@@ -307,7 +320,8 @@ try {
     }
   };
   const oldApp = ours().filter((pid) => cmdline(pid)[0] !== appImage);
-  await page.click(`js:document.querySelector('[data-update-notice="toolbar"] button:not([aria-label])')`);
+  await openRestart(page);
+  await page.click(`js:${RESTART}`);
   page.close();
   const deadline = Date.now() + 60000;
   while (ours().some((pid) => oldApp.includes(pid))) {

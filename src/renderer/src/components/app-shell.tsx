@@ -54,7 +54,7 @@ export const AppShell = () => {
           </span>
         </div>
         <div className="mt-3 empty:hidden">
-          <UpdateNotice placement="sidebar" />
+          <UpdateNotice />
         </div>
         <div className="mt-2 empty:hidden">
           <DevicesIndicator placement="sidebar" />

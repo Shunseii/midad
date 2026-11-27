@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { LONG_BOOK } from "../lib/fixture.mjs";
 import { openReader } from "../lib/reader.mjs";
 import { freePort, startSyncServer } from "../lib/sync-server.mjs";
+import { RESTART_BUTTON, setUpdateStatus, updateManaged, updateReady } from "../lib/updates.mjs";
 
 export const name = "Devices";
 
@@ -80,6 +81,27 @@ export const checks = [
     },
   ],
   [
+    "with an update ready, the reader's Devices icon turns to a download with the update dot, and its popover puts Restart above Devices",
+    async (page) => {
+      await openReader(page, { bookId: LONG_BOOK, position: 3 });
+      await page.waitFor(`!!${indicator("synced")}`, { message: "the reader shows no Up to date icon" });
+      assert.equal(await page.ev(`${indicator("synced")}.hasAttribute("data-update-indicator")`), false, "the update shows with none ready");
+      await setUpdateStatus(page, updateReady());
+      await page.waitFor(`${indicator("synced")}?.hasAttribute("data-update-indicator")`, { message: "the Devices icon doesn't show the update" });
+      assert.equal(await page.ev(`!!${indicator("synced")}.querySelector("[data-update-dot]")`), true, "no update dot");
+      assert.equal(await page.ev(`${indicator("synced")}.getAttribute("aria-label")`), "Devices: Up to date · Update ready");
+      assert.equal(await page.ev(`!!document.querySelector("[data-update-notice]")`), false, "the reader still shows the Update ready pill");
+
+      await page.click(`js:${indicator("synced")}`);
+      await page.waitFor(`!!document.querySelector("[data-devices-popover]") && !!document.querySelector("[data-update-section]")`, { message: "the popover lacks the update or Devices" });
+      const order = await page.ev(`document.querySelector("[data-update-section]").compareDocumentPosition(document.querySelector("[data-devices-popover]")) & Node.DOCUMENT_POSITION_FOLLOWING`);
+      assert.ok(order, "the update section isn't above Devices");
+      assert.equal(await page.ev(`${RESTART_BUTTON}?.disabled`), false, "Restart to update is missing or disabled");
+      await page.press("Escape");
+      await openDevicesSettings(page);
+    },
+  ],
+  [
     "with the server stopped, the library and the reader show offline",
     async (page) => {
       await stopServer();
@@ -87,6 +109,10 @@ export const checks = [
       assert.ok((await page.ev(devicesText)).includes("Offline · retrying"));
       await openReader(page, { bookId: LONG_BOOK, position: 3 });
       await page.waitFor(`!!${indicator("offline")}?.querySelector("[data-devices-dot]")`, { message: "the reader's top bar shows no offline indicator with a dot" });
+      assert.equal(await page.ev(`${indicator("offline")}.hasAttribute("data-update-indicator")`), true, "the update stopped showing");
+      assert.equal(await page.ev(`!!${indicator("offline")}.querySelector("[data-update-dot]")`), false, "the update dot shows over the offline dot");
+      await setUpdateStatus(page, updateManaged());
+      await page.waitFor(`!${indicator("offline")}.hasAttribute("data-update-indicator")`, { message: "the update stayed with none ready" });
     },
   ],
   [
