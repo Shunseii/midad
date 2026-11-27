@@ -41,6 +41,7 @@ import { useKeybindings } from "../lib/use-keybindings";
 import { shortcutKeys, shortcutLabel, withShortcut } from "../lib/keymap";
 import { neighbourPages } from "../lib/neighbours";
 import { continuesBurst, firstFullyVisible, nearestWord, restoredScrollTop, wordSelector } from "../lib/zoom-anchor";
+import { arrival, pageMemory, type PagePlace, type PageRef } from "../lib/page-memory";
 
 interface TocEntry {
   /** The page number printed in the book, when the page has one. */
@@ -117,7 +118,17 @@ const sameLines = (a: number[], b: number[]) => a.length === b.length && a.every
 /** Longer than the column's width transition, in case its transitionend never comes. */
 const WIDTH_FOLLOW_MAX_MS = 600;
 
-const focusInNoteEditor = () => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
+/** The first whole word at the top of the page's view, and how far below the view's top it sits. */
+const topWordAnchor = (root: HTMLElement): ScrollAnchor | null => {
+  const view = root.getBoundingClientRect();
+  const words = [...root.querySelectorAll<HTMLElement>("[data-w]")];
+  const word = words[firstFullyVisible({ words: words.map((w) => w.getBoundingClientRect()), view })];
+  const { part, line, w } = word?.dataset ?? {};
+  if (!word || (part !== "matn" && part !== "hashiya")) return null;
+  return { part, line: Number(line), word: Number(w), offset: word.getBoundingClientRect().top - view.top };
+};
+
+const focusInNoteEditor =() => document.activeElement?.closest('[role="dialog"][aria-label="Note"]') != null;
 
 /** Scrolls to the first of some spans and tints the words of all of them for a moment. */
 const revealSpans = ({ root, spans }: { root: HTMLElement | null; spans: Span[] }) => {
@@ -614,17 +625,22 @@ export const ReaderRoute = () => {
     if (!fromUrl && marker.data) pendingRow.current = marker.data;
   }, [marker.isSuccess, marker.data, fromUrl]);
 
-  // Each page starts at its top, unless it's opening at a particular place (a saved spot, a citation, a contents row).
+  // A page comes back where it was left this session, or else starts at its top. A navigation with its own
+  // target (a citation, the marker's row, a launch or Settings place) goes there instead, as does opening the book.
   const shownPage = page.data?.position;
-  const lastShownPage = useRef(shownPage);
+  const shownBook = page.data?.bookId;
+  const lastShownPage = useRef<PageRef | null>(null);
   useLayoutEffect(() => {
-    if (shownPage === undefined || shownPage === lastShownPage.current) return;
-    const first = lastShownPage.current === undefined;
-    lastShownPage.current = shownPage;
-    const placed =
+    if (shownPage === undefined || shownBook === undefined) return;
+    const last = lastShownPage.current;
+    if (last?.bookId === shownBook && last.position === shownPage) return;
+    lastShownPage.current = { bookId: shownBook, position: shownPage };
+    const hasTarget =
       pendingReveal.current?.position === shownPage || pendingRow.current?.position === shownPage || pendingScroll.current !== null || pendingPlace.current !== null;
-    if (!first && !placed) pageRoot.current?.scrollTo({ top: 0 });
-  }, [shownPage]);
+    const next = arrival({ page: { bookId: shownBook, position: shownPage }, opening: last === null, hasTarget, memory: pageMemory });
+    if (next.kind === "restore") restorePlace(next.place);
+    else if (next.kind === "top") pageRoot.current?.scrollTo({ top: 0 });
+  }, [shownPage, shownBook]);
 
   useEffect(() => {
     const reveal = pendingReveal.current;
@@ -1125,23 +1141,30 @@ export const ReaderRoute = () => {
     }
   }, [bookLoaded, bookId, position, total]);
 
-  const shownPosition = useRef<number | null>(null);
-  shownPosition.current = page.data?.position ?? null;
+  const shownRef = useRef<PageRef | null>(null);
+  shownRef.current = page.data ? { bookId: page.data.bookId, position: page.data.position } : null;
   const placeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const savePlace = useCallback(() => {
     clearTimeout(placeTimer.current);
     placeTimer.current = undefined;
     const root = pageRoot.current;
-    const at = shownPosition.current;
-    if (!root || at === null) return;
-    const view = root.getBoundingClientRect();
-    const words = [...root.querySelectorAll<HTMLElement>("[data-w]")];
-    const word = words[firstFullyVisible({ words: words.map((w) => w.getBoundingClientRect()), view })];
-    const { part, line, w } = word?.dataset ?? {};
-    if (!word || (part !== "matn" && part !== "hashiya")) return;
-    const anchor: ScrollAnchor = { part, line: Number(line), word: Number(w), offset: word.getBoundingClientRect().top - view.top };
+    const at = shownRef.current?.position;
+    const anchor = root && topWordAnchor(root);
+    if (at === undefined || !anchor) return;
     void midad["library.setProgress"]({ bookId, position: at, anchor }).catch(() => undefined);
   }, [bookId]);
+  const memoryFrame = useRef(0);
+  const rememberPlace = () => {
+    cancelAnimationFrame(memoryFrame.current);
+    memoryFrame.current = requestAnimationFrame(() => {
+      const root = pageRoot.current;
+      const shown = shownRef.current;
+      // Until a launch's or Settings' place is put back, the scroll isn't the reader's own.
+      if (!root || !shown || pendingScroll.current !== null || pendingPlace.current !== null) return;
+      const anchor = topWordAnchor(root);
+      pageMemory.remember({ page: shown, place: anchor ? { anchor } : { scrollTop: root.scrollTop } });
+    });
+  };
   const schedulePlaceSave = () => {
     clearTimeout(placeTimer.current);
     placeTimer.current = setTimeout(savePlace, SAVE_PLACE_MS);
@@ -1192,7 +1215,7 @@ export const ReaderRoute = () => {
   const holdAnchor = (anchor: Pick<ZoomAnchor, "selector" | "offset"> | null) => {
     const root = pageRoot.current;
     const word = anchor && root?.querySelector(anchor.selector);
-    if (!anchor || !root || !word) return;
+    if (!anchor || !root || !word) return false;
     root.scrollTop = restoredScrollTop({
       scrollTop: root.scrollTop,
       anchorTop: word.getBoundingClientRect().top,
@@ -1200,6 +1223,23 @@ export const ReaderRoute = () => {
       offset: anchor.offset,
       maxScrollTop: root.scrollHeight - root.clientHeight,
     });
+    return true;
+  };
+
+  /** Puts a page back where it was left, at once; its word is held again once fonts that were still loading arrive. */
+  const restorePlace = (place: PagePlace) => {
+    const root = pageRoot.current;
+    if (!root) return;
+    if ("scrollTop" in place) {
+      root.scrollTop = place.scrollTop;
+      return;
+    }
+    const anchor = { selector: wordSelector(place.anchor), offset: place.anchor.offset };
+    if (!holdAnchor(anchor)) {
+      root.scrollTop = 0;
+      return;
+    }
+    if (document.fonts.status !== "loaded") void document.fonts.ready.then(() => holdAnchor(anchor));
   };
 
   useLayoutEffect(() => {
@@ -1634,6 +1674,7 @@ export const ReaderRoute = () => {
           onScroll={() => {
             measureOnScreen();
             schedulePlaceSave();
+            rememberPlace();
             if (toolbar) setToolbar(null);
           }}
         >
