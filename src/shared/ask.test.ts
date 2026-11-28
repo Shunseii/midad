@@ -452,3 +452,14 @@ describe("memoryIndex", () => {
   });
 });
 
+describe("SYSTEM_PROMPT", () => {
+  it("nudges the reader to try vowelling, translating or reading a meaning before giving it", () => {
+    expect(SYSTEM_PROMPT).toContain("first encourage them to give it a shot");
+    expect(SYSTEM_PROMPT).toContain("Help directly when they have already tried");
+    expect(SYSTEM_PROMPT).toContain("Never nudge twice for the same thing and never refuse");
+  });
+
+  it("still explains when the reader presses the Explain button", () => {
+    expect(SYSTEM_PROMPT).toContain('"Explain this passage." comes from the reader\'s Explain button: explain the passage');
+  });
+});
