@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,6 +9,7 @@ import { ShortcutsDialog } from "./components/shortcuts-dialog";
 import { ThemeSync } from "./lib/appearance";
 import { LAST_SCREEN_PREF, launchPlace, ON_LAUNCH_PREF, screenOf } from "./lib/launch";
 import { getPref, setPref } from "./lib/prefs";
+import { queryClient } from "./lib/query-client";
 import { KeybindingsRoot } from "./lib/use-keybindings";
 import { keys, midad } from "./lib/midad";
 import { dropFocusFromClickedControls } from "./lib/pointer-focus";
@@ -18,9 +19,6 @@ import { ReaderRoute, type ReaderState } from "./routes/reader";
 import { SettingsRoute } from "./routes/settings";
 import "./styles.css";
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { refetchOnWindowFocus: false, staleTime: 30_000 } },
-});
 
 // The midad CLI writes to the same library; show its changes as they land.
 window.midadEvents.onLibraryChanged(() => void queryClient.invalidateQueries({ queryKey: ["library"] }));
