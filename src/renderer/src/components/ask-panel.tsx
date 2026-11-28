@@ -1,14 +1,16 @@
 import { ArrowDown, ArrowLeft, ArrowUp, BookA, Check, ChevronDown, Copy, History, LoaderCircle, Sparkles, Lightbulb, MessageCircleQuestion, NotebookPen, Pencil, PenLine, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
-import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
 import { ASK_MODELS, askModel, boldRuns, citedGloss, citeSpans, DEFAULT_ASK_MODEL, isArabicLine, markedPhrase, parseCitations, type Segment } from "../../../shared/ask";
 import { getPref, usePref } from "../lib/prefs";
 import { Menu } from "@base-ui/react/menu";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
-import type { AskSelection, Conversation, ConversationSummary, Quote, StoredTurn } from "../../../shared/conversations";
+import type { AskSelection, ConversationSummary, Quote } from "../../../shared/conversations";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { afterAnswer, type AnswerEnd, type AskQueue, dequeue, emptyQueue, enqueue, sendFirst } from "../lib/ask-queue";
+import type { AskQueue } from "../lib/ask-queue";
+import { type AskScreen, createAskSessions, type QueuedMessage, type Turn } from "../lib/ask-session";
+import { queryClient } from "../lib/query-client";
 import { copiedPassage } from "../lib/copied";
 import { arabicNumber, timeAgo } from "../lib/format";
 import { keys, midad, usePage } from "../lib/midad";
@@ -16,14 +18,7 @@ import { handleKeys } from "../lib/use-keybindings";
 import { Button, IconButton, Toast, ToastAction, cx } from "./ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-export type { AskSelection, Quote };
-
-export interface Turn extends Omit<StoredTurn, "createdAt"> {
-  /** While streaming: what Claude is doing, e.g. reading the page. */
-  activity: string | null;
-  /** Answered in a new Claude session because the old one was gone. Only known for answers given since the panel opened. */
-  restarted?: boolean;
-}
+export type { AskSelection, Quote, QueuedMessage, Turn };
 
 /** How long a deleted conversation can be brought back; a little longer than its toast shows. */
 const UNDO_DELETE_MS = 4500;
@@ -32,208 +27,35 @@ const UNDO_DELETE_MS = 4500;
 const COMPOSER_LINE = 24;
 const COMPOSER_ROWS = 3;
 
-const fromStored = ({ createdAt: _, ...turn }: StoredTurn): Turn => ({ ...turn, activity: null });
-
 /** The error of an answer the reader stopped: shown as a note, not a failure. */
 const STOPPED = "Stopped.";
 
-/** A question typed while Claude was answering, waiting its turn. It keeps the page and selection it was typed on. */
-export interface QueuedMessage {
-  id: string;
-  question: string;
-  quotes: Quote[];
-  position: number;
-  selection: AskSelection | null;
-}
+const ASK_MODEL_PREF = { key: "ask.model", fallback: DEFAULT_ASK_MODEL as string };
+
+const askSessions = createAskSessions({
+  api: midad,
+  onAskEvent: (callback) => window.midadEvents.onAskEvent(callback),
+  model: () => getPref(ASK_MODEL_PREF),
+  historyChanged: (bookId) => void queryClient.invalidateQueries({ queryKey: keys.conversations(bookId) }),
+});
 
 /**
  * One Ask AI conversation for a book: a Claude session continued across questions.
  * A new one lives only in memory until it's saved; once saved, each question is saved as it's asked.
- * Opening the book brings back its most recently used saved one.
+ * Opening the book brings back its most recently used saved one; coming back to it in the same app session
+ * brings back whatever was open, with answers that kept streaming meanwhile.
  */
 export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A new conversation starts: the reader's selection goes with the old one. */ onNew?: () => void }) => {
   const client = useQueryClient();
-  const [turns, setTurns] = useState<Turn[]>([]);
-  // The turns as last drawn, for a question asked from a callback (the queue, Send now).
-  const turnsNow = useRef(turns);
-  turnsNow.current = turns;
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
-  const isSaved = useRef(false);
-  const current = useRef<string | null>(null);
-  const sessionId = useRef<string | null>(null);
-  // Bumped whenever another conversation is shown, so a late load or answer can't revive the old one.
-  const generation = useRef(0);
-  const update = useCallback((id: string, change: (t: Turn) => Partial<Turn>) => {
-    setTurns((all) => all.map((t) => (t.id === id ? { ...t, ...change(t) } : t)));
-  }, []);
+  const session = askSessions.of(bookId);
+  const state = useSyncExternalStore(session.subscribe, session.getState);
+  const { turns, conversationId, saved, queue } = state;
   const history = useQuery({ queryKey: keys.conversations(bookId), queryFn: () => midad["conversations.list"]({ bookId }) });
   const [deleted, setDeleted] = useState<{ id: string; wasOpen: boolean } | null>(null);
   const deleting = useRef<{ id: string; timer: ReturnType<typeof setTimeout> } | null>(null);
   const refreshHistory = () => client.invalidateQueries({ queryKey: keys.conversations(bookId) });
-  // Read by an answer as it ends, so it's kept in a ref as well as in state.
-  const queueRef = useRef<AskQueue<QueuedMessage>>(emptyQueue());
-  const [queue, setQueueState] = useState(queueRef.current);
-  const setQueue = useCallback((next: AskQueue<QueuedMessage>) => {
-    queueRef.current = next;
-    setQueueState(next);
-  }, []);
-  // Answers the reader stopped, so their end pauses the queue rather than counting as a failure.
-  const stopped = useRef(new Set<string>());
-
-  const show = useCallback((conversation: Conversation | null) => {
-    generation.current += 1;
-    current.current = conversation?.id ?? null;
-    setConversationId(current.current);
-    isSaved.current = conversation !== null;
-    setSaved(isSaved.current);
-    sessionId.current = conversation?.sessionId ?? null;
-    setTurns(conversation?.turns.map(fromStored) ?? []);
-    setQueue(emptyQueue());
-  }, [setQueue]);
-
-  const load = useCallback(
-    (fetch: () => Promise<Conversation | null>) => {
-      show(null);
-      const started = generation.current;
-      void fetch().then((conversation) => {
-        if (started === generation.current) show(conversation);
-      });
-    },
-    [show],
-  );
-
-  useEffect(() => load(() => midad["conversations.latest"]({ bookId })), [bookId, load]);
-
-  useEffect(
-    () =>
-      window.midadEvents.onAskEvent((requestId, event) => {
-        if (event.kind === "delta") update(requestId, (t) => ({ answer: t.answer + event.text, activity: null }));
-        if (event.kind === "tool") update(requestId, (t) => ({ activity: "Reading the page…", answer: t.answer && !t.answer.endsWith("\n\n") ? `${t.answer}\n\n` : t.answer }));
-      }),
-    [update],
-  );
-
-  const ask = async ({ question, position, selection, quotes = [] }: { question: string; position: number; selection: AskSelection | null; quotes?: Quote[] }) => {
-    const id = crypto.randomUUID();
-    if (!current.current) {
-      current.current = crypto.randomUUID();
-      setConversationId(current.current);
-    }
-    const conversation = current.current;
-    const started = generation.current;
-    // Claude's session only keeps answers that finished; the stopped ones since go along with this question.
-    const earlier = turnsNow.current;
-    const cutOff = earlier.slice(earlier.findLastIndex((t) => t.status === "done") + 1).map((t) => ({ question: t.question, answer: t.answer, status: t.status, quotes: t.quotes.map((q) => ({ text: q.text })) }));
-    const ended = (end: AnswerEnd) => {
-      stopped.current.delete(id);
-      if (started !== generation.current) return;
-      const { next, queue: after } = afterAnswer({ queue: queueRef.current, end });
-      setQueue(after);
-      if (next) void ask(next);
-    };
-    setTurns((all) => [...all, { id, question, quotes, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }]);
-    if (isSaved.current) {
-      try {
-        await midad["conversations.addTurn"]({ conversationId: conversation, bookId, turn: { id, question, quotes, position, selection } });
-      } catch (err) {
-        update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) }));
-        ended("error");
-        return;
-      }
-      void refreshHistory();
-    }
-    midad["ai.ask"]({
-      requestId: id,
-      bookId,
-      position,
-      question: questionWithQuoteMarks({ question, quotes }) || "Explain this passage.",
-      selection: selection && position === selection.position ? { span: selection.span, text: selection.text } : undefined,
-      quotes: quotes.map((q) => ({ text: q.text, span: q.position === position ? q.span : null })),
-      sessionId: sessionId.current,
-      model: getPref(ASK_MODEL_PREF),
-      cutOff,
-    })
-      .then(
-        (result) => {
-          if (started === generation.current) sessionId.current = result.sessionId || sessionId.current;
-          update(id, () => ({ answer: result.text, status: "done", activity: null, restarted: result.restarted }));
-          ended("done");
-        },
-        (err: unknown) => {
-          update(id, () => ({ status: "error", activity: null, error: err instanceof Error ? err.message : String(err) }));
-          ended(stopped.current.has(id) ? "stopped" : "error");
-        },
-      )
-      .finally(() => {
-        if (isSaved.current) void refreshHistory();
-      });
-  };
 
   const busy = turns.some((t) => t.status === "streaming");
-  const stop = () => {
-    for (const t of turns) {
-      if (t.status !== "streaming") continue;
-      stopped.current.add(t.id);
-      void midad["ai.cancel"]({ requestId: t.id });
-    }
-  };
-  const queueMessage = (message: Omit<QueuedMessage, "id">) => setQueue(enqueue({ queue: queueRef.current, item: { id: crypto.randomUUID(), ...message } }));
-  /** Sends a message at once: an answer in progress is stopped first, keeping what it wrote so far. */
-  const sendNow = (message: QueuedMessage) => {
-    if (!busy) {
-      setQueue(dequeue({ queue: { ...queueRef.current, paused: false }, id: message.id }));
-      void ask(message);
-      return;
-    }
-    setQueue(sendFirst({ queue: queueRef.current, item: message }));
-    stop();
-  };
-  const sendQueuedNow = (id: string) => {
-    const message = queueRef.current.items.find((m) => m.id === id);
-    if (message) sendNow(message);
-  };
-  const sendDraftNow = (message: Omit<QueuedMessage, "id">) => sendNow({ id: crypto.randomUUID(), ...message });
-  /** Takes a message out of the queue, to edit it in the composer. */
-  const takeQueued = (id: string): QueuedMessage | null => {
-    const message = queueRef.current.items.find((m) => m.id === id) ?? null;
-    setQueue(dequeue({ queue: queueRef.current, id }));
-    return message;
-  };
-  const removeQueued = (id: string) => setQueue(dequeue({ queue: queueRef.current, id }));
-  const retry = (turn: Turn) => {
-    const message = { question: turn.question, position: turn.position, selection: turn.selection, quotes: turn.quotes };
-    if (busy) queueMessage(message);
-    else void ask(message);
-  };
-  /** Starts a fresh conversation and Claude session; the old one stays in the history. */
-  const reset = () => {
-    stop();
-    show(null);
-  };
-  /** Shows a saved conversation; the next question continues its Claude session. */
-  const open = (id: string) => {
-    if (id === current.current) return;
-    stop();
-    load(() => midad["conversations.get"]({ id }));
-  };
-  /** Saves the open conversation with everything asked so far; later questions save as they're asked. */
-  const save = async () => {
-    const id = current.current;
-    if (!id || isSaved.current || turns.length === 0) return;
-    isSaved.current = true;
-    setSaved(true);
-    try {
-      await midad["conversations.save"]({ id, bookId, sessionId: sessionId.current, turns: turns.map(({ activity: _, restarted: __, ...turn }) => turn) });
-    } catch {
-      if (current.current === id) {
-        isSaved.current = false;
-        setSaved(false);
-      }
-    } finally {
-      void refreshHistory();
-    }
-  };
   const rename = async ({ id, title }: { id: string; title: string }) => {
     await midad["conversations.rename"]({ id, title });
     void refreshHistory();
@@ -259,8 +81,8 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
 
   const remove = (id: string) => {
     commitDelete();
-    const wasOpen = id === current.current;
-    if (wasOpen) reset();
+    const wasOpen = id === session.getState().conversationId;
+    if (wasOpen) session.reset();
     deleting.current = { id, timer: setTimeout(commitDelete, UNDO_DELETE_MS) };
     setDeleted({ id, wasOpen });
   };
@@ -269,17 +91,21 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
     if (!pending) return;
     clearTimeout(pending.timer);
     deleting.current = null;
-    if (deleted?.wasOpen) load(() => midad["conversations.get"]({ id: pending.id }));
+    if (deleted?.wasOpen) session.loadConversation(pending.id);
     setDeleted(null);
   };
 
   // `moved` stays false until the first switch, so the panel doesn't slide in when it opens.
-  const [screen, setScreen] = useState<{ name: "chat" | "history"; moved: boolean }>({ name: "chat", moved: false });
-  const showScreen = (name: "chat" | "history") => setScreen({ name, moved: true });
+  const [moved, setMoved] = useState(false);
+  const screen = { name: state.screen, moved };
+  const showScreen = (name: AskScreen) => {
+    setMoved(true);
+    session.setScreen(name);
+  };
   // Bumped to put the caret in the composer once a new conversation is showing.
   const [composeRequest, setComposeRequest] = useState(0);
   const startNew = () => {
-    reset();
+    session.reset();
     onNew?.();
     if (screen.name !== "chat") showScreen("chat");
     setComposeRequest((n) => n + 1);
@@ -292,31 +118,32 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
     nameWithClaude,
     composeRequest,
     turns,
-    ask,
+    ask: session.ask,
     busy,
-    stop,
-    retry,
+    stop: session.stop,
+    retry: session.retry,
     queue,
-    queueMessage,
-    sendQueuedNow,
-    sendDraftNow,
-    takeQueued,
-    removeQueued,
-    reset,
-    open,
+    queueMessage: session.queueMessage,
+    sendQueuedNow: session.sendQueuedNow,
+    sendDraftNow: session.sendDraftNow,
+    takeQueued: session.takeQueued,
+    removeQueued: session.removeQueued,
+    reset: session.reset,
+    open: session.open,
     conversationId,
     saved,
-    save,
+    save: session.save,
     rename,
     history: (history.data ?? []).filter((c) => c.id !== deleted?.id),
     remove,
     undoDelete,
     commitDelete,
     deleted: deleted !== null,
+    /** What was typed in the composer and not sent, kept while away from the book. */
+    draft: session.draft,
+    keepDraft: session.keepDraft,
   };
 };
-
-const ASK_MODEL_PREF = { key: "ask.model", fallback: DEFAULT_ASK_MODEL as string };
 
 const ARABIC_START = /^[^\p{L}]*\p{Script=Arabic}/u;
 
@@ -925,8 +752,12 @@ const CiteChip = ({
     onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
   }) => {
     const { screen, showScreen, composeRequest, turns, ask, busy, stop, retry, open, conversationId, rename, nameWithClaude, history, remove, undoDelete, commitDelete, deleted } = conversation;
-    const { queue, queueMessage, sendQueuedNow, sendDraftNow, takeQueued, removeQueued } = conversation;
-    const [draft, setDraft] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
+    const { queue, queueMessage, sendQueuedNow, sendDraftNow, takeQueued, removeQueued, keepDraft } = conversation;
+    const [draft, setDraftState] = useState<{ question: string; quotes: Quote[]; empty: boolean }>({ question: "", quotes: [], empty: true });
+    const setDraft = ({ question, quotes, empty }: { question: string; quotes: Quote[]; empty: boolean }) => {
+      setDraftState({ question, quotes, empty });
+      keepDraft({ question, quotes });
+    };
     const editor = useRef<HTMLDivElement>(null);
     // Each pill's quote and the span it renders into, kept in the editor's text flow.
     const pills = useRef(new Map<string, { quote: Quote; host: HTMLElement }>());
@@ -1047,12 +878,7 @@ const CiteChip = ({
       clear();
     };
 
-    /** Puts a queued question back in the composer, after anything already typed there. */
-    const editQueued = (id: string) => {
-      const root = editor.current;
-      const message = takeQueued(id);
-      if (!root || !message) return;
-      if (!draft.empty) root.append("\n");
+    const appendToComposer = ({ root, message }: { root: HTMLElement; message: { question: string; quotes: Quote[] } }) => {
       for (const part of parseComposer(message)) {
         if (part.kind === "text") {
           root.append(part.text);
@@ -1065,6 +891,22 @@ const CiteChip = ({
         pills.current.set(part.quote.id, { quote: part.quote, host });
       }
       sync();
+    };
+
+    // What was typed before leaving the book, or the chat, comes back in the composer.
+    useLayoutEffect(() => {
+      const root = editor.current;
+      const kept = conversation.draft();
+      if (root && !root.hasChildNodes() && (kept.question || kept.quotes.length > 0)) appendToComposer({ root, message: kept });
+    }, [screen.name]);
+
+    /** Puts a queued question back in the composer, after anything already typed there. */
+    const editQueued = (id: string) => {
+      const root = editor.current;
+      const message = takeQueued(id);
+      if (!root || !message) return;
+      if (!draft.empty) root.append("\n");
+      appendToComposer({ root, message });
       root.focus();
       caretAtEnd(root);
     };
