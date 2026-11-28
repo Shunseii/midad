@@ -140,7 +140,8 @@ export const NoteLayer = ({
         finalFocus={false}
         onMouseEnter={() => onPointerInside(true)}
         onMouseLeave={() => onPointerInside(false)}
-        className={FLOATING_LAYER}
+        // The peek's hover ring carries on round its arrow.
+        className={cx(FLOATING_LAYER, "has-[[data-note-peek]:hover]:[--arrow-ring:var(--color-accent)] has-[[data-note-peek]:hover]:[--arrow-shadow:transparent]")}
       >
         {children}
         <PopoverArrow />
@@ -154,6 +155,7 @@ export const NotePeek = ({ note, lineLabel, onEdit }: { note: Note; lineLabel: s
   <button
     type="button"
     aria-label={`Edit note on ${lineLabel}`}
+    data-note-peek
     onClick={onEdit}
     className="group flex w-64 flex-col gap-1.5 rounded-xl bg-surface-3 px-3 py-2.5 text-left shadow-float hover:ring-1 hover:ring-accent"
   >

@@ -59,7 +59,11 @@ function PopoverContent({
   )
 }
 
-/** A small triangle pointing at the anchor, drawn in the popup's surface colour with a hairline edge. */
+/**
+ * A small triangle pointing at the anchor, drawn in the popup's surface colour with a hairline edge.
+ * Setting --arrow-ring on the popup edges its sides in that colour instead, outside the fill like a
+ * ring-1, so it joins a ring on the box with no line across its base.
+ */
 function PopoverArrow({ className, ...props }: PopoverPrimitive.Arrow.Props) {
   return (
     <PopoverPrimitive.Arrow
@@ -70,8 +74,9 @@ function PopoverArrow({ className, ...props }: PopoverPrimitive.Arrow.Props) {
       )}
       {...props}
     >
-      <svg viewBox="0 0 12 6" aria-hidden className="block size-full fill-popover drop-shadow-[0_1px_0_var(--color-line)]">
-        <path d="M0 0h12L6 6z" />
+      <svg viewBox="0 0 12 6" aria-hidden className="block size-full overflow-visible drop-shadow-[0_1px_0_var(--arrow-shadow,var(--color-line))]">
+        <path d="M1 1 6 6l5-5" strokeWidth={2} className="fill-none stroke-(--arrow-ring,transparent)" />
+        <path d="M0 0h12L6 6z" className="fill-popover" />
       </svg>
     </PopoverPrimitive.Arrow>
   )

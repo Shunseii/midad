@@ -211722,11 +211722,12 @@
       "type": "instance"
     },
     "ycl5eIR3": {
+      "css": "/* The peek's hover ring carries on round the arrow, which sits over the ring at its base. */\n\n:hover > & {\n  border-color: {color.accent};\n}",
       "index": "a000VV",
       "name": "Arrow",
       "parentId": "zEcCJa4W",
       "style": {
-        "background": "{color.surface}",
+        "background": "{color.surface-3}",
         "border-left": "1px solid {color.line}",
         "border-top": "1px solid {color.line}",
         "height": 10,
@@ -213859,7 +213860,7 @@
       "type": "frame"
     },
     "zEcCJa4W": {
-      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: top center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 -8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}\ncursor: pointer;\n\n&:hover {\n  box-shadow:\n    var(--elevation-float),\n    0 0 0 1px {color.accent};\n}",
+      "css": "transition:\n  opacity {transition.duration-pop} {ease.out},\n  scale {transition.duration-pop} {ease.out},\n  translate {transition.duration-pop} {ease.out},\n  display {transition.duration-pop} allow-discrete;\ntransform-origin: top center;\n\n@starting-style {\n  opacity: 0;\n  scale: 0.95;\n  translate: 0 -8px;\n}\n\n&[data-state=\"closed\"] {\n  display: none;\n  opacity: 0;\n  scale: 0.95;\n  transition-duration: {transition.duration-pop-exit};\n}\n\n@media (prefers-reduced-motion: reduce) {\n  transition-property: opacity, display;\n}\ncursor: pointer;\n\n&:hover {\n  /* The ring first, so the elevation's hairline doesn't paint over it. */\n  box-shadow:\n    0 0 0 1px {color.accent},\n    var(--elevation-float);\n}",
       "index": "a2",
       "name": "Note peek",
       "parentId": "1X7ah7rQ",
