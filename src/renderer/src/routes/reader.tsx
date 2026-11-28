@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
 import { type CSSProperties, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from "react-router";
-import { type Highlight, type LetterRef, lineText, type Note, type NoteTarget, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
+import { existingNoteFor, type Highlight, type LetterRef, lineText, type Note, type NoteTarget, type Part, quoteSpan, type Span, spanContains, spansOverlap, wordsOf } from "../../../shared/annotations";
 import { isArabicLetter, lettersOf, markFromKey, mergeMarks } from "../../../shared/harakat";
 import type { BookDetail, Bookmark as SavedBookmark, ScrollAnchor, StoredPage } from "../../../shared/library";
 import { DisplayMenu, stepScale, WHEEL_STEP, ZOOM_SHOWN_MS, ZoomLevel } from "../components/display-menu";
@@ -1127,7 +1127,8 @@ export const ReaderRoute = () => {
   const openNoteFromToolbar = () => {
     if (!toolbar) return;
     const span = toolbar.mode === "selection" ? toolbar.span : toolbar.highlight.span;
-    setNoteEditor({ note: null, span, rect: toolbar.rect, mode: "edit" });
+    const existing = existingNoteFor({ notes: annotations.data?.notes ?? [], span });
+    setNoteEditor({ note: existing, span: existing?.span ?? span, rect: toolbar.rect, mode: "edit" });
     finishToolbar();
   };
 

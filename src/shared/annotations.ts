@@ -136,6 +136,18 @@ export const spansOverlap = (a: Span, b: Span): boolean =>
 export const spanContains = ({ span, part, ref }: { span: Span; part: Part; ref: WordRef }): boolean =>
   span.part === part && compareRefs(span.start, ref) <= 0 && compareRefs(ref, span.end) <= 0;
 
+/**
+ * The words note a new note on `span` should open instead: one whose words take in the whole span,
+ * the exact match first. Null when none does, or when several do and none matches exactly.
+ */
+export const existingNoteFor = ({ notes, span }: { notes: Note[]; span: Span }): Note | null => {
+  const covering = notes.filter(
+    (n) => n.kind === "words" && !n.stale && spanContains({ span: n.span, part: span.part, ref: span.start }) && spanContains({ span: n.span, part: span.part, ref: span.end }),
+  );
+  const exact = covering.find((n) => compareRefs(n.span.start, span.start) === 0 && compareRefs(n.span.end, span.end) === 0);
+  return exact ?? (covering.length === 1 ? (covering[0] ?? null) : null);
+};
+
 /** The words a span covers, joined by single spaces. Throws if the span doesn't fit the page. */
 export const quoteSpan = ({ page, span }: { page: Page; span: Span }): string => {
   const { part, start, end } = span;

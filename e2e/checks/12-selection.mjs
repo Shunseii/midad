@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { join } from "node:path";
+import { ROOT } from "../lib/app.mjs";
 import { LONG_BOOK } from "../lib/fixture.mjs";
 import { openReader } from "../lib/reader.mjs";
 
 export const name = "Selection";
+
+const midadCli = ({ userData, args }) =>
+  execFileSync(process.execPath, ["--no-warnings", join(ROOT, "out/cli/midad.mjs"), ...args], { env: { ...process.env, MIDAD_DB: join(userData, "midad.db") }, stdio: "pipe" }).toString();
 
 const word = (line, w) => `[data-part=matn][data-line="${line}"][data-w="${w}"]`;
 /** The selected words, as "line:word". */
@@ -153,6 +159,24 @@ export const checks = [
       await page.sleep(900);
       assert.ok(await page.ev(`!!document.querySelector("[data-slot=popover-content] textarea, [data-slot=popover-content] [contenteditable]")`), "the note editor closed when the pointer left it");
       await page.press("Escape");
+    },
+  ],
+  [
+    "Note on words that already have a note opens that note instead of a new one",
+    async (page, app) => {
+      midadCli({ userData: app.userData, args: ["note", "add", LONG_BOOK, "12", "--line", "2", "--words", "3-6", "--body", "already here"] });
+      await openReader(page, { bookId: LONG_BOOK, position: 12 });
+      await page.ev(`window.getSelection().removeAllRanges()`);
+      await page.sleep(400);
+      await selectWords(page);
+      await page.click(`js:[...document.querySelectorAll("button")].find((b) => b.textContent.trim() === "Note")`);
+      const editorText = `(() => { const e = document.querySelector("[data-slot=popover-content] textarea, [data-slot=popover-content] [contenteditable]"); return e ? (e.value ?? e.textContent) : null; })()`;
+      await page.waitFor(`${editorText} !== null`, { message: "the note editor didn't open" });
+      assert.equal(await page.ev(editorText), "already here", "the editor didn't open the existing note");
+      await page.press("Escape");
+      await page.sleep(300);
+      const { notes } = JSON.parse(midadCli({ userData: app.userData, args: ["annotations", LONG_BOOK, "12", "--json"] }));
+      assert.deepEqual(notes.map((n) => n.body), ["already here"], "pressing Note made another note");
     },
   ],
   [
