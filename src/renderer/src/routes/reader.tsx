@@ -944,7 +944,8 @@ export const ReaderRoute = () => {
 
   /**
    * The page paints any word a selection touches as wholly selected; the selection itself, which is
-   * what gets copied, is stretched to match, so a copy never stops partway through a word.
+   * what gets copied, is fitted to match, so a copy never stops partway through a word or carries
+   * a stray space at either end.
    */
   const snapToWords = ({ root, span, range }: { root: HTMLElement; span: Span; range: Range }) => {
     const at = (ref: { line: number; word: number }) => root.querySelector<HTMLElement>(`[data-part="${span.part}"][data-line="${ref.line}"][data-w="${ref.word}"]`);
@@ -955,9 +956,9 @@ export const ReaderRoute = () => {
     const whole = document.createRange();
     whole.setStartBefore(first);
     whole.setEndAfter(last);
-    // Only ever grows: a selection reaching into the ḥāshiya keeps its end there.
-    if (range.compareBoundaryPoints(Range.START_TO_START, whole) < 0) whole.setStart(range.startContainer, range.startOffset);
-    if (range.compareBoundaryPoints(Range.END_TO_END, whole) > 0) whole.setEnd(range.endContainer, range.endOffset);
+    // A selection reaching on into the ḥāshiya keeps its end there.
+    const reachesOn = [...root.querySelectorAll(`[data-w]:not([data-part="${span.part}"])`)].some((w) => range.intersectsNode(w) && whole.comparePoint(w, 0) > 0);
+    if (reachesOn && range.compareBoundaryPoints(Range.END_TO_END, whole) > 0) whole.setEnd(range.endContainer, range.endOffset);
     if (range.compareBoundaryPoints(Range.START_TO_START, whole) === 0 && range.compareBoundaryPoints(Range.END_TO_END, whole) === 0) return;
     // Keeps which end moves, so Shift+arrows carry on from the same side.
     const backward = selection.anchorNode === range.endContainer && selection.anchorOffset === range.endOffset && !range.collapsed;
