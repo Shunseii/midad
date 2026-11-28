@@ -19,7 +19,24 @@ import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } 
 import { findOnPage } from "../../../shared/find";
 import { citeSpans } from "../../../shared/ask";
 import { ScanPane, ScanSlot } from "../components/scan-pane";
-import { caretNear, letterAtSelectionStart, type NoteMarkTarget, PageView, rectWithGlosses, rowOfWord, screenRows, selectionCoversWord, selectSpan, spanFromSelection, type WordTarget } from "../components/page-view";
+import {
+  caretNear,
+  letterAtSelectionStart,
+  type NoteMarkTarget,
+  PageView,
+  type PointerSelection,
+  rectWithGlosses,
+  rowOfWord,
+  screenRows,
+  type SelectionAnchor,
+  selectByPointer,
+  selectionCoversWord,
+  selectSpan,
+  spanFromSelection,
+  toWordPoint,
+  type WordTarget,
+} from "../components/page-view";
+import { autoScrollStep, granularityFor } from "../lib/pointer-selection";
 import { IconButton, Segmented, Skeleton, Toast, ToastAction, cx } from "../components/ui";
 import { rememberCopy } from "../lib/copied";
 import { tintWords } from "../lib/reveal";
@@ -105,6 +122,13 @@ export type ReaderState = ({ scrollTop: number } | { anchor: ScrollAnchor } | { 
 
 /** How long scrolling has to settle before the place on the page is saved. */
 const SAVE_PLACE_MS = 400;
+
+/** Where a selection's fixed end was: its node and offset, and, inside a word, that word point as a key. */
+interface SelectionMark {
+  node: Node | null;
+  offset: number;
+  word: string | null;
+}
 
 /** A word held in place while the text size changes, and how far below the top of the page's view it was. */
 interface ZoomAnchor {
@@ -484,6 +508,7 @@ export const ReaderRoute = () => {
     return new Set([...fromLayer, ...markTint, ...(panelEditTint ? [panelEditTint] : [])]);
   }, [noteEditor, entryTint, markTint, panelEditTint]);
   const pageRoot = useRef<HTMLDivElement>(null);
+  const scrubberBar = useRef<HTMLDivElement>(null);
   const pointerInNote = useRef(false);
   const leftNote = useRef(false);
   // A popover that closes under the pointer never sees it leave.
@@ -770,28 +795,107 @@ export const ReaderRoute = () => {
   };
 
   /**
-   * The first click redraws the word with the letter cursor, so the browser
-   * neither fires dblclick nor selects the word. Select it on the second press.
+   * The page runs mouse selection itself, as the browser does on plain text: a press selects from
+   * its point, a double-click by words and a triple-click by lines, a drag carries on at that size,
+   * the view scrolls when a drag nears its edge, and Shift+press extends from where the selection
+   * started. The browser can't be left to it: a press can redraw the word under it (the letter
+   * cursor comes and goes), which drops its selection, and a press off the text selects nothing.
+   * The pointer is always taken to the nearest word, so a drag never runs out into the panels.
    */
-  /** A drag that starts off the text (margins, gaps) still selects, from the nearest text. */
-  const startDragSelection = (e: React.MouseEvent<HTMLElement>) => {
-    const root = pageRoot.current;
-    const anchor = root && caretNear({ root, x: e.clientX, y: e.clientY });
+  const pointerSelection = useRef<PointerSelection | null>(null);
+  // Where the selection's fixed end was left after the last press, to tell whether anything has moved it since.
+  const selectionMark = useRef<SelectionMark | null>(null);
+  const dragging = useRef(false);
+  const endDrag = useRef<() => void>(() => {});
+  const selectionEnd = useRef(() => {});
+
+  const anchorOf = (point: { node: Node; offset: number }): SelectionAnchor => {
+    const word = toWordPoint(point);
+    return word ? { word } : { raw: point };
+  };
+  // Also held by word and characters, so a redrawn word (the letter cursor) still counts as the same place.
+  const markOf = (selection: Selection): SelectionMark => {
+    const point = selection.anchorNode && toWordPoint({ node: selection.anchorNode, offset: selection.anchorOffset });
+    return { node: selection.anchorNode, offset: selection.anchorOffset, word: point ? JSON.stringify(point) : null };
+  };
+
+  /** What a Shift+press extends from: the last press's start and size while the selection is still the one it made. */
+  const shiftAnchor = (selection: Selection): PointerSelection => {
+    const last = pointerSelection.current;
+    const was = selectionMark.current;
+    const now = markOf(selection);
+    const kept = was && ((was.node === now.node && was.offset === now.offset) || (was.word !== null && was.word === now.word));
+    if (last && kept) return last;
+    return { granularity: "char", anchor: anchorOf({ node: selection.anchorNode as Node, offset: selection.anchorOffset }) };
+  };
+
+  const startPointerSelection = ({ e, root, extend }: { e: React.MouseEvent<HTMLElement>; root: HTMLElement; extend: PointerSelection | null }) => {
+    const press = caretNear({ root, x: e.clientX, y: e.clientY });
     const selection = window.getSelection();
-    if (!root || !anchor || !selection) return;
+    const pressedWord = press && (press.node instanceof Element ? press.node : press.node.parentElement)?.closest<HTMLElement>("[data-w]");
+    if (!press || !selection || !pressedWord) return;
     e.preventDefault();
-    selection.collapse(anchor.node, anchor.offset);
+    endDrag.current();
+    if (document.activeElement !== root) root.focus({ preventScroll: true });
+    const pressed = e.target as Element;
+    const gesture: PointerSelection = extend ?? {
+      granularity: granularityFor({ clicks: e.detail, onWord: !!pressed.closest("[data-w]"), onLine: !!pressed.closest("[data-line-block]") }),
+      anchor: anchorOf(press),
+      word: { part: pressedWord.dataset.part as Part, ref: { line: Number(pressedWord.dataset.line), word: Number(pressedWord.dataset.w) } },
+    };
+    pointerSelection.current = gesture;
+    const select = (x: number, y: number) => {
+      const focus = caretNear({ root, x, y });
+      if (focus) selectByPointer({ root, selection, gesture, focus });
+    };
+    select(e.clientX, e.clientY);
+    // Dropping the letter cursor redraws its word and loses what was just selected; put a word or line back afterwards.
+    if (target && gesture.granularity !== "char") reselect.current = spanFromSelection(root)?.span ?? null;
+
+    let pointer = { x: e.clientX, y: e.clientY };
+    let frame = 0;
+    let scrolled = false;
+    const scroll = () => {
+      const view = root.getBoundingClientRect();
+      // The scrubber covers the foot of the page while it shows; the text ends above it.
+      const bottom = Math.min(view.bottom, scrubberBar.current?.getBoundingClientRect().top ?? view.bottom);
+      const step = autoScrollStep({ y: pointer.y, top: view.top, bottom });
+      if (step !== 0) {
+        root.scrollTop += step;
+        scrolled = true;
+      }
+      frame = requestAnimationFrame(scroll);
+    };
+    const onScroll = () => select(pointer.x, pointer.y);
     const move = (ev: MouseEvent) => {
-      const focus = caretNear({ root, x: ev.clientX, y: ev.clientY });
-      if (focus) selection.extend(focus.node, focus.offset);
+      // The release can be missed (outside the window, say): a move with the button up ends the drag.
+      if (ev.buttons % 2 === 0) return end();
+      pointer = { x: ev.clientX, y: ev.clientY };
+      select(pointer.x, pointer.y);
     };
-    const up = (ev: MouseEvent) => {
+    const end = () => {
+      if (!dragging.current) return;
+      dragging.current = false;
+      cancelAnimationFrame(frame);
       window.removeEventListener("mousemove", move);
-      // Released over the page, the page's own mouseup handles it.
-      if (!(ev.target instanceof Node && root.contains(ev.target))) onSelectionEnd();
+      window.removeEventListener("mouseup", end);
+      window.removeEventListener("blur", end);
+      root.removeEventListener("scroll", onScroll);
+      const finish = () => {
+        selectionEnd.current();
+        selectionMark.current = markOf(selection);
+      };
+      // The last scroll step's event is still to come, and a scroll puts the toolbar away; open it after.
+      if (scrolled) requestAnimationFrame(finish);
+      else finish();
     };
+    dragging.current = true;
+    endDrag.current = end;
     window.addEventListener("mousemove", move);
-    window.addEventListener("mouseup", up, { once: true });
+    window.addEventListener("mouseup", end);
+    window.addEventListener("blur", end);
+    root.addEventListener("scroll", onScroll);
+    frame = requestAnimationFrame(scroll);
   };
 
   /**
@@ -808,28 +912,17 @@ export const ReaderRoute = () => {
   const onMouseDown = (e: React.MouseEvent<HTMLElement>) => {
     goalX.current = null;
     setMenuOpen(false);
-    dismiss();
-    if (e.button === 0 && pageRoot.current) markDragging(pageRoot.current);
-    const offText = e.target instanceof Element && !e.target.closest("[data-w], [data-gloss-label], [role=link], button, a, input, textarea");
-    if (e.button === 0 && e.detail === 1 && offText) return startDragSelection(e);
-    if (e.detail === 3 && e.target instanceof Element) {
-      const onLine = e.target.closest<HTMLElement>("[data-w]") ?? e.target.closest("[data-line]")?.querySelector<HTMLElement>("[data-w]");
-      if (onLine) {
-        e.preventDefault();
-        selectLine(onLine);
-        return;
-      }
-    }
-    const word = e.detail === 2 && e.target instanceof Element ? e.target.closest<HTMLElement>("[data-w]") : null;
     const root = pageRoot.current;
-    if (!word || !root) return;
-    e.preventDefault();
-    const ref = { line: Number(word.dataset.line), word: Number(word.dataset.w) };
-    const span: Span = { part: word.dataset.part as Span["part"], start: ref, end: ref };
-    if (target) {
-      reselect.current = span;
-      setTarget(null);
-    } else selectSpan({ root, span });
+    const selection = window.getSelection();
+    // A plain click leaves a caret, which Shift+press extends from too.
+    const extend = e.shiftKey && selection?.anchorNode && root?.contains(selection.anchorNode) ? shiftAnchor(selection) : null;
+    dismiss();
+    if (e.button !== 0 || !root || !(e.target instanceof Element)) return;
+    markDragging(root);
+    if (e.target.closest("[data-gloss-label], [role=link], button, a, input, textarea")) return;
+    // As in the browser, a press on the selection keeps it until the release, so it can be dragged out as text.
+    if (!extend && e.detail === 1 && e.target.closest("[data-w][data-in-selection], [data-space][data-in-selection]")) return;
+    startPointerSelection({ e, root, extend });
   };
 
   /**
@@ -927,21 +1020,10 @@ export const ReaderRoute = () => {
     onSelectionEnd();
   };
 
-  /** Selects a whole line: the browser's triple-click stops at inline pieces such as a note's corners. */
-  const selectLine = (word: HTMLElement) => {
-    const root = pageRoot.current;
-    if (!root) return;
-    const { part, line } = word.dataset;
-    const words = root.querySelectorAll<HTMLElement>(`[data-part="${part}"][data-line="${line}"][data-w]`);
-    const last = words[words.length - 1];
-    if (!last) return;
-    selectSpan({ root, span: { part: part as Span["part"], start: { line: Number(line), word: 1 }, end: { line: Number(line), word: Number(last.dataset.w) } } });
-    onSelectionEnd();
-  };
-
   /**
    * The page paints any word a selection touches as wholly selected; the selection itself, which is
-   * what gets copied, is stretched to match, so a copy never stops partway through a word.
+   * what gets copied, is fitted to match, so a copy never stops partway through a word or carries
+   * a stray space at either end.
    */
   const snapToWords = ({ root, span, range }: { root: HTMLElement; span: Span; range: Range }) => {
     const at = (ref: { line: number; word: number }) => root.querySelector<HTMLElement>(`[data-part="${span.part}"][data-line="${ref.line}"][data-w="${ref.word}"]`);
@@ -952,9 +1034,9 @@ export const ReaderRoute = () => {
     const whole = document.createRange();
     whole.setStartBefore(first);
     whole.setEndAfter(last);
-    // Only ever grows: a selection reaching into the ḥāshiya keeps its end there.
-    if (range.compareBoundaryPoints(Range.START_TO_START, whole) < 0) whole.setStart(range.startContainer, range.startOffset);
-    if (range.compareBoundaryPoints(Range.END_TO_END, whole) > 0) whole.setEnd(range.endContainer, range.endOffset);
+    // A selection reaching on into the ḥāshiya keeps its end there.
+    const reachesOn = [...root.querySelectorAll(`[data-w]:not([data-part="${span.part}"])`)].some((w) => range.intersectsNode(w) && whole.comparePoint(w, 0) > 0);
+    if (reachesOn && range.compareBoundaryPoints(Range.END_TO_END, whole) > 0) whole.setEnd(range.endContainer, range.endOffset);
     if (range.compareBoundaryPoints(Range.START_TO_START, whole) === 0 && range.compareBoundaryPoints(Range.END_TO_END, whole) === 0) return;
     // Keeps which end moves, so Shift+arrows carry on from the same side.
     const backward = selection.anchorNode === range.endContainer && selection.anchorOffset === range.endOffset && !range.collapsed;
@@ -985,6 +1067,7 @@ export const ReaderRoute = () => {
       setTarget(null);
     }
   };
+  selectionEnd.current = onSelectionEnd;
 
   useLayoutEffect(() => {
     const span = reselect.current;
@@ -1665,7 +1748,8 @@ export const ReaderRoute = () => {
           tabIndex={-1}
           className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden outline-hidden [scrollbar-gutter:stable_both-edges]"
           onMouseDown={onMouseDown}
-          onMouseUp={onSelectionEnd}
+          // A click on the selection clears it only after the mouseup handlers, so look once it has.
+          onMouseUp={() => !dragging.current && setTimeout(() => selectionEnd.current())}
           onCopy={() => {
             const root = pageRoot.current;
             const picked = root && spanFromSelection(root);
@@ -1735,6 +1819,7 @@ export const ReaderRoute = () => {
         </div>
         {book.data && total > 0 && (
           <div
+            ref={scrubberBar}
             {...chromeHover}
             data-focus={focused ? "hidden" : undefined}
             className="absolute inset-x-0 bottom-0 z-10 h-24 bg-bg px-6 transition-[translate,opacity] [view-transition-name:page-scrubber] duration-panel ease-sheet data-[focus=hidden]:pointer-events-none data-[focus=hidden]:translate-y-full data-[focus=hidden]:opacity-0 motion-reduce:transition-opacity"

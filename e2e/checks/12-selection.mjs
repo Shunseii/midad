@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { ROOT } from "../lib/app.mjs";
 import { LONG_BOOK } from "../lib/fixture.mjs";
-import { openReader } from "../lib/reader.mjs";
+import { openReader, SLIDER } from "../lib/reader.mjs";
 
 export const name = "Selection";
 
@@ -17,6 +17,41 @@ const selectedWords = (page) =>
 /** Spaces still painted in the selection colour, by attribute or by a fading background. */
 const paintedSpaces = (page) =>
   page.ev(`[...document.querySelectorAll("[data-part=matn] [data-space], [data-space]")].filter((s) => { const c = getComputedStyle(s); return c.boxShadow !== "none" || (c.backgroundColor !== "rgba(0, 0, 0, 0)" && c.backgroundColor !== "transparent"); }).length`);
+
+const toolbarShown = (page) => page.ev(`[...document.querySelectorAll("button")].some((b) => b.textContent.trim() === "Note")`);
+const copiedText = (page) => page.ev(`window.getSelection().toString()`);
+const SHIFT = 8;
+const centre = async (page, selector) => {
+  const r = await page.rectOf(selector);
+  return { x: r.cx, y: r.cy };
+};
+/** A fresh page 12 at its top, with nothing selected and the pointer out of the way. */
+const freshPage = async (page) => {
+  await openReader(page, { bookId: LONG_BOOK, position: 12 });
+  await page.ev(`document.querySelector("[data-region=page]").scrollTop = 0; window.getSelection().removeAllRanges()`);
+  await page.move(5, 5);
+  await page.sleep(400);
+};
+/** Presses `clicks` times at a point, as a hand does: the last press is held down for a drag when `hold` is set. */
+const pressN = async (page, { at, clicks, shift = false, hold = false }) => {
+  await page.move(at.x, at.y);
+  for (let n = 1; n <= clicks; n++) {
+    await page.mouse("mousePressed", at.x, at.y, { clickCount: n, buttons: 1, modifiers: shift ? SHIFT : 0 });
+    await page.sleep(40);
+    if (hold && n === clicks) return;
+    await page.mouse("mouseReleased", at.x, at.y, { clickCount: n, modifiers: shift ? SHIFT : 0 });
+    await page.sleep(90);
+  }
+};
+/** Moves with the button held from one point to another in small steps, then releases at `release` (defaults to the end). */
+const dragTo = async (page, { from, to, clicks = 1, steps = 12, release = to }) => {
+  for (let i = 1; i <= steps; i++) {
+    await page.mouse("mouseMoved", from.x + ((to.x - from.x) * i) / steps, from.y + ((to.y - from.y) * i) / steps, { buttons: 1 });
+    await page.sleep(16);
+  }
+  await page.mouse("mouseReleased", release.x, release.y, { clickCount: clicks });
+  await page.sleep(250);
+};
 
 /** Drags across line 2 from its third word to its sixth (right to left). */
 const selectWords = async (page) => {
@@ -228,6 +263,163 @@ export const checks = [
       await page.press("ArrowUp", { shift: true });
       await page.sleep(150);
       assert.equal((await selectedWords(page)).at(-1), "3:3", "Shift+↑ didn't come back to the same word");
+    },
+  ],
+  [
+    "double-click and drag extends a word at a time, either way",
+    async (page) => {
+      await freshPage(page);
+      const start = await centre(page, word(2, 5));
+      await pressN(page, { at: start, clicks: 2, hold: true });
+      await dragTo(page, { from: start, to: await centre(page, word(2, 8)), clicks: 2 });
+      assert.deepEqual(await selectedWords(page), ["2:5", "2:6", "2:7", "2:8"], "double-click and drag stayed on one word");
+      await freshPage(page);
+      await pressN(page, { at: start, clicks: 2, hold: true });
+      // Only partway onto the word before: by words, it is taken whole.
+      const before = await page.rectOf(word(2, 2));
+      await dragTo(page, { from: start, to: { x: before.x + before.width - 3, y: before.cy }, clicks: 2 });
+      assert.deepEqual(await selectedWords(page), ["2:2", "2:3", "2:4", "2:5"], "double-click and drag back didn't take whole words");
+      assert.ok(await toolbarShown(page), "no toolbar after the drag");
+    },
+  ],
+  [
+    "triple-click and drag extends a line at a time",
+    async (page) => {
+      await freshPage(page);
+      const start = await centre(page, word(2, 5));
+      await pressN(page, { at: start, clicks: 3, hold: true });
+      await dragTo(page, { from: start, to: await centre(page, word(4, 3)), clicks: 3 });
+      const lineLength = (line) => page.ev(`document.querySelectorAll('[data-part=matn][data-line="${line}"][data-w]').length`);
+      const words = await selectedWords(page);
+      assert.equal(words[0], "2:1", `the drag didn't keep the whole first line: ${words.join(",")}`);
+      assert.equal(words.at(-1), `4:${await lineLength(4)}`, `the drag didn't take the whole of line 4: ${words.join(",")}`);
+      assert.ok(await toolbarShown(page), "no toolbar after the drag");
+    },
+  ],
+  [
+    "a drag from a word just clicked selects, though the click put the letter cursor on it",
+    async (page) => {
+      await freshPage(page);
+      const start = await centre(page, word(2, 3));
+      await pressN(page, { at: start, clicks: 1 });
+      await page.sleep(700);
+      assert.ok(await page.ev(`!!document.querySelector('${word(2, 3)} .text-accent')`), "the click didn't put the letter cursor on the word");
+      await pressN(page, { at: start, clicks: 1, hold: true });
+      await dragTo(page, { from: start, to: await centre(page, word(2, 6)) });
+      assert.deepEqual(await selectedWords(page), ["2:3", "2:4", "2:5", "2:6"], "the drag selected nothing");
+      assert.ok(await toolbarShown(page), "no toolbar after the drag");
+    },
+  ],
+  [
+    "Shift+click extends from where the selection started, by words after a double-click",
+    async (page) => {
+      await freshPage(page);
+      // Dragged from the middle of word 3 to word 5, then Shift+clicked on the far side of word 3.
+      const from = await centre(page, word(2, 3));
+      await pressN(page, { at: from, clicks: 1, hold: true });
+      await dragTo(page, { from, to: await centre(page, word(2, 5)) });
+      await pressN(page, { at: await centre(page, word(2, 8)), clicks: 1, shift: true });
+      await page.sleep(200);
+      assert.deepEqual(await selectedWords(page), ["2:3", "2:4", "2:5", "2:6", "2:7", "2:8"], "Shift+click didn't extend");
+      await pressN(page, { at: await centre(page, word(2, 1)), clicks: 1, shift: true });
+      await page.sleep(200);
+      assert.deepEqual(await selectedWords(page), ["2:1", "2:2", "2:3"], "Shift+click past the start lost the word the drag started in");
+
+      await freshPage(page);
+      await pressN(page, { at: await centre(page, word(2, 5)), clicks: 2 });
+      await page.sleep(300);
+      // At the very start of word 8, which a selection by characters wouldn't reach into.
+      const eighth = await page.rectOf(word(2, 8));
+      await pressN(page, { at: { x: eighth.x + eighth.width - 2, y: eighth.cy }, clicks: 1, shift: true });
+      await page.sleep(200);
+      assert.deepEqual(await selectedWords(page), ["2:5", "2:6", "2:7", "2:8"], "Shift+click after a double-click didn't take the whole word");
+    },
+  ],
+  [
+    "Shift+click in the margin extends the selection instead of dropping it",
+    async (page) => {
+      await freshPage(page);
+      const from = await centre(page, word(2, 3));
+      await pressN(page, { at: from, clicks: 1, hold: true });
+      await dragTo(page, { from, to: await centre(page, word(2, 5)) });
+      const lineEnd = await page.rectOf(`js:[...document.querySelectorAll('[data-part=matn][data-line="4"][data-w]')].at(-1)`);
+      await pressN(page, { at: { x: lineEnd.x - 30, y: lineEnd.cy }, clicks: 1, shift: true });
+      await page.sleep(200);
+      const words = await selectedWords(page);
+      assert.equal(words[0], "2:3", `Shift+click in the margin dropped the selection: ${words.join(",")}`);
+      assert.ok(words.at(-1)?.startsWith("4:"), `Shift+click in the margin didn't reach line 4: ${words.join(",")}`);
+    },
+  ],
+  [
+    "a drag released off the page keeps to the page's words and still shows the toolbar",
+    async (page) => {
+      for (const release of ["side", "outside", "below"]) {
+        await freshPage(page);
+        const from = await centre(page, word(2, 3));
+        const area = await page.rectOf("[data-region=page]");
+        const to = release === "side" ? { x: 10, y: from.y + 60 } : release === "outside" ? { x: area.x + area.width - 1, y: from.y } : { x: area.cx, y: area.y + area.height - 4 };
+        await pressN(page, { at: from, clicks: 1, hold: true });
+        await dragTo(page, { from, to, release: release === "outside" ? { x: 1500, y: from.y } : to });
+        const text = await copiedText(page);
+        assert.ok(!/Contents|Bookmarks|باب \d/.test(text), `released ${release}, the selection ran out of the page: ${text.slice(0, 60)}`);
+        assert.ok((await selectedWords(page)).length > 1, `released ${release}, nothing is selected`);
+        await page.waitFor(`[...document.querySelectorAll("button")].some((b) => b.textContent.trim() === "Note")`, { timeout: 1500, message: `released ${release}, no toolbar` });
+      }
+    },
+  ],
+  [
+    "a drag held at the foot of the page scrolls it and selects on, even from the margin",
+    async (page) => {
+      await freshPage(page);
+      const first = await page.rectOf(word(4, 1));
+      const from = { x: first.x + first.width + 30, y: first.cy };
+      const scrubber = await page.rectOf(SLIDER);
+      const foot = { x: from.x - 100, y: scrubber.y - 20 };
+      await pressN(page, { at: from, clicks: 1, hold: true });
+      for (let i = 1; i <= 10; i++) {
+        await page.mouse("mouseMoved", from.x + ((foot.x - from.x) * i) / 10, from.y + ((foot.y - from.y) * i) / 10, { buttons: 1 });
+        await page.sleep(16);
+      }
+      for (let i = 0; i < 30; i++) {
+        await page.mouse("mouseMoved", foot.x, foot.y + (i % 2), { buttons: 1 });
+        await page.sleep(40);
+      }
+      const scrolled = await page.ev(`document.querySelector("[data-region=page]").scrollTop`);
+      await page.mouse("mouseReleased", foot.x, foot.y, { clickCount: 1 });
+      await page.sleep(300);
+      assert.ok(scrolled > 200, `the page didn't scroll under the drag: ${scrolled}`);
+      const words = await page.ev(`[...document.querySelectorAll("[data-w][data-in-selection]")].map((w) => w.dataset.part + ":" + w.dataset.line)`);
+      assert.equal(words[0], "matn:4", "the selection didn't start at line 4");
+      assert.ok(words.includes("matn:16"), `the selection didn't follow the scroll: ends at ${words.at(-1)}`);
+      await page.waitFor(`[...document.querySelectorAll("button")].some((b) => b.textContent.trim() === "Note")`, { timeout: 1500, message: "no toolbar after a drag that scrolled" });
+    },
+  ],
+  [
+    "a click on the selection clears it and puts the toolbar away",
+    async (page) => {
+      await freshPage(page);
+      await selectWords(page);
+      assert.ok(await toolbarShown(page), "no toolbar for the selection");
+      await pressN(page, { at: await centre(page, word(2, 4)), clicks: 1 });
+      await page.sleep(500);
+      assert.deepEqual(await selectedWords(page), [], "the click didn't clear the selection");
+      assert.ok(!(await toolbarShown(page)), "the toolbar stayed for a selection that's gone");
+    },
+  ],
+  [
+    "Shift+arrows leave no stray space at the selection's ends",
+    async (page) => {
+      await freshPage(page);
+      // Right to left from word 6 to word 3, then one word further and back.
+      const from = await centre(page, word(2, 6));
+      await pressN(page, { at: from, clicks: 1, hold: true });
+      await dragTo(page, { from, to: await centre(page, word(2, 3)) });
+      await page.press("ArrowRight", { shift: true });
+      await page.press("ArrowLeft", { shift: true });
+      await page.sleep(150);
+      assert.deepEqual(await selectedWords(page), ["2:3", "2:4", "2:5", "2:6"]);
+      const text = await copiedText(page);
+      assert.equal(text, text.trim(), `the copy carries a stray space: ${JSON.stringify(text)}`);
     },
   ],
 ];

@@ -18,6 +18,7 @@ import type { StoredPage } from "../../../shared/library";
 import type { Gloss } from "../../../shared/page";
 import type { GlossMode, HighlightStyle, NoteIcons, PageWidth } from "../lib/appearance";
 import { arabicNumber } from "../lib/format";
+import { type Granularity, type Unit, unitSpan } from "../lib/pointer-selection";
 import { FOOTNOTE_REF, footnotesByMarker, splitFootnoteRef, toArabicIndic } from "../lib/footnotes";
 import { scrollToMiddle, tintWords } from "../lib/reveal";
 import { type Sweep, sweepOrder, sweepTiming } from "../lib/sweep";
@@ -1100,15 +1101,116 @@ export const caretNear = ({ root, x, y }: { root: HTMLElement; x: number; y: num
   const direct = at(x, y);
   if (direct) return direct;
   // Nearest word: the closest row first, then the closest word along it.
-  let best: { rect: DOMRect; score: number } | null = null;
+  let best: { el: HTMLElement; rect: DOMRect; score: number } | null = null;
   for (const el of root.querySelectorAll<HTMLElement>("[data-w]")) {
     const r = el.getBoundingClientRect();
     const dy = y < r.top ? r.top - y : y > r.bottom ? y - r.bottom : 0;
     const dx = x < r.left ? r.left - x : x > r.right ? x - r.right : 0;
     const score = dy * 10_000 + dx;
-    if (!best || score < best.score) best = { rect: r, score };
+    if (!best || score < best.score) best = { el, rect: r, score };
   }
   if (!best) return null;
-  const { rect } = best;
-  return at(Math.min(Math.max(x, rect.left + 1), rect.right - 1), rect.top + rect.height / 2);
+  const { el, rect } = best;
+  const px = Math.min(Math.max(x, rect.left + 1), rect.right - 1);
+  // A word out of view or under the scrubber can't be hit-tested, so measure its letters instead.
+  return at(px, rect.top + rect.height / 2) ?? offsetAtX({ word: el, x: px });
+};
+
+/** The text position in a right-to-left word nearest to an x position. */
+const offsetAtX = ({ word, x }: { word: HTMLElement; x: number }): { node: Node; offset: number } | null => {
+  const walker = readingText(word);
+  let best: { node: Node; offset: number; distance: number } | null = null;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const length = node.textContent?.length ?? 0;
+    for (let i = 0; i < length; i++) {
+      const range = document.createRange();
+      range.setStart(node, i);
+      range.setEnd(node, i + 1);
+      const box = range.getBoundingClientRect();
+      if (box.width === 0) continue;
+      const distance = x < box.left ? box.left - x : x > box.right ? x - box.right : 0;
+      if (!best || distance < best.distance) best = { node, offset: x > (box.left + box.right) / 2 ? i : i + 1, distance };
+    }
+  }
+  return best && { node: best.node, offset: best.offset };
+};
+
+/** A text position inside a word, held by the word and the characters before it, so it outlasts the word being redrawn. */
+export interface WordPoint {
+  part: Part;
+  ref: WordRef;
+  offset: number;
+}
+
+export const wordElement = ({ root, part, ref }: { root: HTMLElement; part: Part; ref: WordRef }) =>
+  root.querySelector<HTMLElement>(`[data-part="${part}"][data-line="${ref.line}"][data-w="${ref.word}"]`);
+
+export const toWordPoint = ({ node, offset }: { node: Node; offset: number }): WordPoint | null => {
+  const word = (node instanceof Element ? node : node.parentElement)?.closest<HTMLElement>("[data-w]");
+  if (!word) return null;
+  const before = document.createRange();
+  before.setStart(word, 0);
+  before.setEnd(node, offset);
+  return { part: word.dataset.part as Part, ref: { line: Number(word.dataset.line), word: Number(word.dataset.w) }, offset: before.toString().length };
+};
+
+export const fromWordPoint = ({ root, point }: { root: HTMLElement; point: WordPoint }): { node: Node; offset: number } | null => {
+  const word = wordElement({ root, part: point.part, ref: point.ref });
+  if (!word) return null;
+  const walker = document.createTreeWalker(word, NodeFilter.SHOW_TEXT);
+  let left = point.offset;
+  let last: Node | null = null;
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const length = node.textContent?.length ?? 0;
+    if (left <= length) return { node, offset: left };
+    left -= length;
+    last = node;
+  }
+  return last ? { node: last, offset: last.textContent?.length ?? 0 } : { node: word, offset: word.childNodes.length };
+};
+
+/** Where a mouse selection started: a point in a word, or, extending one made some other way, its raw fixed end. */
+export type SelectionAnchor = { word: WordPoint } | { raw: { node: Node; offset: number } };
+
+export interface PointerSelection {
+  granularity: Granularity;
+  anchor: SelectionAnchor;
+  /** The word pressed on, whose word or line a word- or line-wise drag always keeps. */
+  word?: { part: Part; ref: WordRef };
+}
+
+const wordOf = (node: Node) => (node instanceof Element ? node : node.parentElement)?.closest<HTMLElement>("[data-w]") ?? null;
+
+const unitOf = ({ words, index, granularity }: { words: HTMLElement[]; index: number; granularity: Granularity }): Unit => {
+  if (granularity !== "line") return { first: index, last: index };
+  const word = words[index];
+  const inLine = (i: number) => words[i]?.dataset.part === word?.dataset.part && words[i]?.dataset.line === word?.dataset.line;
+  let first = index;
+  let last = index;
+  while (inLine(first - 1)) first -= 1;
+  while (inLine(last + 1)) last += 1;
+  return { first, last };
+};
+
+/** Selects from a mouse selection's start to the pointer's text position, in whole words or lines when it is word- or line-wise. */
+export const selectByPointer = ({ root, selection, gesture, focus }: { root: HTMLElement; selection: Selection; gesture: PointerSelection; focus: { node: Node; offset: number } }) => {
+  const anchorWord = gesture.word && wordElement({ root, ...gesture.word });
+  const focusWord = wordOf(focus.node);
+  if (gesture.granularity === "char" || !anchorWord || !focusWord) {
+    const from = "raw" in gesture.anchor ? gesture.anchor.raw : fromWordPoint({ root, point: gesture.anchor.word });
+    if (from) selection.setBaseAndExtent(from.node, from.offset, focus.node, focus.offset);
+    return;
+  }
+  const words = [...root.querySelectorAll<HTMLElement>("[data-w]")];
+  const { from, to, backward } = unitSpan({
+    anchor: unitOf({ words, index: words.indexOf(anchorWord), granularity: gesture.granularity }),
+    focus: unitOf({ words, index: words.indexOf(focusWord), granularity: gesture.granularity }),
+  });
+  const first = words[from];
+  const last = words[to];
+  if (!first?.parentNode || !last?.parentNode) return;
+  const start = { node: first.parentNode, offset: [...first.parentNode.childNodes].indexOf(first) };
+  const end = { node: last.parentNode, offset: [...last.parentNode.childNodes].indexOf(last) + 1 };
+  if (backward) selection.setBaseAndExtent(end.node, end.offset, start.node, start.offset);
+  else selection.setBaseAndExtent(start.node, start.offset, end.node, end.offset);
 };
