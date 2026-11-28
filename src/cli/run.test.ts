@@ -4,6 +4,8 @@ import type { ExportFile } from "../shared/corpus";
 import { createAnnotations } from "../main/annotations";
 import type { CorpusSource } from "../main/corpus";
 import { createLibrary } from "../main/library";
+import { type BaharRunner, createBahar } from "./bahar";
+import { dictionaryDb, sqliteBaharDb } from "./bahar-test-db";
 import { runCli } from "./run";
 
 // Page 1: matn line 1 is a heading, line 2 has five words (word 4 carries an
@@ -43,10 +45,10 @@ beforeEach(async () => {
   await library.importBook({ corpusBookId: "b2" });
 });
 
-const runIn = async ({ currentBook, argv }: { currentBook?: string; argv: string[] }) => {
+const runIn = async ({ currentBook, argv, bahar }: { currentBook?: string; argv: string[]; bahar?: ReturnType<typeof createBahar> }) => {
   let stdout = "";
   let stderr = "";
-  const code = await runCli({ argv, db, stdout: (s) => (stdout += s), stderr: (s) => (stderr += s), ...(currentBook ? { currentBook } : {}) });
+  const code = await runCli({ argv, db, stdout: (s) => (stdout += s), stderr: (s) => (stderr += s), ...(currentBook ? { currentBook } : {}), ...(bahar ? { bahar } : {}) });
   return { code, stdout, stderr };
 };
 
@@ -346,5 +348,78 @@ describe("book pin and unpin", () => {
     expect(code).toBe(1);
     expect(stderr).toContain("Ask AI can't pin books");
     expect((await shelf()).every(([, pinned]) => !pinned)).toBe(true);
+  });
+});
+
+describe("bahar", () => {
+  const TOKEN = "eyJhbGciOiJFZERTQSJ9.eyJhIjoicm8ifQ.c2VjcmV0";
+  const fakeBahar = () => {
+    const calls: Parameters<BaharRunner>[0][] = [];
+    const run: BaharRunner = async (input) => {
+      calls.push(input);
+      if (input.args[0] === "db-info") return { code: 0, stdout: JSON.stringify({ hostname: "h.turso.io", db_name: "h", access_token: TOKEN }), stderr: "" };
+      const [word] = JSON.parse(input.stdin ?? "[]") as { word: string }[];
+      return { code: 0, stdout: `Update available.\n${JSON.stringify({ added: 1, results: [{ id: "new1", word: word?.word }] })}`, stderr: "" };
+    };
+    const dictionary = dictionaryDb([{ id: "e1", word: "اللَّفْظُ", translation: "utterance", root: ["ل", "ف", "ظ"], tags: ["midad"] }]);
+    return { bahar: createBahar({ run, candidates: ["bahar"], connect: () => sqliteBaharDb(dictionary) }), calls };
+  };
+
+  it("searches the reader's dictionary in compact lines, without the token", async () => {
+    const { bahar } = fakeBahar();
+    const { code, stdout, stderr } = await runIn({ argv: ["bahar", "search", "اللفظ"], bahar });
+    expect(code).toBe(0);
+    expect(stdout).toBe("اللَّفْظُ — utterance · ism · root ل-ف-ظ · tags midad · id e1\n");
+    expect(stdout + stderr).not.toContain(TOKEN);
+    const json = await runIn({ argv: ["bahar", "search", "utterance", "--json"], bahar });
+    expect(JSON.parse(json.stdout)).toMatchObject([{ id: "e1" }]);
+    expect(json.stdout).not.toContain(TOKEN);
+  });
+
+  it("says when nothing matches", async () => {
+    const { stdout } = await runIn({ argv: ["bahar", "search", "كتاب"], bahar: fakeBahar().bahar });
+    expect(stdout).toMatch(/^No matches/);
+  });
+
+  it("adds a word tagged midad, with the book and printed page as the example's context", async () => {
+    const { bahar, calls } = fakeBahar();
+    const { code, stdout } = await runIn({
+      currentBook: "b1",
+      bahar,
+      argv: ["bahar", "add", "--word", "المُرَكَّبُ", "--translation", "compound", "--type", "ism", "--root", "ر ك ب", "--tags", "nahw, ajurrumiyya", "--example", "الكلام هو اللفظ المركب", "--example-translation", "Speech is a compound utterance", "--from-page", "1"],
+    });
+    expect(code).toBe(0);
+    expect(stdout).toBe("Added المُرَكَّبُ to the reader's Bahar dictionary (id new1).\n");
+    const add = calls.find((c) => c.args[0] === "add");
+    expect(JSON.parse(add?.stdin ?? "")).toEqual([
+      {
+        word: "المُرَكَّبُ",
+        translation: "compound",
+        type: "ism",
+        root: ["ر", "ك", "ب"],
+        tags: ["nahw", "ajurrumiyya", "midad"],
+        examples: [{ sentence: "الكلام هو اللفظ المركب", context: "الآجرومية · ص ١", translation: "Speech is a compound utterance" }],
+      },
+    ]);
+  });
+
+  it("adds just the required fields, still tagged midad", async () => {
+    const { bahar, calls } = fakeBahar();
+    await runIn({ bahar, argv: ["bahar", "add", "--word", "نور", "--translation", "light", "--type", "ism", "--tags", "midad"] });
+    expect(JSON.parse(calls[0]?.stdin ?? "")).toEqual([{ word: "نور", translation: "light", type: "ism", tags: ["midad"] }]);
+  });
+
+  it("refuses an incomplete or mistyped entry without running bahar", async () => {
+    const { bahar, calls } = fakeBahar();
+    const missing = await runIn({ bahar, argv: ["bahar", "add", "--word", "نور"] });
+    expect(missing.code).toBe(1);
+    expect(missing.stderr).toMatch(/Missing --translation, --type/);
+    const badType = await runIn({ bahar, argv: ["bahar", "add", "--word", "نور", "--translation", "light", "--type", "noun"] });
+    expect(badType.stderr).toMatch(/--type is one of ism, fi'l, harf, expression/);
+    expect(calls).toHaveLength(0);
+  });
+
+  it("has no edit, delete or grade commands", async () => {
+    for (const sub of ["edit", "delete", "grade"]) expect((await runIn({ bahar: fakeBahar().bahar, argv: ["bahar", sub] })).code).toBe(2);
   });
 });
