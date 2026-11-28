@@ -36,6 +36,7 @@ import { pageBalance } from "../lib/focus";
 import { useChromeHover } from "../lib/use-chrome-hover";
 import { useFocusChrome, useSteadyWhileHidden } from "../lib/use-focus-chrome";
 import { switchListInTransition } from "../lib/view-transition";
+import { scrollByStep } from "../lib/scroll-step";
 import { useKeybindings } from "../lib/use-keybindings";
 import { shortcutKeys, shortcutLabel, withShortcut } from "../lib/keymap";
 import { neighbourPages } from "../lib/neighbours";
@@ -1375,6 +1376,12 @@ export const ReaderRoute = () => {
     go(next);
   };
 
+  /** J and K are letters in the harakat editor and the note editor. */
+  const scrollPage = (direction: 1 | -1) => {
+    if (target !== null || focusInNoteEditor() || !pageRoot.current) return false;
+    scrollByStep({ scroller: pageRoot.current, direction });
+  };
+
   /** Esc has something else to close first. A menu or popover may already have closed itself on this Esc, before the reader sees it. */
   const escapeTaken = (e: KeyboardEvent) =>
     menuOpen ||
@@ -1410,6 +1417,8 @@ export const ReaderRoute = () => {
       // Right-to-left book: the next page is to the left.
       "page.next": () => turnTo(position + 1),
       "page.previous": () => turnTo(position - 1),
+      "page.scrollDown": () => scrollPage(1),
+      "page.scrollUp": () => scrollPage(-1),
       "selection.all": () => selectPage(),
       "region.left": () => moveRegion(-1),
       "region.right": () => moveRegion(1),
