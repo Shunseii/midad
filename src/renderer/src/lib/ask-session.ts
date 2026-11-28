@@ -6,7 +6,7 @@
  */
 import type { StreamEvent } from "../../../shared/ask";
 import { questionWithQuoteMarks } from "../../../shared/composer";
-import type { AskSelection, Conversation, Quote, StoredTurn } from "../../../shared/conversations";
+import type { Conversation, Quote, StoredTurn } from "../../../shared/conversations";
 import type { MidadApi } from "../../../shared/ipc";
 import { afterAnswer, type AnswerEnd, type AskQueue, dequeue, emptyQueue, enqueue, sendFirst } from "./ask-queue";
 
@@ -17,13 +17,12 @@ export interface Turn extends Omit<StoredTurn, "createdAt"> {
   restarted?: boolean;
 }
 
-/** A question typed while Claude was answering, waiting its turn. It keeps the page and selection it was typed on. */
+/** A question typed while Claude was answering, waiting its turn. It keeps the page it was typed on. */
 export interface QueuedMessage {
   id: string;
   question: string;
   quotes: Quote[];
   position: number;
-  selection: AskSelection | null;
 }
 
 export type AskScreen = "chat" | "history";
@@ -87,7 +86,7 @@ const createAskSession = ({ bookId, api, model, historyChanged }: { bookId: stri
     if (event.kind === "tool") update(requestId, (t) => ({ activity: "Reading the page…", answer: t.answer && !t.answer.endsWith("\n\n") ? `${t.answer}\n\n` : t.answer }));
   };
 
-  const ask = async ({ question, position, selection, quotes = [] }: { question: string; position: number; selection: AskSelection | null; quotes?: Quote[] }) => {
+  const ask = async ({ question, position, quotes = [] }: { question: string; position: number; quotes?: Quote[] }) => {
     const id = crypto.randomUUID();
     if (!state.conversationId) set({ conversationId: crypto.randomUUID() });
     const conversation = state.conversationId ?? "";
@@ -102,10 +101,10 @@ const createAskSession = ({ bookId, api, model, historyChanged }: { bookId: stri
       set({ queue });
       if (next) void ask(next);
     };
-    set({ turns: [...state.turns, { id, question, quotes, position, selection, answer: "", status: "streaming", activity: "Starting Claude…", error: null }] });
+    set({ turns: [...state.turns, { id, question, quotes, position, answer: "", status: "streaming", activity: "Starting Claude…", error: null }] });
     if (state.saved) {
       try {
-        await api["conversations.addTurn"]({ conversationId: conversation, bookId, turn: { id, question, quotes, position, selection } });
+        await api["conversations.addTurn"]({ conversationId: conversation, bookId, turn: { id, question, quotes, position } });
       } catch (err) {
         update(id, () => ({ status: "error", activity: null, error: errorText(err) }));
         ended("error");
@@ -118,7 +117,6 @@ const createAskSession = ({ bookId, api, model, historyChanged }: { bookId: stri
       bookId,
       position,
       question: questionWithQuoteMarks({ question, quotes }) || "Explain this passage.",
-      selection: selection && position === selection.position ? { span: selection.span, text: selection.text } : undefined,
       quotes: quotes.map((q) => ({ text: q.text, span: q.position === position ? q.span : null })),
       sessionId,
       model: model(),
@@ -174,7 +172,7 @@ const createAskSession = ({ bookId, api, model, historyChanged }: { bookId: stri
   };
   const removeQueued = (id: string) => setQueue(dequeue({ queue: state.queue, id }));
   const retry = (turn: Turn) => {
-    const message = { question: turn.question, position: turn.position, selection: turn.selection, quotes: turn.quotes };
+    const message = { question: turn.question, position: turn.position, quotes: turn.quotes };
     if (busy()) queueMessage(message);
     else void ask(message);
   };

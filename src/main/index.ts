@@ -172,13 +172,13 @@ const handlers: MidadApi = {
   "bookmarks.list": (input) => bookmarks.list(input),
   "bookmarks.set": (input) => bookmarks.set(input),
   "bookmarks.remove": (input) => bookmarks.remove(input),
-  "ai.ask": async ({ requestId, bookId, position, question, selection, quotes, sessionId, model: requested, cutOff: stoppedTurns = [] }) => {
+  "ai.ask": async ({ requestId, bookId, position, question, quotes, sessionId, model: requested, cutOff: stoppedTurns = [] }) => {
     const model = askModel(requested);
     const book = await library.getBook(bookId);
     const page = await library.getPage({ bookId, position });
     if (!book || !page) throw new Error("That page isn't in the library.");
     const { pageNote } = await annotations.listForPage({ bookId, position });
-    const context = readingContext({ bookId, title: book.title, position, number: page.number, selection, quotes, pageNote: pageNote?.body ?? null });
+    const context = readingContext({ bookId, title: book.title, position, number: page.number, quotes, pageNote: pageNote?.body ?? null });
     const cutOff = cutOffRecap(stoppedTurns);
     const prompt = [context, cutOff, question].filter(Boolean).join("\n\n");
     // A new Claude session starts knowing what Ask AI remembers about the reader.

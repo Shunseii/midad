@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { askModel, boldRuns, CORPUS_TOOLS, citedGloss, citeSpan, citeSpans, claudeArgs, cutOffRecap, isArabicLine, isLostSession, markedPhrase, memoryIndex, SYSTEM_PROMPT, parseCitations, readingContext, sessionRecap, streamEvent } from "./ask";
 import { quoteSpan } from "./annotations";
+import { noteSpot } from "./conversations";
 import { parsePage } from "./page";
 
 describe("parseCitations", () => {
@@ -156,15 +157,33 @@ describe("readingContext", () => {
     expect(text).not.toMatch(/selection/i);
   });
 
-  it("adds the selection with its lines and words", () => {
+  it("gives a passage asked about from the page as a quote with its lines and words, never as a selection", () => {
     const text = readingContext({
       ...base,
-      selection: { span: { part: "hashiya", start: { line: 1, word: 2 }, end: { line: 1, word: 3 } }, text: "بالوضع القصد" },
+      quotes: [{ span: { part: "hashiya", start: { line: 1, word: 2 }, end: { line: 1, word: 3 } }, text: "بالوضع القصد" }],
     });
-    expect(text).toMatch(/selection/i);
-    expect(text).toContain("بالوضع القصد");
-    expect(text).toMatch(/ḥāshiya 1/);
-    expect(text).toMatch(/--hashiya --line 1 --words 2-3/);
+    expect(text).not.toMatch(/selection/i);
+    expect(text).toMatch(/quote 1: ḥāshiya 1, words 2–3 \(--hashiya --line 1 --words 2-3\): بالوضع القصد/);
+  });
+});
+
+describe("noteSpot", () => {
+  const span = (line: number) => ({ part: "matn" as const, start: { line, word: 1 }, end: { line, word: 2 } });
+  const quote = (line: number | null, position = 3) => ({ id: `q${line}`, text: "الكلام", span: line === null ? null : span(line), position });
+
+  it("saves on the one page passage a question quoted, on that passage's page", () => {
+    expect(noteSpot({ quotes: [quote(2, 4)] })).toEqual({ position: 4, span: span(2) });
+    expect(noteSpot({ quotes: [quote(null), quote(5)] })).toEqual({ position: 3, span: span(5) });
+  });
+
+  it("has nowhere to save when the question quoted no page passage, or several", () => {
+    expect(noteSpot({ quotes: [] })).toBeNull();
+    expect(noteSpot({ quotes: [quote(null)] })).toBeNull();
+    expect(noteSpot({ quotes: [quote(1), quote(2)] })).toBeNull();
+  });
+
+  it("saves an older turn on the selection it was asked about", () => {
+    expect(noteSpot({ quotes: [], selection: { span: span(6), text: "الكلام", position: 2 } })).toEqual({ position: 2, span: span(6) });
   });
 });
 

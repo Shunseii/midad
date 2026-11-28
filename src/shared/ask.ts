@@ -179,7 +179,6 @@ export const readingContext = ({
   title,
   position,
   number,
-  selection,
   quotes = [],
   pageNote = null,
 }: {
@@ -187,7 +186,6 @@ export const readingContext = ({
   title: string;
   position: number;
   number: number | null;
-  selection?: { span: Span; text: string };
   /** Text the reader pasted into the question: from this page (with its span) or from elsewhere. */
   quotes?: { span: Span | null; text: string }[];
   /** The reader's own note on the page as a whole. */
@@ -198,7 +196,6 @@ export const readingContext = ({
     `book: ${bookId} (${title})`,
     `page ${position}${number === null ? "" : `, printed ${number}`}`,
     `citing: [[line 2: words]] for this page; [[page 42, line 2: words]] for any other page (midad page numbers, not printed ones)`,
-    ...(selection ? [`selection: ${describeSpan(selection.span)}: ${selection.text}`] : []),
     ...quotes.map((q, i) => (q.span ? `quote ${i + 1}: ${describeSpan(q.span)}: ${q.text}` : `quote ${i + 1} (pasted): ${q.text}`)),
     ...(pageNote ? [`the reader's note on this page: ${pageNote.replace(/\s*\n\s*/g, " / ")}`] : []),
     "</reading-context>",

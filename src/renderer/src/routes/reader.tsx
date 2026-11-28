@@ -13,7 +13,7 @@ import { SidePanel, SidePanelBody } from "../components/side-panel";
 import { useMediaQuery } from "../lib/media";
 import { NoteEditor, NoteLayer, NotePeek, NoteRowPeek, SelectionToolbar } from "../components/annotation-popovers";
 import { AnnotationsPanel, type NoteDraft, type PanelTab, spanLabel } from "../components/annotations-panel";
-import { type AskSelection, AskHeader, AskPanel, useAskConversation } from "../components/ask-panel";
+import { AskHeader, AskPanel, type Quote, useAskConversation } from "../components/ask-panel";
 import { PageScrubber } from "../components/page-scrubber";
 import { CLOSED_FIND, FindBar, type FindState, revealMatch, useFindHighlights } from "../components/find-bar";
 import { findOnPage } from "../../../shared/find";
@@ -504,8 +504,7 @@ export const ReaderRoute = () => {
   const arrivedWith = useLocation().state as ReaderState | null;
   const pendingScroll = useRef(arrivedWith && "scrollTop" in arrivedWith ? arrivedWith.scrollTop : null);
   const pendingPlace = useRef(arrivedWith && "anchor" in arrivedWith ? arrivedWith.anchor : null);
-  const [askSelection, setAskSelection] = useState<AskSelection | null>(null);
-  const conversation = useAskConversation({ bookId, onNew: () => setAskSelection(null) });
+  const conversation = useAskConversation({ bookId });
   const client = useQueryClient();
   const [find, setFind] = useState<FindState>(CLOSED_FIND);
   const [findFocus, setFindFocus] = useState(0);
@@ -691,12 +690,9 @@ export const ReaderRoute = () => {
     switchListInTransition({ list: "panel", order: ["annotations", "ask"], from: group(panelTab), to: group(next), apply: () => setPanelTab(next) });
   };
 
-  const openAsk = (selection: AskSelection | null) => {
-    if (selection) {
-      setAskSelection(selection);
-      // Asking about a passage shows the chat, even if the saved conversations were open.
-      if (conversation.screen.name !== "chat") conversation.showScreen("chat");
-    }
+  /** Opens Ask AI; a passage asked about goes into the composer as a quote. */
+  const openAsk = (quote: Quote | null) => {
+    if (quote) conversation.quoteInComposer(quote);
     switchPanelTab("ask");
     setPanelOpen(true);
     setAskShown(true);
@@ -1513,14 +1509,11 @@ export const ReaderRoute = () => {
           bookId={bookId}
           conversation={conversation}
           position={position}
-          pageNumber={page.data?.number ?? position}
-          selection={askSelection}
-          onClearSelection={() => setAskSelection(null)}
           onCite={citeLines}
-          onSaveNote={(turn, body) => {
-            void midad["notes.add"]({ bookId, position: turn.position, span: turn.selection.span, body }).then(() =>
+          onSaveNote={({ at, body }) => {
+            void midad["notes.add"]({ bookId, position: at.position, span: at.span, body }).then(() =>
               Promise.all([
-                client.invalidateQueries({ queryKey: keys.annotations(bookId, turn.position) }),
+                client.invalidateQueries({ queryKey: keys.annotations(bookId, at.position) }),
                 client.invalidateQueries({ queryKey: keys.bookMarks(bookId) }),
               ]),
             );
@@ -1829,7 +1822,7 @@ export const ReaderRoute = () => {
                 finishToolbar();
               }}
               onAsk={() => {
-                if (shown.mode === "selection") openAsk({ span: shown.span, text: page.data ? quoteSpan({ page: page.data.page, span: shown.span }) : shown.text, position });
+                if (shown.mode === "selection") openAsk({ id: crypto.randomUUID(), span: shown.span, text: page.data ? quoteSpan({ page: page.data.page, span: shown.span }) : shown.text, position });
                 finishToolbar();
               }}
             />

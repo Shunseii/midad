@@ -84,6 +84,11 @@ if (citePage) words.unshift("See [[page " + citePage + ", line 2]] here. ");
 // "[cite: X]" in the question: the answer opens with the citation [[X]], as written.
 const citeAs = /\\[cite: ([^\\]]+)\\]/.exec(prompt.split("</reading-context>").at(-1))?.[1];
 if (citeAs) words.unshift("See [[" + citeAs + "]] here. ");
+// Says how many passages from the page the question quoted, and whether a selection came along, so a check can see what got through.
+const context = prompt.split("</reading-context>")[0];
+const quoted = (context.match(/^quote \\d+: /gm) ?? []).length;
+if (quoted) words.unshift("QUOTED-" + quoted + " ");
+if (/^selection: /m.test(context)) words.unshift("SELECTION-SEEN ");
 if (prompt.includes("<cut-off-messages>")) words.unshift(prompt.includes("Reader: Stopped first") ? "CUTOFF-SEEN " : "CUTOFF-OTHER ");
 // Names the model it was asked for when that isn't Ask AI's default, so a check can see the reader's choice got through.
 const model = process.argv.includes("--model") ? process.argv[process.argv.indexOf("--model") + 1] : null;

@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowLeft, ArrowUp, BookA, Check, ChevronDown, Copy, History, LoaderCircle, Sparkles, Lightbulb, MessageCircleQuestion, NotebookPen, Pencil, PenLine, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, TextQuote, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, BookA, Check, ChevronDown, Copy, History, LoaderCircle, Sparkles, Lightbulb, MessageCircleQuestion, NotebookPen, Pencil, PenLine, Quote as QuoteIcon, RotateCcw, SendHorizontal, Square, SquarePen, Star, Trash2, X } from "lucide-react";
 import { type ClipboardEvent, type KeyboardEvent, type MouseEvent, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { quoteSpan, type Span } from "../../../shared/annotations";
@@ -6,7 +6,7 @@ import { ASK_MODELS, askModel, boldRuns, citedGloss, citeSpans, DEFAULT_ASK_MODE
 import { getPref, usePref } from "../lib/prefs";
 import { Menu } from "@base-ui/react/menu";
 import { type ComposerPart, parseComposer, questionWithQuoteMarks, serializeComposer } from "../../../shared/composer";
-import type { AskSelection, ConversationSummary, Quote } from "../../../shared/conversations";
+import { type ConversationSummary, type NoteSpot, noteSpot, type Quote } from "../../../shared/conversations";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AskQueue } from "../lib/ask-queue";
 import { type AskScreen, createAskSessions, type QueuedMessage, type Turn } from "../lib/ask-session";
@@ -18,7 +18,7 @@ import { handleKeys } from "../lib/use-keybindings";
 import { Button, IconButton, Toast, ToastAction, cx } from "./ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
-export type { AskSelection, Quote, QueuedMessage, Turn };
+export type { Quote, QueuedMessage, Turn };
 
 /** How long a deleted conversation can be brought back; a little longer than its toast shows. */
 const UNDO_DELETE_MS = 4500;
@@ -45,7 +45,7 @@ const askSessions = createAskSessions({
  * Opening the book brings back its most recently used saved one; coming back to it in the same app session
  * brings back whatever was open, with answers that kept streaming meanwhile.
  */
-export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A new conversation starts: the reader's selection goes with the old one. */ onNew?: () => void }) => {
+export const useAskConversation = ({ bookId }: { bookId: string }) => {
   const client = useQueryClient();
   const session = askSessions.of(bookId);
   const state = useSyncExternalStore(session.subscribe, session.getState);
@@ -106,14 +106,24 @@ export const useAskConversation = ({ bookId, onNew }: { bookId: string; /** A ne
   const [composeRequest, setComposeRequest] = useState(0);
   const startNew = () => {
     session.reset();
-    onNew?.();
     if (screen.name !== "chat") showScreen("chat");
     setComposeRequest((n) => n + 1);
   };
 
+  // Passages asked about from the page, waiting for the composer to take them in as quote pills.
+  const [incomingQuotes, setIncomingQuotes] = useState<Quote[]>([]);
+  const quoteInComposer = (quote: Quote) => {
+    if (screen.name !== "chat") showScreen("chat");
+    setIncomingQuotes((quotes) => [...quotes, quote]);
+  };
+  const takeIncomingQuotes = () => setIncomingQuotes([]);
+
   return {
     screen,
     showScreen,
+    incomingQuotes,
+    quoteInComposer,
+    takeIncomingQuotes,
     startNew,
     nameWithClaude,
     composeRequest,
@@ -736,20 +746,14 @@ const CiteChip = ({
     bookId,
     conversation,
     position,
-    pageNumber,
-    selection,
-    onClearSelection,
     onCite,
     onSaveNote,
   }: {
     bookId: string;
     conversation: ReturnType<typeof useAskConversation>;
     position: number;
-    pageNumber: number;
-    selection: AskSelection | null;
-    onClearSelection: () => void;
     onCite: (cite: Citation) => void;
-    onSaveNote: (turn: Turn & { selection: AskSelection }, body: string) => void;
+    onSaveNote: (input: { at: NoteSpot; body: string }) => void;
   }) => {
     const { screen, showScreen, composeRequest, turns, ask, busy, stop, retry, open, conversationId, rename, nameWithClaude, history, remove, undoDelete, commitDelete, deleted } = conversation;
     const { queue, queueMessage, sendQueuedNow, sendDraftNow, takeQueued, removeQueued, keepDraft } = conversation;
@@ -767,7 +771,6 @@ const CiteChip = ({
     // Follows new text while the reader is at the bottom; scrolling up lets go until they're back at the bottom.
     const pinned = useRef(true);
     const [atBottom, setAtBottom] = useState(true);
-    const activeSelection = selection && selection.position === position ? selection : null;
 
     useEffect(() => {
       const root = editor.current;
@@ -863,10 +866,10 @@ const CiteChip = ({
     /** Asks now, or queues the question while Claude is answering. */
     const send = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
       if (!question && quotes.length === 0) return;
-      if (busy) queueMessage({ question, quotes, position, selection: activeSelection });
+      if (busy) queueMessage({ question, quotes, position });
       else {
         pinned.current = true;
-        void ask({ question, position, selection: activeSelection, quotes });
+        void ask({ question, position, quotes });
       }
       clear();
     };
@@ -874,7 +877,7 @@ const CiteChip = ({
     const sendNow = ({ question, quotes }: { question: string; quotes: Quote[] }) => {
       if (!question && quotes.length === 0) return;
       if (!busy) return send({ question, quotes });
-      sendDraftNow({ question, quotes, position, selection: activeSelection });
+      sendDraftNow({ question, quotes, position });
       clear();
     };
 
@@ -932,6 +935,20 @@ const CiteChip = ({
       sync();
     };
 
+    // A passage asked about from the page lands in the composer as a pill, after what's typed or at the caret.
+    const { incomingQuotes, takeIncomingQuotes } = conversation;
+    const tookQuotes = useRef<Quote[] | null>(null);
+    useEffect(() => {
+      const root = editor.current;
+      if (incomingQuotes.length === 0 || !root || tookQuotes.current === incomingQuotes) return;
+      tookQuotes.current = incomingQuotes;
+      takeIncomingQuotes();
+      const caretInside = document.activeElement === root;
+      root.focus();
+      if (!caretInside) caretAtEnd(root);
+      for (const quote of incomingQuotes) insertQuote(quote);
+    }, [incomingQuotes, screen.name]);
+
     const removeQuote = (id: string) => {
       pills.current.get(id)?.host.remove();
       sync();
@@ -984,7 +1001,7 @@ const CiteChip = ({
     };
 
     // Starters make the reader do the work: they try and Claude checks, or Claude hints and quizzes.
-    const suggestions: { icon: typeof Lightbulb; label: string; question?: string; draft?: string }[] = activeSelection
+    const suggestions: { icon: typeof Lightbulb; label: string; question?: string; draft?: string }[] = draft.quotes.length > 0
       ? [
           { icon: Lightbulb, label: "Explain this", question: "Explain this passage." },
           { icon: MessageCircleQuestion, label: "Quiz me on this", question: "Quiz me on this passage. Ask one question at a time and wait for my answer before the next. Don't give answers unless I ask." },
@@ -1030,22 +1047,10 @@ const CiteChip = ({
         <div className="relative flex min-h-0 flex-1 flex-col">
         <div ref={scroller} onScroll={onScroll} onWheel={stopJump} onPointerDown={stopJump} className="min-h-0 flex-1 overflow-y-auto">
         <div ref={content} className="flex flex-col gap-5 p-5">
-          {activeSelection && (
-            <div className="flex flex-col gap-2 rounded-xl bg-surface-2 px-4 py-3">
-              <div className="flex items-center gap-1.5 text-xs text-ink-3">
-                <TextQuote aria-hidden className="size-3.5" />
-                Selected on page {arabicNumber(pageNumber)}
-                <span className="flex-1" />
-                <IconButton icon={X} label="Clear selection" onClick={onClearSelection} />
-              </div>
-              <p className="ar border-r-2 border-accent pr-3 text-right text-ar-body">{activeSelection.text}</p>
-            </div>
-          )}
-
           {turns.length === 0 && (
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <h2 className="text-heading font-semibold">{activeSelection ? "Ask about this passage" : "Ask about this page"}</h2>
+                <h2 className="text-heading font-semibold">Ask about this page</h2>
                 <p className="text-sm text-ink-3">Claude answers from this page and links to the lines it uses.</p>
               </div>
               <div className="flex flex-col items-start gap-2">
@@ -1095,14 +1100,15 @@ const CiteChip = ({
               {turn.restarted && <p className="text-xs text-ink-3">Claude no longer had this conversation, so it picked up in a new session from what was said so far.</p>}
               {turn.status !== "streaming" && (
                 <div className="flex items-center gap-1">
-                  {turn.status === "done" && turn.selection && (
+                  {turn.status === "done" && noteSpot(turn) && (
                     <IconButton
                       icon={NotebookPen}
                       label={saved.has(turn.id) ? "Saved as note" : "Save as note"}
                       disabled={saved.has(turn.id)}
                       onClick={() => {
-                        if (!turn.selection) return;
-                        onSaveNote({ ...turn, selection: turn.selection }, plainAnswer(turn.answer));
+                        const at = noteSpot(turn);
+                        if (!at) return;
+                        onSaveNote({ at, body: plainAnswer(turn.answer) });
                         setSaved((s) => new Set(s).add(turn.id));
                       }}
                     />
@@ -1143,14 +1149,14 @@ const CiteChip = ({
             <div className="relative min-w-0 flex-1 py-1">
               {draft.empty && (
                 <span aria-hidden className="pointer-events-none absolute inset-x-0 top-1 truncate text-body text-ink-3">
-                  {activeSelection ? "Ask about this passage…" : "Ask about this page…"}
+                  Ask about this page…
                 </span>
               )}
               <div
                 ref={editor}
                 role="textbox"
                 aria-multiline
-                aria-label={activeSelection ? "Ask about this passage" : "Ask about this page"}
+                aria-label="Ask about this page"
                 contentEditable="plaintext-only"
                 suppressContentEditableWarning
                 dir="auto"

@@ -1,5 +1,6 @@
 import { DatabaseSync } from "node:sqlite";
 import { beforeEach, describe, expect, it } from "vitest";
+import { noteSpot } from "../shared/conversations";
 import type { ExportFile } from "../shared/corpus";
 import type { CorpusSource } from "./corpus";
 import { createConversations, type Conversations } from "./conversations";
@@ -18,7 +19,6 @@ const question = (id: string, text = `question ${id}`) => ({
   question: text,
   quotes: [{ id: `q-${id}`, text: "الكلام", span: { part: "matn" as const, start: { line: 1, word: 1 }, end: { line: 1, word: 1 } }, position: 1 }],
   position: 1,
-  selection: null,
 });
 
 let db: DatabaseSync;
@@ -174,5 +174,23 @@ describe("saving a conversation", () => {
       ["c2", null, null],
       ["c1", 1, 1],
     ]);
+  });
+
+  it("still loads a turn asked about a selection before selections became quotes, saving its note there", async () => {
+    const old = new DatabaseSync(":memory:");
+    await createLibrary({ db: old, corpus, now: () => clock }).importBook({ corpusBookId: "b1" });
+    const span = { part: "matn", start: { line: 1, word: 1 }, end: { line: 1, word: 2 } };
+    old.exec(`CREATE TABLE conversations (id TEXT PRIMARY KEY, book_id TEXT NOT NULL, session_id TEXT, title TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL);
+      CREATE TABLE turns (id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL, question TEXT NOT NULL, quotes TEXT NOT NULL, position INTEGER NOT NULL, selection TEXT, answer TEXT NOT NULL DEFAULT '', status TEXT NOT NULL, error TEXT, created_at INTEGER NOT NULL);
+      INSERT INTO conversations VALUES ('c1', 'b1', NULL, 'old', 1, 1);
+      INSERT INTO turns VALUES ('t1', 'c1', 'Explain this passage.', '[]', 1, '${JSON.stringify({ span, text: "الكلام هو", position: 1 })}', 'An answer.', 'done', NULL, 1);`);
+    const turn = (await createConversations({ db: old }).get({ id: "c1" }))?.turns[0];
+    expect(turn).toMatchObject({ question: "Explain this passage.", answer: "An answer.", selection: { span, text: "الكلام هو", position: 1 } });
+    expect(turn && noteSpot(turn)).toEqual({ position: 1, span });
+  });
+
+  it("leaves the selection off turns asked now", async () => {
+    await conversations.addTurn({ conversationId: "c1", bookId: "b1", turn: question("t1") });
+    expect((await conversations.get({ id: "c1" }))?.turns[0]).not.toHaveProperty("selection");
   });
 });
