@@ -14,6 +14,31 @@ const composerHeight = (page) => page.ev(`Math.round(document.querySelector("${C
 const position = (page) =>
   page.ev(`(() => { const e = ${SCROLLER}; return { gap: Math.round(e.scrollHeight - e.scrollTop - e.clientHeight), top: Math.round(e.scrollTop), height: e.scrollHeight, jump: document.querySelector('[aria-label="Jump to latest"]').dataset.state }; })()`);
 const streaming = (page) => page.ev(`!!document.querySelector('[aria-label="Stop"]')`);
+const composerPills = `document.querySelector("${COMPOSER}").querySelectorAll("[contenteditable=false]")`;
+const wordsOf = (page, { line, from, to }) =>
+  page.ev(`[...document.querySelectorAll('[data-part=matn][data-line="${line}"][data-w]')].filter((w) => +w.dataset.w >= ${from} && +w.dataset.w <= ${to}).map((w) => w.textContent.trim()).join(" ")`);
+
+/** Selects words of a matn line and presses Ask in the selection toolbar. */
+const askAboutWords = async (page, { line, from, to }) => {
+  const a = await page.rectOf(`[data-part=matn][data-line="${line}"][data-w="${from}"]`);
+  const b = await page.rectOf(`[data-part=matn][data-line="${line}"][data-w="${to}"]`);
+  await page.drag({ from: { x: a.x + a.width - 2, y: a.cy }, to: { x: b.x + 2, y: b.cy } });
+  await page.sleep(400);
+  await page.waitFor(`!!(${buttonByText("Ask").slice(3)})`, { message: `no Ask button after selecting: "${await page.ev(`getSelection().toString()`)}"` });
+  await page.click(buttonByText("Ask"));
+  await page.sleep(300);
+};
+
+/** Opens Ask AI on a new, empty conversation. */
+const startFresh = async (page) => {
+  const open = `!!document.querySelector('[aria-label="Saved conversations"], [aria-label="Back to conversation"]')`;
+  if (!(await page.ev(open))) await page.click('[aria-label^="Ask AI"]');
+  await page.waitFor(open, { message: "Ask AI didn't open" });
+  await page.sleep(400);
+  if (await page.ev(`!!document.querySelector('[aria-label="New conversation"]')`)) await page.click('[aria-label="New conversation"]');
+  await page.waitFor(`!!document.querySelector("${COMPOSER}")`, { message: "the new conversation didn't open" });
+  await page.sleep(400);
+};
 
 export const checks = [
   [
@@ -176,23 +201,62 @@ export const checks = [
     },
   ],
   [
-    "a new conversation drops the selected passage",
+    "Ask on a selection puts it in the composer as a quote pill, after what was typed, and another adds a second",
     async (page) => {
-      await openReader(page, { bookId: LONG_BOOK, position: 12 });
-      const from = await page.rectOf('[data-part=matn][data-line="2"][data-w="2"]');
-      const to = await page.rectOf('[data-part=matn][data-line="2"][data-w="4"]');
-      await page.drag({ from: { x: from.x + from.width - 2, y: from.cy }, to: { x: to.x + 2, y: to.cy } });
-      await page.sleep(400);
-      await page.waitFor(`!!(${buttonByText("Ask").slice(3)})`, { message: `no Ask button after selecting: "${await page.ev(`getSelection().toString()`)}"` });
-      await page.click(buttonByText("Ask"));
-      await page.waitFor(`document.body.textContent.includes("Ask about this passage")`, { message: "the selection didn't reach Ask AI" });
-      // New conversation is always in the saved-conversations screen's header.
-      await page.click('[aria-label="Saved conversations"]');
-      await page.sleep(500);
-      await page.click('[aria-label="New conversation"]');
-      await page.sleep(500);
-      assert.ok(await page.ev(`document.body.textContent.includes("Ask about this page")`), "the selected passage stayed after New conversation");
-      assert.equal(await page.ev(`document.body.textContent.includes("Ask about this passage")`), false);
+      await openReader(page, { bookId: LONG_BOOK, position: 14 });
+      await page.waitFor(`!document.querySelector('[aria-label="Stop"]')`, { timeout: 20_000, message: "an earlier answer never finished" });
+      await startFresh(page);
+      await page.click(COMPOSER);
+      await page.press("a", { code: "KeyA", ctrl: true, commands: ["selectAll"] });
+      await page.press("Backspace", { commands: ["deleteBackward"] });
+      await page.type("Compare");
+      await askAboutWords(page, { line: 2, from: 2, to: 4 });
+      await page.waitFor(`${composerPills}.length === 1`, { message: "Ask didn't put a quote pill in the composer" });
+      assert.ok(await page.ev(`document.activeElement === document.querySelector("${COMPOSER}")`), "the composer isn't focused");
+      assert.equal(await page.ev(`getSelection().toString().length > 0 && !document.querySelector("${COMPOSER}").contains(getSelection().anchorNode)`), false, "the page selection stayed");
+      assert.ok((await page.ev(`document.querySelector("${COMPOSER}").innerText`)).startsWith("Compare"), "what was typed went");
+      assert.ok(!(await page.ev(`document.body.textContent.includes("Selected on page")`)), "the old selection card showed");
+      assert.ok(await page.ev(`document.body.textContent.includes("Ask about this page")`), "the heading isn't about the page");
+      const words = await wordsOf(page, { line: 2, from: 2, to: 4 });
+      assert.ok((await page.ev(`${composerPills}[0].textContent`)).includes(words), `the pill doesn't quote "${words}"`);
+      const starters = await page.ev(`[...document.querySelectorAll("button")].map((b) => b.textContent.trim()).filter((t) => /^(Explain this|Quiz me on this|Quiz me on this page|Key terms on this page)$/.test(t))`);
+      assert.deepEqual(starters, ["Explain this", "Quiz me on this"], "with a pill in the draft, the starters should act on the passage");
+
+      await askAboutWords(page, { line: 3, from: 2, to: 3 });
+      await page.waitFor(`${composerPills}.length === 2`, { message: "a second Ask didn't add a second pill" });
+      assert.ok((await page.ev(`document.querySelector("${COMPOSER}").innerText`)).startsWith("Compare"), "the second Ask lost what was typed");
+      assert.ok(await page.ev(`document.activeElement === document.querySelector("${COMPOSER}")`), "the composer isn't focused after the second Ask");
+    },
+  ],
+  [
+    "a question with quote pills sends them to Claude, not a selection, and two quotes leave nothing to save as a note",
+    async (page) => {
+      await page.type(" [12 words]");
+      await page.press("Enter");
+      await page.waitFor(`!document.querySelector('[aria-label="Stop"]') && document.body.textContent.includes("QUOTED-2")`, { timeout: 15_000, message: "Claude wasn't given both quotes" });
+      assert.equal(await page.ev(`document.body.textContent.includes("SELECTION-SEEN")`), false, "Claude was still sent a selection");
+      assert.equal(await page.ev(`${composerPills}.length`), 0, "the pills stayed in the composer");
+      assert.equal(await page.ev(`document.querySelectorAll('[aria-label="Save as note"]').length`), 0, "an answer to two quotes offered Save as note");
+    },
+  ],
+  [
+    "Save as note on an answer to a one-quote question saves it on those words",
+    async (page) => {
+      await askAboutWords(page, { line: 5, from: 1, to: 2 });
+      await page.waitFor(`${composerPills}.length === 1`, { message: "Ask didn't put a quote pill in the composer" });
+      await page.type(" [12 words]");
+      await page.press("Enter");
+      await page.waitFor(`!document.querySelector('[aria-label="Stop"]') && document.body.textContent.includes("QUOTED-1")`, { timeout: 15_000, message: "the one-quote answer never came" });
+      const noted = `document.querySelectorAll('[data-part=matn][data-line="5"][data-w].note-span').length`;
+      assert.equal(await page.ev(noted), 0, "line 5 already had a note");
+      // The answer settles its last lines after it finishes, moving the buttons under it.
+      await page.waitStill('[aria-label="Save as note"]');
+      await page.click('[aria-label="Save as note"]');
+      await page.waitFor(`!!document.querySelector('[aria-label="Saved as note"]')`, { message: "Save as note didn't save" });
+      await page.waitFor(`${noted} >= 2`, { timeout: 5000, message: "the note wasn't put on the quoted words" });
+      assert.equal(await page.ev(`document.querySelectorAll('[data-part=matn][data-line="5"][data-w="3"].note-span').length`), 0, "the note reached past the quoted words");
+      // The checks after this one expect a short conversation that doesn't scroll.
+      await startFresh(page);
     },
   ],
   [

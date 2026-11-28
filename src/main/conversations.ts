@@ -102,7 +102,7 @@ const toTurn = ([id, row]: [string, Row]): StoredTurn => ({
   question: String(row.question),
   quotes: JSON.parse(String(row.quotes)) as Quote[],
   position: Number(row.position),
-  selection: typeof row.selection === "string" ? (JSON.parse(row.selection) as AskSelection) : null,
+  ...(typeof row.selection === "string" ? { selection: JSON.parse(row.selection) as AskSelection } : {}),
   answer: String(row.answer),
   status: row.status as TurnStatus,
   error: typeof row.error === "string" ? row.error : null,

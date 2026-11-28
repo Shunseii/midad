@@ -61,7 +61,7 @@ describe("ask sessions", () => {
     const session = sessions.of("a");
     await settle();
     session.reset();
-    void session.ask({ question: "New question", position: 5, selection: null });
+    void session.ask({ question: "New question", position: 5 });
     await settle();
     const requestId = request(0).requestId;
     finish(requestId, "New answer");
@@ -82,7 +82,7 @@ describe("ask sessions", () => {
     await settle();
     const seen = vi.fn();
     const unsubscribe = session.subscribe(seen);
-    void session.ask({ question: "Q1", position: 1, selection: null });
+    void session.ask({ question: "Q1", position: 1 });
     await settle();
     const requestId = request(0).requestId;
     emit(requestId, { kind: "delta", text: "Part one, " });
@@ -93,7 +93,7 @@ describe("ask sessions", () => {
     await settle();
     expect(sessions.of("a").getState().turns[0]).toMatchObject({ answer: "Part one, part two.", status: "done" });
 
-    void session.ask({ question: "Q2", position: 1, selection: null });
+    void session.ask({ question: "Q2", position: 1 });
     await settle();
     expect(request(1).sessionId).toBe("claude-new");
   });
@@ -102,8 +102,8 @@ describe("ask sessions", () => {
     const { sessions, finish, api, request } = setup();
     const session = sessions.of("a");
     await settle();
-    void session.ask({ question: "Q1", position: 1, selection: null });
-    session.queueMessage({ question: "Q2", quotes: [], position: 1, selection: null });
+    void session.ask({ question: "Q1", position: 1 });
+    session.queueMessage({ question: "Q2", quotes: [], position: 1 });
     await settle();
     finish(request(0).requestId, "A1");
     await settle();
@@ -117,7 +117,7 @@ describe("ask sessions", () => {
     const a = sessions.of("a");
     const b = sessions.of("b");
     await settle();
-    void a.ask({ question: "About A", position: 1, selection: null });
+    void a.ask({ question: "About A", position: 1 });
     await settle();
     emit(request(0).requestId, { kind: "delta", text: "A's answer" });
     expect(a.getState().turns[0]?.answer).toBe("A's answer");

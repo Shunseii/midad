@@ -1,5 +1,6 @@
 import type { Span } from "./annotations";
 
+/** Passage a turn was asked about before quotes replaced it; only older saved turns have one. */
 export interface AskSelection {
   span: Span;
   text: string;
@@ -24,7 +25,8 @@ export interface StoredTurn {
   question: string;
   quotes: Quote[];
   position: number;
-  selection: AskSelection | null;
+  /** Only on turns saved before Ask from the selection toolbar became a quote. */
+  selection?: AskSelection | null;
   answer: string;
   status: TurnStatus;
   error: string | null;
@@ -50,3 +52,20 @@ export interface Conversation {
   title: string;
   turns: StoredTurn[];
 }
+
+/** Where an answer is saved as a note: on some words of a page. */
+export interface NoteSpot {
+  position: number;
+  span: Span;
+}
+
+/**
+ * Where Save as note puts an answer: on the one passage from the page its question quoted.
+ * None when it quoted no page passage or several. Older turns asked about a selection use that.
+ */
+export const noteSpot = (turn: Pick<StoredTurn, "quotes" | "selection">): NoteSpot | null => {
+  const fromPage = turn.quotes.flatMap((q) => (q.span ? [{ position: q.position, span: q.span }] : []));
+  if (fromPage.length === 1) return fromPage[0] ?? null;
+  if (fromPage.length === 0 && turn.selection) return { position: turn.selection.position, span: turn.selection.span };
+  return null;
+};
