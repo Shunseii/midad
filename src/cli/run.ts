@@ -9,6 +9,9 @@ import { createPageFinder } from "../main/find-page";
 import { createLibrary } from "../main/library";
 import { createMemories } from "../main/memories";
 import { isMemoryType, MEMORY_TYPES, type Memory, type MemoryType } from "../shared/memories";
+import { isMark } from "../shared/harakat";
+import { type Bahar, BAHAR_WORD_TYPES, type BaharWord, isBaharWordType } from "./bahar";
+import { DEFAULT_LIMIT, formatEntries, MAX_LIMIT } from "./bahar-search";
 
 export const MEMORY_USAGE = `Memory (what Ask AI remembers about the reader across chats; labelled as written by the agent)
   midad memory list [--type <type>] [--global | --book <book> | --all]
@@ -30,6 +33,23 @@ How to apply: lines), book (goals and context for one book; needs --book). One f
 per memory; the description is one line, written so a later search finds it.
 Example:
   midad memory add --type preference --name transliterate-terms --description "Transliterate Arabic terms, in brackets after the Arabic" --body "Write الاسم (ism), not ism or الاسم alone."
+`;
+
+export const BAHAR_USAGE = `Bahar (the reader's own Arabic dictionary and flashcard app)
+  midad bahar search <query> [--limit <n>]      Words in their dictionary matching an Arabic word (harakat
+                                                and hamza ignored), its root letters, or an English meaning.
+                                                Best match first, ${DEFAULT_LIMIT} by default (at most ${MAX_LIMIT}).
+  midad bahar add --word <arabic> --translation <meaning> --type <${BAHAR_WORD_TYPES.join("|")}>
+                  [--root <letters>] [--definition <text>] [--tags <a,b>]
+                  [--example <sentence> [--example-translation <text>] [--from-page <page>] [--context <text>]]
+                                                Add one word, with its flashcards. Only after the reader
+                                                confirmed this exact entry.
+
+Search before adding, to avoid a duplicate. add always tags the word "midad". An
+--example is the sentence the word was read in; its context is the book's title and
+the page's printed number (--from-page <page> is the page's position, as for midad
+page; the book is this chat's unless --book names another), or --context.
+--root takes the letters with or without spaces: "ف ع ل", "ف-ع-ل" or فعل.
 `;
 
 export const USAGE = `Usage: midad <command> [options]
@@ -54,6 +74,7 @@ Writing (labelled as written by the agent)
   midad harakat clear <book> <page> <span>      Remove every added mark inside the span
 
 ${MEMORY_USAGE}
+${BAHAR_USAGE}
 Library management (not for agents)
   midad book remove <book> [--yes]              Remove the book, its pages and everything about it,
                                                 on every synced device. Without --yes, only lists
@@ -95,6 +116,14 @@ const OPTIONS = {
   description: { type: "string" },
   limit: { type: "string" },
   yes: { type: "boolean" },
+  translation: { type: "string" },
+  root: { type: "string" },
+  definition: { type: "string" },
+  tags: { type: "string" },
+  example: { type: "string" },
+  "example-translation": { type: "string" },
+  "from-page": { type: "string" },
+  context: { type: "string" },
   help: { type: "boolean", short: "h" },
 } as const;
 
@@ -147,6 +176,12 @@ const memoryType = (value: string | undefined): MemoryType => {
   if (!isMemoryType(value)) throw new Error(`--type is one of ${MEMORY_TYPES.join(", ")}.`);
   return value;
 };
+
+/** Root letters from what was typed: "ف ي د", "ف-ي-د" and "فيد" are all three letters. */
+export const parseRoot = (input: string): string[] => [...input].filter((ch) => /\p{L}/u.test(ch) && !isMark(ch));
+
+const ARABIC_DIGITS = "٠١٢٣٤٥٦٧٨٩";
+const arabicNumber = (n: number) => String(n).replace(/\d/g, (d) => ARABIC_DIGITS[Number(d)] ?? d);
 
 const writtenBy = (m: Memory) => `${m.author === "reader" ? "the reader" : "Ask AI"}${m.editedAt === null ? "" : ", edited"}`;
 
@@ -220,6 +255,7 @@ export const runCli = async ({
   stderr,
   currentBook,
   scansDir,
+  bahar,
 }: {
   argv: string[];
   db: DatabaseSync;
@@ -229,6 +265,8 @@ export const runCli = async ({
   currentBook?: string;
   /** Where the app caches page scans, cleared for a removed book. */
   scansDir?: string;
+  /** The reader's Bahar dictionary, for the bahar commands. */
+  bahar?: Bahar;
 }): Promise<number> => {
   const library = createLibrary({
     db,
@@ -265,7 +303,7 @@ export const runCli = async ({
 
   try {
     if (!command || opts.help) {
-      stdout(command === "memory" ? MEMORY_USAGE : USAGE);
+      stdout(command === "memory" ? MEMORY_USAGE : command === "bahar" ? BAHAR_USAGE : USAGE);
       return command || opts.help ? 0 : 2;
     }
     const [a, b, c] = rest;
@@ -286,7 +324,7 @@ export const runCli = async ({
       return currentBook ? { global: true, bookId: await bookNamed(currentBook) } : undefined;
     };
 
-    switch (`${command} ${["highlight", "note", "harakat", "memory", "book"].includes(command) ? (a ?? "") : ""}`.trim()) {
+    switch (`${command} ${["highlight", "note", "harakat", "memory", "book", "bahar"].includes(command) ? (a ?? "") : ""}`.trim()) {
       case "books": {
         const books = await library.listBooks();
         print({
@@ -455,6 +493,50 @@ export const runCli = async ({
         const book = await finder.findBook(b);
         await library.setPinned({ bookId: book.bookId, pinned });
         done(`${pinned ? "Pinned" : "Unpinned"} ${book.title} (${book.bookId}).`, { bookId: book.bookId, pinned });
+        return 0;
+      }
+      case "bahar search": {
+        if (!bahar) throw new Error("Bahar isn't available here.");
+        const query = rest.slice(1).join(" ");
+        if (!query.trim()) throw new UsageError("Say what to search for: midad bahar search <word or meaning>.");
+        const found = await bahar.search({ query, ...(opts.limit ? { limit: int(opts.limit, "--limit") } : {}) });
+        print({ json: found, text: formatEntries(found) });
+        return 0;
+      }
+      case "bahar add": {
+        if (!bahar) throw new Error("Bahar isn't available here.");
+        const missing = (["word", "translation", "type"] as const).filter((flag) => !opts[flag]?.trim());
+        if (missing.length || rest.length > 1) {
+          throw new Error(
+            `${missing.length ? `Missing ${missing.map((f) => `--${f}`).join(", ")}. ` : "Pass every value with its flag. "}Use: midad bahar add --word <arabic> --translation <meaning> --type <${BAHAR_WORD_TYPES.join("|")}>`,
+          );
+        }
+        if (!isBaharWordType(opts.type)) throw new Error(`--type is one of ${BAHAR_WORD_TYPES.join(", ")}.`);
+        const sentence = opts.example?.trim();
+        const context = async (): Promise<string | undefined> => {
+          if (opts.context?.trim()) return opts.context.trim();
+          const book = opts.book ?? currentBook;
+          if (!book) return undefined;
+          if (!opts["from-page"]) return (await finder.findBook(book)).title;
+          const stored = await findPage({ book, position: opts["from-page"] });
+          const { title } = await finder.findBook(stored.bookId);
+          return `${title} · ص ${arabicNumber(stored.number ?? stored.position)}`;
+        };
+        const where = sentence ? await context() : undefined;
+        const exampleTranslation = opts["example-translation"]?.trim();
+        const definition = opts.definition?.trim();
+        const root = parseRoot(opts.root ?? "");
+        const word: BaharWord = {
+          word: opts.word?.trim() ?? "",
+          translation: opts.translation?.trim() ?? "",
+          type: opts.type,
+          ...(root.length > 0 && { root }),
+          tags: [...new Set([...(opts.tags ?? "").split(/[,،]/).map((t) => t.trim()).filter(Boolean), "midad"])],
+          ...(definition && { definition }),
+          ...(sentence && { examples: [{ sentence, ...(where && { context: where }), ...(exampleTranslation && { translation: exampleTranslation }) }] }),
+        };
+        const added = await bahar.add(word);
+        done(`Added ${added.word} to the reader's Bahar dictionary (id ${added.id}).`, { added: true, ...added, entry: word });
         return 0;
       }
       case "memory delete":
