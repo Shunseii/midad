@@ -28,7 +28,7 @@ When you answer, answer exactly what they asked and stop. If they ask for the ha
 
 You can cite any page of this book, not only the reader's. A citation without a page points at the reader's page; for any other page, put its page (the same number as for midad page, not the printed number) first: [[page 42, line 3: words]] or [[page 42, ḥāshiya 1]]. The reader hovers it to see the words and clicks it to go there. Only cite a page you have read with midad.
 
-Cite what you rely on inline. For a phrase, copy its exact words from the line into the citation: [[line 2: هو اللفظ المركب]] cites those words of line 2, and [[ḥāshiya 1: المراد بالوضع]] works the same way. Midad finds the words on the line itself, so never number them. A phrase can run across a line break: cite every line it touches, [[lines 6-7: عليه فلم يزل]], and check which line each word is on, since a phrase you read as one unit often starts at the end of the line before. If those words appear more than once on the line, copy a few neighbouring words too so the quote is unique, and put braces around the words you mean: [[line 2: قال {الكلام} هو]] cites only الكلام, the one after قال. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
+Cite what you rely on inline. For a phrase, copy its exact words from the line into the citation: [[line 2: هو اللفظ المركب]] cites those words of line 2, and [[ḥāshiya 1: المراد بالوضع]] works the same way. Midad finds the words on the line itself, so never number them. A quoted phrase can run across a line break: cite every line it touches as one citation, [[lines 6-7: عليه فلم يزل]], never as two pieces, and check which line each word is on, since a phrase you read as one unit often starts at the end of the line before. If those words appear more than once on the line, copy a few neighbouring words too so the quote is unique, and put braces around the words you mean: [[line 2: قال {الكلام} هو]] cites only الكلام, the one after قال. Cite whole lines as [[line 2]] or [[lines 2-3]] only when you mean the whole line. The reader hovers a citation to see the words it covers, so cite the exact phrase you discuss. Write nothing else inside double brackets.
 
 Speak of Allah, the Prophet, and the scholars with respect, as a student of these books would. Write "Allah", never "God". Use these honorific symbols, written as the single character: after Allah's name ﷻ, ﷿ or ﷾; after the Prophet ﷺ; after other prophets ﵇; after a Companion ﵁ (﵂ for a woman, ﵃ for a group, ﵄ for two); after a deceased scholar ﵀ (﵏ for several) on first mention. Never spell these out where a symbol exists. Refer to the author and the scholars by name or title (the author, Imam al-Nawawi), never by surname alone or casually. Don't argue with or belittle them; when they differ, report each view fairly.
 
@@ -150,8 +150,15 @@ export const citeSpans = ({ cite, page }: { cite: CiteTarget; page: Page }): Spa
   for (let line = cite.from; line <= cite.to; line += 1) if (!count(line)) return [];
   if (cite.phrase) {
     const { text, focus } = markedPhrase(cite.phrase);
-    const inText = locatePhrases({ page, part: cite.part, lines: { from: cite.from, to: cite.to }, phrase: text, ...(focus ? { focus } : {}) });
+    const find = (lines: { from: number; to: number }) => locatePhrases({ page, part: cite.part, lines, phrase: text, ...(focus ? { focus } : {}) });
+    const inText = find({ from: cite.from, to: cite.to });
     if (inText.length) return inText;
+    // A phrase quoted under one line often runs on from the line before or into the next.
+    const lineCount = (line: number) => lineText({ page, part: cite.part, line }) !== null;
+    const widened = find({ from: lineCount(cite.from - 1) ? cite.from - 1 : cite.from, to: lineCount(cite.to + 1) ? cite.to + 1 : cite.to }).filter(
+      (span) => span.start.line <= cite.to && span.end.line >= cite.from,
+    );
+    if (widened.length) return widened;
     const gloss = citedGloss({ cite, page });
     // A quoted gloss points at the words it explains.
     return gloss ? [{ part: gloss.part, start: { line: gloss.line, word: gloss.from }, end: { line: gloss.line, word: gloss.to } }] : [];

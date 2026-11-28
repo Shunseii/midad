@@ -87,6 +87,16 @@ describe("citeSpan", () => {
     expect(quoted("[[lines 1-2: المفيد بالوضع]]")).toBe("المفيد بالوضع");
   });
 
+  it("finds a phrase cited under one line when it runs over from the line before or into the next", () => {
+    expect(quoted("[[line 2: المفيد بالوضع]]")).toBe("المفيد بالوضع");
+    expect(quoted("[[line 1: المفيد بالوضع]]")).toBe("المفيد بالوضع");
+  });
+
+  it("doesn't take a phrase from a neighbouring line that the cited line has no part of", () => {
+    expect(citeSpan({ cite: cite("[[line 1: وأقسامه ثلاثة اسم]]"), page })).toBeNull();
+    expect(citeSpan({ cite: cite("[[line 1: بالوضع وأقسامه]]"), page })).toBeNull();
+  });
+
   it("finds ḥāshiya words", () => {
     expect(quoted("[[ḥāshiya 1:1]]")).toBe("المراد");
   });
@@ -484,7 +494,7 @@ describe("SYSTEM_PROMPT", () => {
   });
 
   it("tells Claude to cite every line a phrase runs across", () => {
-    expect(SYSTEM_PROMPT).toContain("A phrase can run across a line break: cite every line it touches");
+    expect(SYSTEM_PROMPT).toContain("A quoted phrase can run across a line break: cite every line it touches as one citation");
   });
 
   it("still explains when the reader presses the Explain button", () => {
