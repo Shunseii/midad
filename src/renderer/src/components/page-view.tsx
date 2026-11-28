@@ -260,12 +260,13 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
     flush(`run-${letter}`);
     // Chromium paints a mark in its letter's colour, so a letter the reader has marked is drawn
     // whole in their colour, with the book's marks and theirs together where the font places them.
+    // The tick comes after the letter: before it, Chromium shapes a lone final ه as initial (هـ).
     nodes.push(
       <span key={letter} className={cx("relative isolate", marks.mine && "text-ink-added", letter === targetLetter && "text-accent")}>
-        {letter === targetLetter && <span data-overlay aria-hidden className={TARGET_TICK} />}
         {l.base}
         {marks.corpus}
         {marks.mine}
+        {letter === targetLetter && <span data-overlay aria-hidden className={TARGET_TICK} />}
       </span>,
     );
   });
