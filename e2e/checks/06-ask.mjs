@@ -290,4 +290,18 @@ export const checks = [
       assert.deepEqual(await tinted(), [repeat.second], "the braced citation tinted more than the word in braces");
     },
   ],
+  [
+    "a question's line breaks show in its bubble",
+    async (page) => {
+      await page.waitFor(`!document.querySelector('[aria-label="Stop"]')`, { timeout: 20_000, message: "an earlier answer never finished" });
+      await page.click(COMPOSER);
+      await page.type("first line");
+      await page.press("Enter", { shift: true, commands: ["insertLineBreak"] });
+      await page.type("second line");
+      await page.press("Enter");
+      const bubble = `[...document.querySelectorAll("p.bg-accent-soft")].at(-1)`;
+      await page.waitFor(`${bubble}?.innerText.includes("second line")`, { message: "the question didn't show" });
+      assert.equal(await page.ev(`${bubble}.innerText.trim()`), "first line\nsecond line");
+    },
+  ],
 ];

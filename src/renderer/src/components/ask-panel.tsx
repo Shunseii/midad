@@ -1062,7 +1062,7 @@ const CiteChip = ({
             <div key={turn.id} className="flex flex-col gap-3">
               <p
                 dir={turn.question ? (ARABIC_START.test(turn.question) ? "rtl" : "ltr") : "auto"}
-                className={cx("max-w-[85%] self-end rounded-xl bg-accent-soft px-3.5 py-2.5", ARABIC_START.test(turn.question) ? "ar text-ar-body" : "text-body")}
+                className={cx("max-w-[85%] self-end rounded-xl bg-accent-soft px-3.5 py-2.5 break-words whitespace-pre-wrap", ARABIC_START.test(turn.question) ? "ar text-ar-body" : "text-body")}
               >
                 {parseComposer(turn).map((part, i) =>
                   part.kind === "quote" ? (
