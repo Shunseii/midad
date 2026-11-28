@@ -261,8 +261,9 @@ const WordText = ({ text, mine, display, targetLetter }: { text: string; mine: M
     // Chromium paints a mark in its letter's colour, so a letter the reader has marked is drawn
     // whole in their colour, with the book's marks and theirs together where the font places them.
     // The tick comes after the letter: before it, Chromium shapes a lone final ه as initial (هـ).
+    // Keyed on its marks so a removed mark is repainted: on a highlighted word Chromium leaves its ink on screen.
     nodes.push(
-      <span key={letter} className={cx("relative isolate", marks.mine && "text-ink-added", letter === targetLetter && "text-accent")}>
+      <span key={`${letter}${marks.corpus}${marks.mine}`} className={cx("relative isolate", marks.mine && "text-ink-added", letter === targetLetter && "text-accent")}>
         {l.base}
         {marks.corpus}
         {marks.mine}
