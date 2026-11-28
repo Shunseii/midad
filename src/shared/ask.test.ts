@@ -457,6 +457,7 @@ describe("SYSTEM_PROMPT", () => {
     expect(SYSTEM_PROMPT).toContain("first encourage them to give it a shot");
     expect(SYSTEM_PROMPT).toContain("Help directly when they have already tried");
     expect(SYSTEM_PROMPT).toContain("Never nudge twice for the same thing and never refuse");
+    expect(SYSTEM_PROMPT).toContain("Don't give a hint or any part of the answer with the nudge");
   });
 
   it("still explains when the reader presses the Explain button", () => {
