@@ -82,6 +82,10 @@ describe("citeSpan", () => {
     expect(quoted("[[lines 1-2]]")).toBe("الكلام هو اللفظ المركب المفيد بالوضع وأقسامه ثلاثة");
   });
 
+  it("finds a phrase that runs across a line break when both lines are cited", () => {
+    expect(quoted("[[lines 1-2: المفيد بالوضع]]")).toBe("المفيد بالوضع");
+  });
+
   it("finds ḥāshiya words", () => {
     expect(quoted("[[ḥāshiya 1:1]]")).toBe("المراد");
   });
@@ -458,6 +462,10 @@ describe("SYSTEM_PROMPT", () => {
     expect(SYSTEM_PROMPT).toContain("Help directly when they have already tried");
     expect(SYSTEM_PROMPT).toContain("Never nudge twice for the same thing and never refuse");
     expect(SYSTEM_PROMPT).toContain("Don't give a hint or any part of the answer with the nudge");
+  });
+
+  it("tells Claude to cite every line a phrase runs across", () => {
+    expect(SYSTEM_PROMPT).toContain("A phrase can run across a line break: cite every line it touches");
   });
 
   it("still explains when the reader presses the Explain button", () => {
