@@ -452,3 +452,12 @@ describe("memoryIndex", () => {
   });
 });
 
+describe("Bahar in the system prompt", () => {
+  it("says to search first, confirm the exact entry before adding, and never claim an unconfirmed add", () => {
+    expect(SYSTEM_PROMPT).toContain("midad bahar search");
+    expect(SYSTEM_PROMPT).toMatch(/show the exact entry you would save[^.]*and wait for the reader to confirm/);
+    expect(SYSTEM_PROMPT).toContain("Only after they confirm, run midad bahar add");
+    expect(SYSTEM_PROMPT).toContain("Never say a word was added unless that command succeeded");
+  });
+});
+
